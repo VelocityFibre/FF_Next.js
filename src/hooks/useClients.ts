@@ -1,0 +1,248 @@
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { clientService } from '@/services/clientService';
+import { 
+  Client, 
+  ClientFormData, 
+  ClientFilter,
+  ClientSummary,
+  ClientDropdownOption,
+  ContactHistory
+} from '@/types/client.types';
+
+// Query Keys
+export const clientKeys = {
+  all: ['clients'] as const,
+  lists: () => [...clientKeys.all, 'list'] as const,
+  list: (filter?: ClientFilter) => [...clientKeys.lists(), { filter }] as const,
+  details: () => [...clientKeys.all, 'detail'] as const,
+  detail: (id: string) => [...clientKeys.details(), id] as const,
+  active: () => [...clientKeys.all, 'active'] as const,
+  summary: () => [...clientKeys.all, 'summary'] as const,
+  contactHistory: (clientId: string) => [...clientKeys.all, 'contactHistory', clientId] as const,
+};
+
+// Queries
+
+/**
+ * Hook to fetch all clients with optional filtering
+ */
+export function useClients(filter?: ClientFilter) {
+  return useQuery({
+    queryKey: clientKeys.list(filter),
+    queryFn: () => clientService.getAll(filter),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+/**
+ * Hook to fetch active clients for dropdowns
+ */
+export function useActiveClients() {
+  return useQuery({
+    queryKey: clientKeys.active(),
+    queryFn: () => clientService.getActiveClients(),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
+}
+
+/**
+ * Hook to fetch a single client by ID
+ */
+export function useClient(id: string) {
+  return useQuery({
+    queryKey: clientKeys.detail(id),
+    queryFn: () => clientService.getById(id),
+    enabled: !!id,
+  });
+}
+
+/**
+ * Hook to fetch client summary statistics
+ */
+export function useClientSummary() {
+  return useQuery({
+    queryKey: clientKeys.summary(),
+    queryFn: () => clientService.getClientSummary(),
+    staleTime: 15 * 60 * 1000, // 15 minutes
+  });
+}
+
+/**
+ * Hook to fetch contact history for a client
+ */
+export function useContactHistory(clientId: string) {
+  return useQuery({
+    queryKey: clientKeys.contactHistory(clientId),
+    queryFn: () => clientService.getContactHistory(clientId),
+    enabled: !!clientId,
+  });
+}
+
+// Mutations
+
+/**
+ * Hook to create a new client
+ */
+export function useCreateClient() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (data: ClientFormData) => clientService.create(data),
+    onSuccess: () => {
+      // Invalidate and refetch client queries
+      queryClient.invalidateQueries({ queryKey: clientKeys.all });
+    },
+    onError: (error: Error) => {
+      console.error('Failed to create client:', error);
+      throw error;
+    },
+  });
+}
+
+/**
+ * Hook to update a client
+ */
+export function useUpdateClient() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<ClientFormData> }) => 
+      clientService.update(id, data),
+    onSuccess: (_, { id }) => {
+      // Invalidate specific client and list queries
+      queryClient.invalidateQueries({ queryKey: clientKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: clientKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: clientKeys.active() });
+      queryClient.invalidateQueries({ queryKey: clientKeys.summary() });
+    },
+    onError: (error: Error) => {
+      console.error('Failed to update client:', error);
+      throw error;
+    },
+  });
+}
+
+/**
+ * Hook to delete a client
+ */
+export function useDeleteClient() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => clientService.delete(id),
+    onSuccess: (_, id) => {
+      // Remove client from cache and invalidate lists
+      queryClient.removeQueries({ queryKey: clientKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: clientKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: clientKeys.active() });
+      queryClient.invalidateQueries({ queryKey: clientKeys.summary() });
+    },
+    onError: (error: Error) => {
+      console.error('Failed to delete client:', error);
+      throw error;
+    },
+  });
+}
+
+/**
+ * Hook to update client project metrics
+ */
+export function useUpdateClientMetrics() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (clientId: string) => clientService.updateClientMetrics(clientId),
+    onSuccess: (_, clientId) => {
+      // Invalidate client queries to show updated metrics
+      queryClient.invalidateQueries({ queryKey: clientKeys.detail(clientId) });
+      queryClient.invalidateQueries({ queryKey: clientKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: clientKeys.summary() });
+    },
+    onError: (error: Error) => {
+      console.error('Failed to update client metrics:', error);
+      throw error;
+    },
+  });
+}
+
+/**
+ * Hook to add contact history
+ */
+export function useAddContactHistory() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (contactHistory: Omit<ContactHistory, 'id' | 'createdAt'>) => 
+      clientService.addContactHistory(contactHistory),
+    onSuccess: (_, contactHistory) => {
+      // Invalidate contact history and client queries
+      queryClient.invalidateQueries({ 
+        queryKey: clientKeys.contactHistory(contactHistory.clientId) 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: clientKeys.detail(contactHistory.clientId) 
+      });
+    },
+    onError: (error: Error) => {
+      console.error('Failed to add contact history:', error);
+      throw error;
+    },
+  });
+}
+
+// Custom Hooks for Client Filter Management
+
+/**
+ * Hook to manage client filter state
+ */
+export function useClientFilters() {
+  const [filter, setFilter] = React.useState<ClientFilter>({});
+  
+  const updateFilter = (newFilter: Partial<ClientFilter>) => {
+    setFilter(prev => ({ ...prev, ...newFilter }));
+  };
+  
+  const clearFilter = () => {
+    setFilter({});
+  };
+  
+  const hasActiveFilters = Object.keys(filter).some(key => {
+    const value = filter[key as keyof ClientFilter];
+    return Array.isArray(value) ? value.length > 0 : !!value;
+  });
+  
+  return {
+    filter,
+    updateFilter,
+    clearFilter,
+    hasActiveFilters,
+  };
+}
+
+// Helper hook for client selection in forms
+export function useClientSelection() {
+  const { data: activeClients = [], isLoading } = useActiveClients();
+  
+  const getClientById = (id: string): ClientDropdownOption | undefined => {
+    return activeClients.find(client => client.id === id);
+  };
+  
+  const searchClients = (searchTerm: string): ClientDropdownOption[] => {
+    if (!searchTerm) return activeClients;
+    
+    const term = searchTerm.toLowerCase();
+    return activeClients.filter(client =>
+      client.name.toLowerCase().includes(term) ||
+      client.contactPerson.toLowerCase().includes(term) ||
+      client.email.toLowerCase().includes(term)
+    );
+  };
+  
+  return {
+    clients: activeClients,
+    isLoading,
+    getClientById,
+    searchClients,
+  };
+}

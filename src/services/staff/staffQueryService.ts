@@ -1,0 +1,216 @@
+import { 
+  collection, 
+  query, 
+  where, 
+  orderBy, 
+  getDocs,
+  Timestamp
+} from 'firebase/firestore';
+import { db } from '@/config/firebase';
+import { 
+  StaffMember,
+  StaffDropdownOption,
+  StaffSummary,
+  StaffStatus,
+  Department,
+  StaffLevel,
+  ProjectAssignment
+} from '@/types/staff.types';
+
+/**
+ * Specialized query operations for staff
+ */
+export const staffQueryService = {
+  /**
+   * Get active staff for dropdown usage
+   */
+  async getActiveStaff(): Promise<StaffDropdownOption[]> {
+    try {
+      // Get all staff and filter client-side to avoid index requirement
+      const q = query(
+        collection(db, 'staff'),
+        orderBy('name', 'asc')
+      );
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as StaffMember))
+        .filter(staff => staff.status === StaffStatus.ACTIVE)
+        .map(staff => ({
+          id: staff.id!,
+          name: staff.name,
+          email: staff.email,
+          position: staff.position,
+          department: staff.department,
+          level: staff.level,
+          currentProjectCount: staff.currentProjectCount,
+          maxProjectCount: staff.maxProjectCount,
+        }));
+    } catch (error) {
+      console.error('Error getting active staff:', error);
+      throw new Error('Failed to fetch active staff');
+    }
+  },
+
+  /**
+   * Get project managers for dropdown usage
+   */
+  async getProjectManagers(): Promise<StaffDropdownOption[]> {
+    try {
+      // Get all staff and filter client-side to avoid index requirement
+      const q = query(
+        collection(db, 'staff'),
+        orderBy('name', 'asc')
+      );
+      const snapshot = await getDocs(q);
+      
+      // Filter by status and position client-side
+      // Look for positions that include "Project Manager" or similar roles
+      const managerPositions = [
+        'Project Manager',
+        'Senior Project Manager', 
+        'Operations Manager',
+        'Construction Manager',
+        'Team Lead'
+      ];
+      
+      return snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as StaffMember))
+        .filter(staff => {
+          // Check if active
+          if (staff.status !== StaffStatus.ACTIVE) return false;
+          
+          // Check if position matches any manager position
+          const position = staff.position?.toLowerCase() || '';
+          return managerPositions.some(mp => 
+            position.includes(mp.toLowerCase()) || 
+            position.includes('manager') ||
+            position.includes('lead') ||
+            position.includes('supervisor')
+          );
+        })
+        .map(staff => ({
+          id: staff.id!,
+          name: staff.name,
+          email: staff.email,
+          position: staff.position,
+          department: staff.department,
+          level: staff.level,
+          currentProjectCount: staff.currentProjectCount,
+          maxProjectCount: staff.maxProjectCount,
+        }));
+    } catch (error) {
+      console.error('Error getting project managers:', error);
+      throw new Error('Failed to fetch project managers');
+    }
+  },
+
+  /**
+   * Get staff summary statistics
+   */
+  async getStaffSummary(): Promise<StaffSummary> {
+    try {
+      const staff = await staffQueryService.getAllStaff();
+      
+      const summary: StaffSummary = {
+        totalStaff: staff.length,
+        activeStaff: staff.filter(s => s.status === StaffStatus.ACTIVE).length,
+        onLeaveStaff: staff.filter(s => s.status === StaffStatus.ON_LEAVE).length,
+        inactiveStaff: staff.filter(s => s.status === StaffStatus.INACTIVE).length,
+        staffByDepartment: {},
+        staffByLevel: {},
+        utilizationRate: 0,
+        averageProjectsPerPerson: 0,
+        topPerformers: [],
+      };
+      
+      // Count by department
+      staff.forEach(member => {
+        summary.staffByDepartment[member.department] = 
+          (summary.staffByDepartment[member.department] || 0) + 1;
+      });
+      
+      // Count by level
+      staff.forEach(member => {
+        summary.staffByLevel[member.level] = 
+          (summary.staffByLevel[member.level] || 0) + 1;
+      });
+      
+      // Calculate utilization
+      const activeStaff = staff.filter(s => s.status === StaffStatus.ACTIVE);
+      if (activeStaff.length > 0) {
+        const totalCapacity = activeStaff.reduce((sum, s) => sum + s.maxProjectCount, 0);
+        const totalUtilized = activeStaff.reduce((sum, s) => sum + s.currentProjectCount, 0);
+        summary.utilizationRate = (totalUtilized / totalCapacity) * 100;
+        summary.averageProjectsPerPerson = totalUtilized / activeStaff.length;
+      }
+      
+      // Get top performers
+      summary.topPerformers = staff
+        .filter(s => s.averageProjectRating > 0)
+        .sort((a, b) => b.averageProjectRating - a.averageProjectRating)
+        .slice(0, 5);
+      
+      return summary;
+    } catch (error) {
+      console.error('Error getting staff summary:', error);
+      throw new Error('Failed to fetch staff summary');
+    }
+  },
+
+  /**
+   * Get project assignments for a project
+   */
+  async getProjectAssignments(projectId: string): Promise<ProjectAssignment[]> {
+    try {
+      const q = query(
+        collection(db, 'projectAssignments'),
+        where('projectId', '==', projectId),
+        orderBy('assignedDate', 'desc')
+      );
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as ProjectAssignment));
+    } catch (error) {
+      console.error('Error getting project assignments:', error);
+      throw new Error('Failed to fetch project assignments');
+    }
+  },
+
+  /**
+   * Get staff assignments for a staff member
+   */
+  async getStaffAssignments(staffId: string): Promise<ProjectAssignment[]> {
+    try {
+      const q = query(
+        collection(db, 'projectAssignments'),
+        where('staffId', '==', staffId),
+        where('status', '==', 'active'),
+        orderBy('assignedDate', 'desc')
+      );
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as ProjectAssignment));
+    } catch (error) {
+      console.error('Error getting staff assignments:', error);
+      throw new Error('Failed to fetch staff assignments');
+    }
+  },
+
+  /**
+   * Helper to get all staff (used internally)
+   */
+  async getAllStaff(): Promise<StaffMember[]> {
+    const snapshot = await getDocs(collection(db, 'staff'));
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as StaffMember));
+  }
+};
