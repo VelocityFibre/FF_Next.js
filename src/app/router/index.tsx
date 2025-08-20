@@ -17,14 +17,16 @@ const ClientCreatePage = lazy(() => import('@/modules/clients/ClientCreatePage')
 const ClientEditPage = lazy(() => import('@/modules/clients/ClientEditPage').then(m => ({ default: m.ClientEditPage })));
 const ClientDetailPage = lazy(() => import('@/modules/clients/ClientDetailPage').then(m => ({ default: m.ClientDetailPage })));
 
+const StaffPage = lazy(() => import('@/modules/staff/StaffPage').then(m => ({ default: m.StaffPage })));
+const StaffCreatePage = lazy(() => import('@/modules/staff/StaffCreatePage').then(m => ({ default: m.StaffCreatePage })));
+const StaffEditPage = lazy(() => import('@/modules/staff/StaffEditPage').then(m => ({ default: m.StaffEditPage })));
+const StaffDetailPage = lazy(() => import('@/modules/staff/StaffDetailPage').then(m => ({ default: m.StaffDetailPage })));
+
 // Legacy pages (to be migrated to modules)
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
 const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));
 const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
-const StaffList = lazy(() => import('@/pages/StaffList').then(m => ({ default: m.StaffList })));
-const StaffForm = lazy(() => import('@/pages/StaffForm').then(m => ({ default: m.StaffForm })));
-const StaffDetail = lazy(() => import('@/pages/StaffDetail').then(m => ({ default: m.StaffDetail })));
 
 // Loading component
 function Loading() {
@@ -149,7 +151,7 @@ export const router = createBrowserRouter([
             path: 'staff',
             element: (
               <Suspense fallback={<Loading />}>
-                <StaffList />
+                <StaffPage />
               </Suspense>
             ),
           },
@@ -157,7 +159,7 @@ export const router = createBrowserRouter([
             path: 'staff/new',
             element: (
               <Suspense fallback={<Loading />}>
-                <StaffForm />
+                <StaffCreatePage />
               </Suspense>
             ),
           },
@@ -165,7 +167,7 @@ export const router = createBrowserRouter([
             path: 'staff/:id/edit',
             element: (
               <Suspense fallback={<Loading />}>
-                <StaffForm />
+                <StaffEditPage />
               </Suspense>
             ),
           },
@@ -173,7 +175,7 @@ export const router = createBrowserRouter([
             path: 'staff/:id',
             element: (
               <Suspense fallback={<Loading />}>
-                <StaffDetail />
+                <StaffDetailPage />
               </Suspense>
             ),
           },
