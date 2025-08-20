@@ -1,12 +1,9 @@
 import { 
   collection, 
-  doc, 
-  writeBatch, 
   query, 
   where, 
   getDocs,
-  Timestamp,
-  serverTimestamp
+  Timestamp
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { 
@@ -15,326 +12,51 @@ import {
   FiberImportRow,
   SOWImportSummary 
 } from '../types/sowImport.types';
+import { sowPoleImportService } from './sowPoleImport';
+import { sowDropImportService } from './sowDropImport';
+import { sowFiberImportService } from './sowFiberImport';
 
 export class SOWTrackerService {
-  private readonly BATCH_SIZE = 500;
-
   /**
-   * Import poles from SOW data
+   * Import all SOW data (poles, drops, fiber)
    */
-  async importPoles(
+  async importAll(
     projectId: string,
     projectCode: string,
-    poles: PoleImportRow[]
-  ): Promise<{ success: number; failed: number; errors: string[] }> {
-    const results = { success: 0, failed: 0, errors: [] as string[] };
-    const batch = writeBatch(db);
-    let batchCount = 0;
-
-    try {
-      // Check for existing poles
-      const existingPolesQuery = query(
-        collection(db, 'poles'),
-        where('projectId', '==', projectId)
-      );
-      const existingPoles = await getDocs(existingPolesQuery);
-      const existingPoleNumbers = new Set(
-        existingPoles.docs.map(doc => doc.data().poleNumber)
-      );
-
-      for (const pole of poles) {
-        try {
-          // Validate pole number uniqueness
-          if (existingPoleNumbers.has(pole.poleNumber)) {
-            results.errors.push(`Pole ${pole.poleNumber} already exists`);
-            results.failed++;
-            continue;
-          }
-
-          const poleRef = doc(collection(db, 'poles'));
-          const poleData = {
-            projectId,
-            projectCode,
-            poleNumber: pole.poleNumber,
-            location: pole.location || '',
-            coordinates: pole.coordinates ? {
-              lat: pole.coordinates.lat,
-              lng: pole.coordinates.lng
-            } : null,
-            phase: pole.phase || 'Phase 1',
-            status: 'pending',
-            dropCount: pole.dropCount || 0,
-            maxDrops: 12,
-            installationDate: null,
-            photos: {
-              beforeInstallation: null,
-              duringInstallation: null,
-              afterInstallation: null,
-              poleLabel: null,
-              cableRouting: null,
-              qualityCheck: null
-            },
-            qualityChecks: {
-              poleCondition: null,
-              cableRouting: null,
-              connectorQuality: null,
-              labelingCorrect: null,
-              groundingProper: null,
-              heightCompliant: null,
-              tensionCorrect: null,
-              documentationComplete: null
-            },
-            metadata: {
-              importedAt: serverTimestamp(),
-              importedFrom: 'SOW',
-              lastUpdated: serverTimestamp(),
-              createdBy: 'system',
-              syncStatus: 'synced'
-            }
-          };
-
-          batch.set(poleRef, poleData);
-          batchCount++;
-          results.success++;
-
-          // Commit batch if size reached
-          if (batchCount >= this.BATCH_SIZE) {
-            await batch.commit();
-            batchCount = 0;
-          }
-        } catch (error) {
-          results.errors.push(`Failed to import pole ${pole.poleNumber}: ${error}`);
-          results.failed++;
-        }
-      }
-
-      // Commit remaining batch
-      if (batchCount > 0) {
-        await batch.commit();
-      }
-
-      return results;
-    } catch (error) {
-      console.error('Error importing poles:', error);
-      throw error;
+    data: {
+      poles: PoleImportRow[];
+      drops: DropImportRow[];
+      fiberSections: FiberImportRow[];
     }
-  }
+  ): Promise<{
+    poles: { success: number; failed: number; errors: string[] };
+    drops: { success: number; failed: number; errors: string[] };
+    fiber: { success: number; failed: number; errors: string[] };
+  }> {
+    // Import in order: poles first, then drops (which reference poles), then fiber
+    const poleResults = await sowPoleImportService.importPoles(
+      projectId,
+      projectCode,
+      data.poles
+    );
 
-  /**
-   * Import home drops from SOW data
-   */
-  async importDrops(
-    projectId: string,
-    projectCode: string,
-    drops: DropImportRow[]
-  ): Promise<{ success: number; failed: number; errors: string[] }> {
-    const results = { success: 0, failed: 0, errors: [] as string[] };
-    const batch = writeBatch(db);
-    let batchCount = 0;
+    const dropResults = await sowDropImportService.importDrops(
+      projectId,
+      projectCode,
+      data.drops
+    );
 
-    try {
-      // Check for existing drops
-      const existingDropsQuery = query(
-        collection(db, 'drops'),
-        where('projectId', '==', projectId)
-      );
-      const existingDrops = await getDocs(existingDropsQuery);
-      const existingDropNumbers = new Set(
-        existingDrops.docs.map(doc => doc.data().dropNumber)
-      );
+    const fiberResults = await sowFiberImportService.importFiber(
+      projectId,
+      projectCode,
+      data.fiberSections
+    );
 
-      for (const drop of drops) {
-        try {
-          // Validate drop number uniqueness
-          if (existingDropNumbers.has(drop.dropNumber)) {
-            results.errors.push(`Drop ${drop.dropNumber} already exists`);
-            results.failed++;
-            continue;
-          }
-
-          const dropRef = doc(collection(db, 'drops'));
-          const dropData = {
-            projectId,
-            projectCode,
-            dropNumber: drop.dropNumber,
-            poleNumber: drop.poleNumber,
-            address: drop.address || '',
-            coordinates: drop.coordinates ? {
-              lat: drop.coordinates.lat,
-              lng: drop.coordinates.lng
-            } : null,
-            homeOwner: drop.homeOwner || '',
-            contactNumber: drop.contactNumber || '',
-            phase: drop.phase || 'Phase 1',
-            status: 'pending',
-            installationType: drop.installationType || 'standard',
-            cableLength: drop.cableLength || 0,
-            installationDate: null,
-            photos: {
-              houseEntrance: null,
-              cableRoute: null,
-              termination: null,
-              speedTest: null,
-              completion: null,
-              customerSignoff: null
-            },
-            qualityChecks: {
-              cableIntegrity: null,
-              connectorQuality: null,
-              signalStrength: null,
-              speedTestPassed: null,
-              customerSatisfied: null,
-              documentationComplete: null
-            },
-            notes: drop.notes || '',
-            metadata: {
-              importedAt: serverTimestamp(),
-              importedFrom: 'SOW',
-              lastUpdated: serverTimestamp(),
-              createdBy: 'system',
-              syncStatus: 'synced'
-            }
-          };
-
-          batch.set(dropRef, dropData);
-          batchCount++;
-          results.success++;
-
-          // Commit batch if size reached
-          if (batchCount >= this.BATCH_SIZE) {
-            await batch.commit();
-            batchCount = 0;
-          }
-        } catch (error) {
-          results.errors.push(`Failed to import drop ${drop.dropNumber}: ${error}`);
-          results.failed++;
-        }
-      }
-
-      // Commit remaining batch
-      if (batchCount > 0) {
-        await batch.commit();
-      }
-
-      return results;
-    } catch (error) {
-      console.error('Error importing drops:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Import fiber sections from SOW data
-   */
-  async importFiber(
-    projectId: string,
-    projectCode: string,
-    fiberSections: FiberImportRow[]
-  ): Promise<{ success: number; failed: number; errors: string[] }> {
-    const results = { success: 0, failed: 0, errors: [] as string[] };
-    const batch = writeBatch(db);
-    let batchCount = 0;
-
-    try {
-      // Check for existing fiber sections
-      const existingFiberQuery = query(
-        collection(db, 'fiberSections'),
-        where('projectId', '==', projectId)
-      );
-      const existingFiber = await getDocs(existingFiberQuery);
-      const existingSectionIds = new Set(
-        existingFiber.docs.map(doc => doc.data().sectionId)
-      );
-
-      for (const fiber of fiberSections) {
-        try {
-          // Validate section ID uniqueness
-          if (existingSectionIds.has(fiber.sectionId)) {
-            results.errors.push(`Fiber section ${fiber.sectionId} already exists`);
-            results.failed++;
-            continue;
-          }
-
-          const fiberRef = doc(collection(db, 'fiberSections'));
-          const fiberData = {
-            projectId,
-            projectCode,
-            sectionId: fiber.sectionId,
-            startPoint: fiber.startPoint || '',
-            endPoint: fiber.endPoint || '',
-            startCoordinates: fiber.startCoordinates ? {
-              lat: fiber.startCoordinates.lat,
-              lng: fiber.startCoordinates.lng
-            } : null,
-            endCoordinates: fiber.endCoordinates ? {
-              lat: fiber.endCoordinates.lat,
-              lng: fiber.endCoordinates.lng
-            } : null,
-            length: fiber.length || 0,
-            cableType: fiber.cableType || '12-core',
-            phase: fiber.phase || 'Phase 1',
-            status: 'pending',
-            installationMethod: fiber.installationMethod || 'aerial',
-            stringingDate: null,
-            splicingDate: null,
-            testingDate: null,
-            photos: {
-              startPoint: null,
-              endPoint: null,
-              midSpan: null,
-              splicing: null,
-              testing: null,
-              completion: null
-            },
-            testResults: {
-              otdrTest: null,
-              continuityTest: null,
-              lossTest: null,
-              reflectionTest: null
-            },
-            qualityChecks: {
-              cableIntegrity: null,
-              splicingQuality: null,
-              tensionCorrect: null,
-              sagCompliant: null,
-              routingProper: null,
-              documentationComplete: null
-            },
-            notes: fiber.notes || '',
-            metadata: {
-              importedAt: serverTimestamp(),
-              importedFrom: 'SOW',
-              lastUpdated: serverTimestamp(),
-              createdBy: 'system',
-              syncStatus: 'synced'
-            }
-          };
-
-          batch.set(fiberRef, fiberData);
-          batchCount++;
-          results.success++;
-
-          // Commit batch if size reached
-          if (batchCount >= this.BATCH_SIZE) {
-            await batch.commit();
-            batchCount = 0;
-          }
-        } catch (error) {
-          results.errors.push(`Failed to import fiber section ${fiber.sectionId}: ${error}`);
-          results.failed++;
-        }
-      }
-
-      // Commit remaining batch
-      if (batchCount > 0) {
-        await batch.commit();
-      }
-
-      return results;
-    } catch (error) {
-      console.error('Error importing fiber sections:', error);
-      throw error;
-    }
+    return {
+      poles: poleResults,
+      drops: dropResults,
+      fiber: fiberResults
+    };
   }
 
   /**
@@ -378,7 +100,7 @@ export class SOWTrackerService {
   }
 
   /**
-   * Validate import data before processing
+   * Validate all import data before processing
    */
   async validateImportData(
     projectId: string,
@@ -389,55 +111,60 @@ export class SOWTrackerService {
     const errors: string[] = [];
 
     // Validate poles
-    const poleNumbers = new Set<string>();
-    for (const pole of poles) {
-      if (!pole.poleNumber) {
-        errors.push('Pole missing pole number');
-        continue;
-      }
-      if (poleNumbers.has(pole.poleNumber)) {
-        errors.push(`Duplicate pole number: ${pole.poleNumber}`);
-      }
-      poleNumbers.add(pole.poleNumber);
+    const poleValidation = sowPoleImportService.validatePoleData(poles);
+    errors.push(...poleValidation.errors);
 
-      if (pole.dropCount && pole.dropCount > 12) {
-        errors.push(`Pole ${pole.poleNumber} exceeds maximum drop count of 12`);
-      }
-    }
+    // Get valid pole numbers for drop validation
+    const validPoleNumbers = new Set(poles.map(p => p.poleNumber));
 
     // Validate drops
-    const dropNumbers = new Set<string>();
-    for (const drop of drops) {
-      if (!drop.dropNumber) {
-        errors.push('Drop missing drop number');
-        continue;
-      }
-      if (dropNumbers.has(drop.dropNumber)) {
-        errors.push(`Duplicate drop number: ${drop.dropNumber}`);
-      }
-      dropNumbers.add(drop.dropNumber);
-
-      if (drop.poleNumber && !poleNumbers.has(drop.poleNumber)) {
-        errors.push(`Drop ${drop.dropNumber} references non-existent pole: ${drop.poleNumber}`);
-      }
-    }
+    const dropValidation = sowDropImportService.validateDropData(drops, validPoleNumbers);
+    errors.push(...dropValidation.errors);
 
     // Validate fiber sections
-    const sectionIds = new Set<string>();
-    for (const fiber of fiberSections) {
-      if (!fiber.sectionId) {
-        errors.push('Fiber section missing section ID');
-        continue;
-      }
-      if (sectionIds.has(fiber.sectionId)) {
-        errors.push(`Duplicate fiber section ID: ${fiber.sectionId}`);
-      }
-      sectionIds.add(fiber.sectionId);
-    }
+    const fiberValidation = sowFiberImportService.validateFiberData(fiberSections);
+    errors.push(...fiberValidation.errors);
 
     return {
       valid: errors.length === 0,
       errors
+    };
+  }
+
+  /**
+   * Get import statistics for dashboard
+   */
+  async getImportStatistics(projectId: string): Promise<{
+    totalImported: number;
+    byType: { poles: number; drops: number; fiber: number };
+    byStatus: Record<string, number>;
+    lastImportDate: Date | null;
+  }> {
+    const summary = await this.getImportSummary(projectId);
+    
+    // Get status breakdown
+    const statusCounts: Record<string, number> = {};
+    
+    // Count poles by status
+    const polesQuery = query(
+      collection(db, 'poles'),
+      where('projectId', '==', projectId)
+    );
+    const polesSnapshot = await getDocs(polesQuery);
+    polesSnapshot.forEach(doc => {
+      const status = doc.data().status || 'pending';
+      statusCounts[status] = (statusCounts[status] || 0) + 1;
+    });
+
+    return {
+      totalImported: summary.totalPoles + summary.totalDrops + summary.totalFiberSections,
+      byType: {
+        poles: summary.totalPoles,
+        drops: summary.totalDrops,
+        fiber: summary.totalFiberSections
+      },
+      byStatus: statusCounts,
+      lastImportDate: summary.importDate.toDate()
     };
   }
 }
