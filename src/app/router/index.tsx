@@ -1,15 +1,18 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { FirebaseTest } from '@/components/dev/FirebaseTest';
 import { StaffDebug } from '@/components/dev/StaffDebug';
 import { StaffDataFix } from '@/pages/StaffDataFix';
 import { LoginPage } from '@/components/auth/LoginPage';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Lazy load pages
+// Lazy load modules and pages
+const Dashboard = lazy(() => import('@/modules/dashboard/Dashboard').then(m => ({ default: m.Dashboard })));
+
+// Legacy pages (to be migrated to modules)
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
-const Dashboard = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard })));
 const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
 const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));
 const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
@@ -23,8 +26,8 @@ const ClientDetail = lazy(() => import('@/pages/ClientDetail').then(m => ({ defa
 // Loading component
 function Loading() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div className="flex items-center justify-center min-h-screen bg-background-primary">
+      <LoadingSpinner size="lg" label="Loading..." />
     </div>
   );
 }

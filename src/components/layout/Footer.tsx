@@ -1,18 +1,59 @@
+import { Heart, Shield, Zap } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
+
 export function Footer(): JSX.Element {
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
+  const { currentTheme } = useTheme();
 
   return (
-    <footer className="bg-gray-800 text-white py-4">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="text-sm">
-            © {currentYear} FibreFlow. All rights reserved.
+    <footer className="bg-surface-primary border-t border-border-primary py-3 px-4 lg:px-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+        {/* Left side - Copyright */}
+        <div className="flex items-center text-sm text-text-tertiary">
+          <span>© {currentYear} FibreFlow. All rights reserved.</span>
+        </div>
+
+        {/* Center - Status/Version (desktop only) */}
+        <div className="hidden lg:flex items-center space-x-4 text-xs text-text-tertiary">
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-success-500 rounded-full"></div>
+            <span>System Online</span>
           </div>
-          <div className="mt-2 md:mt-0 text-sm text-gray-400">
-            Migrated to React with ❤️
+          <div className="flex items-center space-x-1">
+            <Shield className="w-3 h-3" />
+            <span>Secure Connection</span>
           </div>
+          <div className="flex items-center space-x-1">
+            <Zap className="w-3 h-3" />
+            <span>React v18.3+</span>
+          </div>
+        </div>
+
+        {/* Right side - Migration info */}
+        <div className="flex items-center text-sm text-text-tertiary">
+          <span className="flex items-center space-x-1">
+            <span>Migrated to React with</span>
+            <Heart className="w-3 h-3 text-error-500 fill-current" />
+            <span>by VF Team</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Mobile status indicators */}
+      <div className="lg:hidden flex justify-center items-center space-x-4 text-xs text-text-tertiary mt-2 pt-2 border-t border-border-subtle">
+        <div className="flex items-center space-x-1">
+          <div className="w-2 h-2 bg-success-500 rounded-full"></div>
+          <span>Online</span>
+        </div>
+        <div className="flex items-center space-x-1">
+          <Shield className="w-3 h-3" />
+          <span>Secure</span>
+        </div>
+        <div className="flex items-center space-x-1">
+          <Zap className="w-3 h-3" />
+          <span>React</span>
         </div>
       </div>
     </footer>
-  )
+  );
 }
