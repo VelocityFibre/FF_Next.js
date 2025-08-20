@@ -42,6 +42,11 @@ const SOWDashboard = lazy(() => import('@/modules/sow/SOWDashboard').then(m => (
 const OneMapDashboard = lazy(() => import('@/modules/onemap/OneMapDashboard').then(m => ({ default: m.OneMapDashboard })));
 const NokiaEquipmentDashboard = lazy(() => import('@/modules/nokia-equipment/NokiaEquipmentDashboard').then(m => ({ default: m.NokiaEquipmentDashboard })));
 
+// Project Management Module Extensions
+const PoleTrackerDashboard = lazy(() => import('@/modules/projects/pole-tracker/PoleTrackerDashboard').then(m => ({ default: m.PoleTrackerDashboard })));
+const PoleTrackerList = lazy(() => import('@/modules/projects/pole-tracker/PoleTrackerList').then(m => ({ default: m.PoleTrackerList })));
+const UnifiedTrackerGrid = lazy(() => import('@/modules/projects/tracker/UnifiedTrackerGrid').then(m => ({ default: m.UnifiedTrackerGrid })));
+
 // Analytics Module
 const DailyProgressDashboard = lazy(() => import('@/modules/daily-progress/DailyProgressDashboard').then(m => ({ default: m.DailyProgressDashboard })));
 const EnhancedKPIDashboard = lazy(() => import('@/modules/kpis/EnhancedKPIDashboard').then(m => ({ default: m.EnhancedKPIDashboard })));
@@ -381,7 +386,27 @@ export const router = createBrowserRouter([
           },
           {
             path: 'pole-tracker',
-            element: <div className="bg-white rounded-lg p-6">Pole Tracker (Implementation in Progress)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <PoleTrackerDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'pole-tracker/list',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <PoleTrackerList />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'projects/:projectId/tracker',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <UnifiedTrackerGrid />
+              </Suspense>
+            ),
           },
           {
             path: '',
