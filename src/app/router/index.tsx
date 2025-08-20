@@ -11,6 +11,12 @@ import { useAuth } from '@/contexts/AuthContext';
 // Lazy load modules and pages
 const Dashboard = lazy(() => import('@/modules/dashboard/Dashboard').then(m => ({ default: m.Dashboard })));
 
+// Module pages
+const ClientsPage = lazy(() => import('@/modules/clients/ClientsPage').then(m => ({ default: m.ClientsPage })));
+const ClientCreatePage = lazy(() => import('@/modules/clients/ClientCreatePage').then(m => ({ default: m.ClientCreatePage })));
+const ClientEditPage = lazy(() => import('@/modules/clients/ClientEditPage').then(m => ({ default: m.ClientEditPage })));
+const ClientDetailPage = lazy(() => import('@/modules/clients/ClientDetailPage').then(m => ({ default: m.ClientDetailPage })));
+
 // Legacy pages (to be migrated to modules)
 const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
@@ -19,9 +25,6 @@ const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ de
 const StaffList = lazy(() => import('@/pages/StaffList').then(m => ({ default: m.StaffList })));
 const StaffForm = lazy(() => import('@/pages/StaffForm').then(m => ({ default: m.StaffForm })));
 const StaffDetail = lazy(() => import('@/pages/StaffDetail').then(m => ({ default: m.StaffDetail })));
-const ClientList = lazy(() => import('@/pages/ClientList').then(m => ({ default: m.ClientList })));
-const ClientForm = lazy(() => import('@/pages/ClientForm').then(m => ({ default: m.ClientForm })));
-const ClientDetail = lazy(() => import('@/pages/ClientDetail').then(m => ({ default: m.ClientDetail })));
 
 // Loading component
 function Loading() {
@@ -110,7 +113,7 @@ export const router = createBrowserRouter([
             path: 'clients',
             element: (
               <Suspense fallback={<Loading />}>
-                <ClientList />
+                <ClientsPage />
               </Suspense>
             ),
           },
@@ -118,7 +121,7 @@ export const router = createBrowserRouter([
             path: 'clients/new',
             element: (
               <Suspense fallback={<Loading />}>
-                <ClientForm />
+                <ClientCreatePage />
               </Suspense>
             ),
           },
@@ -126,7 +129,7 @@ export const router = createBrowserRouter([
             path: 'clients/:id/edit',
             element: (
               <Suspense fallback={<Loading />}>
-                <ClientForm />
+                <ClientEditPage />
               </Suspense>
             ),
           },
@@ -134,7 +137,7 @@ export const router = createBrowserRouter([
             path: 'clients/:id',
             element: (
               <Suspense fallback={<Loading />}>
-                <ClientDetail />
+                <ClientDetailPage />
               </Suspense>
             ),
           },
