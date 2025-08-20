@@ -39,6 +39,7 @@ const TasksDashboard = lazy(() => import('@/modules/tasks/TasksDashboard').then(
 
 // Project Management Module Extensions
 const SOWDashboard = lazy(() => import('@/modules/sow/SOWDashboard').then(m => ({ default: m.SOWDashboard })));
+const SOWListPage = lazy(() => import('@/modules/sow/SOWListPage').then(m => ({ default: m.SOWListPage })));
 const OneMapDashboard = lazy(() => import('@/modules/onemap/OneMapDashboard').then(m => ({ default: m.OneMapDashboard })));
 const NokiaEquipmentDashboard = lazy(() => import('@/modules/nokia-equipment/NokiaEquipmentDashboard').then(m => ({ default: m.NokiaEquipmentDashboard })));
 
@@ -46,6 +47,8 @@ const NokiaEquipmentDashboard = lazy(() => import('@/modules/nokia-equipment/Nok
 const PoleTrackerDashboard = lazy(() => import('@/modules/projects/pole-tracker/PoleTrackerDashboard').then(m => ({ default: m.PoleTrackerDashboard })));
 const PoleTrackerList = lazy(() => import('@/modules/projects/pole-tracker/PoleTrackerList').then(m => ({ default: m.PoleTrackerList })));
 const UnifiedTrackerGrid = lazy(() => import('@/modules/projects/tracker/UnifiedTrackerGrid').then(m => ({ default: m.UnifiedTrackerGrid })));
+const HomeInstallsDashboard = lazy(() => import('@/modules/projects/home-installs/HomeInstallsDashboard').then(m => ({ default: m.HomeInstallsDashboard })));
+const HomeInstallsList = lazy(() => import('@/modules/projects/home-installs/HomeInstallsList').then(m => ({ default: m.HomeInstallsList })));
 
 // Analytics Module
 const DailyProgressDashboard = lazy(() => import('@/modules/daily-progress/DailyProgressDashboard').then(m => ({ default: m.DailyProgressDashboard })));
@@ -321,6 +324,14 @@ export const router = createBrowserRouter([
             ),
           },
           {
+            path: 'sow/list',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <SOWListPage />
+              </Suspense>
+            ),
+          },
+          {
             path: 'onemap',
             element: (
               <Suspense fallback={<Loading />}>
@@ -405,6 +416,22 @@ export const router = createBrowserRouter([
             element: (
               <Suspense fallback={<Loading />}>
                 <UnifiedTrackerGrid />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'home-installs',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <HomeInstallsDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'home-installs/list',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <HomeInstallsList />
               </Suspense>
             ),
           },

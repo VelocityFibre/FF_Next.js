@@ -1,423 +1,294 @@
 import {
   collection,
   doc,
-  getDocs,
-  getDoc,
   addDoc,
   updateDoc,
   deleteDoc,
+  getDocs,
+  getDoc,
   query,
   where,
   orderBy,
   limit,
-  Timestamp,
-  QueryConstraint,
   serverTimestamp,
+  Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
-import { 
-  PoleTracker, 
-  PoleSearchFilters, 
-  PoleListItem,
-  StatusHistoryEntry,
-  PolePhoto,
-  QualityCheck
-} from '../types/pole-tracker.types';
+import { db } from '@/lib/firebase';
+import { poleValidationService } from './poleValidation';
+import { poleStatisticsService, PoleStatistics } from './poleStatistics';
 
-const COLLECTION_NAME = 'pole-trackers';
+export interface Pole {
+  id?: string;
+  poleNumber: string;
+  projectId: string;
+  projectCode: string;
+  location: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  phase: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'issue';
+  dropCount: number;
+  maxDrops: number;
+  installationDate?: Date | null;
+  photos: {
+    beforeInstallation: string | null;
+    duringInstallation: string | null;
+    afterInstallation: string | null;
+    poleLabel: string | null;
+    cableRouting: string | null;
+    qualityCheck: string | null;
+  };
+  qualityChecks: {
+    poleCondition: boolean | null;
+    cableRouting: boolean | null;
+    connectorQuality: boolean | null;
+    labelingCorrect: boolean | null;
+    groundingProper: boolean | null;
+    heightCompliant: boolean | null;
+    tensionCorrect: boolean | null;
+    documentationComplete: boolean | null;
+  };
+  statusHistory?: Array<{
+    status: string;
+    timestamp: Date;
+    changedBy: string;
+    notes?: string;
+  }>;
+  metadata: {
+    createdAt?: any;
+    updatedAt?: any;
+    createdBy?: string;
+    syncStatus?: 'synced' | 'pending' | 'error';
+    lastSyncAttempt?: Date;
+  };
+}
 
-export const poleTrackerService = {
+export class PoleTrackerService {
+  private readonly collection = 'poles';
+
   /**
-   * Generate VF Pole ID
+   * Create a new pole
    */
-  generateVfPoleId(projectCode: string, sequenceNumber: number): string {
-    const paddedNumber = sequenceNumber.toString().padStart(4, '0');
-    return `${projectCode}.P.A${paddedNumber}`;
-  },
-
-  /**
-   * Get all poles with optional filters
-   */
-  async getAll(filters?: PoleSearchFilters): Promise<PoleTracker[]> {
-    try {
-      const constraints: QueryConstraint[] = [];
-
-      if (filters?.projectId) {
-        constraints.push(where('projectId', '==', filters.projectId));
-      }
-      if (filters?.contractorId) {
-        constraints.push(where('contractorId', '==', filters.contractorId));
-      }
-      if (filters?.status) {
-        constraints.push(where('status', '==', filters.status));
-      }
-      if (filters?.installationPhase) {
-        constraints.push(where('installationPhase', '==', filters.installationPhase));
-      }
-      if (filters?.syncStatus) {
-        constraints.push(where('syncStatus', '==', filters.syncStatus));
-      }
-
-      constraints.push(orderBy('createdAt', 'desc'));
-
-      const q = query(collection(db, COLLECTION_NAME), ...constraints);
-      const snapshot = await getDocs(q);
-
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as PoleTracker));
-    } catch (error) {
-      console.error('Error fetching poles:', error);
-      throw error;
+  async createPole(data: Omit<Pole, 'id'>): Promise<string> {
+    // Validate pole number uniqueness
+    const isUnique = await poleValidationService.isPoleNumberUnique(data.poleNumber);
+    if (!isUnique) {
+      throw new Error(`Pole number ${data.poleNumber} already exists`);
     }
-  },
 
-  /**
-   * Get pole by ID
-   */
-  async getById(id: string): Promise<PoleTracker | null> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const snapshot = await getDoc(docRef);
-
-      if (!snapshot.exists()) {
-        return null;
-      }
-
-      return {
-        id: snapshot.id,
-        ...snapshot.data()
-      } as PoleTracker;
-    } catch (error) {
-      console.error('Error fetching pole:', error);
-      throw error;
+    // Validate drop count
+    if (!poleValidationService.validateDropCount(data.dropCount, data.maxDrops)) {
+      throw new Error(`Drop count ${data.dropCount} exceeds maximum of ${data.maxDrops}`);
     }
-  },
 
-  /**
-   * Check if pole number is unique
-   */
-  async isPoleNumberUnique(poleNumber: string, excludeId?: string): Promise<boolean> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('poleNumber', '==', poleNumber)
-      );
-      const snapshot = await getDocs(q);
-
-      if (excludeId) {
-        return snapshot.docs.every(doc => doc.id === excludeId);
-      }
-
-      return snapshot.empty;
-    } catch (error) {
-      console.error('Error checking pole number uniqueness:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Create new pole
-   */
-  async create(data: Omit<PoleTracker, 'id'>): Promise<string> {
-    try {
-      // Validate pole number uniqueness
-      const isUnique = await this.isPoleNumberUnique(data.poleNumber);
-      if (!isUnique) {
-        throw new Error(`Pole number ${data.poleNumber} already exists`);
-      }
-
-      // Validate drop count
-      if (data.dropCount && data.dropCount > data.maxCapacity) {
-        throw new Error(`Drop count cannot exceed maximum capacity of ${data.maxCapacity}`);
-      }
-
-      // Add status to history if present
-      const statusHistory: StatusHistoryEntry[] = [];
-      if (data.status) {
-        statusHistory.push({
-          status: data.status,
-          changedAt: Timestamp.now(),
-          changedBy: data.createdBy,
-          changedByName: data.createdByName,
-          source: data.importSource || 'Manual Entry',
-          importBatchId: data.importBatchId,
-        });
-      }
-
-      const poleData = {
-        ...data,
-        statusHistory,
-        dropCount: data.connectedDrops?.length || 0,
+    const poleData = {
+      ...data,
+      metadata: {
+        ...data.metadata,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        syncStatus: 'synced',
-      };
-
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), poleData);
-      return docRef.id;
-    } catch (error) {
-      console.error('Error creating pole:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Update pole
-   */
-  async update(id: string, data: Partial<PoleTracker>): Promise<void> {
-    try {
-      // If updating pole number, check uniqueness
-      if (data.poleNumber) {
-        const isUnique = await this.isPoleNumberUnique(data.poleNumber, id);
-        if (!isUnique) {
-          throw new Error(`Pole number ${data.poleNumber} already exists`);
-        }
+        syncStatus: 'synced'
       }
-
-      // Validate drop count
-      if (data.dropCount !== undefined && data.maxCapacity) {
-        if (data.dropCount > data.maxCapacity) {
-          throw new Error(`Drop count cannot exceed maximum capacity of ${data.maxCapacity}`);
-        }
-      }
-
-      // Update status history if status changed
-      if (data.status) {
-        const existing = await this.getById(id);
-        if (existing && existing.status !== data.status) {
-          const statusHistory = existing.statusHistory || [];
-          statusHistory.push({
-            status: data.status,
-            changedAt: Timestamp.now(),
-            changedBy: data.updatedBy || 'system',
-            changedByName: data.updatedByName,
-            previousStatus: existing.status,
-            source: 'Manual Update',
-          });
-          data.statusHistory = statusHistory;
-        }
-      }
-
-      // Update drop count if drops array changed
-      if (data.connectedDrops) {
-        data.dropCount = data.connectedDrops.length;
-      }
-
-      const updateData = {
-        ...data,
-        updatedAt: serverTimestamp(),
-      };
-
-      const docRef = doc(db, COLLECTION_NAME, id);
-      await updateDoc(docRef, updateData);
-    } catch (error) {
-      console.error('Error updating pole:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Delete pole
-   */
-  async delete(id: string): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      await deleteDoc(docRef);
-    } catch (error) {
-      console.error('Error deleting pole:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Get poles by project
-   */
-  async getByProject(projectId: string): Promise<PoleTracker[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('projectId', '==', projectId),
-        orderBy('vfPoleId', 'asc')
-      );
-      const snapshot = await getDocs(q);
-
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as PoleTracker));
-    } catch (error) {
-      console.error('Error fetching project poles:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Add photo to pole
-   */
-  async addPhoto(poleId: string, photo: PolePhoto): Promise<void> {
-    try {
-      const pole = await this.getById(poleId);
-      if (!pole) {
-        throw new Error('Pole not found');
-      }
-
-      const photos = pole.installationPhotos || [];
-      photos.push(photo);
-
-      await this.update(poleId, {
-        installationPhotos: photos,
-      });
-    } catch (error) {
-      console.error('Error adding photo:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Add quality check
-   */
-  async addQualityCheck(poleId: string, check: QualityCheck): Promise<void> {
-    try {
-      const pole = await this.getById(poleId);
-      if (!pole) {
-        throw new Error('Pole not found');
-      }
-
-      const checks = pole.qualityChecks || [];
-      checks.push(check);
-
-      await this.update(poleId, {
-        qualityChecks: checks,
-      });
-    } catch (error) {
-      console.error('Error adding quality check:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Get poles needing sync
-   */
-  async getPendingSync(): Promise<PoleTracker[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('syncStatus', '==', 'pending'),
-        orderBy('createdAt', 'asc'),
-        limit(50)
-      );
-      const snapshot = await getDocs(q);
-
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as PoleTracker));
-    } catch (error) {
-      console.error('Error fetching pending sync poles:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Bulk import poles
-   */
-  async bulkImport(poles: Omit<PoleTracker, 'id'>[], batchId: string): Promise<{ success: number; errors: string[] }> {
-    const results = {
-      success: 0,
-      errors: [] as string[],
     };
 
-    for (const pole of poles) {
-      try {
-        // Check pole number uniqueness
-        const isUnique = await this.isPoleNumberUnique(pole.poleNumber);
-        if (!isUnique) {
-          results.errors.push(`Pole ${pole.poleNumber}: Already exists`);
-          continue;
-        }
-
-        // Add import tracking
-        const poleData = {
-          ...pole,
-          importBatchId: batchId,
-          importSource: 'Bulk Import',
-        };
-
-        await this.create(poleData);
-        results.success++;
-      } catch (error) {
-        results.errors.push(`Pole ${pole.poleNumber}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    }
-
-    return results;
-  },
+    const docRef = await addDoc(collection(db, this.collection), poleData);
+    return docRef.id;
+  }
 
   /**
-   * Get statistics
+   * Update an existing pole
    */
-  async getStatistics(projectId?: string): Promise<{
-    total: number;
-    byStatus: Record<string, number>;
-    byPhase: Record<string, number>;
-    byContractor: Record<string, number>;
-    averageDropUtilization: number;
-  }> {
-    try {
-      const constraints: QueryConstraint[] = [];
-      if (projectId) {
-        constraints.push(where('projectId', '==', projectId));
+  async updatePole(id: string, updates: Partial<Pole>): Promise<void> {
+    const poleRef = doc(db, this.collection, id);
+    
+    // If updating pole number, check uniqueness
+    if (updates.poleNumber) {
+      const isUnique = await poleValidationService.isPoleNumberUnique(updates.poleNumber, id);
+      if (!isUnique) {
+        throw new Error(`Pole number ${updates.poleNumber} already exists`);
       }
-
-      const q = query(collection(db, COLLECTION_NAME), ...constraints);
-      const snapshot = await getDocs(q);
-
-      const stats = {
-        total: snapshot.size,
-        byStatus: {} as Record<string, number>,
-        byPhase: {} as Record<string, number>,
-        byContractor: {} as Record<string, number>,
-        totalDrops: 0,
-        totalCapacity: 0,
-      };
-
-      snapshot.docs.forEach(doc => {
-        const data = doc.data() as PoleTracker;
-        
-        // Count by status
-        if (data.status) {
-          stats.byStatus[data.status] = (stats.byStatus[data.status] || 0) + 1;
-        }
-
-        // Count by phase
-        if (data.installationPhase) {
-          stats.byPhase[data.installationPhase] = (stats.byPhase[data.installationPhase] || 0) + 1;
-        }
-
-        // Count by contractor
-        if (data.contractorName) {
-          stats.byContractor[data.contractorName] = (stats.byContractor[data.contractorName] || 0) + 1;
-        }
-
-        // Calculate drop utilization
-        stats.totalDrops += data.dropCount || 0;
-        stats.totalCapacity += data.maxCapacity || 12;
-      });
-
-      return {
-        total: stats.total,
-        byStatus: stats.byStatus,
-        byPhase: stats.byPhase,
-        byContractor: stats.byContractor,
-        averageDropUtilization: stats.totalCapacity > 0 
-          ? (stats.totalDrops / stats.totalCapacity) * 100 
-          : 0,
-      };
-    } catch (error) {
-      console.error('Error getting statistics:', error);
-      throw error;
     }
-  },
-};
+
+    // If updating drop count, validate
+    if (updates.dropCount !== undefined) {
+      const existingDoc = await getDoc(poleRef);
+      const maxDrops = updates.maxDrops || existingDoc.data()?.maxDrops || 12;
+      
+      if (!poleValidationService.validateDropCount(updates.dropCount, maxDrops)) {
+        throw new Error(`Drop count ${updates.dropCount} exceeds maximum of ${maxDrops}`);
+      }
+    }
+
+    // Track status changes
+    if (updates.status) {
+      const existingDoc = await getDoc(poleRef);
+      const currentStatus = existingDoc.data()?.status;
+      
+      if (currentStatus !== updates.status) {
+        const statusHistory = existingDoc.data()?.statusHistory || [];
+        statusHistory.push({
+          status: updates.status,
+          timestamp: new Date(),
+          changedBy: updates.metadata?.createdBy || 'system',
+          previousStatus: currentStatus
+        });
+        updates.statusHistory = statusHistory;
+      }
+    }
+
+    const updateData = {
+      ...updates,
+      metadata: {
+        ...updates.metadata,
+        updatedAt: serverTimestamp()
+      }
+    };
+
+    await updateDoc(poleRef, updateData);
+  }
+
+  /**
+   * Delete a pole
+   */
+  async deletePole(id: string): Promise<void> {
+    await deleteDoc(doc(db, this.collection, id));
+  }
+
+  /**
+   * Get a single pole by ID
+   */
+  async getPoleById(id: string): Promise<Pole | null> {
+    const docSnap = await getDoc(doc(db, this.collection, id));
+    
+    if (!docSnap.exists()) {
+      return null;
+    }
+
+    return {
+      id: docSnap.id,
+      ...docSnap.data()
+    } as Pole;
+  }
+
+  /**
+   * Get poles for a project
+   */
+  async getPolesByProject(
+    projectId: string,
+    filters?: {
+      status?: string;
+      phase?: string;
+      search?: string;
+    }
+  ): Promise<Pole[]> {
+    let q = query(
+      collection(db, this.collection),
+      where('projectId', '==', projectId),
+      orderBy('poleNumber')
+    );
+
+    if (filters?.status) {
+      q = query(q, where('status', '==', filters.status));
+    }
+
+    if (filters?.phase) {
+      q = query(q, where('phase', '==', filters.phase));
+    }
+
+    const snapshot = await getDocs(q);
+    let poles = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Pole));
+
+    // Apply search filter
+    if (filters?.search) {
+      const searchLower = filters.search.toLowerCase();
+      poles = poles.filter(pole =>
+        pole.poleNumber.toLowerCase().includes(searchLower) ||
+        pole.location.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return poles;
+  }
+
+  /**
+   * Update pole photos
+   */
+  async updatePolePhotos(id: string, photos: Partial<Pole['photos']>): Promise<void> {
+    const poleRef = doc(db, this.collection, id);
+    const existingDoc = await getDoc(poleRef);
+    const existingPhotos = existingDoc.data()?.photos || {};
+
+    await updateDoc(poleRef, {
+      photos: {
+        ...existingPhotos,
+        ...photos
+      },
+      'metadata.updatedAt': serverTimestamp()
+    });
+  }
+
+  /**
+   * Update quality checks
+   */
+  async updateQualityChecks(
+    id: string,
+    checks: Partial<Pole['qualityChecks']>
+  ): Promise<void> {
+    const poleRef = doc(db, this.collection, id);
+    const existingDoc = await getDoc(poleRef);
+    const existingChecks = existingDoc.data()?.qualityChecks || {};
+
+    await updateDoc(poleRef, {
+      qualityChecks: {
+        ...existingChecks,
+        ...checks
+      },
+      'metadata.updatedAt': serverTimestamp()
+    });
+  }
+
+  /**
+   * Get statistics for a project
+   */
+  async getProjectStatistics(projectId: string): Promise<PoleStatistics> {
+    return poleStatisticsService.getProjectStatistics(projectId);
+  }
+
+  /**
+   * Get poles with pending sync
+   */
+  async getPendingSyncPoles(projectId: string): Promise<Pole[]> {
+    const q = query(
+      collection(db, this.collection),
+      where('projectId', '==', projectId),
+      where('metadata.syncStatus', '==', 'pending')
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Pole));
+  }
+
+  /**
+   * Mark poles as synced
+   */
+  async markAsSynced(poleIds: string[]): Promise<void> {
+    const updates = poleIds.map(id =>
+      updateDoc(doc(db, this.collection, id), {
+        'metadata.syncStatus': 'synced',
+        'metadata.lastSyncAttempt': serverTimestamp()
+      })
+    );
+
+    await Promise.all(updates);
+  }
+}
+
+export const poleTrackerService = new PoleTrackerService();

@@ -1,21 +1,23 @@
 ## ARCHON INTEGRATION
 
 **Status**: Active
-**Project ID**: `fibreflow-react`
-**Activated**: 2025-08-20 12:10
+**Project ID**: `a82eb260-b1ca-4581-bbb5-d71719beefd3`
+**Activated**: 2025-08-20 14:45:00
+**Firebase Project**: `fibreflow-73daf`
 
 ### Project Context
-- **Type**: react
-- **Languages**: JavaScript, TypeScript, Firebase
+- **Type**: React Migration (Angular → React)
+- **Languages**: TypeScript, JavaScript, React, Firebase
 - **Path**: C:\Jarvis\AI Workspace\FibreFlow_React
-
+- **Completion**: 43.5% (37/85 tasks)
+- **Build Status**: FAILING (TypeScript errors)
 
 ### MANDATORY WORKFLOW RULES
 
 #### Before Starting ANY Task:
 ```javascript
 // ALWAYS execute these checks first:
-1. archon:manage_task(action="list", project_id="fibreflow-react", filter_by="status", filter_value="todo")
+1. archon:manage_task(action="list", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", filter_by="status", filter_value="todo")
 2. archon:perform_rag_query(query="[relevant feature/pattern]", match_count=5)
 3. archon:search_code_examples(query="[implementation pattern]", match_count=3)
 ```
@@ -23,19 +25,19 @@
 #### During Development:
 ```javascript
 // Update task status immediately when starting:
-archon:manage_task(action="update", task_id="[current_task_id]", update_fields={"status": "doing"})
+archon:manage_task(action="update", task_id="[current_task_id]", update_fields={"status": "in_progress"})
 
 // Search before implementing:
 archon:perform_rag_query(query="[specific technical question]")
 
 // Create tasks for discoveries:
-archon:manage_task(action="create", project_id="fibreflow-react", title="[new requirement]")
+archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", title="[new requirement]", priority="[critical/high/medium/low]")
 ```
 
 #### After Completing Work:
 ```javascript
 // Mark task complete:
-archon:manage_task(action="update", task_id="[task_id]", update_fields={"status": "done"})
+archon:manage_task(action="update", task_id="[task_id]", update_fields={"status": "completed"})
 
 // Document learnings:
 // Add to knowledge base if new patterns discovered
@@ -45,18 +47,28 @@ archon:manage_task(action="update", task_id="[task_id]", update_fields={"status"
 
 **Get all project tasks:**
 ```
-Show me all Archon tasks for project fibreflow-react
+archon:manage_task(action="list", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3")
+```
+
+**Get critical blockers:**
+```
+archon:manage_task(action="list", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", filter_by="priority", filter_value="critical")
 ```
 
 **Search project knowledge:**
 ```
-Search Archon for [topic] in project fibreflow-react
+archon:perform_rag_query(query="[topic]", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3")
 ```
 
 **Create new task:**
 ```
-Create Archon task: [description] for project fibreflow-react
+archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", title="[description]", priority="[priority]")
 ```
+
+### Current Critical Tasks (MUST FIX IMMEDIATELY)
+1. **CRIT-001**: Fix TypeScript Compilation Errors (blocking 5 tasks)
+2. **CRIT-002**: Test Firebase Connection
+3. **CRIT-003**: Configure ESLint for TypeScript
 
 ### Integration Rules
 
