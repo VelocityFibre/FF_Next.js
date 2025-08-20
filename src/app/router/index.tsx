@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 // Lazy load modules and pages
 const Dashboard = lazy(() => import('@/modules/dashboard/Dashboard').then(m => ({ default: m.Dashboard })));
+const VFThemeTest = lazy(() => import('@/pages/test/VFThemeTest'));
 
 // Module pages
 const ClientsPage = lazy(() => import('@/modules/clients/ClientsPage').then(m => ({ default: m.ClientsPage })));
@@ -22,11 +23,36 @@ const StaffCreatePage = lazy(() => import('@/modules/staff/StaffCreatePage').the
 const StaffEditPage = lazy(() => import('@/modules/staff/StaffEditPage').then(m => ({ default: m.StaffEditPage })));
 const StaffDetailPage = lazy(() => import('@/modules/staff/StaffDetailPage').then(m => ({ default: m.StaffDetailPage })));
 
+// Procurement Module
+const ProcurementPage = lazy(() => import('@/modules/procurement/ProcurementPage').then(m => ({ default: m.ProcurementPage })));
+const ProcurementOverview = lazy(() => import('@/modules/procurement/ProcurementOverview').then(m => ({ default: m.ProcurementOverview })));
+const BOQListPage = lazy(() => import('@/modules/procurement/boq/BOQListPage').then(m => ({ default: m.BOQListPage })));
+const RFQListPage = lazy(() => import('@/modules/procurement/rfq/RFQListPage').then(m => ({ default: m.RFQListPage })));
+
+// Suppliers Module
+const SuppliersPage = lazy(() => import('@/modules/suppliers/SuppliersPage').then(m => ({ default: m.SuppliersPage })));
+
+// Communications Module
+const MeetingsDashboard = lazy(() => import('@/modules/meetings/MeetingsDashboard').then(m => ({ default: m.MeetingsDashboard })));
+const ActionItemsDashboard = lazy(() => import('@/modules/action-items/ActionItemsDashboard').then(m => ({ default: m.ActionItemsDashboard })));
+const TasksDashboard = lazy(() => import('@/modules/tasks/TasksDashboard').then(m => ({ default: m.TasksDashboard })));
+
+// Project Management Module Extensions
+const SOWDashboard = lazy(() => import('@/modules/sow/SOWDashboard').then(m => ({ default: m.SOWDashboard })));
+const OneMapDashboard = lazy(() => import('@/modules/onemap/OneMapDashboard').then(m => ({ default: m.OneMapDashboard })));
+const NokiaEquipmentDashboard = lazy(() => import('@/modules/nokia-equipment/NokiaEquipmentDashboard').then(m => ({ default: m.NokiaEquipmentDashboard })));
+
+// Analytics Module
+const DailyProgressDashboard = lazy(() => import('@/modules/daily-progress/DailyProgressDashboard').then(m => ({ default: m.DailyProgressDashboard })));
+const EnhancedKPIDashboard = lazy(() => import('@/modules/kpis/EnhancedKPIDashboard').then(m => ({ default: m.EnhancedKPIDashboard })));
+const KPIDashboard = lazy(() => import('@/modules/kpi-dashboard/KPIDashboard').then(m => ({ default: m.KPIDashboard })));
+const ReportsDashboard = lazy(() => import('@/modules/reports/ReportsDashboard').then(m => ({ default: m.ReportsDashboard })));
+
 // Legacy pages (to be migrated to modules)
-const HomePage = lazy(() => import('@/pages/HomePage').then(m => ({ default: m.HomePage })));
 const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
 const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));
 const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
+const Settings = lazy(() => import('@/pages/Settings').then(m => ({ default: m.Settings })));
 
 // Loading component
 function Loading() {
@@ -61,6 +87,14 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/test/vf-theme',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <VFThemeTest />
+      </Suspense>
+    ),
   },
   {
     path: '/app',
@@ -145,7 +179,49 @@ export const router = createBrowserRouter([
           },
           {
             path: 'procurement',
-            element: <div className="bg-white rounded-lg p-6">Procurement Module (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ProcurementPage />
+              </Suspense>
+            ),
+            children: [
+              {
+                index: true,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <ProcurementOverview />
+                  </Suspense>
+                ),
+              },
+              {
+                path: 'boq',
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <BOQListPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: 'rfq',
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <RFQListPage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: 'stock',
+                element: <div className="p-6">Stock Management (Coming Soon)</div>,
+              },
+              {
+                path: 'orders',
+                element: <div className="p-6">Purchase Orders (Coming Soon)</div>,
+              },
+              {
+                path: 'suppliers',
+                element: <div className="p-6">Supplier Management (Coming Soon)</div>,
+              },
+            ],
           },
           {
             path: 'staff',
@@ -185,7 +261,11 @@ export const router = createBrowserRouter([
           },
           {
             path: 'suppliers',
-            element: <div className="bg-white rounded-lg p-6">Suppliers Module (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <SuppliersPage />
+              </Suspense>
+            ),
           },
           {
             path: 'communications',
@@ -201,7 +281,11 @@ export const router = createBrowserRouter([
           },
           {
             path: 'settings',
-            element: <div className="bg-white rounded-lg p-6">Settings (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Settings />
+              </Suspense>
+            ),
           },
           {
             path: 'firebase-test',
@@ -216,36 +300,88 @@ export const router = createBrowserRouter([
             element: <StaffDataFix />,
           },
           {
-            path: 'pole-tracker',
-            element: <div className="bg-white rounded-lg p-6">Pole Tracker (Coming Soon)</div>,
+            path: 'meetings',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <MeetingsDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'sow',
-            element: <div className="bg-white rounded-lg p-6">SOW Data Management (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <SOWDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'onemap',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <OneMapDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'nokia-equipment',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <NokiaEquipmentDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'tasks',
-            element: <div className="bg-white rounded-lg p-6">Task Management (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <TasksDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'daily-progress',
-            element: <div className="bg-white rounded-lg p-6">Daily Progress (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <DailyProgressDashboard />
+              </Suspense>
+            ),
           },
           {
-            path: 'kpis',
-            element: <div className="bg-white rounded-lg p-6">Enhanced KPIs (Coming Soon)</div>,
+            path: 'enhanced-kpis',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <EnhancedKPIDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'kpi-dashboard',
-            element: <div className="bg-white rounded-lg p-6">KPI Dashboard (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <KPIDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'reports',
-            element: <div className="bg-white rounded-lg p-6">Reports (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ReportsDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'action-items',
-            element: <div className="bg-white rounded-lg p-6">Action Items (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ActionItemsDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'pole-tracker',
+            element: <div className="bg-white rounded-lg p-6">Pole Tracker (Implementation in Progress)</div>,
           },
           {
             path: '',

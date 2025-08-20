@@ -24,6 +24,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { UserRole, Permission } from '@/types/auth.types';
+import VFLogo from '@/components/ui/VFLogo';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -50,18 +51,18 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
           permissions: [], // Available to all
         },
         { 
-          to: '/app/communications', 
-          icon: MessageSquare, 
-          label: 'Communications',
-          shortLabel: 'Comm',
-          permissions: [Permission.VIEW_COMMUNICATIONS],
+          to: '/app/meetings', 
+          icon: Users, 
+          label: 'Meetings',
+          shortLabel: 'Meet',
+          permissions: [],
         },
         { 
           to: '/app/action-items', 
           icon: CheckCircle, 
           label: 'Action Items',
-          shortLabel: 'Tasks',
-          permissions: [Permission.VIEW_COMMUNICATIONS],
+          shortLabel: 'Actions',
+          permissions: [],
         },
       ]
     },
@@ -75,105 +76,76 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
           icon: FolderOpen, 
           label: 'Projects',
           shortLabel: 'Proj',
-          permissions: [Permission.VIEW_PROJECTS],
+          permissions: [],
         },
         { 
           to: '/app/sow', 
           icon: FileText, 
-          label: 'SOW Management',
+          label: 'SOW Data Management',
           shortLabel: 'SOW',
-          permissions: [Permission.VIEW_PROJECTS],
+          permissions: [],
         },
         { 
-          to: '/app/pole-tracker', 
+          to: '/app/onemap', 
+          icon: FileText, 
+          label: 'OneMap Data Grid',
+          shortLabel: 'OneMap',
+          permissions: [],
+        },
+        { 
+          to: '/app/nokia-equipment', 
           icon: Wrench, 
-          label: 'Pole Tracker',
-          shortLabel: 'Poles',
-          permissions: [Permission.VIEW_PROJECTS],
+          label: 'Nokia Equipment Data',
+          shortLabel: 'Nokia',
+          permissions: [],
+        },
+        { 
+          to: '/app/tasks', 
+          icon: CheckCircle, 
+          label: 'Task Management',
+          shortLabel: 'Tasks',
+          permissions: [],
         },
         { 
           to: '/app/daily-progress', 
           icon: BarChart3, 
           label: 'Daily Progress',
           shortLabel: 'Daily',
-          permissions: [Permission.VIEW_ANALYTICS],
+          permissions: [],
         },
         { 
-          to: '/app/kpis', 
+          to: '/app/enhanced-kpis', 
           icon: TrendingUp, 
-          label: 'KPIs',
-          shortLabel: 'KPI',
-          permissions: [Permission.VIEW_ANALYTICS],
-        },
-      ]
-    },
-    
-    // RESOURCES Section
-    { 
-      section: 'RESOURCES', 
-      items: [
-        { 
-          to: '/app/clients', 
-          icon: Building2, 
-          label: 'Clients',
-          shortLabel: 'Clients',
-          permissions: [Permission.VIEW_CLIENTS],
+          label: 'Enhanced KPIs',
+          shortLabel: 'KPIs',
+          permissions: [],
         },
         { 
-          to: '/app/staff', 
-          icon: Users, 
-          label: 'Staff',
-          shortLabel: 'Staff',
-          permissions: [Permission.VIEW_STAFF],
-        },
-        { 
-          to: '/app/contractors', 
-          icon: UserCheck, 
-          label: 'Contractors',
-          shortLabel: 'Contr',
-          permissions: [Permission.VIEW_CONTRACTORS],
-        },
-        { 
-          to: '/app/suppliers', 
-          icon: Truck, 
-          label: 'Suppliers',
-          shortLabel: 'Supp',
-          permissions: [Permission.VIEW_SUPPLIERS],
-        },
-      ]
-    },
-    
-    // OPERATIONS Section
-    { 
-      section: 'OPERATIONS', 
-      items: [
-        { 
-          to: '/app/procurement', 
-          icon: Package, 
-          label: 'Procurement',
-          shortLabel: 'Proc',
-          permissions: [Permission.VIEW_PROCUREMENT],
-        },
-        { 
-          to: '/app/field', 
-          icon: Smartphone, 
-          label: 'Field App',
-          shortLabel: 'Field',
-          permissions: [Permission.VIEW_PROJECTS], // Field technicians need project access
-        },
-        { 
-          to: '/app/analytics', 
+          to: '/app/kpi-dashboard', 
           icon: BarChart3, 
-          label: 'Analytics',
-          shortLabel: 'Analytics',
-          permissions: [Permission.VIEW_ANALYTICS],
+          label: 'KPI Dashboard',
+          shortLabel: 'KPI Dash',
+          permissions: [],
         },
+        { 
+          to: '/app/reports', 
+          icon: FileText, 
+          label: 'Reports',
+          shortLabel: 'Reports',
+          permissions: [],
+        },
+      ]
+    },
+    // SYSTEM Section
+    { 
+      section: 'SYSTEM', 
+      items: [
         { 
           to: '/app/settings', 
           icon: Settings, 
           label: 'Settings',
           shortLabel: 'Settings',
-          permissions: [Permission.MANAGE_SETTINGS],
+          permissions: [],
         },
       ]
     },
@@ -218,60 +190,98 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
     return currentUser?.role?.replace('_', ' ').toUpperCase() || 'USER';
   };
 
+  // Get theme-aware sidebar styles
+  const getSidebarStyles = () => {
+    const baseStyles = themeConfig.name === 'vf' ? {
+      backgroundColor: themeConfig.colors.surface.sidebar || themeConfig.colors.surface.primary,
+      borderColor: themeConfig.colors.border.sidebar || themeConfig.colors.border.primary,
+      textColor: themeConfig.colors.text.sidebarPrimary || themeConfig.colors.text.primary,
+      textColorSecondary: themeConfig.colors.text.sidebarSecondary || themeConfig.colors.text.secondary,
+      textColorTertiary: themeConfig.colors.text.sidebarTertiary || themeConfig.colors.text.tertiary
+    } : {
+      backgroundColor: themeConfig.colors.surface.primary,
+      borderColor: themeConfig.colors.border.primary,
+      textColor: themeConfig.colors.text.primary,
+      textColorSecondary: themeConfig.colors.text.secondary,
+      textColorTertiary: themeConfig.colors.text.tertiary
+    };
+
+    return baseStyles;
+  };
+
+  const sidebarStyles = getSidebarStyles();
+  
   return (
     <>
       {/* Sidebar */}
-      <aside className={`
-        fixed left-0 top-0 h-full bg-surface-primary border-r border-border-primary
-        shadow-lg transition-all duration-300 z-30
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 
-        ${isCollapsed ? 'lg:w-16' : 'lg:w-64'}
-        ${isCollapsed ? 'w-16' : 'w-64'}
-      `}>
-        
-        {/* Logo/Brand Section */}
-        <div className={`p-4 border-b border-border-secondary ${isCollapsed ? 'px-2' : ''}`}>
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-lg">FF</span>
+      <aside 
+        className={`
+          fixed left-0 top-0 h-full shadow-lg transition-all duration-300 z-30 flex flex-col
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0 
+          ${isCollapsed ? 'lg:w-16' : 'lg:w-64'}
+          ${isCollapsed ? 'w-16' : 'w-64'}
+        `}
+        style={{
+          backgroundColor: sidebarStyles.backgroundColor,
+          borderRight: `1px solid ${sidebarStyles.borderColor}`
+        }}
+      >
+        {/* Scrollable container for entire sidebar content */}
+        <div className="flex flex-col h-full overflow-hidden">
+          {/* Logo/Brand Section - Fixed at top */}
+          <div 
+            className={`py-6 px-4 border-b flex-shrink-0 ${isCollapsed ? 'px-2' : ''}`}
+            style={{ borderColor: sidebarStyles.borderColor }}
+          >
+            <div className="flex items-center justify-center">
+              {/* Use VFLogo for all themes */}
+              <VFLogo 
+                size={isCollapsed ? 'medium' : 'large'} 
+                className="mx-auto"
+              />
             </div>
-            {!isCollapsed && (
-              <div className="flex-1 min-w-0">
-                <div className="font-bold text-text-primary text-lg truncate">FibreFlow</div>
-                <div className="text-xs text-text-tertiary">Project Management</div>
-              </div>
-            )}
           </div>
-        </div>
 
-        {/* User Profile Section */}
-        <div className={`p-4 border-b border-border-secondary ${isCollapsed ? 'px-2' : ''}`}>
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-semibold text-sm">
-                {getUserInitials()}
-              </span>
+          {/* User Profile Section */}
+          <div 
+            className={`p-4 border-b flex-shrink-0 ${isCollapsed ? 'px-2' : ''}`}
+            style={{ borderColor: sidebarStyles.borderColor }}
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+                <span className="text-white font-semibold text-sm">
+                  {getUserInitials()}
+                </span>
+              </div>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <div 
+                    className="font-medium text-sm truncate"
+                    style={{ color: sidebarStyles.textColor }}
+                  >
+                    {getUserName()}
+                  </div>
+                  <div 
+                    className="text-xs truncate"
+                    style={{ color: sidebarStyles.textColorTertiary }}
+                  >
+                    {getUserRole()}
+                  </div>
+                </div>
+              )}
             </div>
-            {!isCollapsed && (
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-text-primary text-sm truncate">
-                  {getUserName()}
-                </div>
-                <div className="text-xs text-text-tertiary truncate">
-                  {getUserRole()}
-                </div>
-              </div>
-            )}
           </div>
-        </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
+          {/* Navigation - Scrollable */}
+          <nav className="flex-1 overflow-y-auto py-4 custom-scrollbar min-h-0">
           {visibleNavItems.map((section, idx) => (
             <div key={idx} className={`${isCollapsed ? 'px-2' : 'px-4'} mb-6`}>
               {!isCollapsed && (
-                <div className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-3 px-2">
+                <div 
+                  className="text-xs font-semibold uppercase tracking-wider mb-3 px-2"
+                  style={{ color: sidebarStyles.textColorTertiary }}
+                >
                   {section.section}
                 </div>
               )}
@@ -283,13 +293,33 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
                     className={({ isActive }) =>
                       `flex items-center rounded-lg transition-all duration-200 relative group ${
                         isCollapsed ? 'px-3 py-3 justify-center' : 'px-3 py-2 space-x-3'
-                      } ${
-                        isActive
-                          ? 'bg-primary-500 text-white shadow-md'
-                          : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary'
                       }`
                     }
+                    style={({ isActive }) => ({
+                      backgroundColor: isActive 
+                        ? themeConfig.colors.primary[500]
+                        : 'transparent',
+                      color: isActive 
+                        ? '#ffffff'
+                        : sidebarStyles.textColorSecondary
+                    })}
                     title={isCollapsed ? item.label : undefined}
+                    onMouseEnter={(e) => {
+                      const navLink = e.currentTarget;
+                      const isActive = navLink.classList.contains('active');
+                      if (!isActive) {
+                        navLink.style.backgroundColor = themeConfig.colors.surface.sidebarSecondary || themeConfig.colors.surface.secondary;
+                        navLink.style.color = sidebarStyles.textColor;
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const navLink = e.currentTarget;
+                      const isActive = navLink.classList.contains('active');
+                      if (!isActive) {
+                        navLink.style.backgroundColor = 'transparent';
+                        navLink.style.color = sidebarStyles.textColorSecondary;
+                      }
+                    }}
                   >
                     <item.icon className={`${isCollapsed ? 'w-5 h-5' : 'w-5 h-5'} flex-shrink-0`} />
                     {!isCollapsed && (
@@ -298,7 +328,14 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
                     
                     {/* Tooltip for collapsed sidebar */}
                     {isCollapsed && (
-                      <div className="absolute left-full ml-2 px-2 py-1 bg-surface-elevated text-text-primary text-sm rounded-md shadow-lg border border-border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap">
+                      <div 
+                        className="absolute left-full ml-2 px-2 py-1 text-sm rounded-md shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap"
+                        style={{
+                          backgroundColor: themeConfig.colors.surface.elevated,
+                          color: themeConfig.colors.text.primary,
+                          borderColor: themeConfig.colors.border.primary
+                        }}
+                      >
                         {item.label}
                       </div>
                     )}
@@ -307,29 +344,43 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
               </div>
             </div>
           ))}
-        </nav>
+          </nav>
 
-        {/* Collapse toggle button */}
-        <div className={`border-t border-border-secondary p-2 ${isCollapsed ? 'flex justify-center' : ''}`}>
-          <button
-            onClick={onCollapse}
-            className={`
-              flex items-center justify-center p-2 rounded-lg 
-              text-text-secondary hover:text-text-primary hover:bg-surface-secondary
-              transition-colors duration-200
-              ${isCollapsed ? 'w-10 h-10' : 'w-full'}
-            `}
-            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          {/* Collapse toggle button - Fixed at bottom */}
+          <div 
+            className={`border-t p-2 flex-shrink-0 ${isCollapsed ? 'flex justify-center' : ''}`}
+            style={{ borderColor: sidebarStyles.borderColor }}
           >
-            {isCollapsed ? (
-              <ChevronRight className="w-4 h-4" />
-            ) : (
-              <>
-                <ChevronLeft className="w-4 h-4 mr-2" />
-                <span className="text-sm font-medium">Collapse</span>
-              </>
-            )}
-          </button>
+            <button
+              onClick={onCollapse}
+              className={`
+                flex items-center justify-center p-2 rounded-lg 
+                transition-colors duration-200
+                ${isCollapsed ? 'w-10 h-10' : 'w-full'}
+              `}
+              style={{
+                color: sidebarStyles.textColorSecondary
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = sidebarStyles.textColor;
+                e.currentTarget.style.backgroundColor = themeConfig.colors.surface.sidebarSecondary || themeConfig.colors.surface.secondary;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = sidebarStyles.textColorSecondary;
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <>
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  <span className="text-sm font-medium">Collapse</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </aside>
     </>

@@ -1,0 +1,13 @@
+
+# Archon Integration Rules for FibreFlow_React
+# Project ID: fibreflow-react
+
+Before starting any task:
+1. Check Archon tasks: archon:manage_task(action="list", project_id="fibreflow-react")
+2. Search knowledge: archon:perform_rag_query(query="[relevant topic]")
+3. Find examples: archon:search_code_examples(query="[pattern]")
+
+Always update task status when starting work:
+archon:manage_task(action="update", task_id="[task_id]", update_fields={"status": "doing"})
+
+Document learnings in Archon knowledge base when discovering new patterns.

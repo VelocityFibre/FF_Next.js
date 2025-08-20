@@ -133,6 +133,8 @@ export interface ThemeColors {
     tertiary: string;
     elevated: string;
     overlay: string;
+    sidebar?: string;
+    sidebarSecondary?: string;
   };
   
   // Border colors
@@ -144,6 +146,7 @@ export interface ThemeColors {
     error: string;
     success: string;
     warning: string;
+    sidebar?: string;
   };
   
   // Text colors
@@ -157,6 +160,9 @@ export interface ThemeColors {
     success: string;
     warning: string;
     error: string;
+    sidebarPrimary?: string;
+    sidebarSecondary?: string;
+    sidebarTertiary?: string;
   };
 }
 
@@ -169,7 +175,9 @@ export interface ThemeConfig {
   brand: {
     logo?: string;
     logoInverse?: string;
+    logoText?: string;
     favicon?: string;
+    showBrandName?: boolean;
   };
   shadows: {
     sm: string;

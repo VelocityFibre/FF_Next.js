@@ -1,0 +1,66 @@
+[
+  {
+    "id": "f3cd0619-1fa2-4b0d-9990-9f4801e17196",
+    "title": "Architecture review for FibreFlow_React",
+    "description": "Review project architecture and identify improvement opportunities",
+    "status": "todo",
+    "priority": "medium",
+    "project_id": "fibreflow-react",
+    "created_at": "2025-08-20T12:10:21.083407",
+    "tags": [
+      "architecture",
+      "review"
+    ]
+  },
+  {
+    "id": "e58c111a-cd0c-4bcd-8500-058ba6340bde",
+    "title": "Analyze bundle size and performance",
+    "description": "Review build output and identify optimization opportunities",
+    "status": "todo",
+    "priority": "low",
+    "project_id": "fibreflow-react",
+    "created_at": "2025-08-20T12:10:21.083407",
+    "tags": [
+      "performance",
+      "optimization"
+    ]
+  },
+  {
+    "id": "b9bfbb48-c037-4c7e-9daa-da3cc9d4c538",
+    "title": "Review component structure and patterns",
+    "description": "Ensure consistent component patterns and identify reusable components",
+    "status": "todo",
+    "priority": "medium",
+    "project_id": "fibreflow-react",
+    "created_at": "2025-08-20T12:10:21.083407",
+    "tags": [
+      "components",
+      "patterns"
+    ]
+  },
+  {
+    "id": "d03bba89-6907-4255-94be-2b1ff8912125",
+    "title": "Test coverage analysis",
+    "description": "Analyze current test coverage and identify gaps",
+    "status": "todo",
+    "priority": "medium",
+    "project_id": "fibreflow-react",
+    "created_at": "2025-08-20T12:10:21.083407",
+    "tags": [
+      "testing",
+      "coverage"
+    ]
+  },
+  {
+    "id": "a1ec6589-9b0b-4cab-93e9-2497c07c82d4",
+    "title": "Documentation needs assessment",
+    "description": "Review existing documentation and identify areas for improvement",
+    "status": "todo",
+    "priority": "low",
+    "project_id": "fibreflow-react",
+    "created_at": "2025-08-20T12:10:21.083407",
+    "tags": [
+      "documentation"
+    ]
+  }
+]

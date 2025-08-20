@@ -1,3 +1,94 @@
+## ARCHON INTEGRATION
+
+**Status**: Active
+**Project ID**: `fibreflow-react`
+**Activated**: 2025-08-20 12:10
+
+### Project Context
+- **Type**: react
+- **Languages**: JavaScript, TypeScript, Firebase
+- **Path**: C:\Jarvis\AI Workspace\FibreFlow_React
+
+
+### MANDATORY WORKFLOW RULES
+
+#### Before Starting ANY Task:
+```javascript
+// ALWAYS execute these checks first:
+1. archon:manage_task(action="list", project_id="fibreflow-react", filter_by="status", filter_value="todo")
+2. archon:perform_rag_query(query="[relevant feature/pattern]", match_count=5)
+3. archon:search_code_examples(query="[implementation pattern]", match_count=3)
+```
+
+#### During Development:
+```javascript
+// Update task status immediately when starting:
+archon:manage_task(action="update", task_id="[current_task_id]", update_fields={"status": "doing"})
+
+// Search before implementing:
+archon:perform_rag_query(query="[specific technical question]")
+
+// Create tasks for discoveries:
+archon:manage_task(action="create", project_id="fibreflow-react", title="[new requirement]")
+```
+
+#### After Completing Work:
+```javascript
+// Mark task complete:
+archon:manage_task(action="update", task_id="[task_id]", update_fields={"status": "done"})
+
+// Document learnings:
+// Add to knowledge base if new patterns discovered
+```
+
+### Quick Commands
+
+**Get all project tasks:**
+```
+Show me all Archon tasks for project fibreflow-react
+```
+
+**Search project knowledge:**
+```
+Search Archon for [topic] in project fibreflow-react
+```
+
+**Create new task:**
+```
+Create Archon task: [description] for project fibreflow-react
+```
+
+### Integration Rules
+
+1. **NEVER** start coding without checking Archon tasks
+2. **ALWAYS** search Archon before implementing new patterns
+3. **UPDATE** task status in real-time as work progresses
+4. **CREATE** tasks for any new requirements discovered
+5. **SEARCH** knowledge base before asking questions
+
+---
+
+## 📋 GOLDEN GUARDRAILS - RULES.md
+
+**CRITICAL**: This project uses RULES.md as the SINGLE SOURCE OF TRUTH for all development standards.
+
+### Priority Order
+1. **RULES.md** - Golden guardrails (HIGHEST PRIORITY)
+2. **CLAUDE.md** - Project-specific overrides (this file)
+3. **Global CLAUDE.md** - Universal defaults
+
+### Automatic Enforcement
+- RULES.md is loaded at session start
+- Updated after every git commit
+- Validated before code changes
+- Synchronized with global standards
+
+**IMPORTANT**: Always consult RULES.md before making any decisions.
+
+---
+*Archon Integration configured by @Archon activation protocol*
+
+
 # Claude Development Notes - FibreFlow React Migration
 
 ## 🔗 ARCHON INTEGRATION

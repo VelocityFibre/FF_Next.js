@@ -263,21 +263,24 @@ const vfTheme: ThemeConfig = {
   name: 'vf',
   displayName: 'VF Brand',
   description: 'Velocity Fibre branded theme with corporate colors',
+  isDark: false, // Main content stays light, but sidebar is dark
   colors: {
     ...lightTheme.colors,
+    // VF Brand primary colors (purple/magenta palette)
     primary: {
       50: '#fdf2f8',
       100: '#fce7f3',
       200: '#fbcfe8',
       300: '#f9a8d4',
       400: '#f472b6',
-      500: '#ec4899',
+      500: '#ec4899', // Main VF brand color
       600: '#db2777',
       700: '#be185d',
       800: '#9d174d',
       900: '#831843',
       950: '#500724',
     },
+    // VF secondary colors (blue palette for accents)
     secondary: {
       50: '#f0f9ff',
       100: '#e0f2fe',
@@ -291,21 +294,35 @@ const vfTheme: ThemeConfig = {
       900: '#0c4a6e',
       950: '#082f49',
     },
-    accent: {
-      50: '#fff7ed',
-      100: '#ffedd5',
-      200: '#fed7aa',
-      300: '#fdba74',
-      400: '#fb923c',
-      500: '#f97316',
-      600: '#ea580c',
-      700: '#c2410c',
-      800: '#9a3412',
-      900: '#7c2d12',
-      950: '#431407',
+    // Keep main backgrounds light for content area
+    background: {
+      primary: '#ffffff',
+      secondary: '#f9fafb',
+      tertiary: '#f3f4f6',
+      inverse: '#111827',
+    },
+    surface: {
+      primary: '#ffffff',
+      secondary: '#f9fafb',
+      tertiary: '#f3f4f6',
+      elevated: '#ffffff',
+      overlay: 'rgba(0, 0, 0, 0.5)',
+      // Dark sidebar surface
+      sidebar: '#1e293b', // slate-800
+      sidebarSecondary: '#334155', // slate-700
+    },
+    border: {
+      primary: '#e5e7eb',
+      secondary: '#d1d5db',
+      subtle: '#f3f4f6',
+      focus: '#ec4899',
+      error: '#ef4444',
+      success: '#22c55e',
+      warning: '#f59e0b',
+      sidebar: '#475569', // slate-600
     },
     text: {
-      primary: '#1f2937',
+      primary: '#111827',
       secondary: '#374151',
       tertiary: '#6b7280',
       inverse: '#ffffff',
@@ -314,12 +331,18 @@ const vfTheme: ThemeConfig = {
       success: '#166534',
       warning: '#92400e',
       error: '#991b1b',
+      // Sidebar-specific text colors
+      sidebarPrimary: '#f8fafc', // slate-50
+      sidebarSecondary: '#e2e8f0', // slate-200  
+      sidebarTertiary: '#cbd5e1', // slate-300
     },
   },
   brand: {
     logo: '/assets/logos/vf-logo.svg',
     logoInverse: '/assets/logos/vf-logo-white.svg',
+    logoText: 'VELOCITY FIBRE',
     favicon: '/assets/favicons/vf-favicon.ico',
+    showBrandName: true,
   },
 };
 
