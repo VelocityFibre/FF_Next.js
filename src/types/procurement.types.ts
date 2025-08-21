@@ -4,6 +4,10 @@
 
 export * from './procurement/index';
 
+// Re-export specific types for backward compatibility
+export { BOQStatus } from './procurement/boq.types';
+export { RFQStatus } from './procurement/rfq.types';
+
 // Note: All type definitions have been moved to separate files
 // for better organization and to comply with the 300-line limit:
 // - ./procurement/stock.types.ts - Stock and inventory types

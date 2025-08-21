@@ -175,8 +175,9 @@ ARCHON INTEGRATION
 ### Test Types Required
 - Unit tests for all functions/methods
 - Integration tests for API endpoints
-- E2E tests for critical user flows
+- E2E tests for critical user flows (MANDATORY via Playwright MCP)
 - Performance tests for data-heavy operations
+- UI/Visual tests after any component changes (MANDATORY via Playwright MCP)
 
 ## 📏 CODE QUALITY STANDARDS (MANDATORY)
 

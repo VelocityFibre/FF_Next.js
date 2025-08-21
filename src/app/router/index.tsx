@@ -62,10 +62,10 @@ const AnalyticsDashboard = lazy(() => import('@/modules/analytics/AnalyticsDashb
 const CommunicationsDashboard = lazy(() => import('@/modules/communications/CommunicationsDashboard').then(m => ({ default: m.default })));
 const HomeInstallationsDashboard = lazy(() => import('@/modules/installations/HomeInstallationsDashboard').then(m => ({ default: m.default })));
 const FieldAppPortal = lazy(() => import('@/modules/field-app/FieldAppPortal').then(m => ({ default: m.default })));
-const FiberStringingDashboard = lazy(() => import('@/modules/projects/fiber-stringing/FiberStringingDashboard').then(m => ({ default: m.default })));
-const DropsManagement = lazy(() => import('@/modules/projects/drops/DropsManagement').then(m => ({ default: m.default })));
-const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-tracker/mobile/PoleCaptureMobile').then(m => ({ default: m.default })));
-const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.default })));
+const FiberStringingDashboard = lazy(() => import('@/modules/projects/fiber-stringing/FiberStringingDashboard').then(m => ({ default: m.FiberStringingDashboard })));
+const DropsManagement = lazy(() => import('@/modules/projects/drops/DropsManagement').then(m => ({ default: m.DropsManagement })));
+const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-tracker/mobile/PoleCaptureMobile').then(m => ({ default: m.PoleCaptureMobile })));
+const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.SOWManagement })));
 
 // Legacy pages (to be migrated to modules)
 const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
