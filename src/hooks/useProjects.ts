@@ -1,11 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectService } from '@/services/projectService';
 import { 
-  Project, 
   ProjectFormData, 
-  ProjectFilter, 
-  ProjectSummary,
-  ProjectHierarchy 
+  ProjectFilter 
 } from '@/types/project.types';
 
 // Query Keys
@@ -27,7 +24,7 @@ export function useProjects(filter?: ProjectFilter) {
     queryKey: projectKeys.list(filter),
     queryFn: () => projectService.getAll(filter),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
@@ -40,7 +37,7 @@ export function useProject(id: string, enabled = true) {
     queryFn: () => projectService.getById(id),
     enabled: !!id && enabled,
     staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
@@ -50,10 +47,15 @@ export function useProject(id: string, enabled = true) {
 export function useProjectHierarchy(id: string, enabled = true) {
   return useQuery({
     queryKey: projectKeys.hierarchy(id),
-    queryFn: () => projectService.getProjectHierarchy(id),
+    queryFn: async () => {
+      // For now, just return the project data
+      // TODO: Implement proper hierarchy fetching
+      const project = await projectService.getById(id);
+      return project ? { project, phases: [] } : null;
+    },
     enabled: !!id && enabled,
     staleTime: 2 * 60 * 1000, // 2 minutes (more dynamic data)
-    cacheTime: 5 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 }
 
@@ -65,7 +67,7 @@ export function useProjectSummary() {
     queryKey: projectKeys.summary(),
     queryFn: () => projectService.getProjectSummary(),
     staleTime: 10 * 60 * 1000, // 10 minutes (less dynamic)
-    cacheTime: 15 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
   });
 }
 
@@ -138,10 +140,11 @@ export function useInitializeProjectPhases() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (projectId: string) => projectService.initializeProjectPhases(projectId),
-    onSuccess: (_, projectId) => {
+    mutationFn: ({ projectId, projectType }: { projectId: string; projectType: string }) => 
+      projectService.generatePhases(projectId, projectType),
+    onSuccess: (_, variables) => {
       // Invalidate hierarchy to show new phases
-      queryClient.invalidateQueries({ queryKey: projectKeys.hierarchy(projectId) });
+      queryClient.invalidateQueries({ queryKey: projectKeys.hierarchy(variables.projectId) });
     },
     onError: (error) => {
       console.error('Failed to initialize project phases:', error);
@@ -156,10 +159,10 @@ export function useUpdateProjectProgress() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (projectId: string) => projectService.updateProjectProgress(projectId),
-    onSuccess: (_, projectId) => {
+    mutationFn: ({ projectId, data }: { projectId: string; data: any }) => projectService.update(projectId, data),
+    onSuccess: (_, variables) => {
       // Invalidate project data to show updated progress
-      queryClient.invalidateQueries({ queryKey: projectKeys.detail(projectId) });
+      queryClient.invalidateQueries({ queryKey: projectKeys.detail(variables.projectId) });
       queryClient.invalidateQueries({ queryKey: projectKeys.lists() });
       queryClient.invalidateQueries({ queryKey: projectKeys.summary() });
     },
@@ -199,10 +202,14 @@ export function useProjectsSubscription(filter?: ProjectFilter, enabled = true) 
   React.useEffect(() => {
     if (!enabled) return;
 
+    const subscribeFilter: { status?: string; clientId?: string } = {};
+    if (filter?.status?.[0]) subscribeFilter.status = filter.status[0];
+    if (filter?.clientId) subscribeFilter.clientId = filter.clientId;
+    
     const unsubscribe = projectService.subscribeToProjects((projects) => {
       // Update the cache with real-time data
       queryClient.setQueryData(projectKeys.list(filter), projects);
-    }, filter);
+    }, subscribeFilter);
 
     return unsubscribe;
   }, [filter, enabled, queryClient]);
@@ -226,6 +233,7 @@ export function useProjectForm(id?: string) {
     async (data: ProjectFormData) => {
       if (id) {
         await updateMutation.mutateAsync({ id, data });
+        return id;
       } else {
         const newId = await createMutation.mutateAsync(data);
         return newId;

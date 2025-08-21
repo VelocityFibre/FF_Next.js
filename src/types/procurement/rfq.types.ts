@@ -3,12 +3,36 @@ import { Currency, UnitOfMeasure } from './stock.types';
 
 // ============= RFQ (Request for Quote) Types =============
 
-export type RFQStatus = 'draft' | 'sent' | 'pending' | 'quoted' | 'expired' | 'cancelled';
-export type QuoteStatus = 'draft' | 'submitted' | 'under_review' | 'accepted' | 'rejected' | 'expired';
+export enum RFQStatus {
+  DRAFT = 'draft',
+  SENT = 'sent',
+  PENDING = 'pending',
+  RESPONSES_PENDING = 'responses_pending',
+  QUOTED = 'quoted',
+  RESPONSES_RECEIVED = 'responses_received',
+  EVALUATION = 'evaluation',
+  AWARDED = 'awarded',
+  EXPIRED = 'expired',
+  CANCELLED = 'cancelled'
+}
+
+export type RFQStatusType = 'draft' | 'sent' | 'pending' | 'responses_pending' | 'quoted' | 'responses_received' | 'evaluation' | 'awarded' | 'expired' | 'cancelled';
+
+export enum QuoteStatus {
+  DRAFT = 'draft',
+  SUBMITTED = 'submitted',
+  UNDER_REVIEW = 'under_review',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+  EXPIRED = 'expired'
+}
+
+export type QuoteStatusType = 'draft' | 'submitted' | 'under_review' | 'accepted' | 'rejected' | 'expired';
 
 export interface RFQ {
   id?: string;
   number: string; // Unique RFQ number
+  rfqNumber?: string; // Alternative for number
   title: string;
   
   // Source
@@ -18,11 +42,14 @@ export interface RFQ {
   projectName?: string;
   
   // Status
-  status: RFQStatus;
+  status: RFQStatusType;
   
   // Suppliers
   supplierIds: string[];
   suppliers: RFQSupplier[];
+  invitedSuppliers?: RFQSupplier[]; // Alternative for suppliers
+  responses?: any[];
+  selectedResponseId?: string;
   
   // Items
   items: RFQItem[];
@@ -31,6 +58,7 @@ export interface RFQ {
   // Dates
   issueDate: Timestamp;
   dueDate: Timestamp;
+  deadline?: Timestamp; // Alternative for dueDate
   validityPeriodDays: number;
   
   // Requirements
@@ -133,7 +161,7 @@ export interface Quote {
   supplierPhone?: string;
   
   // Status
-  status: QuoteStatus;
+  status: QuoteStatusType;
   
   // Items
   items: QuoteItem[];
@@ -257,4 +285,41 @@ export interface QuoteComparison {
   comparedAt: Timestamp;
   comparedBy: string;
   comparedByName: string;
+}
+
+// Form data for creating/updating RFQ
+export interface RFQFormData {
+  number?: string;
+  title: string;
+  projectId?: string;
+  projectName?: string;
+  boqId?: string;
+  items: RFQItem[];
+  requirements?: string;
+  deadline?: Date | Timestamp;
+  deliveryDate?: Date | Timestamp;
+  deliveryAddress?: string;
+  paymentTerms?: string;
+  supplierIds: string[];
+  attachments?: string[];
+}
+
+// RFQ Response data
+export interface RFQResponse {
+  id?: string;
+  rfqId: string;
+  supplierId: string;
+  supplierName: string;
+  quoteNumber: string;
+  quoteDate: Timestamp;
+  validUntil?: Timestamp;
+  items: QuoteItem[];
+  totalAmount: number;
+  currency?: string;
+  paymentTerms?: string;
+  deliveryTerms?: string;
+  deliveryTime?: number;
+  notes?: string;
+  attachments?: string[];
+  status: 'draft' | 'submitted' | 'reviewed' | 'accepted' | 'rejected';
 }

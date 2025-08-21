@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Download, FileSpreadsheet, AlertCircle, CheckCircle, X, Building2 } from 'lucide-react';
 import { clientService } from '@/services/clientService';
-import { ClientImportResult, ClientImportError } from '@/types/client.types';
+import { ClientImportResult } from '@/types/client.types';
 
 export function ClientImport() {
   const [isImporting, setIsImporting] = useState(false);

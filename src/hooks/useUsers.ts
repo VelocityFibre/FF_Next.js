@@ -10,7 +10,7 @@ export function useUsers(params: UserListParams = {}) {
   return useQuery({
     queryKey: [...QUERY_KEYS.users, params],
     queryFn: () => userService.getUsers(params),
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   })
 }
 

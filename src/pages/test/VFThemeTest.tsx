@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import VFLogo from '@/components/ui/VFLogo';
 import { useTheme } from '@/contexts/ThemeContext';
 import { themes } from '@/config/themes';
@@ -18,7 +17,7 @@ export default function VFThemeTest() {
             {Object.keys(themes).map((themeName) => (
               <button
                 key={themeName}
-                onClick={() => setTheme(themeName)}
+                onClick={() => setTheme(themeName as 'light' | 'dark' | 'vf' | 'fibreflow')}
                 className={`px-4 py-2 rounded-lg border-2 transition-all ${
                   themeConfig.name === themeName
                     ? 'border-blue-500 bg-blue-50'

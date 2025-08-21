@@ -1,9 +1,7 @@
 import { Heart, Shield, Zap } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 export function Footer(): JSX.Element {
   const currentYear = new Date().getFullYear();
-  const { currentTheme } = useTheme();
 
   return (
     <footer className="bg-surface-primary border-t border-border-primary py-3 px-4 lg:px-6">

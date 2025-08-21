@@ -1,4 +1,4 @@
-import { TrendingUp, Calendar, FileText, BarChart3, Clock, Users, Download, AlertCircle } from 'lucide-react';
+import { TrendingUp, Calendar, FileText, BarChart3, Users, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function DailyProgressDashboard() {

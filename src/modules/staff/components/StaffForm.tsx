@@ -4,8 +4,7 @@ import { ArrowLeft, Save, User } from 'lucide-react';
 import { useStaffMember, useCreateStaff, useUpdateStaff } from '@/hooks/useStaff';
 import { 
   StaffFormData, 
-  Department, 
-  Position,
+  Department,
   StaffStatus,
   StaffLevel,
   ContractType,
@@ -42,7 +41,6 @@ export function StaffForm() {
     level: StaffLevel.JUNIOR,
     status: StaffStatus.ACTIVE,
     skills: [],
-    certifications: [],
     experienceYears: 0,
     specializations: [],
     address: '',
@@ -51,7 +49,7 @@ export function StaffForm() {
     postalCode: '',
     emergencyContactName: '',
     emergencyContactPhone: '',
-    startDate: new Date().toISOString().split('T')[0],
+    startDate: new Date(),
     contractType: ContractType.PERMANENT,
     hourlyRate: 0,
     workingHours: '08:00 - 17:00',
@@ -66,8 +64,8 @@ export function StaffForm() {
   useEffect(() => {
     if (staff && isEditing) {
       const startDate = staff.startDate instanceof Timestamp 
-        ? new Date(staff.startDate.seconds * 1000).toISOString().split('T')[0]
-        : new Date(staff.startDate).toISOString().split('T')[0];
+        ? new Date(staff.startDate.seconds * 1000)
+        : new Date(staff.startDate);
 
       setFormData({
         name: staff.name,
@@ -80,7 +78,6 @@ export function StaffForm() {
         level: staff.level || StaffLevel.JUNIOR,
         status: staff.status,
         skills: staff.skills || [],
-        certifications: staff.certifications || [],
         experienceYears: staff.experienceYears || 0,
         specializations: staff.specializations || [],
         address: staff.address,

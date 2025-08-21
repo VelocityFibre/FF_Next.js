@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
-import { ClientFormData, ServiceType } from '@/types/client.types';
+import { ClientFormData } from '@/types/client.types';
 import { useClient, useCreateClient, useUpdateClient } from '@/hooks/useClients';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ClientFormFields } from './ClientFormFields';
@@ -19,19 +19,10 @@ export function ClientForm() {
   const updateMutation = useUpdateClient();
 
   const [formData, setFormData] = useState<ClientFormData>({
-    companyName: '',
-    clientCode: '',
-    clientType: '' as any,
-    industry: '',
-    registrationNumber: '',
-    taxNumber: '',
-    website: '',
-    contactName: '',
-    contactTitle: '',
+    name: '',
+    contactPerson: '',
     email: '',
     phone: '',
-    alternativePhone: '',
-    department: '',
     address: {
       street: '',
       city: '',
@@ -47,23 +38,45 @@ export function ClientForm() {
       postalCode: '',
       country: '',
     },
-    serviceTypes: [],
-    paymentTerms: '' as any,
+    registrationNumber: '',
+    vatNumber: '',
+    industry: '',
+    website: '',
+    alternativeEmail: '',
+    alternativePhone: '',
     creditLimit: 0,
-    preferredCurrency: '' as any,
-    contractValue: 0,
-    billingEmail: '',
-    accountNumber: '',
-    specialRequirements: '',
+    paymentTerms: 'NET_30' as any,
+    creditRating: 'GOOD' as any,
+    status: 'ACTIVE' as any,
+    category: 'STANDARD' as any,
+    priority: 'MEDIUM' as any,
+    preferredContactMethod: 'EMAIL' as any,
+    communicationLanguage: 'en',
+    timezone: 'UTC',
     notes: '',
     tags: [],
-    isActive: true,
+    serviceTypes: [],
+    specialRequirements: '',
+    taxExempt: false,
+    autoApproveOrders: false,
+    requiresPO: false,
+    allowBackorders: false,
   });
 
   useEffect(() => {
     if (client && isEditing) {
       setFormData({
-        ...client,
+        name: client.name,
+        contactPerson: client.contactPerson,
+        email: client.email,
+        phone: client.phone,
+        address: {
+          street: client.address,
+          city: client.city,
+          state: client.province,
+          postalCode: client.postalCode,
+          country: client.country,
+        },
         billingAddress: client.billingAddress || {
           sameAsPhysical: true,
           street: '',
@@ -72,6 +85,31 @@ export function ClientForm() {
           postalCode: '',
           country: '',
         },
+        registrationNumber: client.registrationNumber || '',
+        vatNumber: client.vatNumber || '',
+        industry: client.industry,
+        website: client.website || '',
+        alternativeEmail: client.alternativeEmail || '',
+        alternativePhone: client.alternativePhone || '',
+        creditLimit: client.creditLimit,
+        paymentTerms: client.paymentTerms,
+        creditRating: client.creditRating,
+        status: client.status,
+        category: client.category,
+        priority: client.priority,
+        accountManagerId: client.accountManagerId || '',
+        salesRepresentativeId: client.salesRepresentativeId || '',
+        preferredContactMethod: client.preferredContactMethod,
+        communicationLanguage: client.communicationLanguage || 'en',
+        timezone: client.timezone || 'UTC',
+        notes: client.notes || '',
+        tags: client.tags || [],
+        serviceTypes: client.serviceTypes || [],
+        specialRequirements: client.specialRequirements || '',
+        taxExempt: client.taxExempt || false,
+        requiresPO: client.requiresPO || false,
+        autoApproveOrders: client.autoApproveOrders || false,
+        allowBackorders: client.allowBackorders || false,
       });
     }
   }, [client, isEditing]);
@@ -95,14 +133,6 @@ export function ClientForm() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const toggleServiceType = (service: ServiceType) => {
-    setFormData(prev => ({
-      ...prev,
-      serviceTypes: prev.serviceTypes?.includes(service)
-        ? prev.serviceTypes.filter(s => s !== service)
-        : [...(prev.serviceTypes || []), service]
-    }));
-  };
 
   if (isLoading) {
     return (
@@ -153,7 +183,6 @@ export function ClientForm() {
           <ServiceBillingFields
             formData={formData}
             onChange={handleInputChange}
-            onToggleService={toggleServiceType}
           />
 
           {/* Form Actions */}

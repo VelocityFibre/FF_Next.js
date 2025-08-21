@@ -51,7 +51,13 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
   };
 
   const renderRating = () => {
-    const rating = supplier.rating.overall;
+    const rating = typeof supplier.rating === 'number' 
+      ? supplier.rating 
+      : supplier.rating.overall;
+    const totalReviews = typeof supplier.rating === 'object' 
+      ? supplier.rating.totalReviews || 0
+      : 0;
+    
     return (
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
@@ -65,7 +71,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
           />
         ))}
         <span className="text-xs text-gray-500 ml-1">
-          ({supplier.rating.totalReviews})
+          ({totalReviews})
         </span>
       </div>
     );
@@ -91,8 +97,8 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
               </span>
             )}
           </div>
-          <h3 className="text-lg font-semibold text-gray-900">{supplier.companyName}</h3>
-          <p className="text-sm text-gray-500">Reg: {supplier.registrationNo}</p>
+          <h3 className="text-lg font-semibold text-gray-900">{supplier.companyName || supplier.name}</h3>
+          <p className="text-sm text-gray-500">Reg: {supplier.registrationNo || supplier.registrationNumber}</p>
         </div>
         <button
           onClick={(e) => {
@@ -113,15 +119,15 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <Mail className="h-4 w-4 mr-2 text-gray-400" />
-          <span className="truncate">{supplier.contact.email}</span>
+          <span className="truncate">{supplier.primaryContact?.email || supplier.email}</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <Phone className="h-4 w-4 mr-2 text-gray-400" />
-          <span>{supplier.contact.phone}</span>
+          <span>{supplier.primaryContact?.phone || supplier.phone}</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <MapPin className="h-4 w-4 mr-2 text-gray-400" />
-          <span>{supplier.contact.address.city}, {supplier.contact.address.province}</span>
+          <span>{supplier.addresses?.physical?.city || 'N/A'}, {supplier.addresses?.physical?.state || 'N/A'}</span>
         </div>
       </div>
 
@@ -156,7 +162,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
             <div className="flex items-center gap-1">
               <TrendingUp className="h-3 w-3 text-green-500" />
               <span className="text-sm font-medium text-gray-900">
-                {supplier.performanceScore}%
+                {supplier.performance?.overallScore || 0}%
               </span>
             </div>
           </div>
@@ -164,34 +170,32 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
         
         {/* Compliance Status */}
         <div className="mt-3 flex items-center gap-2">
-          {supplier.compliance?.taxCompliant && (
+          {supplier.complianceStatus?.taxCompliant && (
             <span className="text-xs text-green-600 flex items-center gap-1">
               <CheckCircle className="h-3 w-3" />
               Tax
             </span>
           )}
-          {supplier.compliance?.insuranceValid && (
+          {supplier.complianceStatus?.isoCompliant && (
             <span className="text-xs text-green-600 flex items-center gap-1">
               <CheckCircle className="h-3 w-3" />
-              Insurance
+              ISO
             </span>
           )}
-          {supplier.compliance?.bbbeeLevel && (
+          {supplier.complianceStatus?.beeLevel && (
             <span className="text-xs text-blue-600">
-              BBBEE L{supplier.compliance.bbbeeLevel}
+              BBBEE L{supplier.complianceStatus.beeLevel}
             </span>
           )}
         </div>
       </div>
 
       {/* Active Indicators */}
-      {(supplier.activeRFQs || supplier.completedOrders) && (
+      {(supplier.performance?.metrics?.totalOrders) && (
         <div className="mt-3 pt-3 border-t border-gray-200 flex justify-between text-xs text-gray-500">
-          {supplier.activeRFQs > 0 && (
-            <span>{supplier.activeRFQs} active RFQs</span>
-          )}
-          {supplier.completedOrders > 0 && (
-            <span>{supplier.completedOrders} orders completed</span>
+          <span>{supplier.performance.metrics.totalOrders} total orders</span>
+          {supplier.performance.metrics.completedOrders > 0 && (
+            <span>{supplier.performance.metrics.completedOrders} completed</span>
           )}
         </div>
       )}

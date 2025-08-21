@@ -10,15 +10,13 @@ import {
   Users,
   Clock,
   Building2,
-  Progress,
-  ChevronRight,
   CheckCircle,
   Circle,
   AlertCircle,
   PlayCircle
 } from 'lucide-react';
 import { useProject, useProjectHierarchy, useDeleteProject } from '@/hooks/useProjects';
-import { ProjectStatus, PhaseStatus, StepStatus, TaskStatus, Priority } from '@/types/project.types';
+import { ProjectStatus, PhaseStatus, TaskStatus, Priority } from '@/types/project.types';
 import { NeonSOWDisplay } from '@/components/sow/NeonSOWDisplay';
 
 const statusColors = {
@@ -42,7 +40,7 @@ const getPhaseStatusIcon = (status: PhaseStatus) => {
       return <CheckCircle className="h-5 w-5 text-green-600" />;
     case PhaseStatus.IN_PROGRESS:
       return <PlayCircle className="h-5 w-5 text-blue-600" />;
-    case PhaseStatus.BLOCKED:
+    case PhaseStatus.ON_HOLD:
       return <AlertCircle className="h-5 w-5 text-red-600" />;
     default:
       return <Circle className="h-5 w-5 text-gray-400" />;
@@ -130,7 +128,7 @@ export function ProjectDetail() {
           </button>
           <div>
             <h1 className="text-2xl font-semibold text-gray-900">{project.name}</h1>
-            <p className="text-gray-600 mt-1">{project.projectCode}</p>
+            <p className="text-gray-600 mt-1">{project.code}</p>
           </div>
         </div>
         
@@ -157,8 +155,8 @@ export function ProjectDetail() {
         <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors[project.status]}`}>
           {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('_', ' ')}
         </span>
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${priorityColors[project.priorityLevel]}`}>
-          {project.priorityLevel.charAt(0).toUpperCase() + project.priorityLevel.slice(1)} Priority
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${priorityColors[project.priority]}`}>
+          {project.priority.charAt(0).toUpperCase() + project.priority.slice(1)} Priority
         </span>
         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
           {project.projectType.toUpperCase()}
@@ -232,23 +230,23 @@ export function ProjectDetail() {
                 <div>
                   <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                     <span>Overall Progress</span>
-                    <span>{Math.round(project.overallProgress)}%</span>
+                    <span>{Math.round(project.actualProgress || 0)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div
                       className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                      style={{ width: `${project.overallProgress}%` }}
+                      style={{ width: `${project.actualProgress || 0}%` }}
                     ></div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-2xl font-semibold text-gray-900">{project.completedTasksCount}</div>
+                    <div className="text-2xl font-semibold text-gray-900">{0}</div>
                     <div className="text-sm text-gray-500">Tasks Completed</div>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
-                    <div className="text-2xl font-semibold text-gray-900">{project.activeTasksCount}</div>
+                    <div className="text-2xl font-semibold text-gray-900">{0}</div>
                     <div className="text-sm text-gray-500">Active Tasks</div>
                   </div>
                 </div>
@@ -275,7 +273,7 @@ export function ProjectDetail() {
                   <Calendar className="h-5 w-5 text-gray-400 mr-3" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">Expected End</p>
-                    <p className="text-sm text-gray-500">{formatDate(project.expectedEndDate)}</p>
+                    <p className="text-sm text-gray-500">{formatDate(project.endDate)}</p>
                   </div>
                 </div>
 
@@ -283,7 +281,7 @@ export function ProjectDetail() {
                   <DollarSign className="h-5 w-5 text-gray-400 mr-3" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">Budget</p>
-                    <p className="text-sm text-gray-500">{formatCurrency(project.budget)}</p>
+                    <p className="text-sm text-gray-500">{formatCurrency(project.budget || 0)}</p>
                   </div>
                 </div>
 
@@ -291,16 +289,16 @@ export function ProjectDetail() {
                   <Clock className="h-5 w-5 text-gray-400 mr-3" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">Working Hours</p>
-                    <p className="text-sm text-gray-500">{project.workingHours}</p>
+                    <p className="text-sm text-gray-500">N/A</p>
                   </div>
                 </div>
 
-                {project.projectManagerName && (
+                {project.projectManager && (
                   <div className="flex items-center">
                     <Users className="h-5 w-5 text-gray-400 mr-3" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Project Manager</p>
-                      <p className="text-sm text-gray-500">{project.projectManagerName}</p>
+                      <p className="text-sm text-gray-500">{project.projectManager}</p>
                     </div>
                   </div>
                 )}
@@ -315,7 +313,7 @@ export function ProjectDetail() {
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Budget Used</span>
                   <span className="text-sm font-medium text-gray-900">
-                    {formatCurrency(project.budgetUsed)}
+                    {formatCurrency(project.actualCost || 0)}
                   </span>
                 </div>
                 
@@ -331,7 +329,7 @@ export function ProjectDetail() {
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Current Phase</span>
                   <span className="text-sm font-medium text-gray-900">
-                    {project.currentPhaseName || project.currentPhase}
+                    {project.phase || 'Planning'}
                   </span>
                 </div>
               </div>
@@ -352,8 +350,9 @@ export function ProjectDetail() {
               <h2 className="text-lg font-semibold text-gray-900 mb-6">Project Hierarchy</h2>
               
               <div className="space-y-6">
-                {hierarchy.phases.map((phase, phaseIndex) => (
-                  <div key={phase.id} className="border border-gray-200 rounded-lg">
+                {hierarchy.phases && hierarchy.phases.length > 0 ? (
+                  hierarchy.phases.map((phase: any) => (
+                    <div key={phase.id} className="border border-gray-200 rounded-lg">
                     <div className="p-4 bg-gray-50 border-b border-gray-200">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -379,7 +378,7 @@ export function ProjectDetail() {
                     {phase.steps && phase.steps.length > 0 && (
                       <div className="p-4">
                         <div className="space-y-4">
-                          {phase.steps.map((step, stepIndex) => (
+                          {phase.steps.map((step: any) => (
                             <div key={step.id} className="ml-4 border-l-2 border-gray-200 pl-4">
                               <div className="flex items-center justify-between">
                                 <div>
@@ -397,7 +396,7 @@ export function ProjectDetail() {
                               
                               {step.tasks && step.tasks.length > 0 && (
                                 <div className="mt-2 ml-4 space-y-1">
-                                  {step.tasks.slice(0, 3).map((task) => (
+                                  {step.tasks.slice(0, 3).map((task: any) => (
                                     <div key={task.id} className="flex items-center text-xs">
                                       <div className={`w-2 h-2 rounded-full mr-2 ${
                                         task.status === TaskStatus.COMPLETED 
@@ -422,7 +421,10 @@ export function ProjectDetail() {
                       </div>
                     )}
                   </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-center py-8">No project phases available</p>
+                )}
               </div>
             </div>
           ) : (

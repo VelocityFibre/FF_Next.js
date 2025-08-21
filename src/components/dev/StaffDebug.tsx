@@ -31,7 +31,7 @@ export function StaffDebug() {
         const active = activeSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
-        }));
+        }) as any);
         setActiveStaff(active);
 
         // Filter for managers

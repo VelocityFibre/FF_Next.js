@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/PigmentGrid';
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Button,
   IconButton,
   Chip,
@@ -36,9 +36,7 @@ import {
   Warning as WarningIcon,
   Error as ErrorIcon,
   MoreVert as MoreVertIcon,
-  Assessment as AssessmentIcon,
   Description as DescriptionIcon,
-  Groups as GroupsIcon,
   Verified as VerifiedIcon,
   Schedule as ScheduleIcon,
   TrendingUp as TrendingUpIcon,
@@ -72,9 +70,9 @@ const ContractorsDashboard: React.FC = () => {
   const [contractors, setContractors] = useState<Contractor[]>([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedContractor, setSelectedContractor] = useState<Contractor | null>(null);
+  const [, setSelectedContractor] = useState<Contractor | null>(null);
   const [openOnboarding, setOpenOnboarding] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterStatus] = useState<string>('all');
 
   useEffect(() => {
     loadContractors();
@@ -174,7 +172,7 @@ const ContractorsDashboard: React.FC = () => {
       case 'green': return <CheckCircleIcon style={{ color: getRAGColor(status) }} />;
       case 'amber': return <WarningIcon style={{ color: getRAGColor(status) }} />;
       case 'red': return <ErrorIcon style={{ color: getRAGColor(status) }} />;
-      default: return null;
+      default: return <ErrorIcon style={{ color: getRAGColor('red') }} />;
     }
   };
 
@@ -216,7 +214,7 @@ const ContractorsDashboard: React.FC = () => {
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -229,7 +227,7 @@ const ContractorsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -242,7 +240,7 @@ const ContractorsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -255,7 +253,7 @@ const ContractorsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -268,7 +266,7 @@ const ContractorsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -281,7 +279,7 @@ const ContractorsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -300,7 +298,7 @@ const ContractorsDashboard: React.FC = () => {
 
       <Card>
         <CardContent>
-          <Tabs value={selectedTab} onChange={(e, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
+          <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
             <Tab label="All Contractors" />
             <Tab label="Pending Onboarding" />
             <Tab label="Compliance Issues" />

@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, Users, Calendar, Target, Download } from 'lucide-react';
+import { BarChart3, Users, Calendar, Target, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function KPIDashboard() {

@@ -2,19 +2,39 @@
  * Base supplier types and interfaces
  */
 
+import { ProductCategory, Currency, PaymentTerms } from './common.types';
+import { SupplierPerformance } from './performance.types';
+
+export interface SupplierContract {
+  id: string;
+  contractNumber: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  value?: number;
+  status: 'active' | 'expired' | 'terminated';
+}
+
 export interface Supplier {
   id: string;
   code: string;
   name: string;
+  companyName?: string; // Alternative to name
   tradingName?: string;
   registrationNumber?: string;
+  registrationNo?: string; // Alternative to registrationNumber
   taxNumber?: string;
   status: SupplierStatus;
   businessType: BusinessType;
   categories: ProductCategory[];
-  rating: number;
+  rating: number | {
+    overall: number;
+    totalReviews?: number;
+  };
   primaryContact: ContactInfo;
+  contact: ContactInfo; // Alias for primaryContact - used in components
   alternativeContacts?: AlternativeContact[];
+  industry?: string; // Industry classification
+  province?: string; // Province/state for South Africa
   addresses: {
     physical: Address;
     postal?: Address;
@@ -63,6 +83,12 @@ export interface Supplier {
   isPreferred?: boolean;
   isVerified?: boolean;
   attachments?: Attachment[];
+  compliance?: {
+    beeLevel?: number;
+    taxCompliant?: boolean;
+    vatRegistered?: boolean;
+  };
+  insuranceValid?: boolean; // Insurance status
 }
 
 export interface ContactInfo {
@@ -168,27 +194,6 @@ export enum BusinessType {
   OTHER = 'other'
 }
 
-export enum PaymentTerms {
-  CASH = 'cash',
-  NET_7 = 'net_7',
-  NET_15 = 'net_15',
-  NET_30 = 'net_30',
-  NET_45 = 'net_45',
-  NET_60 = 'net_60',
-  NET_90 = 'net_90',
-  COD = 'cod',
-  PREPAID = 'prepaid',
-  CUSTOM = 'custom'
-}
-
-export enum Currency {
-  ZAR = 'ZAR',
-  USD = 'USD',
-  EUR = 'EUR',
-  GBP = 'GBP',
-  OTHER = 'OTHER'
-}
-
 export enum DocumentType {
   TAX_CLEARANCE = 'tax_clearance',
   BEE_CERTIFICATE = 'bee_certificate',
@@ -219,3 +224,6 @@ export enum RevenueRange {
   FIFTY_TO_100M = '50m_100m',
   OVER_100M = 'over_100m'
 }
+
+// Re-export from common for backwards compatibility
+export { PaymentTerms, Currency } from './common.types';

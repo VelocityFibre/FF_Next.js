@@ -80,33 +80,24 @@ export const supplierService = {
   async create(data: SupplierFormData): Promise<string> {
     try {
       // Initialize rating
-      const initialRating: SupplierRating = {
+      const initialRating = {
         overall: 0,
-        quality: 0,
-        delivery: 0,
-        pricing: 0,
-        communication: 0,
-        flexibility: 0,
         totalReviews: 0
       };
 
       const supplier: Omit<Supplier, 'id'> = {
         ...data,
         rating: initialRating,
-        performanceScore: 0,
-        reliabilityScore: 0,
         status: SupplierStatus.PENDING,
         isPreferred: false,
-        compliance: {
+        complianceStatus: {
           taxCompliant: false,
-          insuranceValid: false,
-          licenseValid: false
+          vatRegistered: false,
+          beeLevel: undefined
         },
         documents: [],
-        activeRFQs: 0,
-        completedOrders: 0,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         createdBy: 'current-user-id', // TODO: Get from auth context
         lastModifiedBy: 'current-user-id'
       };
@@ -185,8 +176,9 @@ export const supplierService = {
     try {
       const supplier = await this.getById(id);
       
+      const currentRating = typeof supplier.rating === 'object' ? supplier.rating : { overall: supplier.rating, totalReviews: 0 };
       const updatedRating = {
-        ...supplier.rating,
+        ...currentRating,
         ...rating,
         lastReviewDate: Timestamp.now()
       };
@@ -225,33 +217,31 @@ export const supplierService = {
       const startDate = Timestamp.fromDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
       
       const performance: SupplierPerformance = {
-        supplierId,
-        period,
-        onTimeDeliveryRate: 95,
-        averageLeadTime: 5,
-        deliveryIssues: 2,
-        qualityAcceptanceRate: 98,
-        defectRate: 2,
-        returnRate: 1,
-        totalSpend: 150000,
-        averageOrderValue: 15000,
-        paymentCompliance: 100,
-        averageResponseTime: 4,
-        quoteTurnaroundTime: 24,
-        issueResolutionTime: 48,
-        totalOrders: 10,
-        totalItems: 250,
-        performanceScore: 92,
-        reliabilityScore: 95,
-        startDate,
-        endDate: now,
-        calculatedAt: now
+        overallScore: 92,
+        deliveryScore: 95,
+        qualityScore: 98,
+        priceScore: 90,
+        serviceScore: 88,
+        complianceScore: 100,
+        metrics: {
+          totalOrders: 10,
+          completedOrders: 9,
+          onTimeDeliveries: 8,
+          lateDeliveries: 1,
+          defectiveItems: 2,
+          returnedItems: 1,
+          averageLeadTime: 5,
+          averageResponseTime: 4
+        },
+        issues: [],
+        evaluationPeriod: period,
+        lastEvaluationDate: new Date(),
+        nextEvaluationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       };
       
       // Update supplier with latest scores
       await updateDoc(doc(db, COLLECTION_NAME, supplierId), {
-        performanceScore: performance.performanceScore,
-        reliabilityScore: performance.reliabilityScore,
+        performance: performance,
         updatedAt: Timestamp.now()
       });
       
@@ -269,7 +259,7 @@ export const supplierService = {
       // Firestore doesn't support full-text search, so we use a workaround
       const q = query(
         collection(db, COLLECTION_NAME),
-        orderBy('companyName'),
+        orderBy('name'),
         limit(50)
       );
       
@@ -281,7 +271,7 @@ export const supplierService = {
       
       // Client-side filtering
       return suppliers.filter(supplier => 
-        supplier.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+        (supplier.companyName || supplier.name || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     } catch (error) {
       console.error('Error searching suppliers:', error);

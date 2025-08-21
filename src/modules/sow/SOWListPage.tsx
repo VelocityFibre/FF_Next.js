@@ -5,15 +5,12 @@ import {
   Download,
   Upload,
   Search,
-  Filter,
-  Calendar,
   CheckCircle,
   AlertCircle,
   Clock,
   Eye,
   Edit,
   Trash2,
-  MoreVertical,
   FileText,
   MapPin,
   Home,
@@ -25,6 +22,7 @@ interface SOWListItem extends SOWDocument {
   projectName: string;
   projectCode: string;
   uploadedByName: string;
+  rejectionReason?: string;
 }
 
 export function SOWListPage() {
@@ -35,8 +33,7 @@ export function SOWListPage() {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
-  const [selectedDocument, setSelectedDocument] = useState<SOWListItem | null>(null);
-  const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
+  const [, setSelectedDocument] = useState<SOWListItem | null>(null); // For future modal/detail view
 
   useEffect(() => {
     loadSOWDocuments();

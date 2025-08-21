@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/PigmentGrid';
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Paper,
   Select,
   MenuItem,
@@ -27,22 +27,11 @@ import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
   ShowChart as ShowChartIcon,
-  Assessment as AssessmentIcon,
-  Speed as SpeedIcon,
-  Construction as ConstructionIcon,
   Groups as GroupsIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
-  Timeline as TimelineIcon,
   Download as DownloadIcon,
-  Refresh as RefreshIcon,
-  CalendarToday as CalendarIcon,
-  LocationOn as LocationIcon,
-  Engineering as EngineeringIcon
+  Refresh as RefreshIcon
 } from '@mui/icons-material';
 import {
-  LineChart,
-  Line,
   AreaChart,
   Area,
   BarChart,
@@ -141,12 +130,6 @@ const AnalyticsDashboard: React.FC = () => {
     }
   };
 
-  const getPerformanceColor = (value: number, target: number) => {
-    const ratio = value / target;
-    if (ratio >= 1) return '#4caf50';
-    if (ratio >= 0.8) return '#ff9800';
-    return '#f44336';
-  };
 
   const pieData = [
     { name: 'Completed', value: 65, color: '#4caf50' },
@@ -210,7 +193,7 @@ const AnalyticsDashboard: React.FC = () => {
 
       <Grid container spacing={3}>
         {kpis.slice(0, 4).map((kpi) => (
-          <Grid item xs={12} sm={6} md={3} key={kpi.name}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={kpi.name}>
             <Card>
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -244,7 +227,7 @@ const AnalyticsDashboard: React.FC = () => {
           </Grid>
         ))}
 
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -295,7 +278,7 @@ const AnalyticsDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -333,7 +316,7 @@ const AnalyticsDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -418,7 +401,7 @@ const AnalyticsDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>

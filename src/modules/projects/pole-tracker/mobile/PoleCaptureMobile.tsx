@@ -1,16 +1,26 @@
 import { useState, useRef } from 'react';
 import { 
   Camera, 
-  MapPin, 
   Save, 
   X, 
-  Upload,
   CheckCircle,
-  AlertCircle,
   Navigation
 } from 'lucide-react';
 import { PoleData, DropData, PoleStatus } from '../types/pole-tracker.types';
 import { cn } from '@/utils/cn';
+
+interface PoleFormData {
+  projectId: string;
+  poleNumber: string;
+  status: PoleStatus;
+  maxDrops: number;
+  currentDrops: number;
+  drops: DropData[];
+  latitude?: number;
+  longitude?: number;
+  photos?: Record<string, any>;
+  notes?: string;
+}
 
 interface PoleCaptureMobileProps {
   projectId: string;
@@ -37,7 +47,7 @@ const REQUIRED_PHOTOS: PhotoCapture[] = [
 ];
 
 export function PoleCaptureMobile({ projectId, onSave, onCancel }: PoleCaptureMobileProps) {
-  const [formData, setFormData] = useState<Partial<PoleData>>({
+  const [formData, setFormData] = useState<PoleFormData>({
     projectId,
     poleNumber: '',
     status: PoleStatus.NOT_STARTED,
@@ -63,7 +73,7 @@ export function PoleCaptureMobile({ projectId, onSave, onCancel }: PoleCaptureMo
             lng: position.coords.longitude,
           };
           setGpsLocation(location);
-          setFormData(prev => ({
+          setFormData((prev: any) => ({
             ...prev,
             latitude: location.lat,
             longitude: location.lng,
@@ -110,15 +120,15 @@ export function PoleCaptureMobile({ projectId, onSave, onCancel }: PoleCaptureMo
   const addDrop = () => {
     if (formData.currentDrops! < formData.maxDrops!) {
       const newDrop: DropData = {
-        id: `drop-${Date.now()}`,
         dropNumber: `D${(formData.currentDrops || 0) + 1}`,
+        poleNumber: formData.poleNumber,
         customerName: '',
         address: '',
+        installationType: 'aerial',
         status: 'pending',
-        installDate: '',
       };
       
-      setFormData(prev => ({
+      setFormData((prev: any) => ({
         ...prev,
         drops: [...(prev.drops || []), newDrop],
         currentDrops: (prev.currentDrops || 0) + 1,
@@ -129,7 +139,7 @@ export function PoleCaptureMobile({ projectId, onSave, onCancel }: PoleCaptureMo
   const updateDrop = (index: number, field: keyof DropData, value: string) => {
     const updatedDrops = [...(formData.drops || [])];
     updatedDrops[index] = { ...updatedDrops[index], [field]: value };
-    setFormData(prev => ({ ...prev, drops: updatedDrops }));
+    setFormData((prev: any) => ({ ...prev, drops: updatedDrops }));
   };
 
   const handleSubmit = async () => {
@@ -150,14 +160,45 @@ export function PoleCaptureMobile({ projectId, onSave, onCancel }: PoleCaptureMo
       return;
     }
 
-    // Prepare photo URLs for saving
-    const photoUrls = photos.filter(p => p.captured).map(p => p.url!);
+    // Prepare photo URLs for saving (currently unused but may be needed for future features)
+    // const photoUrls = photos.filter(p => p.captured).reduce((acc, p) => {
+    //   acc[p.id] = p.url!;
+    //   return acc;
+    // }, {} as Record<string, string>);
     
-    await onSave({
-      ...formData,
-      photos: photoUrls,
-      capturedAt: new Date().toISOString(),
-    });
+    // Convert form data to PoleData format
+    const poleData: Partial<PoleData> = {
+      vfPoleId: formData.poleNumber,
+      projectId: formData.projectId,
+      projectCode: '',
+      poleNumber: formData.poleNumber,
+      dateInstalled: new Date(),
+      location: `${formData.latitude || 0}, ${formData.longitude || 0}`,
+      poleType: 'wooden' as any,
+      contractorId: '',
+      workingTeam: '',
+      dropCount: formData.currentDrops,
+      maxCapacity: formData.maxDrops,
+      connectedDrops: formData.drops.map(d => d.dropNumber),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      createdBy: '',
+      updatedBy: '',
+    };
+    
+    // Add optional fields
+    if (formData.status) {
+      poleData.status = formData.status.toString();
+    }
+    
+    if (formData.latitude && formData.longitude) {
+      poleData.gpsCoordinates = {
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+      };
+    }
+    
+    await onSave(poleData);
   };
 
   const allRequiredComplete = 
@@ -293,8 +334,8 @@ export function PoleCaptureMobile({ projectId, onSave, onCancel }: PoleCaptureMo
             )}
           </div>
           
-          {formData.drops?.map((drop, index) => (
-            <div key={drop.id} className="mb-3 p-3 bg-neutral-50 rounded-lg">
+          {formData.drops.map((drop, index) => (
+            <div key={index} className="mb-3 p-3 bg-neutral-50 rounded-lg">
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="text"

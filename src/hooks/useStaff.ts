@@ -2,10 +2,8 @@ import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { staffService } from '@/services/staffService';
 import { 
-  StaffMember, 
   StaffFormData, 
   StaffFilter,
-  StaffSummary,
   StaffDropdownOption,
   ProjectAssignment
 } from '@/types/staff.types';

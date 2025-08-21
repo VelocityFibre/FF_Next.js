@@ -27,7 +27,6 @@ export function ProtectedRoute({
     currentUser, 
     isAuthenticated, 
     loading, 
-    hasPermission, 
     hasAnyPermission, 
     hasAllPermissions, 
     hasAnyRole 

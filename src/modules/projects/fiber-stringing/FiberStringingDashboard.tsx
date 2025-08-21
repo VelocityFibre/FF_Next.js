@@ -6,8 +6,7 @@ import {
   AlertCircle,
   Clock,
   TrendingUp,
-  Users,
-  Calendar
+  Users
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 

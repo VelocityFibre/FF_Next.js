@@ -12,12 +12,12 @@ export function ContactFields({ formData, onChange }: ContactFieldsProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Contact Name <span className="text-error-500">*</span>
+            Contact Person <span className="text-error-500">*</span>
           </label>
           <input
             type="text"
-            value={formData.contactName}
-            onChange={(e) => onChange('contactName', e.target.value)}
+            value={formData.contactPerson}
+            onChange={(e) => onChange('contactPerson', e.target.value)}
             className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             required
           />
@@ -25,12 +25,12 @@ export function ContactFields({ formData, onChange }: ContactFieldsProps) {
 
         <div>
           <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Contact Title
+            Alternative Email
           </label>
           <input
-            type="text"
-            value={formData.contactTitle}
-            onChange={(e) => onChange('contactTitle', e.target.value)}
+            type="email"
+            value={formData.alternativeEmail || ''}
+            onChange={(e) => onChange('alternativeEmail', e.target.value)}
             className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
@@ -67,7 +67,7 @@ export function ContactFields({ formData, onChange }: ContactFieldsProps) {
           </label>
           <input
             type="tel"
-            value={formData.alternativePhone}
+            value={formData.alternativePhone || ''}
             onChange={(e) => onChange('alternativePhone', e.target.value)}
             className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
@@ -75,14 +75,18 @@ export function ContactFields({ formData, onChange }: ContactFieldsProps) {
 
         <div>
           <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Department
+            Preferred Contact Method
           </label>
-          <input
-            type="text"
-            value={formData.department}
-            onChange={(e) => onChange('department', e.target.value)}
+          <select
+            value={formData.preferredContactMethod}
+            onChange={(e) => onChange('preferredContactMethod', e.target.value)}
             className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          />
+          >
+            <option value="EMAIL">Email</option>
+            <option value="PHONE">Phone</option>
+            <option value="SMS">SMS</option>
+            <option value="WHATSAPP">WhatsApp</option>
+          </select>
         </div>
       </div>
     </div>

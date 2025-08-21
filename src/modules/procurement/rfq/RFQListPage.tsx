@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Send, Filter, Search, TrendingUp } from 'lucide-react';
+import { Plus, Send, Search, TrendingUp } from 'lucide-react';
 import { useRFQs } from '../hooks/useRFQ';
 import { RFQStatus } from '@/types/procurement.types';
 import { RFQCard } from '../components/RFQCard';
@@ -12,15 +12,17 @@ export function RFQListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<RFQStatus | 'all'>('all');
   
-  const { data: rfqs, isLoading, error } = useRFQs({
-    status: statusFilter === 'all' ? undefined : statusFilter
-  });
+  const { data: rfqs, isLoading, error } = useRFQs(
+    statusFilter === 'all' 
+      ? {} 
+      : { status: statusFilter }
+  );
 
   const filteredRFQs = rfqs?.filter(rfq => {
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       return (
-        rfq.rfqNumber.toLowerCase().includes(search) ||
+        (rfq.number || '').toLowerCase().includes(search) ||
         rfq.title.toLowerCase().includes(search) ||
         rfq.projectName?.toLowerCase().includes(search)
       );

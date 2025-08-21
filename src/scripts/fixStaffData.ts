@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, updateDoc, writeBatch } from 'firebase/firestore';
+import { collection, getDocs, doc, writeBatch } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { StaffStatus, Position, Department } from '@/types/staff.types';
 
@@ -118,8 +118,8 @@ export async function fixStaffData() {
     // Now let's specifically ensure we have some project managers
     // Get all staff again to check positions
     const updatedSnapshot = await getDocs(collection(db, 'staff'));
-    const managers = [];
-    const nonManagers = [];
+    const managers: Array<{ id: string; name: string; position: string }> = [];
+    const nonManagers: Array<{ id: string; name: string; position: string; status: string }> = [];
     
     updatedSnapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();

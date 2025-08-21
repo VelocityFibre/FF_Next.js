@@ -14,6 +14,14 @@ const documentTypeLabels: Record<SOWDocumentType, string> = {
   [SOWDocumentType.SCHEDULE]: 'Schedule',
   [SOWDocumentType.REPORT]: 'Report',
   [SOWDocumentType.OTHER]: 'Other',
+  [SOWDocumentType.POLES]: 'Poles',
+  [SOWDocumentType.DROPS]: 'Drops',
+  [SOWDocumentType.FIBRE]: 'Fibre',
+  [SOWDocumentType.GENERAL]: 'General',
+  [SOWDocumentType.SITE_SURVEY]: 'Site Survey',
+  [SOWDocumentType.TECHNICAL_SPECS]: 'Technical Specs',
+  [SOWDocumentType.CABLE]: 'Cable',
+  [SOWDocumentType.EQUIPMENT]: 'Equipment',
 };
 
 const documentTypeColors: Record<SOWDocumentType, string> = {
@@ -25,6 +33,14 @@ const documentTypeColors: Record<SOWDocumentType, string> = {
   [SOWDocumentType.SCHEDULE]: 'bg-pink-100 text-pink-700',
   [SOWDocumentType.REPORT]: 'bg-indigo-100 text-indigo-700',
   [SOWDocumentType.OTHER]: 'bg-gray-100 text-gray-700',
+  [SOWDocumentType.POLES]: 'bg-teal-100 text-teal-700',
+  [SOWDocumentType.DROPS]: 'bg-cyan-100 text-cyan-700',
+  [SOWDocumentType.FIBRE]: 'bg-emerald-100 text-emerald-700',
+  [SOWDocumentType.GENERAL]: 'bg-slate-100 text-slate-700',
+  [SOWDocumentType.SITE_SURVEY]: 'bg-amber-100 text-amber-700',
+  [SOWDocumentType.TECHNICAL_SPECS]: 'bg-rose-100 text-rose-700',
+  [SOWDocumentType.CABLE]: 'bg-violet-100 text-violet-700',
+  [SOWDocumentType.EQUIPMENT]: 'bg-fuchsia-100 text-fuchsia-700',
 };
 
 export function ProjectDocuments({ project }: ProjectDocumentsProps) {
@@ -76,7 +92,7 @@ export function ProjectDocuments({ project }: ProjectDocumentsProps) {
       </div>
       
       <div className="divide-y divide-neutral-200">
-        {documents.map((doc) => (
+        {documents.map((doc: any) => (
           <div key={doc.id} className="p-4 hover:bg-neutral-50 transition-colors">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

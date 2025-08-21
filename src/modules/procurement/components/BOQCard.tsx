@@ -65,7 +65,7 @@ export function BOQCard({ boq }: BOQCardProps) {
             )}
           </div>
           <h3 className="text-lg font-semibold text-gray-900">{boq.title}</h3>
-          <p className="text-sm text-gray-500">{boq.boqNumber}</p>
+          <p className="text-sm text-gray-500">{boq.number}</p>
         </div>
         <button
           onClick={(e) => {
@@ -93,7 +93,7 @@ export function BOQCard({ boq }: BOQCardProps) {
         )}
         <div className="flex items-center text-sm text-gray-600">
           <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-          <span>Valid until {format(boq.validUntil.toDate(), 'MMM dd, yyyy')}</span>
+          <span>Valid until {boq.validUntil ? format(boq.validUntil.toDate(), 'MMM dd, yyyy') : 'N/A'}</span>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ export function BOQCard({ boq }: BOQCardProps) {
             <p className="text-xs text-gray-500">Total Amount</p>
             <p className="text-lg font-bold text-gray-900 flex items-center">
               <DollarSign className="h-4 w-4 mr-1" />
-              {boq.currency} {boq.totalAmount.toLocaleString()}
+              {boq.currency} {boq.totalAmount?.toLocaleString() || '0'}
             </p>
           </div>
           <div className="text-right">
@@ -117,7 +117,7 @@ export function BOQCard({ boq }: BOQCardProps) {
         <div className="mt-3 pt-3 border-t border-gray-200">
           <p className="text-xs text-gray-500">
             Approved by {boq.approvedByName} on{' '}
-            {boq.approvalDate && format(boq.approvalDate.toDate(), 'MMM dd, yyyy')}
+            {boq.approvedAt && format(boq.approvedAt.toDate(), 'MMM dd, yyyy')}
           </p>
         </div>
       )}

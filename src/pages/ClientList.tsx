@@ -18,9 +18,7 @@ import {
 } from 'lucide-react';
 import { clientService } from '@/services/clientService';
 import { ClientImport } from '@/components/clients/ClientImport';
-import { Client, ClientFilter, ClientStatus, ClientCategory, ClientPriority } from '@/types/client.types';
-import { format } from 'date-fns';
-import { Timestamp } from 'firebase/firestore';
+import { ClientFilter, ClientStatus, ClientCategory, ClientPriority } from '@/types/client.types';
 
 export function ClientList() {
   const navigate = useNavigate();
@@ -282,10 +280,15 @@ export function ClientList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select
                   value={filter.status?.[0] || ''}
-                  onChange={(e) => setFilter(prev => ({
-                    ...prev,
-                    status: e.target.value ? [e.target.value as ClientStatus] : undefined
-                  }))}
+                  onChange={(e) => {
+                    const newFilter = { ...filter };
+                    if (e.target.value) {
+                      newFilter.status = [e.target.value as ClientStatus];
+                    } else {
+                      delete newFilter.status;
+                    }
+                    setFilter(newFilter);
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="">All Statuses</option>
@@ -301,10 +304,15 @@ export function ClientList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <select
                   value={filter.category?.[0] || ''}
-                  onChange={(e) => setFilter(prev => ({
-                    ...prev,
-                    category: e.target.value ? [e.target.value as ClientCategory] : undefined
-                  }))}
+                  onChange={(e) => {
+                    const newFilter = { ...filter };
+                    if (e.target.value) {
+                      newFilter.category = [e.target.value as ClientCategory];
+                    } else {
+                      delete newFilter.category;
+                    }
+                    setFilter(newFilter);
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="">All Categories</option>
@@ -320,10 +328,15 @@ export function ClientList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
                 <select
                   value={filter.priority?.[0] || ''}
-                  onChange={(e) => setFilter(prev => ({
-                    ...prev,
-                    priority: e.target.value ? [e.target.value as ClientPriority] : undefined
-                  }))}
+                  onChange={(e) => {
+                    const newFilter = { ...filter };
+                    if (e.target.value) {
+                      newFilter.priority = [e.target.value as ClientPriority];
+                    } else {
+                      delete newFilter.priority;
+                    }
+                    setFilter(newFilter);
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="">All Priorities</option>

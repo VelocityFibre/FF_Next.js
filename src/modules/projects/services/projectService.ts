@@ -10,9 +10,7 @@ import {
   where, 
   orderBy, 
   limit, 
-  startAfter,
   DocumentSnapshot,
-  Timestamp,
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
@@ -20,11 +18,8 @@ import {
   Project, 
   CreateProjectRequest, 
   UpdateProjectRequest,
-  ProjectFilters,
-  ProjectSortOptions,
   ProjectListQuery,
-  ProjectStatus,
-  ProjectPriority
+  ProjectStatus
 } from '../types/project.types';
 
 const COLLECTION_NAME = 'projects';
@@ -128,12 +123,22 @@ class ProjectService {
         } as Project);
       });
 
-      return {
+      const result: {
+        projects: Project[];
+        total: number;
+        hasMore: boolean;
+        lastDoc?: DocumentSnapshot;
+      } = {
         projects,
         total: projects.length,
         hasMore: snapshot.docs.length > pageLimit,
-        lastDoc: lastVisible,
       };
+      
+      if (lastVisible) {
+        result.lastDoc = lastVisible;
+      }
+      
+      return result;
     } catch (error) {
       console.error('Error fetching projects:', error);
       throw new Error('Failed to fetch projects');

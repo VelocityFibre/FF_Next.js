@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, Filter, Star, Building2, AlertCircle } from 'lucide-react';
+import { Plus, Search, Star, Building2, AlertCircle } from 'lucide-react';
 import { useSuppliers } from './hooks/useSuppliers';
 import { SupplierCard } from './components/SupplierCard';
 import { SupplierStatus, ProductCategory } from '@/types/supplier.types';
@@ -15,19 +15,18 @@ export function SuppliersPage() {
   const [showPreferredOnly, setShowPreferredOnly] = useState(false);
   
   const { data: suppliers, isLoading, error } = useSuppliers({
-    status: statusFilter === 'all' ? undefined : statusFilter,
-    category: categoryFilter === 'all' ? undefined : categoryFilter,
-    isPreferred: showPreferredOnly || undefined
+    ...(statusFilter !== 'all' && { status: statusFilter }),
+    ...(categoryFilter !== 'all' && { category: categoryFilter as string }),
+    ...(showPreferredOnly && { isPreferred: true })
   });
 
   const filteredSuppliers = suppliers?.filter(supplier => {
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       return (
-        supplier.companyName.toLowerCase().includes(search) ||
-        supplier.registrationNo?.toLowerCase().includes(search) ||
-        supplier.contact.email.toLowerCase().includes(search) ||
-        supplier.industry?.toLowerCase().includes(search)
+        (supplier.name || supplier.companyName || '').toLowerCase().includes(search) ||
+        (supplier.registrationNumber || supplier.registrationNo || '').toLowerCase().includes(search) ||
+        supplier.email.toLowerCase().includes(search)
       );
     }
     return true;
@@ -53,7 +52,7 @@ export function SuppliersPage() {
     active: suppliers?.filter(s => s.status === SupplierStatus.ACTIVE).length || 0,
     preferred: suppliers?.filter(s => s.isPreferred).length || 0,
     averageRating: suppliers && suppliers.length > 0
-      ? suppliers.reduce((sum, s) => sum + s.rating.overall, 0) / suppliers.length
+      ? suppliers.reduce((sum, s) => sum + (typeof s.rating === 'number' ? s.rating : s.rating.overall), 0) / suppliers.length
       : 0,
   };
 
@@ -113,11 +112,8 @@ export function SuppliersPage() {
             <option value="all">All Categories</option>
             <option value={ProductCategory.FIBER_CABLE}>Fiber Cable</option>
             <option value={ProductCategory.NETWORK_EQUIPMENT}>Network Equipment</option>
-            <option value={ProductCategory.POLES_INFRASTRUCTURE}>Poles & Infrastructure</option>
             <option value={ProductCategory.CONNECTORS}>Connectors</option>
-            <option value={ProductCategory.SPLICING_EQUIPMENT}>Splicing Equipment</option>
-            <option value={ProductCategory.TESTING_TOOLS}>Testing Tools</option>
-            <option value={ProductCategory.SAFETY_EQUIPMENT}>Safety Equipment</option>
+            <option value={ProductCategory.TEST_EQUIPMENT}>Test Equipment</option>
             <option value={ProductCategory.CONSUMABLES}>Consumables</option>
           </select>
 

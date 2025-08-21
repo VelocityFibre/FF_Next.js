@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Download, Upload, Filter, Search } from 'lucide-react';
+import { Plus, Download, Upload, Search } from 'lucide-react';
 import { useBOQs } from '../hooks/useBOQ';
 import { BOQStatus } from '@/types/procurement.types';
 import { BOQCard } from '../components/BOQCard';
@@ -12,15 +12,17 @@ export function BOQListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<BOQStatus | 'all'>('all');
   
-  const { data: boqs, isLoading, error } = useBOQs({
-    status: statusFilter === 'all' ? undefined : statusFilter
-  });
+  const { data: boqs, isLoading, error } = useBOQs(
+    statusFilter === 'all' 
+      ? {} 
+      : { status: statusFilter }
+  );
 
   const filteredBOQs = boqs?.filter(boq => {
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       return (
-        boq.boqNumber.toLowerCase().includes(search) ||
+        boq.number.toLowerCase().includes(search) ||
         boq.title.toLowerCase().includes(search) ||
         boq.projectName?.toLowerCase().includes(search) ||
         boq.clientName?.toLowerCase().includes(search)
@@ -142,7 +144,7 @@ export function BOQListPage() {
         <div className="bg-white p-4 rounded-lg border border-gray-200">
           <p className="text-sm text-gray-500">Total Value</p>
           <p className="text-2xl font-bold text-gray-900">
-            R {boqs?.reduce((sum, b) => sum + b.totalAmount, 0).toLocaleString() || 0}
+            R {boqs?.reduce((sum, b) => sum + (b.totalAmount || 0), 0).toLocaleString() || 0}
           </p>
         </div>
       </div>

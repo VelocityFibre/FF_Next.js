@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { staffService } from '@/services/staffService';
 import { StaffImport } from '@/components/staff/StaffImport';
-import { StaffMember, StaffFilter, Department, StaffStatus, StaffLevel } from '@/types/staff.types';
+import { StaffFilter, Department, StaffStatus, StaffLevel } from '@/types/staff.types';
 import { format } from 'date-fns';
 import { Timestamp } from 'firebase/firestore';
 
@@ -223,10 +223,15 @@ export function StaffList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
                 <select
                   value={filter.department?.[0] || ''}
-                  onChange={(e) => setFilter(prev => ({
-                    ...prev,
-                    department: e.target.value ? [e.target.value as Department] : undefined
-                  }))}
+                  onChange={(e) => {
+                    const newFilter = { ...filter };
+                    if (e.target.value) {
+                      newFilter.department = [e.target.value as Department];
+                    } else {
+                      delete newFilter.department;
+                    }
+                    setFilter(newFilter);
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="">All Departments</option>
@@ -242,10 +247,15 @@ export function StaffList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Level</label>
                 <select
                   value={filter.level?.[0] || ''}
-                  onChange={(e) => setFilter(prev => ({
-                    ...prev,
-                    level: e.target.value ? [e.target.value as StaffLevel] : undefined
-                  }))}
+                  onChange={(e) => {
+                    const newFilter = { ...filter };
+                    if (e.target.value) {
+                      newFilter.level = [e.target.value as StaffLevel];
+                    } else {
+                      delete newFilter.level;
+                    }
+                    setFilter(newFilter);
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="">All Levels</option>
@@ -261,10 +271,15 @@ export function StaffList() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select
                   value={filter.status?.[0] || ''}
-                  onChange={(e) => setFilter(prev => ({
-                    ...prev,
-                    status: e.target.value ? [e.target.value as StaffStatus] : undefined
-                  }))}
+                  onChange={(e) => {
+                    const newFilter = { ...filter };
+                    if (e.target.value) {
+                      newFilter.status = [e.target.value as StaffStatus];
+                    } else {
+                      delete newFilter.status;
+                    }
+                    setFilter(newFilter);
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 >
                   <option value="">All Statuses</option>

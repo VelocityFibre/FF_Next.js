@@ -1,7 +1,6 @@
 import { 
   StaffFormData, 
-  Department, 
-  Position,
+  Department,
   StaffLevel,
   StaffStatus,
   ContractType,
@@ -207,8 +206,8 @@ export function EmploymentSection({ formData, handleInputChange }: SectionProps)
           <input
             type="date"
             required
-            value={formData.startDate}
-            onChange={(e) => handleInputChange('startDate', e.target.value)}
+            value={formData.startDate instanceof Date ? formData.startDate.toISOString().split('T')[0] : ''}
+            onChange={(e) => handleInputChange('startDate', new Date(e.target.value))}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -391,7 +390,7 @@ export function AvailabilitySection({ formData, handleInputChange }: SectionProp
   );
 }
 
-export function SkillsSection({ formData, toggleSkill }: SectionProps) {
+export function SkillsSection({ formData, toggleSkill, handleInputChange }: SectionProps) {
   return (
     <div>
       <h2 className="text-lg font-medium text-gray-900 mb-4">Skills & Certifications</h2>
@@ -422,7 +421,7 @@ export function SkillsSection({ formData, toggleSkill }: SectionProps) {
         </label>
         <input
           type="text"
-          value={formData.specializations.join(', ')}
+          value={(formData.specializations || []).join(', ')}
           onChange={(e) => handleInputChange('specializations', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
           placeholder="e.g., GPON, Aerial Installation, Splicing"
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

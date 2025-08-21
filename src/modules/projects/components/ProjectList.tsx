@@ -62,11 +62,10 @@ export function ProjectList() {
   const [showFilters, setShowFilters] = useState(false);
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
 
-  const filters: ProjectFilters = {
-    status: selectedStatus.length > 0 ? selectedStatus : undefined,
-    priority: selectedPriority.length > 0 ? selectedPriority : undefined,
-    searchTerm: searchQuery || undefined,
-  };
+  const filters: ProjectFilters = {};
+  if (selectedStatus.length > 0) filters.status = selectedStatus;
+  if (selectedPriority.length > 0) filters.priority = selectedPriority;
+  if (searchQuery) filters.searchTerm = searchQuery;
 
   const { data, isLoading, error } = useProjects({
     filters,

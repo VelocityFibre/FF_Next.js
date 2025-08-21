@@ -7,7 +7,7 @@ const QUERY_KEY = 'pole-trackers';
 export function usePoleTrackers(filters?: PoleSearchFilters) {
   return useQuery({
     queryKey: [QUERY_KEY, filters],
-    queryFn: () => poleTrackerService.getAll(filters),
+    queryFn: () => poleTrackerService.getAll(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
@@ -32,7 +32,7 @@ export function useCreatePole() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: Omit<PoleTracker, 'id'>) => poleTrackerService.create(data),
+    mutationFn: (data: Omit<PoleTracker, 'id'>) => poleTrackerService.create(data as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
@@ -44,7 +44,7 @@ export function useUpdatePole() {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<PoleTracker> }) =>
-      poleTrackerService.update(id, data),
+      poleTrackerService.update(id, data as any),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, id] });
@@ -66,15 +66,16 @@ export function useDeletePole() {
 export function usePoleStatistics(projectId?: string) {
   return useQuery({
     queryKey: [QUERY_KEY, 'statistics', projectId],
-    queryFn: () => poleTrackerService.getStatistics(projectId),
+    queryFn: () => poleTrackerService.getStatistics(projectId!),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
-export function usePendingSyncPoles() {
+export function usePendingSyncPoles(projectId: string) {
   return useQuery({
-    queryKey: [QUERY_KEY, 'pending-sync'],
-    queryFn: () => poleTrackerService.getPendingSync(),
+    queryKey: [QUERY_KEY, 'pending-sync', projectId],
+    queryFn: () => poleTrackerService.getPendingSync(projectId),
     refetchInterval: 30 * 1000, // Refresh every 30 seconds
+    enabled: !!projectId,
   });
 }

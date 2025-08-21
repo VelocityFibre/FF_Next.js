@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
       errorInfo,
@@ -87,7 +87,7 @@ Please describe what you were doing when this error occurred:
     window.location.href = `mailto:support@fibreflow.com?subject=${subject}&body=${body}`;
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       // Custom fallback UI if provided
       if (this.props.fallback) {
@@ -208,7 +208,7 @@ export function withErrorBoundary<P extends object>(
 
 // Hook for throwing errors in functional components
 export function useErrorHandler() {
-  return (error: Error, errorInfo?: string) => {
+  return (error: Error, _errorInfo?: string) => {
     throw error;
   };
 }

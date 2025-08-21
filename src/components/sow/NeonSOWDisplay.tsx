@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { 
-  FileSpreadsheet, 
   MapPin, 
   Cable, 
   Home, 
   Database,
   AlertCircle,
   CheckCircle,
-  ExternalLink,
-  Wifi,
   Activity
 } from 'lucide-react';
 import { useProjectSOW, useNeonHealth } from '@/hooks/useNeonSOW';

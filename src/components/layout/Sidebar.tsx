@@ -4,20 +4,14 @@ import {
   Users, 
   FolderOpen,
   Wrench,
-  Calendar,
   CheckCircle,
   BarChart3,
   FileText,
   Settings,
-  Building2,
-  Package,
   MessageSquare,
   TrendingUp,
   Smartphone,
-  UserCheck,
   Truck,
-  Menu,
-  X,
   ChevronLeft,
   ChevronRight,
   Home,
@@ -27,13 +21,10 @@ import {
   MapPin,
   Camera,
   Briefcase,
-  Activity,
-  PhoneCall,
-  Globe
+  Activity
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { UserRole, Permission } from '@/types/auth.types';
 import VFLogo from '@/components/ui/VFLogo';
 
 interface SidebarProps {
@@ -43,8 +34,8 @@ interface SidebarProps {
   onCollapse: () => void;
 }
 
-export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarProps) {
-  const { currentUser, hasPermission, hasAnyRole } = useAuth();
+export function Sidebar({ isOpen, isCollapsed, onCollapse }: SidebarProps) {
+  const { currentUser, hasPermission } = useAuth();
   const { themeConfig } = useTheme();
 
   // Role-based navigation items with permissions
@@ -405,7 +396,7 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
                   <NavLink
                     key={item.to}
                     to={item.to}
-                    className={({ isActive }) =>
+                    className={() =>
                       `flex items-center rounded-lg transition-all duration-200 relative group ${
                         isCollapsed ? 'px-3 py-3 justify-center' : 'px-3 py-2 space-x-3'
                       }`

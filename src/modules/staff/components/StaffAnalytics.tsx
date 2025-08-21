@@ -2,10 +2,8 @@ import { useStaffSummary } from '@/hooks/useStaff';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { 
   Users, 
-  TrendingUp, 
   Award,
   Clock,
-  Activity,
   PieChart,
   BarChart3,
   ArrowUpRight,
@@ -13,7 +11,6 @@ import {
   Briefcase,
   UserCheck
 } from 'lucide-react';
-import { Department, StaffStatus, StaffLevel, ContractType } from '@/types/staff.types';
 
 export function StaffAnalytics() {
   const { data: summary, isLoading, error } = useStaffSummary();
@@ -38,14 +35,6 @@ export function StaffAnalytics() {
     return `${(value * 100).toFixed(1)}%`;
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-ZA', {
-      style: 'currency',
-      currency: 'ZAR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
 
   return (
     <div className="space-y-6">
@@ -116,10 +105,10 @@ export function StaffAnalytics() {
           </div>
           <p className="text-sm text-gray-500 mb-1">Utilization Rate</p>
           <p className="text-3xl font-bold text-gray-900">
-            {formatPercentage((summary.activeStaff - summary.availableStaff) / summary.activeStaff)}
+            {formatPercentage((summary.activeStaff - (summary.availableStaff || 0)) / summary.activeStaff)}
           </p>
           <p className="text-xs text-gray-500 mt-2">
-            Staff currently assigned
+            {summary.availableStaff || 0} staff currently assigned
           </p>
         </div>
       </div>

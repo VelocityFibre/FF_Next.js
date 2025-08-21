@@ -6,9 +6,7 @@ import {
   X, 
   Calendar,
   MapPin,
-  DollarSign,
   Users,
-  AlertCircle,
   Loader2
 } from 'lucide-react';
 import { 
@@ -40,7 +38,7 @@ export function ProjectForm() {
   
   const { data: project, isLoading: projectLoading } = useProject(projectId || '');
   const { data: clients, isLoading: clientsLoading } = useClients();
-  const { data: staff, isLoading: staffLoading } = useStaff({ position: 'Project Manager' });
+  const { data: staff, isLoading: staffLoading } = useStaff({});
   
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
@@ -50,8 +48,6 @@ export function ProjectForm() {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
-    setValue,
   } = useForm<FormData>({
     defaultValues: {
       priority: ProjectPriority.MEDIUM,
@@ -66,16 +62,15 @@ export function ProjectForm() {
     if (isEditMode && project) {
       reset({
         name: project.name,
-        description: project.description,
+        description: project.description || '',
         startDate: project.startDate.split('T')[0],
         endDate: project.endDate.split('T')[0],
         location: project.location,
         clientId: project.clientId,
         projectManagerId: project.projectManagerId,
         priority: project.priority,
-        status: project.status,
         budget: project.budget,
-      });
+      } as FormData);
     }
   }, [isEditMode, project, reset]);
 

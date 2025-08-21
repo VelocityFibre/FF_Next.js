@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/PigmentGrid';
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Button,
   IconButton,
   Chip,
@@ -30,36 +30,27 @@ import {
   ListItemSecondaryAction,
   Divider,
   Badge,
-  Tooltip,
   Menu,
   MenuItem,
   FormControl,
   InputLabel,
   Select,
   Checkbox,
-  FormControlLabel
 } from '@mui/material';
 import {
   Add as AddIcon,
   Event as EventIcon,
   Task as TaskIcon,
-  Message as MessageIcon,
   Notifications as NotificationsIcon,
   VideoCall as VideoCallIcon,
-  Description as DescriptionIcon,
-  Schedule as ScheduleIcon,
-  Person as PersonIcon,
   Group as GroupIcon,
   MoreVert as MoreVertIcon,
   CheckCircle as CheckCircleIcon,
   RadioButtonUnchecked as RadioButtonUncheckedIcon,
   AttachFile as AttachFileIcon,
-  Send as SendIcon,
   PriorityHigh as PriorityHighIcon,
-  Flag as FlagIcon,
   Assignment as AssignmentIcon,
   Comment as CommentIcon,
-  AccessTime as AccessTimeIcon
 } from '@mui/icons-material';
 
 interface Meeting {
@@ -119,8 +110,6 @@ const CommunicationsDashboard: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [openMeetingDialog, setOpenMeetingDialog] = useState(false);
   const [openTaskDialog, setOpenTaskDialog] = useState(false);
-  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
@@ -349,7 +338,7 @@ const CommunicationsDashboard: React.FC = () => {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <Card sx={{ mb: 2 }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -385,10 +374,10 @@ const CommunicationsDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={9}>
+        <Grid size={{ xs: 12, md: 9 }}>
           <Card>
             <CardContent>
-              <Tabs value={selectedTab} onChange={(e, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
+              <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
                 <Tab label="Tasks" icon={<TaskIcon />} iconPosition="start" />
                 <Tab label="Meetings" icon={<EventIcon />} iconPosition="start" />
                 <Tab label="Action Items" icon={<AssignmentIcon />} iconPosition="start" />
@@ -557,7 +546,7 @@ const CommunicationsDashboard: React.FC = () => {
                           }
                         />
                         <ListItemSecondaryAction>
-                          <IconButton edge="end" onClick={() => setSelectedMeeting(meeting)}>
+                          <IconButton edge="end" onClick={() => console.log('Meeting details:', meeting)}>
                             <MoreVertIcon />
                           </IconButton>
                         </ListItemSecondaryAction>

@@ -25,6 +25,7 @@ export interface KPITarget {
     max?: number;
     warning?: number;
     critical?: number;
+    target?: number; // Added missing target property
   };
   trend?: 'up' | 'down' | 'stable';
   lastUpdated?: Date | string;

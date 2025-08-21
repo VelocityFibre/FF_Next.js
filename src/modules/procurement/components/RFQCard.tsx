@@ -54,7 +54,7 @@ export function RFQCard({ rfq }: RFQCardProps) {
     }
   };
 
-  const respondedCount = rfq.invitedSuppliers?.filter(s => s.status === 'responded').length || 0;
+  const respondedCount = rfq.invitedSuppliers?.filter((s: any) => s.status === 'responded').length || 0;
   const totalInvited = rfq.invitedSuppliers?.length || 0;
 
   return (
@@ -93,7 +93,7 @@ export function RFQCard({ rfq }: RFQCardProps) {
         )}
         <div className="flex items-center text-sm text-gray-600">
           <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-          <span>Deadline: {format(rfq.deadline.toDate(), 'MMM dd, yyyy')}</span>
+          <span>Deadline: {rfq.deadline ? format(rfq.deadline.toDate(), 'MMM dd, yyyy') : 'N/A'}</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <Users className="h-4 w-4 mr-2 text-gray-400" />

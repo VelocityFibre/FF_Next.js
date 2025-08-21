@@ -96,7 +96,7 @@ export function ProjectHeader({ project, hasPermission, onEdit, onDelete }: Proj
             </div>
           )}
           
-          {hasPermission(Permission.PROJECTS_EDIT) && (
+          {hasPermission(Permission.PROJECTS_UPDATE) && (
             <button
               onClick={onEdit}
               className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"

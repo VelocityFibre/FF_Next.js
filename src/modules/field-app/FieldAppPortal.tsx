@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/PigmentGrid';
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Button,
   IconButton,
   Chip,
-  Paper,
   Avatar,
   List,
   ListItem,
@@ -18,14 +17,12 @@ import {
   Badge,
   Alert,
   LinearProgress,
-  Fab,
   SpeedDial,
   SpeedDialAction,
   SpeedDialIcon,
   Switch,
   FormControlLabel,
   Divider,
-  Tooltip,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -45,7 +42,6 @@ import {
   LocationOn as LocationIcon,
   Navigation as NavigationIcon,
   CheckCircle as CheckIcon,
-  Warning as WarningIcon,
   Schedule as ScheduleIcon,
   Build as ToolsIcon,
   QrCodeScanner as QrScannerIcon,
@@ -60,9 +56,7 @@ import {
   Videocam as VideoIcon,
   Mic as MicIcon,
   Save as SaveIcon,
-  Upload as UploadIcon,
   Download as DownloadIcon,
-  WifiOff as NoConnectionIcon,
   Router as RouterIcon,
   Speed as SpeedTestIcon,
   Home as HomeIcon
@@ -314,7 +308,7 @@ const FieldAppPortal: React.FC = () => {
       )}
 
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ mb: 2 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -324,7 +318,7 @@ const FieldAppPortal: React.FC = () => {
                 {tasks.map((task) => (
                   <React.Fragment key={task.id}>
                     <ListItem 
-                      button 
+                      component="button"
                       onClick={() => {
                         setSelectedTask(task);
                         setOpenTaskDialog(true);
@@ -335,7 +329,7 @@ const FieldAppPortal: React.FC = () => {
                           {task.type === 'installation' && <HomeIcon />}
                           {task.type === 'repair' && <ToolsIcon />}
                           {task.type === 'inspection' && <TaskIcon />}
-                          {task.type === 'maintenance' && <BuildIcon />}
+                          {task.type === 'maintenance' && <ToolsIcon />}
                         </Avatar>
                       </ListItemIcon>
                       <ListItemText
@@ -402,7 +396,7 @@ const FieldAppPortal: React.FC = () => {
                 Quick Actions
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -412,7 +406,7 @@ const FieldAppPortal: React.FC = () => {
                     View Map
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -422,7 +416,7 @@ const FieldAppPortal: React.FC = () => {
                     Take Photo
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -432,7 +426,7 @@ const FieldAppPortal: React.FC = () => {
                     Scan Equipment
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -447,7 +441,7 @@ const FieldAppPortal: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ mb: 2 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -547,25 +541,25 @@ const FieldAppPortal: React.FC = () => {
                 Tools & Resources
               </Typography>
               <List dense>
-                <ListItem button>
+                <ListItem component="button">
                   <ListItemIcon>
                     <DownloadIcon />
                   </ListItemIcon>
                   <ListItemText primary="Download Maps" />
                 </ListItem>
-                <ListItem button>
+                <ListItem component="button">
                   <ListItemIcon>
                     <RouterIcon />
                   </ListItemIcon>
                   <ListItemText primary="Equipment Catalog" />
                 </ListItem>
-                <ListItem button>
+                <ListItem component="button">
                   <ListItemIcon>
                     <NotesIcon />
                   </ListItemIcon>
                   <ListItemText primary="Installation Guide" />
                 </ListItem>
-                <ListItem button>
+                <ListItem component="button">
                   <ListItemIcon>
                     <PhoneIcon />
                   </ListItemIcon>
@@ -661,17 +655,17 @@ const FieldAppPortal: React.FC = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Grid container spacing={1}>
-                    <Grid item xs={4}>
+                    <Grid size={4}>
                       <Button fullWidth variant="outlined" size="small" startIcon={<PhotoIcon />}>
                         Photo
                       </Button>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid size={4}>
                       <Button fullWidth variant="outlined" size="small" startIcon={<VideoIcon />}>
                         Video
                       </Button>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid size={4}>
                       <Button fullWidth variant="outlined" size="small" startIcon={<MicIcon />}>
                         Audio
                       </Button>

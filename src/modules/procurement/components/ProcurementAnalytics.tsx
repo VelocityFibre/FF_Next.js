@@ -1,4 +1,4 @@
-import { TrendingUp, Package, DollarSign, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { TrendingUp, DollarSign, Clock, CheckCircle } from 'lucide-react';
 import { useBOQs } from '../hooks/useBOQ';
 import { useRFQs } from '../hooks/useRFQ';
 import { BOQStatus, RFQStatus } from '@/types/procurement.types';
@@ -13,9 +13,9 @@ export function ProcurementAnalytics() {
       total: boqs?.length || 0,
       draft: boqs?.filter(b => b.status === BOQStatus.DRAFT).length || 0,
       approved: boqs?.filter(b => b.status === BOQStatus.APPROVED).length || 0,
-      totalValue: boqs?.reduce((sum, b) => sum + b.totalAmount, 0) || 0,
+      totalValue: boqs?.reduce((sum, b) => sum + (b.totalAmount || 0), 0) || 0,
       averageValue: boqs && boqs.length > 0 
-        ? boqs.reduce((sum, b) => sum + b.totalAmount, 0) / boqs.length 
+        ? boqs.reduce((sum, b) => sum + (b.totalAmount || 0), 0) / boqs.length 
         : 0,
     },
     rfq: {

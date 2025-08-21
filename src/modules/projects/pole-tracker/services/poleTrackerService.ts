@@ -9,11 +9,9 @@ import {
   query,
   where,
   orderBy,
-  limit,
-  serverTimestamp,
-  Timestamp
+  serverTimestamp
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db } from '@/config/firebase';
 import { poleValidationService } from './poleValidation';
 import { poleStatisticsService, PoleStatistics } from './poleStatistics';
 
@@ -67,6 +65,15 @@ export interface Pole {
 
 export class PoleTrackerService {
   private readonly collection = 'poles';
+
+  // Aliases for hook compatibility
+  getById = this.getPoleById;
+  getByProject = this.getPolesByProject;
+  create = this.createPole;
+  update = this.updatePole;
+  delete = this.deletePole;
+  getStatistics = this.getProjectStatistics;
+  getPendingSync = this.getPendingSyncPoles;
 
   /**
    * Create a new pole
@@ -154,6 +161,19 @@ export class PoleTrackerService {
    */
   async deletePole(id: string): Promise<void> {
     await deleteDoc(doc(db, this.collection, id));
+  }
+
+  /**
+   * Get all poles
+   */
+  async getAll(): Promise<Pole[]> {
+    const q = query(collection(db, this.collection), orderBy('poleNumber'));
+    const snapshot = await getDocs(q);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Pole));
   }
 
   /**

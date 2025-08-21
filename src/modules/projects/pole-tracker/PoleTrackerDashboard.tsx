@@ -1,4 +1,4 @@
-import { MapPin, Camera, Upload, Download, BarChart3, CheckCircle, AlertTriangle, Users, Plus } from 'lucide-react';
+import { MapPin, Camera, Upload, BarChart3, CheckCircle, AlertTriangle, Users, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

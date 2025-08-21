@@ -9,9 +9,7 @@ import {
   Trash2,
   Eye,
   Calendar,
-  Users,
   DollarSign,
-  Progress,
   Building2
 } from 'lucide-react';
 import { useProjects, useDeleteProject, useProjectFilters } from '@/hooks/useProjects';
@@ -44,8 +42,8 @@ export function Projects() {
   // Filter projects by search term
   const filteredProjects = projects.filter(project =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.projectCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.clientName.toLowerCase().includes(searchTerm.toLowerCase())
+    project.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (project.clientName || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleDeleteProject = async (id: string) => {
@@ -189,9 +187,9 @@ export function Projects() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
               <select
                 multiple
-                value={filter.priorityLevel || []}
+                value={filter.priority || []}
                 onChange={(e) => updateFilter({ 
-                  priorityLevel: Array.from(e.target.selectedOptions, option => option.value) as Priority[]
+                  priority: Array.from(e.target.selectedOptions, option => option.value) as Priority[]
                 })}
                 className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -259,7 +257,7 @@ export function Projects() {
                     >
                       {project.name}
                     </h3>
-                    <p className="text-sm text-gray-500">{project.projectCode}</p>
+                    <p className="text-sm text-gray-500">{project.code}</p>
                   </div>
                   
                   <div className="flex items-center gap-2">
@@ -311,8 +309,8 @@ export function Projects() {
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
                     {project.projectType.toUpperCase()}
                   </span>
-                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${priorityColors[project.priorityLevel]}`}>
-                    {project.priorityLevel.charAt(0).toUpperCase() + project.priorityLevel.slice(1)}
+                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${priorityColors[project.priority]}`}>
+                    {project.priority.charAt(0).toUpperCase() + project.priority.slice(1)}
                   </span>
                 </div>
 
@@ -320,12 +318,12 @@ export function Projects() {
                 <div className="mb-4">
                   <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
                     <span>Progress</span>
-                    <span>{Math.round(project.overallProgress)}%</span>
+                    <span>{Math.round(project.actualProgress || 0)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${project.overallProgress}%` }}
+                      style={{ width: `${project.actualProgress || 0}%` }}
                     ></div>
                   </div>
                 </div>
@@ -336,7 +334,7 @@ export function Projects() {
                     <Calendar className="h-4 w-4 mr-2" />
                     <div>
                       <p className="text-xs text-gray-500">Due Date</p>
-                      <p className="font-medium">{formatDate(project.expectedEndDate)}</p>
+                      <p className="font-medium">{formatDate(project.endDate)}</p>
                     </div>
                   </div>
                   
@@ -344,7 +342,7 @@ export function Projects() {
                     <DollarSign className="h-4 w-4 mr-2" />
                     <div>
                       <p className="text-xs text-gray-500">Budget</p>
-                      <p className="font-medium">{formatCurrency(project.budget)}</p>
+                      <p className="font-medium">{formatCurrency(project.budget || 0)}</p>
                     </div>
                   </div>
                 </div>

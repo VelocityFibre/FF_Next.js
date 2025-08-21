@@ -23,7 +23,7 @@ export function AppLayout() {
   
   const location = useLocation();
   const { currentUser, loading } = useAuth();
-  const { themeConfig } = useTheme();
+  const { } = useTheme();
 
   // Save sidebar state to localStorage
   useEffect(() => {
@@ -243,7 +243,7 @@ export function AppLayout() {
         {/* Header */}
         <Header 
           title={pageMeta.title}
-          breadcrumbs={pageMeta.breadcrumbs}
+          breadcrumbs={pageMeta.breadcrumbs || ['Home']}
           actions={pageMeta.actions}
           onMenuClick={() => setSidebarOpen(true)}
           user={currentUser}

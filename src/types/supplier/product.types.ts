@@ -2,6 +2,8 @@
  * Product-related types for suppliers
  */
 
+import { Currency, UnitOfMeasure, ProductCategory } from './common.types';
+
 export interface Product {
   id: string;
   supplierId: string;
@@ -152,22 +154,6 @@ export interface ProductFormData {
 }
 
 // Enums
-export enum ProductCategory {
-  FIBER_CABLE = 'fiber_cable',
-  CONNECTORS = 'connectors',
-  ENCLOSURES = 'enclosures',
-  TOOLS = 'tools',
-  TEST_EQUIPMENT = 'test_equipment',
-  SAFETY_GEAR = 'safety_gear',
-  CONSUMABLES = 'consumables',
-  NETWORK_EQUIPMENT = 'network_equipment',
-  POWER = 'power',
-  DUCTING = 'ducting',
-  POLES = 'poles',
-  HARDWARE = 'hardware',
-  OTHER = 'other'
-}
-
 export enum ProductAvailability {
   IN_STOCK = 'in_stock',
   LOW_STOCK = 'low_stock',
@@ -178,20 +164,5 @@ export enum ProductAvailability {
   CUSTOM_ORDER = 'custom_order'
 }
 
-export enum UnitOfMeasure {
-  EACH = 'each',
-  METER = 'meter',
-  KILOMETER = 'kilometer',
-  ROLL = 'roll',
-  BOX = 'box',
-  PACK = 'pack',
-  SET = 'set',
-  KILOGRAM = 'kilogram',
-  TON = 'ton',
-  LITER = 'liter',
-  HOUR = 'hour',
-  DAY = 'day',
-  SQUARE_METER = 'square_meter',
-  CUBIC_METER = 'cubic_meter',
-  OTHER = 'other'
-}
+// Re-export from common for backwards compatibility
+export { ProductCategory, UnitOfMeasure } from './common.types';

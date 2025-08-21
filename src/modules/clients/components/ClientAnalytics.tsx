@@ -11,7 +11,6 @@ import {
   ArrowUpRight,
   ArrowDownRight
 } from 'lucide-react';
-import { ClientCategory, ClientStatus, ClientPriority } from '@/types/client.types';
 
 export function ClientAnalytics() {
   const { data: summary, isLoading, error } = useClientSummary();

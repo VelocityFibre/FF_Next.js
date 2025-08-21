@@ -1,4 +1,4 @@
-import { Package, Wrench, BarChart3, Search, Upload, Download, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Package, Wrench, BarChart3, Upload, Download, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

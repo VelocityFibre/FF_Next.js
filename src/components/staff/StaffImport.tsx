@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Download, FileSpreadsheet, AlertCircle, CheckCircle, X, Users } from 'lucide-react';
 import { staffService } from '@/services/staffService';
-import { StaffImportResult, StaffImportError } from '@/types/staff.types';
+import { StaffImportResult } from '@/types/staff.types';
 
 export function StaffImport() {
   const [isImporting, setIsImporting] = useState(false);

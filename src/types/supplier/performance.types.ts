@@ -2,6 +2,10 @@
  * Supplier performance and contract types
  */
 
+// Import shared types to avoid duplicates
+import type { SupplierContract, ServiceLevelAgreement } from './base.types';
+import { Currency, PaymentTerms } from './common.types';
+
 export interface SupplierPerformance {
   overallScore: number; // 0-100
   deliveryScore: number; // 0-100
@@ -84,73 +88,12 @@ export interface SupplierReview {
     yes: number;
     no: number;
   };
-  reported?: boolean;
-  reportReason?: string;
-}
-
-export interface SupplierContract {
-  id: string;
-  supplierId: string;
-  contractNumber: string;
-  title: string;
-  description?: string;
-  type: ContractType;
-  status: ContractStatus;
-  startDate: Date | string;
-  endDate: Date | string;
-  value?: number;
-  currency?: Currency;
-  paymentTerms?: PaymentTerms;
-  deliveryTerms?: string;
-  sla?: ServiceLevelAgreement;
-  clauses?: {
-    type: string;
-    description: string;
-    mandatory: boolean;
-  }[];
-  milestones?: {
-    description: string;
-    dueDate: Date | string;
-    value?: number;
-    status: 'pending' | 'completed' | 'overdue';
-  }[];
-  renewalTerms?: {
-    autoRenew: boolean;
-    renewalPeriod?: number; // in months
-    noticePeriod?: number; // in days
-    priceAdjustment?: string;
-  };
-  penalties?: {
-    type: string;
-    description: string;
-    amount?: number;
-    percentage?: number;
-  }[];
-  documents?: string[]; // document URLs or IDs
-  signedDate?: Date | string;
-  signedBy?: {
-    supplier: string;
-    company: string;
-  };
-  notes?: string;
-  alerts?: {
-    type: 'expiry' | 'renewal' | 'milestone' | 'payment';
-    message: string;
-    date: Date | string;
-    acknowledged: boolean;
-  }[];
   createdBy: string;
   createdAt: Date | string;
   updatedAt?: Date | string;
 }
 
-export interface ServiceLevelAgreement {
-  responseTime: number; // in hours
-  resolutionTime: number; // in hours
-  uptime?: number; // percentage
-  penalties?: string;
-  escalationProcess?: string;
-}
+// ServiceLevelAgreement interface moved to base.types.ts to avoid duplication
 
 // Enums
 export enum ContractType {

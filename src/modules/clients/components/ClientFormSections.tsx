@@ -227,8 +227,8 @@ export function AddressSection({ formData, handleInputChange }: SectionProps) {
           <input
             type="text"
             required
-            value={formData.address}
-            onChange={(e) => handleInputChange('address', e.target.value)}
+            value={formData.address?.street || ''}
+            onChange={(e) => handleInputChange('address', { ...formData.address, street: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -240,8 +240,8 @@ export function AddressSection({ formData, handleInputChange }: SectionProps) {
           <input
             type="text"
             required
-            value={formData.city}
-            onChange={(e) => handleInputChange('city', e.target.value)}
+            value={formData.address?.city || ''}
+            onChange={(e) => handleInputChange('address', { ...formData.address, city: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -251,8 +251,8 @@ export function AddressSection({ formData, handleInputChange }: SectionProps) {
             Province *
           </label>
           <select
-            value={formData.province}
-            onChange={(e) => handleInputChange('province', e.target.value)}
+            value={formData.address?.state || ''}
+            onChange={(e) => handleInputChange('address', { ...formData.address, state: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {provinces.map(province => (
@@ -270,8 +270,8 @@ export function AddressSection({ formData, handleInputChange }: SectionProps) {
           <input
             type="text"
             required
-            value={formData.postalCode}
-            onChange={(e) => handleInputChange('postalCode', e.target.value)}
+            value={formData.address?.postalCode || ''}
+            onChange={(e) => handleInputChange('address', { ...formData.address, postalCode: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -283,8 +283,8 @@ export function AddressSection({ formData, handleInputChange }: SectionProps) {
           <input
             type="text"
             required
-            value={formData.country}
-            onChange={(e) => handleInputChange('country', e.target.value)}
+            value={formData.address?.country || ''}
+            onChange={(e) => handleInputChange('address', { ...formData.address, country: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

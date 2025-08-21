@@ -1,4 +1,4 @@
-import { Package, FileText, Send, ShoppingCart, TrendingUp, AlertCircle, DollarSign, Clock } from 'lucide-react';
+import { Package, FileText, Send, ShoppingCart, AlertCircle, DollarSign, Clock } from 'lucide-react';
 import { useBOQs } from './hooks/useBOQ';
 import { useRFQs } from './hooks/useRFQ';
 import { BOQStatus, RFQStatus } from '@/types/procurement.types';
@@ -16,7 +16,7 @@ export function ProcurementOverview() {
       total: boqs?.length || 0,
       draft: boqs?.filter(b => b.status === BOQStatus.DRAFT).length || 0,
       approved: boqs?.filter(b => b.status === BOQStatus.APPROVED).length || 0,
-      totalValue: boqs?.reduce((sum, b) => sum + b.totalAmount, 0) || 0,
+      totalValue: boqs?.reduce((sum, b) => sum + (b.totalAmount || 0), 0) || 0,
     },
     rfq: {
       total: rfqs?.length || 0,
@@ -211,11 +211,11 @@ export function ProcurementOverview() {
                 <FileText className="h-5 w-5 text-gray-400" />
                 <div>
                   <p className="text-sm font-medium text-gray-900">{boq.title}</p>
-                  <p className="text-xs text-gray-500">{boq.boqNumber}</p>
+                  <p className="text-xs text-gray-500">{boq.number}</p>
                 </div>
               </div>
               <span className="text-sm text-gray-500">
-                R {boq.totalAmount.toLocaleString()}
+                R {boq.totalAmount?.toLocaleString() || '0'}
               </span>
             </div>
           ))}
@@ -229,7 +229,7 @@ export function ProcurementOverview() {
                 <Send className="h-5 w-5 text-gray-400" />
                 <div>
                   <p className="text-sm font-medium text-gray-900">{rfq.title}</p>
-                  <p className="text-xs text-gray-500">{rfq.rfqNumber}</p>
+                  <p className="text-xs text-gray-500">{rfq.number}</p>
                 </div>
               </div>
               <span className="text-sm text-gray-500">

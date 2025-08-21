@@ -163,7 +163,7 @@ export function StaffDetail() {
               <div>
                 <p className="text-sm text-gray-500">Level</p>
                 <p className="font-medium">
-                  {staff.level.replace('_', ' ').charAt(0).toUpperCase() + staff.level.slice(1)}
+                  {staff.level ? staff.level.replace('_', ' ').charAt(0).toUpperCase() + staff.level.slice(1) : 'N/A'}
                 </p>
               </div>
 

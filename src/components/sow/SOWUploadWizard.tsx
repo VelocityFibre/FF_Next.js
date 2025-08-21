@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -19,8 +18,7 @@ interface SOWUploadWizardProps {
   onCancel: () => void;
 }
 
-export function SOWUploadWizard({ projectId, projectName, onComplete, onCancel }: SOWUploadWizardProps) {
-  const navigate = useNavigate();
+export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploadWizardProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -76,13 +74,15 @@ export function SOWUploadWizard({ projectId, projectName, onComplete, onCancel }
       updatedSteps[currentStep] = {
         ...currentStepData,
         file,
-        data: validationResult.processedData,
+        data: 'processedData' in validationResult ? validationResult.processedData : [],
         completed: true
       };
       setSteps(updatedSteps);
 
       // Process and store data
-      await processStepData(projectId, currentStepData.id, validationResult.processedData);
+      if ('processedData' in validationResult) {
+        await processStepData(projectId, currentStepData.id, validationResult.processedData);
+      }
 
       setIsUploading(false);
     } catch (error) {

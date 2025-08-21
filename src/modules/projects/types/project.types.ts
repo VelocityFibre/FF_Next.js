@@ -23,10 +23,25 @@ export interface Project {
   
   // Progress & Metrics
   progress: ProjectProgress;
+  plannedProgress?: number;
+  actualProgress?: number;
+  schedulePerformance?: number;
+  costPerformance?: number;
+  qualityScore?: number;
   budget: ProjectBudget;
+  actualCost?: number;
+  
+  // Project Management
+  phase?: string;
+  milestones?: ProjectMilestone[];
+  risks?: ProjectRisk[];
   
   // SOW & Documentation
   sowDocuments: SOWDocument[];
+  documents?: ProjectDocument[];
+  
+  // Updates & Activity
+  updates?: ProjectUpdate[];
   
   // Custom Fields
   metadata?: Record<string, any>;
@@ -60,12 +75,62 @@ export interface ProjectLocation {
 }
 
 export interface ProjectTeamMember {
+  id?: string;
   staffId: string;
   name: string;
   role: string;
   position: string;
+  email?: string;
+  phone?: string;
   assignedDate: string;
   isActive: boolean;
+  isLead?: boolean;
+}
+
+export interface ProjectMilestone {
+  id: string;
+  name: string;
+  description?: string;
+  dueDate: string;
+  completedDate?: string;
+  completed?: boolean;
+  status: 'pending' | 'in_progress' | 'completed' | 'delayed';
+  progress: number;
+}
+
+export interface ProjectRisk {
+  id: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  likelihood: 'low' | 'medium' | 'high';
+  impact: string;
+  mitigation?: string;
+  status: 'identified' | 'mitigated' | 'resolved' | 'active';
+  owner?: string;
+}
+
+export interface ProjectUpdate {
+  id: string;
+  projectId: string;
+  title: string;
+  description: string;
+  message?: string; // Alternative to description
+  type: 'progress' | 'milestone' | 'issue' | 'change' | 'general';
+  author?: string; // Alternative to createdByName
+  date?: string; // Alternative to createdAt
+  createdAt: string;
+  createdBy: string;
+  createdByName?: string;
+}
+
+export interface ProjectDocument {
+  id: string;
+  name: string;
+  type: string;
+  url: string;
+  size?: number;
+  uploadedAt: string;
+  uploadedBy?: string;
 }
 
 export interface ProjectProgress {
@@ -157,12 +222,23 @@ export interface SOWDocument {
 }
 
 export enum SOWDocumentType {
+  PROPOSAL = 'proposal',
+  CONTRACT = 'contract',
+  SOW = 'sow',
+  TECHNICAL_SPEC = 'technical_spec',
+  BUDGET = 'budget',
+  SCHEDULE = 'schedule',
+  REPORT = 'report',
+  OTHER = 'other',
+  // Project-specific types
   POLES = 'poles',
   DROPS = 'drops',
   FIBRE = 'fibre',
   GENERAL = 'general',
   SITE_SURVEY = 'site_survey',
   TECHNICAL_SPECS = 'technical_specs',
+  CABLE = 'cable',
+  EQUIPMENT = 'equipment',
 }
 
 export enum DocumentStatus {

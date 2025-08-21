@@ -8,8 +8,7 @@ import {
   Calendar,
   User,
   Cable,
-  Search,
-  Filter
+  Search
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
@@ -56,7 +55,6 @@ export function DropsManagement() {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [selectedDrop, setSelectedDrop] = useState<Drop | null>(null);
 
   useEffect(() => {
     // Load drops data - TODO: Replace with actual API call
@@ -308,7 +306,7 @@ export function DropsManagement() {
           <div
             key={drop.id}
             className="bg-white rounded-lg border border-neutral-200 p-4 hover:shadow-md transition-shadow cursor-pointer"
-            onClick={() => setSelectedDrop(drop)}
+            onClick={() => console.log('Drop selected:', drop)}
           >
             <div className="flex items-start justify-between mb-3">
               <div>

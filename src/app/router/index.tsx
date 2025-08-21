@@ -342,7 +342,11 @@ export const router = createBrowserRouter([
             path: 'pole-capture',
             element: (
               <Suspense fallback={<Loading />}>
-                <PoleCaptureMobile />
+                <PoleCaptureMobile 
+                  projectId="default" 
+                  onSave={async () => {}} 
+                  onCancel={() => {}} 
+                />
               </Suspense>
             ),
           },

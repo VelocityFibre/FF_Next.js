@@ -8,9 +8,7 @@ import {
   Menu,
   ChevronRight,
   Shield,
-  HelpCircle,
-  Moon,
-  Sun
+  HelpCircle
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -49,7 +47,7 @@ export function Header({
   const notificationRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { signOut, currentUser } = useAuth();
-  const { currentTheme, toggleTheme } = useTheme();
+  const { } = useTheme();
 
   // Close menus when clicking outside
   useEffect(() => {

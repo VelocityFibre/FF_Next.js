@@ -188,7 +188,7 @@ export function useCalculateSupplierPerformance() {
       supplierId: string; 
       period: PerformancePeriod 
     }) => supplierService.calculatePerformance(supplierId, period),
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['suppliers'] });
       queryClient.invalidateQueries({ queryKey: ['suppliers', variables.supplierId] });
       toast.success('Performance calculated successfully');

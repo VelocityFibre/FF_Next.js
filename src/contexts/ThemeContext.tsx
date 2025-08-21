@@ -77,7 +77,7 @@ export function ThemeProvider({
     Object.entries(themeConfig.colors).forEach(([category, colors]) => {
       if (typeof colors === 'object' && colors !== null) {
         Object.entries(colors).forEach(([shade, value]) => {
-          root.style.setProperty(`${THEME_CSS_VAR_PREFIX}-${category}-${shade}`, value);
+          root.style.setProperty(`${THEME_CSS_VAR_PREFIX}-${category}-${shade}`, String(value));
         });
       }
     });

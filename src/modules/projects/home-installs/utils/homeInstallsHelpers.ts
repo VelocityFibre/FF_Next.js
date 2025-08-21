@@ -17,9 +17,9 @@ export function filterHomeInstalls(
     filtered = filtered.filter(install =>
       install.customerName.toLowerCase().includes(search) ||
       install.address.toLowerCase().includes(search) ||
-      install.orderNumber.toLowerCase().includes(search) ||
-      install.customerEmail?.toLowerCase().includes(search) ||
-      install.customerPhone?.includes(search)
+      (install.orderNumber && install.orderNumber.toLowerCase().includes(search)) ||
+      install.customerId?.toLowerCase().includes(search) ||
+      install.alternatePhone?.includes(search)
     );
   }
 
@@ -80,11 +80,11 @@ export function exportInstallsToCSV(installs: HomeInstall[]): void {
   const rows = installs.map(install => [
     install.orderNumber,
     install.customerName,
-    install.customerEmail,
-    install.customerPhone,
+    install.customerId,
+    install.alternatePhone || '',
     install.address,
     install.scheduledDate,
-    install.scheduledTime,
+    '',
     install.status,
     install.packageType,
     install.speed,
@@ -118,31 +118,26 @@ export function generateMockInstalls(): HomeInstall[] {
       id: '1',
       orderNumber: 'HI-2024-001',
       customerName: 'John Smith',
-      customerEmail: 'john.smith@email.com',
-      customerPhone: '(555) 123-4567',
+      customerId: 'CUST-001',
       alternatePhone: '(555) 987-6543',
       address: '123 Main St, Springfield, IL 62701',
-      coordinates: '39.7817° N, 89.6501° W',
+      coordinates: { latitude: 39.7817, longitude: -89.6501 },
       scheduledDate: new Date().toISOString().split('T')[0],
-      scheduledTime: '09:00',
       status: 'scheduled',
       packageType: 'Fiber Pro',
-      speed: 1000,
-      monthlyPrice: 89.99,
+      speed: '1000',
+      monthlyFee: 89.99,
       installationFee: 99.99,
       assignedTechnician: 'Mike Johnson',
-      technicianPhone: '(555) 111-2222',
+      technicianId: 'TECH-001',
+      technicianName: 'Mike Johnson',
       ontSerial: 'ONT-123456',
       routerSerial: 'RTR-789012',
       cableLength: 50,
       estimatedDuration: 2,
-      actualDuration: null,
-      completionDate: null,
       notes: 'Customer will be home all day',
       specialRequirements: 'Need to run cable through basement',
-      customerSignature: null,
-      technicianSignature: null,
-      photos: [],
+      installationType: 'new' as const,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     },

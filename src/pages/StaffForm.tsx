@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, User } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { useStaffMember, useCreateStaff, useUpdateStaff } from '@/hooks/useStaff';
 import { 
   StaffFormData, 
@@ -48,7 +48,7 @@ export function StaffForm() {
 
   useEffect(() => {
     if (staff && isEditing) {
-      setFormData({
+      const formDataUpdate: StaffFormData = {
         name: staff.name,
         email: staff.email,
         phone: staff.phone,
@@ -65,18 +65,32 @@ export function StaffForm() {
         postalCode: staff.postalCode,
         emergencyContactName: staff.emergencyContactName || '',
         emergencyContactPhone: staff.emergencyContactPhone || '',
-        startDate: staff.startDate.toDate ? staff.startDate.toDate() : new Date(staff.startDate),
-        endDate: staff.endDate?.toDate ? staff.endDate.toDate() : undefined,
+        startDate: typeof staff.startDate === 'object' && 'toDate' in staff.startDate 
+          ? (staff.startDate as any).toDate() 
+          : new Date(staff.startDate),
         contractType: staff.contractType,
         workingHours: staff.workingHours,
         availableWeekends: staff.availableWeekends,
         availableNights: staff.availableNights,
         timeZone: staff.timeZone,
         maxProjectCount: staff.maxProjectCount,
-        hourlyRate: staff.hourlyRate,
-        salaryGrade: staff.salaryGrade,
-        managerId: staff.reportsTo,
-      });
+        managerId: staff.reportsTo || '',
+      };
+
+      // Add optional fields only if they exist
+      if (staff.endDate) {
+        formDataUpdate.endDate = typeof staff.endDate === 'object' && 'toDate' in staff.endDate 
+          ? (staff.endDate as any).toDate() 
+          : new Date(staff.endDate);
+      }
+      if (staff.hourlyRate !== undefined) {
+        formDataUpdate.hourlyRate = staff.hourlyRate;
+      }
+      if (staff.salaryGrade) {
+        formDataUpdate.salaryGrade = staff.salaryGrade;
+      }
+
+      setFormData(formDataUpdate);
     }
   }, [staff, isEditing]);
 

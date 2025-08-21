@@ -1,4 +1,4 @@
-import { Target, TrendingUp, BarChart3, PieChart, Activity, Settings, Download, AlertTriangle } from 'lucide-react';
+import { Target, TrendingUp, BarChart3, PieChart, Activity, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

@@ -48,6 +48,8 @@ export enum Permission {
   PROJECTS_UPDATE = 'projects.update',
   PROJECTS_DELETE = 'projects.delete',
   PROJECTS_ASSIGN = 'projects.assign',
+  CREATE_PROJECTS = 'projects.create', // Alias
+  VIEW_PROJECTS = 'projects.read', // Alias
   
   // Staff Management
   STAFF_CREATE = 'staff.create',
@@ -55,12 +57,16 @@ export enum Permission {
   STAFF_UPDATE = 'staff.update',
   STAFF_DELETE = 'staff.delete',
   STAFF_ASSIGN = 'staff.assign',
+  CREATE_STAFF = 'staff.create', // Alias
+  VIEW_STAFF = 'staff.read', // Alias
   
   // Client Management
   CLIENTS_CREATE = 'clients.create',
   CLIENTS_READ = 'clients.read',
   CLIENTS_UPDATE = 'clients.update',
   CLIENTS_DELETE = 'clients.delete',
+  EDIT_CLIENTS = 'clients.update', // Alias
+  DELETE_CLIENTS = 'clients.delete', // Alias
   
   // Pole Tracker
   POLES_CREATE = 'poles.create',
@@ -95,6 +101,17 @@ export enum Permission {
   REPORTS_CREATE = 'reports.create',
   REPORTS_READ = 'reports.read',
   REPORTS_EXPORT = 'reports.export',
+  VIEW_ANALYTICS = 'analytics.read', // Alias
+  
+  // Communications
+  CREATE_COMMUNICATIONS = 'communications.create',
+  VIEW_COMMUNICATIONS = 'communications.read',
+  
+  // SOW Management
+  MANAGE_SOW = 'sow.manage',
+  
+  // Procurement
+  VIEW_PROCUREMENT = 'procurement.read',
   
   // Settings & Administration
   SETTINGS_READ = 'settings.read',

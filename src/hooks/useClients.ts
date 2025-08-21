@@ -2,10 +2,8 @@ import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { clientService } from '@/services/clientService';
 import { 
-  Client, 
   ClientFormData, 
   ClientFilter,
-  ClientSummary,
   ClientDropdownOption,
   ContactHistory
 } from '@/types/client.types';

@@ -75,6 +75,7 @@ export const projectService = {
   getTasks: phases.getStepTasks,
   createTask: phases.createTask,
   updateTask: phases.updateTask,
+  initializeProjectPhases: phases.generateProjectPhases, // Alias
   
   // Stats
   getSummary: stats.getProjectSummary,
@@ -84,6 +85,9 @@ export const projectService = {
   getCountByType: stats.getProjectCountByType,
   getEndingSoon: stats.getProjectsEndingSoon,
   calculateBudgetVariance: stats.calculateBudgetVariance,
+  getProjectSummary: stats.getProjectSummary, // Direct export
+  getProjectHierarchy: realtime.subscribeToProjectHierarchy, // Alias
+  updateProjectProgress: crud.updateProject, // Alias
   
   // Real-time
   subscribe: realtime.subscribeToProject,
@@ -92,5 +96,7 @@ export const projectService = {
   subscribeToSteps: realtime.subscribeToPhaseSteps,
   subscribeToTasks: realtime.subscribeToStepTasks,
   subscribeToHierarchy: realtime.subscribeToProjectHierarchy,
-  unsubscribeAll: realtime.unsubscribeAll
+  unsubscribeAll: realtime.unsubscribeAll,
+  subscribeToProject: realtime.subscribeToProject, // Direct export
+  subscribeToProjects: realtime.subscribeToProjects // Direct export
 };

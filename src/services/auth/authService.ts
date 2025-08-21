@@ -10,6 +10,11 @@ import {
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
+  updatePassword,
+  sendEmailVerification,
+  updateProfile,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from 'firebase/auth';
 import { auth } from '@/config/firebase';
 import {
@@ -258,6 +263,87 @@ class AuthService {
         resolve(user);
       });
     });
+  }
+
+  /**
+   * Change user password
+   */
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      throw new Error('No authenticated user');
+    }
+    
+    // Re-authenticate first
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+    
+    // Update password
+    await updatePassword(user, newPassword);
+  }
+
+  /**
+   * Send email verification
+   */
+  async sendEmailVerification(): Promise<void> {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('No authenticated user');
+    }
+    
+    await sendEmailVerification(user);
+  }
+
+  /**
+   * Update user profile
+   */
+  async updateUserProfile(updates: { displayName?: string; photoURL?: string }): Promise<void> {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('No authenticated user');
+    }
+    
+    await updateProfile(user, updates);
+  }
+
+  /**
+   * Check if user has permission
+   */
+  hasPermission(permission: string): boolean {
+    // TODO: Implement permission check logic
+    return true;
+  }
+
+  /**
+   * Check if user has any of the permissions
+   */
+  hasAnyPermission(permissions: string[]): boolean {
+    // TODO: Implement permission check logic
+    return permissions.some(p => this.hasPermission(p));
+  }
+
+  /**
+   * Check if user has all permissions
+   */
+  hasAllPermissions(permissions: string[]): boolean {
+    // TODO: Implement permission check logic
+    return permissions.every(p => this.hasPermission(p));
+  }
+
+  /**
+   * Check if user has role
+   */
+  hasRole(role: string): boolean {
+    // TODO: Implement role check logic
+    return true;
+  }
+
+  /**
+   * Check if user has any of the roles
+   */
+  hasAnyRole(roles: string[]): boolean {
+    // TODO: Implement role check logic
+    return roles.some(r => this.hasRole(r));
   }
 }
 

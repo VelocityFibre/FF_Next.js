@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Filter, Download, MapPin, Camera, CheckCircle, AlertTriangle } from 'lucide-react';
-import { PoleStatus, InstallationPhase } from './types/pole-tracker.types';
+import { InstallationPhase } from './types/pole-tracker.types';
 
 export function PoleTrackerList() {
   const navigate = useNavigate();

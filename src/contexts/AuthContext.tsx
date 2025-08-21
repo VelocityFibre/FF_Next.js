@@ -191,7 +191,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const changePassword = async (request: ChangePasswordRequest) => {
     try {
       setError(null);
-      await authService.changePassword(request);
+      await authService.changePassword(request.currentPassword, request.newPassword);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to change password';
       setError(message);
@@ -216,7 +216,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!currentUser) {
         throw new Error('No authenticated user');
       }
-      await authService.updateUserProfile(currentUser.id, updates);
+      const profileUpdates: { displayName?: string; photoURL?: string } = {};
+      if (updates.displayName) profileUpdates.displayName = updates.displayName;
+      if (updates.photoURL) profileUpdates.photoURL = updates.photoURL;
+      await authService.updateUserProfile(profileUpdates);
       // Refresh user data
       await refreshUser();
     } catch (err: unknown) {
@@ -229,27 +232,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Permission checking methods
   const hasPermission = (permission: Permission): boolean => {
     if (!currentUser) return false;
-    return authService.hasPermission(currentUser, permission);
+    return authService.hasPermission(permission);
   };
 
   const hasAnyPermission = (permissions: Permission[]): boolean => {
     if (!currentUser) return false;
-    return authService.hasAnyPermission(currentUser, permissions);
+    return authService.hasAnyPermission(permissions);
   };
 
   const hasAllPermissions = (permissions: Permission[]): boolean => {
     if (!currentUser) return false;
-    return authService.hasAllPermissions(currentUser, permissions);
+    return authService.hasAllPermissions(permissions);
   };
 
   const hasRole = (role: UserRole): boolean => {
     if (!currentUser) return false;
-    return authService.hasRole(currentUser, role);
+    return authService.hasRole(role);
   };
 
   const hasAnyRole = (roles: UserRole[]): boolean => {
     if (!currentUser) return false;
-    return authService.hasAnyRole(currentUser, roles);
+    return currentUser?.role ? roles.includes(currentUser.role as UserRole) : false;
   };
 
   // Utility methods

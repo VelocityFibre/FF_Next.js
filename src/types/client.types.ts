@@ -16,6 +16,7 @@ export interface Client {
   province: string;
   postalCode: string;
   country: string;
+  billingAddress?: AddressFormData;
   
   // Business Information
   registrationNumber?: string;
@@ -54,6 +55,12 @@ export interface Client {
   
   // Communication Preferences
   preferredContactMethod: ContactMethod;
+  
+  // Additional fields from ClientFormData
+  taxExempt?: boolean;
+  requiresPO?: boolean;
+  autoApproveOrders?: boolean;
+  allowBackorders?: boolean;
   communicationLanguage: string;
   timezone: string;
   
@@ -83,6 +90,13 @@ export enum ClientStatus {
   SUSPENDED = 'suspended',
   PROSPECT = 'prospect',
   FORMER = 'former',
+}
+
+export enum ClientType {
+  CORPORATE = 'corporate',
+  INDIVIDUAL = 'individual',
+  GOVERNMENT = 'government',
+  NON_PROFIT = 'non_profit'
 }
 
 export enum ClientCategory {
@@ -144,16 +158,30 @@ export enum ServiceType {
 
 // Form Types
 
+// Address structure for forms
+export interface AddressFormData {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  sameAsPhysical?: boolean; // For billing address
+}
+
 export interface ClientFormData {
   name: string;
   contactPerson: string;
   email: string;
   phone: string;
-  address: string;
-  city: string;
-  province: string;
-  postalCode: string;
-  country: string;
+  address: AddressFormData; // Address as object
+  // Individual address fields for backward compatibility
+  street?: string;
+  city?: string;
+  state?: string;
+  province?: string;
+  postalCode?: string;
+  country?: string;
+  billingAddress?: AddressFormData; // Added missing billing address
   registrationNumber?: string;
   vatNumber?: string;
   industry: string;
@@ -175,6 +203,10 @@ export interface ClientFormData {
   tags: string[];
   serviceTypes: ServiceType[];
   specialRequirements?: string;
+  taxExempt?: boolean;
+  requiresPO?: boolean;
+  autoApproveOrders?: boolean;
+  allowBackorders?: boolean;
 }
 
 // Filter Types

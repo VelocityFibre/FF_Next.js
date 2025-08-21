@@ -1,4 +1,4 @@
-import { Map, Grid3x3, Filter, Download, Upload, Layers, Navigation, Search } from 'lucide-react';
+import { Map, Grid3x3, Download, Upload, Layers, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export function OneMapDashboard() {

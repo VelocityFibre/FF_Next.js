@@ -36,7 +36,7 @@ export function ProjectProgress({ project }: ProjectProgressProps) {
     },
   ];
 
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     good: 'text-success-600 bg-success-100',
     warning: 'text-warning-600 bg-warning-100',
     critical: 'text-error-600 bg-error-100',
@@ -129,7 +129,7 @@ export function ProjectProgress({ project }: ProjectProgressProps) {
                 <div className="flex-1">
                   <p className="text-sm text-neutral-900">{update.message}</p>
                   <p className="text-xs text-neutral-600 mt-1">
-                    {update.author} • {new Date(update.date).toLocaleDateString()}
+                    {update.author} • {update.date ? new Date(update.date).toLocaleDateString() : 'No date'}
                   </p>
                 </div>
               </div>

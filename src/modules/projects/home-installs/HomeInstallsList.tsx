@@ -3,7 +3,7 @@
  * Split into modular components for better maintainability
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HomeInstall } from './types/home-install.types';
 import { HomeInstallsHeader } from './components/HomeInstallsHeader';

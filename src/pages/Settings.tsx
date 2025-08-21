@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { VFLogoUpload } from '@/components/settings/VFLogoUpload';
 import { Palette, Moon, Sun } from 'lucide-react';

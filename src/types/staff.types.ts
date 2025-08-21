@@ -280,6 +280,9 @@ export interface StaffFormData {
   employeeId: string;
   position: Position | string;
   department: Department;
+  level?: StaffLevel;
+  bio?: string;
+  specializations?: string[];
   status: StaffStatus;
   managerId?: string;
   skills: Skill[];
@@ -326,13 +329,19 @@ export interface StaffSummary {
   activeStaff: number;
   inactiveStaff: number;
   onLeaveStaff: number;
+  availableStaff?: number;
+  monthlyGrowth?: number;
+  averageProjectLoad?: number;
   staffByDepartment: { [key: string]: number };
   staffByLevel: { [key: string]: number };
   staffBySkill: { [key: string]: number };
+  staffByContractType?: { [key: string]: number };
   averageExperience: number;
   utilizationRate: number;
   overallocatedStaff: number;
   underutilizedStaff: number;
+  topPerformers?: any[];
+  topSkills?: any[];
 }
 
 // Dropdown Data Types for UI

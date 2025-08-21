@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@mui/material/PigmentGrid';
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Button,
   IconButton,
   Chip,
@@ -27,15 +27,10 @@ import {
   Tab,
   Tabs,
   Alert,
-  Badge,
   Tooltip,
   FormControl,
   InputLabel,
   Select,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
   List,
   ListItem,
   ListItemIcon,
@@ -49,8 +44,6 @@ import {
   Schedule as ScheduleIcon,
   Engineering as EngineeringIcon,
   CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
-  Error as ErrorIcon,
   MoreVert as MoreVertIcon,
   Router as RouterIcon,
   Speed as SpeedIcon,
@@ -60,14 +53,9 @@ import {
   LocationOn as LocationOnIcon,
   AccessTime as AccessTimeIcon,
   Build as BuildIcon,
-  Assignment as AssignmentIcon,
-  CameraAlt as CameraAltIcon,
   SignalCellularAlt as SignalIcon,
-  AttachMoney as MoneyIcon,
-  CalendarToday as CalendarIcon,
   Group as GroupIcon,
   Refresh as RefreshIcon,
-  Download as DownloadIcon,
   Map as MapIcon
 } from '@mui/icons-material';
 
@@ -109,7 +97,7 @@ const HomeInstallationsDashboard: React.FC = () => {
   const [selectedInstallation, setSelectedInstallation] = useState<Installation | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStatus] = useState('all');
   const [filterDate, setFilterDate] = useState('today');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -290,7 +278,7 @@ const HomeInstallationsDashboard: React.FC = () => {
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -303,7 +291,7 @@ const HomeInstallationsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -316,7 +304,7 @@ const HomeInstallationsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -329,7 +317,7 @@ const HomeInstallationsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -342,7 +330,7 @@ const HomeInstallationsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -355,7 +343,7 @@ const HomeInstallationsDashboard: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -371,10 +359,10 @@ const HomeInstallationsDashboard: React.FC = () => {
       </Grid>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card>
             <CardContent>
-              <Tabs value={selectedTab} onChange={(e, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
+              <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
                 <Tab label="All Installations" />
                 <Tab label="In Progress" />
                 <Tab label="Scheduled" />
@@ -476,7 +464,7 @@ const HomeInstallationsDashboard: React.FC = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ mb: 2 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -575,28 +563,28 @@ const HomeInstallationsDashboard: React.FC = () => {
         <DialogTitle>Schedule New Installation</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 label="Customer Name"
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 label="Phone Number"
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <TextField
                 fullWidth
                 label="Installation Address"
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Installation Type</InputLabel>
                 <Select label="Installation Type">
@@ -607,7 +595,7 @@ const HomeInstallationsDashboard: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Package</InputLabel>
                 <Select label="Package">
@@ -618,7 +606,7 @@ const HomeInstallationsDashboard: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <TextField
                 fullWidth
                 label="Scheduled Date"
@@ -626,7 +614,7 @@ const HomeInstallationsDashboard: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <InputLabel>Time Slot</InputLabel>
                 <Select label="Time Slot">
@@ -637,7 +625,7 @@ const HomeInstallationsDashboard: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
               <TextField
                 fullWidth
                 label="Special Requirements / Notes"
@@ -670,7 +658,7 @@ const HomeInstallationsDashboard: React.FC = () => {
                 Installation ID: {selectedInstallation.id}
               </Alert>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="subtitle2" gutterBottom>Customer Information</Typography>
                   <List dense>
                     <ListItem>
@@ -691,7 +679,7 @@ const HomeInstallationsDashboard: React.FC = () => {
                     </ListItem>
                   </List>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <Typography variant="subtitle2" gutterBottom>Technical Details</Typography>
                   <List dense>
                     <ListItem>

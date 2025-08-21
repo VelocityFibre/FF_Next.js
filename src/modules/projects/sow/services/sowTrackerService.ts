@@ -5,7 +5,7 @@ import {
   getDocs,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db } from '@/config/firebase';
 import { 
   PoleImportRow, 
   DropImportRow, 
@@ -103,7 +103,7 @@ export class SOWTrackerService {
    * Validate all import data before processing
    */
   async validateImportData(
-    projectId: string,
+    _projectId: string,
     poles: PoleImportRow[],
     drops: DropImportRow[],
     fiberSections: FiberImportRow[]

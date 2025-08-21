@@ -60,7 +60,7 @@ export function ProjectOverview({ project, daysRemaining }: ProjectOverviewProps
             <span className="text-sm text-neutral-600">Budget</span>
           </div>
           <p className="text-xl font-semibold text-neutral-900">
-            {project.budget ? formatCurrency(project.budget) : 'Not set'}
+            {project.budget ? formatCurrency(project.budget.totalBudget) : 'Not set'}
           </p>
           {project.actualCost && (
             <p className="text-sm text-neutral-600 mt-1">
@@ -102,7 +102,7 @@ export function ProjectOverview({ project, daysRemaining }: ProjectOverviewProps
             {project.teamMembers?.length || 0} members
           </p>
           <p className="text-sm text-neutral-600 mt-1">
-            {project.projectManager ? `PM: ${project.projectManager}` : 'No PM assigned'}
+            {project.projectManagerId ? `PM: ${project.projectManagerId}` : 'No PM assigned'}
           </p>
         </div>
       </div>
@@ -121,7 +121,7 @@ export function ProjectOverview({ project, daysRemaining }: ProjectOverviewProps
                 <label className="text-sm text-neutral-600">Location</label>
                 <div className="flex items-center gap-2 mt-1">
                   <MapPin className="h-4 w-4 text-neutral-400" />
-                  <p className="text-neutral-900">{project.location || 'Not specified'}</p>
+                  <p className="text-neutral-900">{project.location ? `${project.location.address}, ${project.location.city}` : 'Not specified'}</p>
                 </div>
               </div>
               <div>
@@ -162,7 +162,7 @@ export function ProjectOverview({ project, daysRemaining }: ProjectOverviewProps
                 <div className="space-y-1 mt-2">
                   {project.risks.map((risk, index) => (
                     <div key={index} className="text-sm text-neutral-900">
-                      • {risk}
+                      • {typeof risk === 'string' ? risk : risk.description || 'Risk'}
                     </div>
                   ))}
                 </div>

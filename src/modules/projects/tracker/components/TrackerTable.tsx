@@ -114,7 +114,7 @@ export function TrackerTable({ data, isLoading, expandedRows, toggleRowExpansion
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      {format(item.lastUpdated, 'MMM dd, HH:mm')}
+                      {item.lastUpdated ? format(item.lastUpdated, 'MMM dd, HH:mm') : 'N/A'}
                     </td>
                     <td className="px-4 py-3">
                       <button
@@ -155,18 +155,18 @@ function TrackerRowDetails({ item }: { item: TrackerItem }) {
           {item.type === 'pole' && (
             <div className="flex justify-between">
               <dt className="text-gray-600">Drop Count:</dt>
-              <dd className="font-medium">{item.metadata.dropCount || 0}/12</dd>
+              <dd className="font-medium">{item.metadata?.dropCount || 0}/12</dd>
             </div>
           )}
           {item.type === 'drop' && (
             <>
               <div className="flex justify-between">
                 <dt className="text-gray-600">Pole Number:</dt>
-                <dd className="font-medium">{item.metadata.poleNumber}</dd>
+                <dd className="font-medium">{item.metadata?.poleNumber || 'N/A'}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-gray-600">Home Owner:</dt>
-                <dd className="font-medium">{item.metadata.homeOwner || 'N/A'}</dd>
+                <dd className="font-medium">{item.metadata?.homeOwner || 'N/A'}</dd>
               </div>
             </>
           )}
@@ -174,11 +174,11 @@ function TrackerRowDetails({ item }: { item: TrackerItem }) {
             <>
               <div className="flex justify-between">
                 <dt className="text-gray-600">Length:</dt>
-                <dd className="font-medium">{item.metadata.length || 0}m</dd>
+                <dd className="font-medium">{item.metadata?.length || 0}m</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-gray-600">Cable Type:</dt>
-                <dd className="font-medium">{item.metadata.cableType || 'N/A'}</dd>
+                <dd className="font-medium">{item.metadata?.cableType || 'N/A'}</dd>
               </div>
             </>
           )}

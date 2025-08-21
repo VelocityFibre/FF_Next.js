@@ -13,25 +13,22 @@ export function ProjectForm() {
   const isEditing = !!id;
 
   const { project, isLoading, save, error } = useProjectForm(id);
-  const { clients, isLoading: isClientsLoading, getClientById } = useClientSelection();
-  const { projectManagers, isLoading: isManagersLoading, getAvailableProjectManagers } = useProjectManagerSelection();
+  const { clients, isLoading: isClientsLoading } = useClientSelection();
+  const { isLoading: isManagersLoading, getAvailableProjectManagers } = useProjectManagerSelection();
 
   const [formData, setFormData] = useState<ProjectFormData>({
-    projectCode: '',
+    code: '',
     name: '',
     description: '',
     clientId: '',
     location: '',
-    projectType: ProjectType.FTTH,
-    priorityLevel: Priority.MEDIUM,
+    projectType: ProjectType.FIBER,
+    priority: Priority.MEDIUM,
     status: ProjectStatus.PLANNING,
-    startDate: new Date(),
-    expectedEndDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days from now
     projectManagerId: '',
     budget: 0,
-    workingHours: '8:00 AM - 5:00 PM',
-    allowWeekendWork: false,
-    allowNightWork: false,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,21 +39,26 @@ export function ProjectForm() {
   useEffect(() => {
     if (project) {
       setFormData({
-        projectCode: project.projectCode,
+        code: project.code,
         name: project.name,
-        description: project.description,
-        clientId: project.clientId,
-        location: project.location,
+        description: project.description || '',
+        clientId: project.clientId || '',
+        location: project.location || '',
         projectType: project.projectType,
-        priorityLevel: project.priorityLevel,
+        priority: project.priority,
         status: project.status,
-        startDate: project.startDate.toDate ? project.startDate.toDate() : new Date(project.startDate),
-        expectedEndDate: project.expectedEndDate.toDate ? project.expectedEndDate.toDate() : new Date(project.expectedEndDate),
-        projectManagerId: project.projectManagerId,
-        budget: project.budget,
-        workingHours: project.workingHours,
-        allowWeekendWork: project.allowWeekendWork,
-        allowNightWork: project.allowNightWork,
+        startDate: typeof project.startDate === 'object' && 'toDate' in project.startDate 
+          ? (project.startDate as any).toDate().toISOString() 
+          : typeof project.startDate === 'string' 
+          ? project.startDate 
+          : new Date(project.startDate).toISOString(),
+        endDate: typeof project.endDate === 'object' && 'toDate' in project.endDate 
+          ? (project.endDate as any).toDate().toISOString() 
+          : typeof project.endDate === 'string' 
+          ? project.endDate 
+          : new Date(project.endDate).toISOString(),
+        projectManagerId: project.projectManagerId || '',
+        budget: project.budget || 0,
       });
     }
   }, [project]);
@@ -166,8 +168,8 @@ export function ProjectForm() {
                 </label>
                 <input
                   type="text"
-                  value={formData.projectCode}
-                  onChange={(e) => handleInputChange('projectCode', e.target.value)}
+                  value={formData.code}
+                  onChange={(e) => handleInputChange('code', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="e.g., LAW-001"
                   required
@@ -284,8 +286,8 @@ export function ProjectForm() {
                   Priority Level *
                 </label>
                 <select
-                  value={formData.priorityLevel}
-                  onChange={(e) => handleInputChange('priorityLevel', e.target.value as Priority)}
+                  value={formData.priority}
+                  onChange={(e) => handleInputChange('priority', e.target.value as Priority)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 >
@@ -332,8 +334,8 @@ export function ProjectForm() {
                 </label>
                 <input
                   type="date"
-                  value={formData.startDate.toISOString().split('T')[0]}
-                  onChange={(e) => handleInputChange('startDate', new Date(e.target.value))}
+                  value={formData.startDate.split('T')[0]}
+                  onChange={(e) => handleInputChange('startDate', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
@@ -345,8 +347,8 @@ export function ProjectForm() {
                 </label>
                 <input
                   type="date"
-                  value={formData.expectedEndDate.toISOString().split('T')[0]}
-                  onChange={(e) => handleInputChange('expectedEndDate', new Date(e.target.value))}
+                  value={formData.endDate.split('T')[0]}
+                  onChange={(e) => handleInputChange('endDate', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
@@ -372,26 +374,13 @@ export function ProjectForm() {
 
         </div>
 
-        {/* Work Schedule Card */}
+        {/* Project Manager Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Work Schedule</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Project Assignment</h2>
           </div>
           <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Working Hours
-                </label>
-                <input
-                  type="text"
-                  value={formData.workingHours}
-                  onChange={(e) => handleInputChange('workingHours', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., 8:00 AM - 5:00 PM"
-                />
-              </div>
-
+            <div className="grid grid-cols-1 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Project Manager *
@@ -415,34 +404,6 @@ export function ProjectForm() {
                 <p className="mt-1 text-xs text-gray-500">
                   Choose an available project manager to lead this project
                 </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="allowWeekendWork"
-                    checked={formData.allowWeekendWork}
-                    onChange={(e) => handleInputChange('allowWeekendWork', e.target.checked)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="allowWeekendWork" className="ml-2 text-sm text-gray-700">
-                    Allow weekend work
-                  </label>
-                </div>
-
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="allowNightWork"
-                    checked={formData.allowNightWork}
-                    onChange={(e) => handleInputChange('allowNightWork', e.target.checked)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="allowNightWork" className="ml-2 text-sm text-gray-700">
-                    Allow night work
-                  </label>
-                </div>
               </div>
             </div>
           </div>

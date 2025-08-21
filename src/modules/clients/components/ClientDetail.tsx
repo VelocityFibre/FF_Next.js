@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Edit, Trash2, Building, MoreVertical, Activity, FileText } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Building, Activity, FileText } from 'lucide-react';
 import { useClient, useDeleteClient } from '@/hooks/useClients';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import {

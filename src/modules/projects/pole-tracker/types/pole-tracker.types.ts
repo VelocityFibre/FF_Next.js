@@ -20,6 +20,7 @@ export enum PoleType {
 }
 
 export enum PoleStatus {
+  NOT_STARTED = 'not_started',
   PLANNED = 'planned',
   APPROVED = 'approved',
   IN_PROGRESS = 'in_progress',
@@ -276,4 +277,20 @@ export interface PoleProgressMetrics {
   totalDrops: number;
   avgDropsPerPole: number;
   capacityUtilization: number; // percentage of max capacity used
+}
+
+// Legacy types for backward compatibility
+export type PoleData = PoleTracker;
+
+export interface DropData {
+  id?: string;
+  dropNumber: string;
+  poleNumber: string;
+  customerName: string;
+  address: string;
+  installationType: 'aerial' | 'underground' | 'hybrid';
+  status: 'pending' | 'in_progress' | 'completed';
+  cableLength?: number;
+  photos?: string[];
+  notes?: string;
 }

@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useProject, useDeleteProject } from '../../hooks/useProjects';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
-import { Permission } from '@/types/auth.types';
 
 import { ProjectHeader } from './ProjectHeader';
 import { ProjectTabs } from './ProjectTabs';

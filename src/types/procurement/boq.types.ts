@@ -3,7 +3,18 @@ import { UnitOfMeasure, Currency } from './stock.types';
 
 // ============= BOQ (Bill of Quantities) Types =============
 
-export type BOQStatus = 'draft' | 'review' | 'approved' | 'revised' | 'cancelled';
+export enum BOQStatus {
+  DRAFT = 'draft',
+  REVIEW = 'review',
+  PENDING_REVIEW = 'pending_review',
+  APPROVED = 'approved',
+  REVISED = 'revised',
+  REJECTED = 'rejected',
+  EXPIRED = 'expired',
+  CANCELLED = 'cancelled'
+}
+
+export type BOQStatusType = 'draft' | 'review' | 'pending_review' | 'approved' | 'revised' | 'rejected' | 'expired' | 'cancelled';
 
 export interface BOQ {
   id?: string;
@@ -12,6 +23,10 @@ export interface BOQ {
   projectId: string;
   projectName: string;
   projectCode?: string;
+  clientName?: string;
+  totalAmount?: number;
+  isTemplate?: boolean;
+  validUntil?: Timestamp;
   
   // Version control
   version: number;
@@ -19,7 +34,7 @@ export interface BOQ {
   previousVersionId?: string;
   
   // Status
-  status: BOQStatus;
+  status: BOQStatusType;
   
   // Items
   sections: BOQSection[];
@@ -213,4 +228,24 @@ export interface BOQComparison {
   // Metadata
   comparedAt: Timestamp;
   comparedBy: string;
+}
+
+// Form data for creating/updating BOQ
+export interface BOQFormData {
+  number?: string;
+  title: string;
+  projectId?: string;
+  projectName?: string;
+  clientId?: string;
+  clientName?: string;
+  sections?: BOQSection[];
+  items: BOQItem[];
+  notes?: string;
+  termsAndConditions?: string;
+  validUntil?: Date | Timestamp;
+  currency?: string;
+  taxRate?: number;
+  discountRate?: number;
+  markup?: number;
+  contingency?: number;
 }

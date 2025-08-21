@@ -2,8 +2,7 @@ import {
   ref, 
   uploadBytes, 
   getDownloadURL, 
-  deleteObject,
-  getMetadata 
+  deleteObject 
 } from 'firebase/storage';
 import { 
   doc, 
@@ -69,7 +68,7 @@ class SOWService {
         uploadedBy,
         version: 1,
         status: DocumentStatus.PENDING,
-        metadata,
+        ...(metadata && { metadata }),
       };
 
       // Update project with new document
@@ -256,7 +255,7 @@ class SOWService {
   }
 
   // Extract SOW data from Excel/CSV
-  async extractSOWData(file: File): Promise<{
+  async extractSOWData(_file: File): Promise<{
     poleCount?: number;
     dropCount?: number;
     cableLength?: number;

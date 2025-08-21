@@ -47,12 +47,24 @@ export function UnifiedTrackerGrid() {
 
     // Apply sorting
     filtered.sort((a, b) => {
-      let aVal: any = a[sortBy];
-      let bVal: any = b[sortBy];
+      let aVal: any;
+      let bVal: any;
 
       if (sortBy === 'updated') {
-        aVal = a.lastUpdated.getTime();
-        bVal = b.lastUpdated.getTime();
+        aVal = a.lastUpdated ? a.lastUpdated.getTime() : 0;
+        bVal = b.lastUpdated ? b.lastUpdated.getTime() : 0;
+      } else if (sortBy === 'identifier') {
+        aVal = a.identifier;
+        bVal = b.identifier;
+      } else if (sortBy === 'status') {
+        aVal = a.status;
+        bVal = b.status;
+      } else if (sortBy === 'progress') {
+        aVal = a.progress;
+        bVal = b.progress;
+      } else {
+        aVal = 0;
+        bVal = 0;
       }
 
       if (sortOrder === 'asc') {
@@ -68,8 +80,8 @@ export function UnifiedTrackerGrid() {
   // Get unique phases
   const phases = useMemo(() => {
     if (!trackerData) return [];
-    const uniquePhases = new Set(trackerData.map(item => item.phase));
-    return Array.from(uniquePhases).sort();
+    const uniquePhases = new Set(trackerData.map(item => item.phase).filter(Boolean));
+    return Array.from(uniquePhases).sort() as string[];
   }, [trackerData]);
 
   // Calculate statistics
@@ -124,7 +136,7 @@ export function UnifiedTrackerGrid() {
         `${item.progress}%`,
         `${item.photos}/${item.totalPhotos}`,
         `${item.qualityChecks}/${item.totalChecks}`,
-        format(item.lastUpdated, 'yyyy-MM-dd HH:mm')
+        item.lastUpdated ? format(item.lastUpdated, 'yyyy-MM-dd HH:mm') : 'N/A'
       ])
     ].map(row => row.join(',')).join('\n');
 

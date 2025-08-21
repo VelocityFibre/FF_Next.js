@@ -1,6 +1,5 @@
 import { Client } from '@/types/client.types';
-import { Mail, Phone, Globe, MapPin, CreditCard, FileText, Calendar } from 'lucide-react';
-import { format } from 'date-fns';
+import { Mail, Phone, Globe, MapPin } from 'lucide-react';
 
 interface SectionProps {
   client: Client;

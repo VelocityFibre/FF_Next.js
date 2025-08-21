@@ -256,6 +256,20 @@ export interface TrackerGridItem {
   qualityStatus?: string;
   hasPhotos: boolean;
   
+  // Additional fields
+  phase?: string;
+  photos?: number;
+  totalPhotos?: number;
+  qualityChecks?: number;
+  totalChecks?: number;
+  lastUpdated?: Date;
+  updated?: Date;
+  metadata?: {
+    importSource?: string;
+    importDate?: Date;
+    [key: string]: any;
+  };
+  
   // Type-specific fields
   dropCount?: number; // For poles
   maxCapacity?: number; // For poles
@@ -283,6 +297,9 @@ export interface TrackerFilters {
     max: number; // 0-100
   };
 }
+
+// Legacy type alias
+export type TrackerItem = TrackerGridItem;
 
 // Statistics
 export interface TrackerStatistics {

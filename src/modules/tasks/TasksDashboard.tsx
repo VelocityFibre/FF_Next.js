@@ -1,4 +1,4 @@
-import { CheckSquare, Clock, Users, Calendar, Filter, Plus, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Clock, Users, Calendar, Plus, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 

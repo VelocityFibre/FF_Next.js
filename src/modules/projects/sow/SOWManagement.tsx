@@ -5,11 +5,9 @@ import {
   Download,
   CheckCircle,
   Clock,
-  AlertCircle,
   Eye,
   Edit,
   Send,
-  FileSpreadsheet,
   Calendar,
   DollarSign
 } from 'lucide-react';
@@ -65,7 +63,7 @@ interface SOWDocument {
 }
 
 export function SOWManagement() {
-  const [sows, setSows] = useState<SOW[]>([
+  const [sows] = useState<SOW[]>([
     {
       id: '1',
       sowNumber: 'SOW-2024-001',
@@ -192,7 +190,6 @@ export function SOWManagement() {
     },
   ]);
 
-  const [selectedSOW, setSelectedSOW] = useState<SOW | null>(null);
   const [filter, setFilter] = useState<'all' | SOW['status']>('all');
 
   const getStatusColor = (status: SOW['status']) => {

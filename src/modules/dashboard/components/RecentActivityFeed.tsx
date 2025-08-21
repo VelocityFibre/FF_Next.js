@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { 
   Clock, 
-  User, 
+ 
   CheckCircle, 
   AlertCircle, 
   FileText, 
@@ -143,7 +142,6 @@ export function RecentActivityFeed({
   showAll = false,
   className = '' 
 }: RecentActivityFeedProps) {
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   const displayedActivities = showAll ? activities : activities.slice(0, 5);
 
@@ -164,24 +162,7 @@ export function RecentActivityFeed({
     return date.toLocaleDateString();
   };
 
-  const getUserInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
-  const toggleExpanded = (id: string) => {
-    const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedItems(newExpanded);
-  };
 
   if (isLoading) {
     return (
@@ -234,7 +215,6 @@ export function RecentActivityFeed({
         {displayedActivities.map((activity, index) => {
           const config = activityConfig[activity.type];
           const Icon = config.icon;
-          const isExpanded = expandedItems.has(activity.id);
           const isLast = index === displayedActivities.length - 1;
 
           return (

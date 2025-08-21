@@ -1,3 +1,4 @@
+import React from 'react';
 import { ChevronDown, ChevronRight, Eye, Edit, MapPin, Phone, Clock, User, Package } from 'lucide-react';
 import { HomeInstall } from '../types/home-install.types';
 import { cn } from '@/utils/cn';
@@ -27,14 +28,12 @@ export function HomeInstallsTable({
         return 'bg-success-100 text-success-800 border-success-200';
       case 'cancelled':
         return 'bg-error-100 text-error-800 border-error-200';
-      case 'pending':
-        return 'bg-neutral-100 text-neutral-800 border-neutral-200';
       default:
         return 'bg-neutral-100 text-neutral-800 border-neutral-200';
     }
   };
 
-  const formatDate = (date: string) => {
+  const formatDate = (date: string | Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -42,13 +41,6 @@ export function HomeInstallsTable({
     });
   };
 
-  const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
 
   if (installs.length === 0) {
     return (
@@ -118,8 +110,8 @@ export function HomeInstallsTable({
                   <td className="px-6 py-4">
                     <div>
                       <div className="text-sm font-medium text-neutral-900">{install.customerName}</div>
-                      {install.customerPhone && (
-                        <div className="text-sm text-neutral-500">{install.customerPhone}</div>
+                      {install.alternatePhone && (
+                        <div className="text-sm text-neutral-500">{install.alternatePhone}</div>
                       )}
                     </div>
                   </td>
@@ -128,7 +120,6 @@ export function HomeInstallsTable({
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-neutral-900">{formatDate(install.scheduledDate)}</div>
-                    <div className="text-sm text-neutral-500">{formatTime(install.scheduledTime)}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
@@ -174,7 +165,7 @@ export function HomeInstallsTable({
                           <div className="space-y-1 text-sm">
                             <div className="flex items-center gap-2 text-neutral-600">
                               <User className="h-4 w-4" />
-                              <span>{install.customerEmail}</span>
+                              <span>{install.customerId}</span>
                             </div>
                             <div className="flex items-center gap-2 text-neutral-600">
                               <Phone className="h-4 w-4" />
@@ -182,7 +173,7 @@ export function HomeInstallsTable({
                             </div>
                             <div className="flex items-start gap-2 text-neutral-600">
                               <MapPin className="h-4 w-4 mt-0.5" />
-                              <span>{install.coordinates}</span>
+                              <span>{install.coordinates ? `${install.coordinates.latitude}, ${install.coordinates.longitude}` : 'No coordinates'}</span>
                             </div>
                           </div>
                         </div>
