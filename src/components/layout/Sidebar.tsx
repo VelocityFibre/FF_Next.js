@@ -19,7 +19,17 @@ import {
   Menu,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Home,
+  Cable,
+  Droplets,
+  FileSignature,
+  MapPin,
+  Camera,
+  Briefcase,
+  Activity,
+  PhoneCall,
+  Globe
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -79,24 +89,38 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
           permissions: [],
         },
         { 
-          to: '/app/sow', 
-          icon: FileText, 
-          label: 'SOW Data Management',
+          to: '/app/pole-capture', 
+          icon: Camera, 
+          label: 'Pole Capture',
+          shortLabel: 'Poles',
+          permissions: [],
+        },
+        { 
+          to: '/app/fiber-stringing', 
+          icon: Cable, 
+          label: 'Fiber Stringing',
+          shortLabel: 'Fiber',
+          permissions: [],
+        },
+        { 
+          to: '/app/drops', 
+          icon: Droplets, 
+          label: 'Drops Management',
+          shortLabel: 'Drops',
+          permissions: [],
+        },
+        { 
+          to: '/app/sow-management', 
+          icon: FileSignature, 
+          label: 'SOW Management',
           shortLabel: 'SOW',
           permissions: [],
         },
         { 
-          to: '/app/onemap', 
-          icon: FileText, 
-          label: 'OneMap Data Grid',
-          shortLabel: 'OneMap',
-          permissions: [],
-        },
-        { 
-          to: '/app/nokia-equipment', 
-          icon: Wrench, 
-          label: 'Nokia Equipment Data',
-          shortLabel: 'Nokia',
+          to: '/app/installations', 
+          icon: Home, 
+          label: 'Home Installations',
+          shortLabel: 'Install',
           permissions: [],
         },
         { 
@@ -111,6 +135,41 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
           icon: BarChart3, 
           label: 'Daily Progress',
           shortLabel: 'Daily',
+          permissions: [],
+        },
+      ]
+    },
+    
+    // CONTRACTORS & SUPPLIERS Section
+    { 
+      section: 'CONTRACTORS & SUPPLIERS', 
+      items: [
+        { 
+          to: '/app/contractors', 
+          icon: Briefcase, 
+          label: 'Contractors Portal',
+          shortLabel: 'Contract',
+          permissions: [],
+        },
+        { 
+          to: '/app/suppliers', 
+          icon: Truck, 
+          label: 'Suppliers',
+          shortLabel: 'Supply',
+          permissions: [],
+        },
+      ]
+    },
+    
+    // ANALYTICS & REPORTING Section
+    { 
+      section: 'ANALYTICS', 
+      items: [
+        { 
+          to: '/app/analytics', 
+          icon: Activity, 
+          label: 'Analytics Dashboard',
+          shortLabel: 'Analytics',
           permissions: [],
         },
         { 
@@ -132,6 +191,62 @@ export function Sidebar({ isOpen, isCollapsed, onToggle, onCollapse }: SidebarPr
           icon: FileText, 
           label: 'Reports',
           shortLabel: 'Reports',
+          permissions: [],
+        },
+      ]
+    },
+    
+    // COMMUNICATIONS Section
+    { 
+      section: 'COMMUNICATIONS', 
+      items: [
+        { 
+          to: '/app/communications', 
+          icon: MessageSquare, 
+          label: 'Communications Portal',
+          shortLabel: 'Comms',
+          permissions: [],
+        },
+        { 
+          to: '/app/meetings', 
+          icon: Users, 
+          label: 'Meetings',
+          shortLabel: 'Meet',
+          permissions: [],
+        },
+        { 
+          to: '/app/action-items', 
+          icon: CheckCircle, 
+          label: 'Action Items',
+          shortLabel: 'Actions',
+          permissions: [],
+        },
+      ]
+    },
+    
+    // FIELD OPERATIONS Section
+    { 
+      section: 'FIELD OPERATIONS', 
+      items: [
+        { 
+          to: '/app/field', 
+          icon: Smartphone, 
+          label: 'Field App Portal',
+          shortLabel: 'Field',
+          permissions: [],
+        },
+        { 
+          to: '/app/onemap', 
+          icon: MapPin, 
+          label: 'OneMap Data Grid',
+          shortLabel: 'OneMap',
+          permissions: [],
+        },
+        { 
+          to: '/app/nokia-equipment', 
+          icon: Wrench, 
+          label: 'Nokia Equipment',
+          shortLabel: 'Nokia',
           permissions: [],
         },
       ]

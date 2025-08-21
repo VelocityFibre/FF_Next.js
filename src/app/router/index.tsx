@@ -56,6 +56,17 @@ const EnhancedKPIDashboard = lazy(() => import('@/modules/kpis/EnhancedKPIDashbo
 const KPIDashboard = lazy(() => import('@/modules/kpi-dashboard/KPIDashboard').then(m => ({ default: m.KPIDashboard })));
 const ReportsDashboard = lazy(() => import('@/modules/reports/ReportsDashboard').then(m => ({ default: m.ReportsDashboard })));
 
+// New Modules (Recently Implemented)
+const ContractorsDashboard = lazy(() => import('@/modules/contractors/ContractorsDashboard').then(m => ({ default: m.default })));
+const AnalyticsDashboard = lazy(() => import('@/modules/analytics/AnalyticsDashboard').then(m => ({ default: m.default })));
+const CommunicationsDashboard = lazy(() => import('@/modules/communications/CommunicationsDashboard').then(m => ({ default: m.default })));
+const HomeInstallationsDashboard = lazy(() => import('@/modules/installations/HomeInstallationsDashboard').then(m => ({ default: m.default })));
+const FieldAppPortal = lazy(() => import('@/modules/field-app/FieldAppPortal').then(m => ({ default: m.default })));
+const FiberStringingDashboard = lazy(() => import('@/modules/projects/fiber-stringing/FiberStringingDashboard').then(m => ({ default: m.default })));
+const DropsManagement = lazy(() => import('@/modules/projects/drops/DropsManagement').then(m => ({ default: m.default })));
+const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-tracker/mobile/PoleCaptureMobile').then(m => ({ default: m.default })));
+const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.default })));
+
 // Legacy pages (to be migrated to modules)
 const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
 const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));
@@ -265,7 +276,11 @@ export const router = createBrowserRouter([
           },
           {
             path: 'contractors',
-            element: <div className="bg-white rounded-lg p-6">Contractors Module (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ContractorsDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'suppliers',
@@ -277,15 +292,67 @@ export const router = createBrowserRouter([
           },
           {
             path: 'communications',
-            element: <div className="bg-white rounded-lg p-6">Communications Module (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <CommunicationsDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'analytics',
-            element: <div className="bg-white rounded-lg p-6">Analytics Module (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AnalyticsDashboard />
+              </Suspense>
+            ),
           },
           {
             path: 'field',
-            element: <div className="bg-white rounded-lg p-6">Field App (Coming Soon)</div>,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <FieldAppPortal />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'installations',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <HomeInstallationsDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'fiber-stringing',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <FiberStringingDashboard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'drops',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <DropsManagement />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'pole-capture',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <PoleCaptureMobile />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'sow-management',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <SOWManagement />
+              </Suspense>
+            ),
           },
           {
             path: 'settings',
