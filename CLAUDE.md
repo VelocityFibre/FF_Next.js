@@ -77,6 +77,9 @@ archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719be
 3. **UPDATE** task status in real-time as work progresses
 4. **CREATE** tasks for any new requirements discovered
 5. **SEARCH** knowledge base before asking questions
+6. **ZERO TOLERANCE** for TypeScript errors - Fix ALL errors before proceeding
+7. **ZERO TOLERANCE** for ESLint warnings - Code must be clean
+8. **ZERO TOLERANCE** for build failures - Everything must compile
 
 ---
 
@@ -103,6 +106,47 @@ archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719be
 
 # Claude Development Notes - FibreFlow React Migration
 
+
+## 🎭 PLAYWRIGHT E2E/UI TESTING (MANDATORY)
+
+**CRITICAL**: All UI testing must use Playwright MCP integration
+
+### Automatic Testing Triggers
+Playwright tests are MANDATORY after:
+- UI component changes
+- Feature completion  
+- Module implementation
+- Bug fixes (UI-related)
+- Before ANY deployment
+- Theme/styling updates
+
+### Quick Commands
+```javascript
+// Run all tests
+mcp_playwright:runTests()
+
+// Run smoke tests only
+mcp_playwright:runTests(grep="@smoke")
+
+// Debug with UI
+mcp_playwright:runTests(ui=true)
+
+// Run specific file
+mcp_playwright:runTests(file="tests/e2e/feature.spec.ts")
+```
+
+### Test Coverage Requirements
+- Navigation: All routes accessible
+- Forms: Validation and submission
+- Data: Tables/lists render correctly
+- Auth: Login/logout flows work
+- Responsive: Mobile/tablet/desktop
+- Themes: Light/dark modes apply
+- Errors: 404/500 handled gracefully
+
+**Full Protocol**: See `C:\Jarvis\PLAYWRIGHT_TESTING_PROTOCOL.md`
+
+---
 ## 🔗 ARCHON INTEGRATION
 
 **Status**: Active

@@ -181,6 +181,18 @@ ARCHON INTEGRATION
 
 ## 📏 CODE QUALITY STANDARDS (MANDATORY)
 
+### 🚨 ZERO TOLERANCE ERROR POLICY
+**ABSOLUTE REQUIREMENTS - NO EXCEPTIONS**
+- **TypeScript Errors**: ZERO TOLERANCE - 0 errors allowed
+- **ESLint Errors**: ZERO TOLERANCE - 0 errors allowed  
+- **Build Errors**: ZERO TOLERANCE - 0 errors allowed
+- **Runtime Errors**: ZERO TOLERANCE - Must handle all edge cases
+- **Console Errors**: ZERO TOLERANCE - No errors in browser console
+- **Test Failures**: ZERO TOLERANCE - 100% tests must pass
+- **Type Coverage**: 100% - No implicit 'any' types allowed
+
+**ENFORCEMENT**: Code with ANY errors will NOT be committed or deployed
+
 ### File Size Limits (STRICTLY ENFORCED)
 - **Files**: Max 300 lines per file
 - **Functions**: Max 50 lines per function
@@ -189,19 +201,21 @@ ARCHON INTEGRATION
 - **Complexity**: Cyclomatic complexity < 10
 
 ### Code Quality Requirements
-- **Typing**: 100% TypeScript/Python type hints
+- **Typing**: 100% TypeScript/Python type hints (ZERO 'any' types)
 - **Testing**: >95% coverage (pytest/vitest)
 - **Documentation**: Comprehensive docstrings
-- **Linting**: Must pass all linters
+- **Linting**: Must pass all linters (ZERO warnings)
 - **Formatting**: Auto-formatted code only
 - **Security**: Input validation, error handling
 - **Performance**: Page load <1.5s, API <200ms
 
-### Before Every Commit Checklist
-- [ ] Code compiles/runs without errors
-- [ ] All tests pass (>90% coverage)
-- [ ] Linting passes (zero warnings)
-- [ ] Code formatted properly
+### Before Every Commit Checklist (ZERO TOLERANCE)
+- [ ] TypeScript compilation: ZERO errors (npm run type-check)
+- [ ] ESLint check: ZERO errors, ZERO warnings (npm run lint)
+- [ ] Build successful: ZERO errors (npm run build)
+- [ ] All tests pass: 100% passing (>90% coverage)
+- [ ] Playwright E2E tests pass (mcp_playwright:runTests())
+- [ ] No 'any' types in TypeScript code
 - [ ] No console.log/print statements in production
 - [ ] No commented-out code
 - [ ] No hardcoded secrets or passwords
@@ -279,10 +293,48 @@ Types: feat, fix, docs, style, refactor, test, chore
 - Complex logic must have comments
 - Architecture decisions documented
 
+## 🎭 PLAYWRIGHT E2E TESTING (MANDATORY)
+
+### When to Run Playwright Tests
+**MUST RUN** after:
+- Any UI component changes
+- Feature completion
+- Module implementation
+- Bug fixes (especially UI)
+- Theme/styling updates
+- Before ANY deployment
+
+### Playwright MCP Commands
+```javascript
+// Run all tests
+mcp_playwright:runTests()
+
+// Run smoke tests
+mcp_playwright:runTests(grep="@smoke")
+
+// Debug with UI
+mcp_playwright:runTests(ui=true)
+
+// Specific file
+mcp_playwright:runTests(file="tests/e2e/feature.spec.ts")
+```
+
+### Required Test Coverage
+- [ ] All routes accessible
+- [ ] Forms validate and submit
+- [ ] Data displays correctly
+- [ ] Auth flows work
+- [ ] Responsive on all devices
+- [ ] Themes apply correctly
+- [ ] Error states handled
+
+**Reference**: See `C:\Jarvis\PLAYWRIGHT_TESTING_PROTOCOL.md` for full details
+
 ## 🚀 DEPLOYMENT STANDARDS
 
 ### Pre-deployment Checklist (MANDATORY)
 - [ ] All tests passing (>90% coverage)
+- [ ] Playwright E2E suite passing (mcp_playwright:runTests())
 - [ ] Build successful (zero errors)
 - [ ] Linting passed (zero warnings)
 - [ ] Type checking passed
@@ -290,8 +342,8 @@ Types: feat, fix, docs, style, refactor, test, chore
 - [ ] Performance benchmarks met
 - [ ] Lighthouse score >90
 - [ ] Accessibility audit passed
-- [ ] Cross-browser tested
-- [ ] Mobile responsive verified
+- [ ] Cross-browser tested (via Playwright)
+- [ ] Mobile responsive verified (via Playwright)
 - [ ] Documentation updated
 - [ ] RULES.md compliance verified
 - [ ] Environment variables configured
