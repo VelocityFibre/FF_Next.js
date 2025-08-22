@@ -13,7 +13,7 @@ import {
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
+// import { useTheme } from '@/contexts/ThemeContext'; // Ready for future use
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { User as UserType } from '@/types/auth.types';
 
@@ -47,7 +47,8 @@ export function Header({
   const notificationRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { signOut, currentUser } = useAuth();
-  const { } = useTheme();
+  // Theme hook ready for future use
+  // const { theme } = useTheme();
 
   // Close menus when clicking outside
   useEffect(() => {

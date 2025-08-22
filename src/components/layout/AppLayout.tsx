@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useTheme } from '@/contexts/ThemeContext';
+// import { useTheme } from '@/contexts/ThemeContext'; // Ready for future use
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -23,7 +23,8 @@ export function AppLayout() {
   
   const location = useLocation();
   const { currentUser, loading } = useAuth();
-  const { } = useTheme();
+  // Theme hook ready for future use
+  // const { theme } = useTheme();
 
   // Save sidebar state to localStorage
   useEffect(() => {

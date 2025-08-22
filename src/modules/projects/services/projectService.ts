@@ -69,7 +69,7 @@ class ProjectService {
     lastDoc?: DocumentSnapshot;
   }> {
     try {
-      let q = collection(db, COLLECTION_NAME);
+      const q = collection(db, COLLECTION_NAME);
       const constraints: any[] = [];
 
       // Apply filters

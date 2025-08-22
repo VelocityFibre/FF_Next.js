@@ -155,11 +155,7 @@ class AuthService {
    * Sign out
    */
   async signOut(): Promise<void> {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      throw error;
-    }
+    await signOut(auth);
   }
 
   /**

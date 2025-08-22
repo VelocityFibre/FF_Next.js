@@ -33,8 +33,8 @@ export const storage = getStorage(app);
 
 // Analytics and Performance Monitoring disabled to prevent installation errors
 // These features require additional API enablement in Google Cloud Console
-let analytics = null;
-let performance = null;
+const analytics = null;
+const performance = null;
 
 // Uncomment when APIs are enabled:
 // if (import.meta.env.VITE_ENABLE_ANALYTICS === 'true') {

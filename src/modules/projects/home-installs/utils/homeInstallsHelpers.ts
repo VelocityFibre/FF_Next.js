@@ -40,12 +40,13 @@ export function filterHomeInstalls(
       case 'tomorrow':
         filtered = filtered.filter(install => install.scheduledDate === tomorrow);
         break;
-      case 'this_week':
+      case 'this_week': {
         const weekFromNow = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
         filtered = filtered.filter(install => 
           install.scheduledDate >= today && install.scheduledDate <= weekFromNow
         );
         break;
+      }
       case 'overdue':
         filtered = filtered.filter(install => 
           install.scheduledDate < today && install.status !== 'completed' && install.status !== 'cancelled'

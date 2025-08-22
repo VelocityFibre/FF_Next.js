@@ -27,7 +27,7 @@ interface StatCardData {
 
 export function Dashboard() {
   const navigate = useNavigate();
-  const [_isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -128,6 +128,7 @@ export function Dashboard() {
         <DashboardHeader 
           onRefresh={handleRefresh}
           onExport={handleExport}
+          isRefreshing={isRefreshing}
         />
 
         {/* Stats Grid - Responsive */}

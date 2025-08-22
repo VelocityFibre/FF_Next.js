@@ -43,7 +43,8 @@ export const AgentDashboard: React.FC<Props> = ({ orchestrator }) => {
     refreshInterval: 5000
   });
 
-  const [_logs, _setLogs] = useState<Array<{ timestamp: Date; level: string; message: string; component: string }>>([]);
+  // Logs functionality temporarily disabled
+  // const [logs, setLogs] = useState<Array<{ timestamp: Date; level: string; message: string; component: string }>>([]);
   const [alerts, setAlerts] = useState<Array<{ id: string; severity: string; message: string; timestamp: Date }>>([]);
 
   // Initialize dashboard

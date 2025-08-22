@@ -114,7 +114,7 @@ export const rfqService = {
     try {
       const docRef = doc(db, COLLECTION_NAME, id);
       
-      let updateData: any = { ...data };
+      const updateData: any = { ...data };
       
       if (data.deadline) {
         updateData.dueDate = data.deadline instanceof Date 

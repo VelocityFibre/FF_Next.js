@@ -29,7 +29,8 @@
       "Bash(curl:*)",
       "Bash(cat:*)",
       "WebFetch(domain:fibreflow-292c7.web.app)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npm run lint:*)"
     ],
     "deny": [],
     "ask": []

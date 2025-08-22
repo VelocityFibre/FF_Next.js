@@ -10,7 +10,7 @@ export async function testFirebaseConnection(): Promise<boolean> {
     const testCollection = collection(db, 'test');
     await getDocs(testCollection);
     
-    console.log('✅ Firebase connection successful');
+    // Firebase connection successful
     return true;
   } catch (error) {
     console.error('❌ Firebase connection failed:', error);

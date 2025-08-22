@@ -33,78 +33,62 @@ export class HybridProjectService {
    * Get all projects (real-time)
    */
   async getAllProjects(): Promise<Project[]> {
-    try {
-      const snapshot = await getDocs(collection(db, 'projects'));
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Project));
-    } catch (error) {
-      throw error;
-    }
+    const snapshot = await getDocs(collection(db, 'projects'));
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Project));
   }
 
   /**
    * Get project by ID (real-time)
    */
   async getProjectById(id: string): Promise<Project | null> {
-    try {
-      const docRef = doc(db, 'projects', id);
-      const snapshot = await getDoc(docRef);
-      
-      if (!snapshot.exists()) return null;
-      
-      return { id: snapshot.id, ...snapshot.data() } as Project;
-    } catch (error) {
-      throw error;
-    }
+    const docRef = doc(db, 'projects', id);
+    const snapshot = await getDoc(docRef);
+    
+    if (!snapshot.exists()) return null;
+    
+    return { id: snapshot.id, ...snapshot.data() } as Project;
   }
 
   /**
    * Create new project (Firebase + trigger analytics sync)
    */
   async createProject(projectData: Omit<Project, 'id'>): Promise<string> {
-    try {
-      // Save to Firebase (real-time operations)
-      const docRef = await addDoc(collection(db, 'projects'), {
-        ...projectData,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-      });
+    // Save to Firebase (real-time operations)
+    const docRef = await addDoc(collection(db, 'projects'), {
+      ...projectData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
 
-      // Trigger analytics sync to Neon (async)
-      this.syncProjectToAnalytics(docRef.id, projectData).catch(() => {
-        // Silent fail for analytics sync
-      });
+    // Trigger analytics sync to Neon (async)
+    this.syncProjectToAnalytics(docRef.id, projectData).catch(() => {
+      // Silent fail for analytics sync
+    });
 
-      return docRef.id;
-    } catch (error) {
-      throw error;
-    }
+    return docRef.id;
   }
 
   /**
    * Update project (Firebase + sync to analytics)
    */
   async updateProject(id: string, updates: Partial<Project>): Promise<void> {
-    try {
-      const docRef = doc(db, 'projects', id);
-      
-      // Update in Firebase
-      await updateDoc(docRef, {
-        ...updates,
-        updatedAt: Timestamp.now(),
-      });
+    const docRef = doc(db, 'projects', id);
+    
+    // Update in Firebase
+    await updateDoc(docRef, {
+      ...updates,
+      updatedAt: Timestamp.now(),
+    });
 
-      // Get full project data and sync to analytics
-      const updatedProject = await this.getProjectById(id);
-      if (updatedProject) {
-        this.syncProjectToAnalytics(id, updatedProject).catch(() => {
-          // Silent fail for analytics sync
-        });
-      }
-    } catch (error) {
-      throw error;
+    // Get full project data and sync to analytics
+    const updatedProject = await this.getProjectById(id);
+    if (updatedProject) {
+      this.syncProjectToAnalytics(id, updatedProject).catch(() => {
+        // Silent fail for analytics sync
+      });
     }
   }
 
@@ -112,15 +96,11 @@ export class HybridProjectService {
    * Delete project (Firebase + analytics)
    */
   async deleteProject(id: string): Promise<void> {
-    try {
-      // Delete from Firebase
-      await deleteDoc(doc(db, 'projects', id));
+    // Delete from Firebase
+    await deleteDoc(doc(db, 'projects', id));
 
-      // Note: Keep analytics data for historical reporting
-      // Could mark as deleted instead of actual deletion
-    } catch (error) {
-      throw error;
-    }
+    // Note: Keep analytics data for historical reporting
+    // Could mark as deleted instead of actual deletion
   }
 
   /**
@@ -162,22 +142,14 @@ export class HybridProjectService {
    * Get project analytics and trends
    */
   async getProjectAnalytics(projectId?: string) {
-    try {
-      return await analyticsService.getProjectOverview(projectId);
-    } catch (error) {
-      throw error;
-    }
+    return await analyticsService.getProjectOverview(projectId);
   }
 
   /**
    * Get project trends over time
    */
   async getProjectTrends(dateFrom: Date, dateTo: Date) {
-    try {
-      return await analyticsService.getProjectTrends(dateFrom, dateTo);
-    } catch (error) {
-      throw error;
-    }
+    return await analyticsService.getProjectTrends(dateFrom, dateTo);
   }
 
   /**
@@ -190,23 +162,19 @@ export class HybridProjectService {
     _value: number, 
     _unit: string = ''
   ): Promise<void> {
-    try {
-      // TODO: Implement KPI recording when analyticsService.recordKPI is ready
-      // const kpiData = {
-      //   projectId,
-      //   metricType,
-      //   metricName,
-      //   metricValue: value.toString(),
-      //   unit,
-      //   recordedDate: new Date(),
-      //   weekNumber: this.getWeekNumber(new Date()),
-      //   monthNumber: new Date().getMonth() + 1,
-      //   year: new Date().getFullYear(),
-      // };
-      // await analyticsService.recordKPI(kpiData);
-    } catch (error) {
-      throw error;
-    }
+    // TODO: Implement KPI recording when analyticsService.recordKPI is ready
+    // const kpiData = {
+    //   projectId,
+    //   metricType,
+    //   metricName,
+    //   metricValue: value.toString(),
+    //   unit,
+    //   recordedDate: new Date(),
+    //   weekNumber: this.getWeekNumber(new Date()),
+    //   monthNumber: new Date().getMonth() + 1,
+    //   year: new Date().getFullYear(),
+    // };
+    // await analyticsService.recordKPI(kpiData);
   }
 
   // ============================================
@@ -256,67 +224,51 @@ export class HybridClientService {
   // ============================================
 
   async getAllClients(): Promise<Client[]> {
-    try {
-      const snapshot = await getDocs(collection(db, 'clients'));
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Client));
-    } catch (error) {
-      throw error;
-    }
+    const snapshot = await getDocs(collection(db, 'clients'));
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Client));
   }
 
   async getClientById(id: string): Promise<Client | null> {
-    try {
-      const docRef = doc(db, 'clients', id);
-      const snapshot = await getDoc(docRef);
-      
-      if (!snapshot.exists()) return null;
-      
-      return { id: snapshot.id, ...snapshot.data() } as Client;
-    } catch (error) {
-      throw error;
-    }
+    const docRef = doc(db, 'clients', id);
+    const snapshot = await getDoc(docRef);
+    
+    if (!snapshot.exists()) return null;
+    
+    return { id: snapshot.id, ...snapshot.data() } as Client;
   }
 
   async createClient(clientData: Omit<Client, 'id'>): Promise<string> {
-    try {
-      const docRef = await addDoc(collection(db, 'clients'), {
-        ...clientData,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-      });
+    const docRef = await addDoc(collection(db, 'clients'), {
+      ...clientData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
 
-      // Sync to analytics
-      this.syncClientToAnalytics(docRef.id, clientData).catch(() => {
-        // Silent fail for analytics sync
-      });
+    // Sync to analytics
+    this.syncClientToAnalytics(docRef.id, clientData).catch(() => {
+      // Silent fail for analytics sync
+    });
 
-      return docRef.id;
-    } catch (error) {
-      throw error;
-    }
+    return docRef.id;
   }
 
   async updateClient(id: string, updates: Partial<Client>): Promise<void> {
-    try {
-      const docRef = doc(db, 'clients', id);
-      
-      await updateDoc(docRef, {
-        ...updates,
-        updatedAt: Timestamp.now(),
-      });
+    const docRef = doc(db, 'clients', id);
+    
+    await updateDoc(docRef, {
+      ...updates,
+      updatedAt: Timestamp.now(),
+    });
 
-      // Sync updates to analytics
-      const updatedClient = await this.getClientById(id);
-      if (updatedClient) {
-        this.syncClientToAnalytics(id, updatedClient).catch(() => {
-          // Silent fail for analytics sync
-        });
-      }
-    } catch (error) {
-      throw error;
+    // Sync updates to analytics
+    const updatedClient = await this.getClientById(id);
+    if (updatedClient) {
+      this.syncClientToAnalytics(id, updatedClient).catch(() => {
+        // Silent fail for analytics sync
+      });
     }
   }
 
@@ -325,19 +277,11 @@ export class HybridClientService {
   // ============================================
 
   async getClientAnalytics(clientId?: string) {
-    try {
-      return await analyticsService.getClientAnalytics(clientId);
-    } catch (error) {
-      throw error;
-    }
+    return await analyticsService.getClientAnalytics(clientId);
   }
 
   async getTopClients(limit: number = 10) {
-    try {
-      return await analyticsService.getTopClients(limit);
-    } catch (error) {
-      throw error;
-    }
+    return await analyticsService.getTopClients(limit);
   }
 
   // ============================================

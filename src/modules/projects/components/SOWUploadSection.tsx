@@ -136,21 +136,24 @@ export function SOWUploadSection({
       let validation: any = { valid: [], invalid: [], errors: [] };
 
       switch (sowFile.type) {
-        case 'poles':
+        case 'poles': {
           const poles = sowDataProcessor.processPoles(rawData);
           validation = sowDataProcessor.validatePoles(poles);
           processedData = validation.valid;
           break;
-        case 'drops':
+        }
+        case 'drops': {
           const drops = sowDataProcessor.processDrops(rawData);
           validation = sowDataProcessor.validateDrops(drops);
           processedData = validation.valid;
           break;
-        case 'fibre':
+        }
+        case 'fibre': {
           const fibres = sowDataProcessor.processFibre(rawData);
           validation = sowDataProcessor.validateFibre(fibres);
           processedData = validation.valid;
           break;
+        }
       }
 
       if (processedData.length === 0) {

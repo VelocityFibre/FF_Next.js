@@ -250,26 +250,27 @@ export {
   batchTaskExample
 };
 
+// Function to run all examples
+async function runExamples() {
+  try {
+    await basicUsageExample();
+    console.log('\n' + '='.repeat(50) + '\n');
+    
+    await dashboardExample();
+    console.log('\n' + '='.repeat(50) + '\n');
+    
+    await eventHandlingExample();
+    console.log('\n' + '='.repeat(50) + '\n');
+    
+    await batchTaskExample();
+    
+  } catch (error) {
+    console.error('❌ Examples failed:', error);
+    process.exit(1);
+  }
+}
+
 // Run examples if this file is executed directly
 if (require.main === module) {
-  async function runExamples() {
-    try {
-      await basicUsageExample();
-      console.log('\n' + '='.repeat(50) + '\n');
-      
-      await dashboardExample();
-      console.log('\n' + '='.repeat(50) + '\n');
-      
-      await eventHandlingExample();
-      console.log('\n' + '='.repeat(50) + '\n');
-      
-      await batchTaskExample();
-      
-    } catch (error) {
-      console.error('❌ Examples failed:', error);
-      process.exit(1);
-    }
-  }
-
   runExamples();
 }

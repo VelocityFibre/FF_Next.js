@@ -85,12 +85,13 @@ class StorageService {
       case 'session':
         serializedValue = sessionStorage.getItem(namespacedKey);
         break;
-      case 'memory':
+      case 'memory': {
         const memoryItem = this.memoryStorage.get(namespacedKey);
         if (memoryItem) {
           return this.validateAndReturnItem(memoryItem) as T | null;
         }
         return null;
+      }
     }
 
     if (!serializedValue) {
@@ -142,13 +143,15 @@ class StorageService {
     const prefix = this.getNamespacedKey('', namespace);
 
     switch (type) {
-      case 'local':
+      case 'local': {
         this.clearStorageByPrefix(localStorage, prefix);
         break;
-      case 'session':
+      }
+      case 'session': {
         this.clearStorageByPrefix(sessionStorage, prefix);
         break;
-      case 'memory':
+      }
+      case 'memory': {
         if (namespace) {
           Array.from(this.memoryStorage.keys())
             .filter(key => key.startsWith(prefix))
@@ -157,6 +160,7 @@ class StorageService {
           this.memoryStorage.clear();
         }
         break;
+      }
     }
   }
 
@@ -223,12 +227,13 @@ class StorageService {
           case 'session':
             serializedValue = sessionStorage.getItem(namespacedKey);
             break;
-          case 'memory':
+          case 'memory': {
             const item = this.memoryStorage.get(namespacedKey);
             if (item && item.ttl && now - item.timestamp > item.ttl) {
               this.memoryStorage.delete(namespacedKey);
             }
             return;
+          }
         }
 
         if (serializedValue) {
