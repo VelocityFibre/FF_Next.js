@@ -152,14 +152,14 @@ export function ProjectDetail() {
 
       {/* Project Status & Priority */}
       <div className="flex items-center gap-4">
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors[project.status]}`}>
-          {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('_', ' ')}
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors[project.status] || 'bg-gray-100 text-gray-800'}`}>
+          {project.status ? (project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('_', ' ')) : 'Unknown'}
         </span>
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${priorityColors[project.priority]}`}>
-          {project.priority.charAt(0).toUpperCase() + project.priority.slice(1)} Priority
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${priorityColors[project.priority] || 'bg-gray-100 text-gray-800'}`}>
+          {project.priority ? (project.priority.charAt(0).toUpperCase() + project.priority.slice(1) + ' Priority') : 'No Priority'}
         </span>
         <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
-          {project.projectType.toUpperCase()}
+          {project.projectType ? project.projectType.toUpperCase() : 'STANDARD'}
         </span>
       </div>
 

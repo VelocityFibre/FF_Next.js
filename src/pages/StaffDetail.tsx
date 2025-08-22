@@ -156,7 +156,7 @@ export function StaffDetail() {
               <div>
                 <p className="text-sm text-gray-500">Department</p>
                 <p className="font-medium">
-                  {staff.department.replace('_', ' ').charAt(0).toUpperCase() + staff.department.slice(1)}
+                  {staff.department ? staff.department.replace('_', ' ').charAt(0).toUpperCase() + staff.department.slice(1) : 'N/A'}
                 </p>
               </div>
 
@@ -170,7 +170,7 @@ export function StaffDetail() {
               <div>
                 <p className="text-sm text-gray-500">Contract Type</p>
                 <p className="font-medium">
-                  {staff.contractType.replace('_', ' ').charAt(0).toUpperCase() + staff.contractType.slice(1)}
+                  {staff.contractType ? staff.contractType.replace('_', ' ').charAt(0).toUpperCase() + staff.contractType.slice(1) : 'N/A'}
                 </p>
               </div>
 
@@ -213,7 +213,7 @@ export function StaffDetail() {
                     className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full"
                   >
                     <Award className="w-3 h-3 mr-1" />
-                    {skill.replace(/_/g, ' ').charAt(0).toUpperCase() + skill.slice(1)}
+                    {skill ? skill.replace(/_/g, ' ').charAt(0).toUpperCase() + skill.slice(1) : ''}
                   </span>
                 ))}
               </div>

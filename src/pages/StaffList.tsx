@@ -237,7 +237,7 @@ export function StaffList() {
                   <option value="">All Departments</option>
                   {Object.values(Department).map(dept => (
                     <option key={dept} value={dept}>
-                      {dept.replace('_', ' ').charAt(0).toUpperCase() + dept.slice(1)}
+                      {dept ? dept.replace('_', ' ').charAt(0).toUpperCase() + dept.slice(1) : ''}
                     </option>
                   ))}
                 </select>
@@ -261,7 +261,7 @@ export function StaffList() {
                   <option value="">All Levels</option>
                   {Object.values(StaffLevel).map(level => (
                     <option key={level} value={level}>
-                      {level.replace('_', ' ').charAt(0).toUpperCase() + level.slice(1)}
+                      {level ? level.replace('_', ' ').charAt(0).toUpperCase() + level.slice(1) : ''}
                     </option>
                   ))}
                 </select>
@@ -285,7 +285,7 @@ export function StaffList() {
                   <option value="">All Statuses</option>
                   {Object.values(StaffStatus).map(status => (
                     <option key={status} value={status}>
-                      {status.replace('_', ' ').charAt(0).toUpperCase() + status.slice(1)}
+                      {status ? status.replace('_', ' ').charAt(0).toUpperCase() + status.slice(1) : ''}
                     </option>
                   ))}
                 </select>
@@ -371,7 +371,7 @@ export function StaffList() {
                   </td>
                   <td className="px-4 py-4">
                     <p className="text-sm text-gray-900">
-                      {member.department.replace('_', ' ').charAt(0).toUpperCase() + member.department.slice(1)}
+                      {member.department ? member.department.replace('_', ' ').charAt(0).toUpperCase() + member.department.slice(1) : 'N/A'}
                     </p>
                   </td>
                   <td className="px-4 py-4">

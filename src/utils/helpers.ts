@@ -29,14 +29,17 @@ export function formatDate(
 /**
  * Capitalize first letter of a string
  */
-export function capitalize(str: string): string {
+export function capitalize(str: string | null | undefined): string {
+  if (!str || typeof str !== 'string') return ''
+  if (str.length === 0) return ''
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
 
 /**
  * Truncate string to specified length with ellipsis
  */
-export function truncate(str: string, length: number): string {
+export function truncate(str: string | null | undefined, length: number): string {
+  if (!str || typeof str !== 'string') return ''
   if (str.length <= length) return str
   return str.slice(0, length - 3) + '...'
 }

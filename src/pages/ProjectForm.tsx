@@ -6,6 +6,7 @@ import { useClientSelection } from '@/hooks/useClients';
 import { useProjectManagerSelection } from '@/hooks/useStaff';
 import { ProjectFormData, ProjectStatus, ProjectType, Priority } from '@/types/project.types';
 import { SOWUploadWizard } from '@/components/sow/SOWUploadWizard';
+import { safeToISOString } from '@/utils/dateHelpers';
 
 export function ProjectForm() {
   const navigate = useNavigate();
@@ -47,16 +48,8 @@ export function ProjectForm() {
         projectType: project.projectType,
         priority: project.priority,
         status: project.status,
-        startDate: typeof project.startDate === 'object' && 'toDate' in project.startDate 
-          ? (project.startDate as any).toDate().toISOString() 
-          : typeof project.startDate === 'string' 
-          ? project.startDate 
-          : new Date(project.startDate).toISOString(),
-        endDate: typeof project.endDate === 'object' && 'toDate' in project.endDate 
-          ? (project.endDate as any).toDate().toISOString() 
-          : typeof project.endDate === 'string' 
-          ? project.endDate 
-          : new Date(project.endDate).toISOString(),
+        startDate: safeToISOString(project.startDate),
+        endDate: safeToISOString(project.endDate),
         projectManagerId: project.projectManagerId || '',
         budget: project.budget || 0,
       });
