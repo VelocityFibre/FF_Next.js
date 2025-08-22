@@ -104,9 +104,14 @@ export async function getOverdueProjects(): Promise<Project[]> {
     // Filter overdue projects
     return projects.filter(project => {
       if (!project.endDate) return false;
-      const endDate = project.endDate instanceof Date 
-        ? project.endDate 
-        : new Date(project.endDate);
+      let endDate: Date;
+      if (project.endDate instanceof Date) {
+        endDate = project.endDate;
+      } else if (typeof project.endDate === 'object' && 'toDate' in project.endDate) {
+        endDate = (project.endDate as any).toDate();
+      } else {
+        endDate = new Date(project.endDate as string);
+      }
       return endDate < now && project.actualProgress < 100;
     });
   } catch (error) {
@@ -180,9 +185,14 @@ export async function getProjectsEndingSoon(): Promise<Project[]> {
     // Filter projects ending within 7 days
     return projects.filter(project => {
       if (!project.endDate) return false;
-      const endDate = project.endDate instanceof Date 
-        ? project.endDate 
-        : new Date(project.endDate);
+      let endDate: Date;
+      if (project.endDate instanceof Date) {
+        endDate = project.endDate;
+      } else if (typeof project.endDate === 'object' && 'toDate' in project.endDate) {
+        endDate = (project.endDate as any).toDate();
+      } else {
+        endDate = new Date(project.endDate as string);
+      }
       return endDate >= now && endDate <= weekFromNow;
     });
   } catch (error) {

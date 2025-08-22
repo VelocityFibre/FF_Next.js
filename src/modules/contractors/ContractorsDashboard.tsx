@@ -1,48 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@mui/material/PigmentGrid';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  IconButton,
-  Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Avatar,
-  LinearProgress,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Tab,
-  Tabs,
-  Alert,
-  Badge,
-  Tooltip
-} from '@mui/material';
-import {
-  Add as AddIcon,
-  Business as BusinessIcon,
-  CheckCircle as CheckCircleIcon,
-  Warning as WarningIcon,
-  Error as ErrorIcon,
-  MoreVert as MoreVertIcon,
-  Description as DescriptionIcon,
-  Verified as VerifiedIcon,
-  Schedule as ScheduleIcon,
-  TrendingUp as TrendingUpIcon,
-  Security as SecurityIcon,
-  AccountBalance as AccountBalanceIcon
-} from '@mui/icons-material';
+import { Plus, Building2, CheckCircle, AlertTriangle, AlertCircle, MoreVertical, Clock } from 'lucide-react';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 interface Contractor {
   id: string;
@@ -69,10 +27,7 @@ interface Contractor {
 const ContractorsDashboard: React.FC = () => {
   const [contractors, setContractors] = useState<Contractor[]>([]);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [, setSelectedContractor] = useState<Contractor | null>(null);
-  const [openOnboarding, setOpenOnboarding] = useState(false);
-  const [filterStatus] = useState<string>('all');
+  // const [filterStatus] = useState<string>('all'); // Reserved for future use
 
   useEffect(() => {
     loadContractors();
@@ -98,405 +53,227 @@ const ContractorsDashboard: React.FC = () => {
         onboardingProgress: 100,
         documentsExpiring: 2,
         activeProjects: 3,
-        complianceIssues: 1,
-        lastActivity: new Date('2024-02-10')
+        complianceIssues: 0,
+        lastActivity: new Date('2024-01-15')
       },
       {
         id: 'CTR002',
-        companyName: 'Network Builders Co',
+        companyName: 'ConnectPro Services',
         registrationNumber: '2019/654321/07',
-        contactPerson: 'Sarah Johnson',
-        email: 'sarah@networkbuilders.co.za',
-        phone: '0834567890',
-        status: 'pending_approval',
-        ragScore: {
-          overall: 'amber',
-          financial: 'green',
-          compliance: 'amber',
-          performance: 'amber',
-          safety: 'green'
-        },
-        onboardingProgress: 75,
-        documentsExpiring: 1,
-        activeProjects: 1,
-        complianceIssues: 3,
-        lastActivity: new Date()
-      },
-      {
-        id: 'CTR003',
-        companyName: 'QuickConnect Ltd',
-        registrationNumber: '2021/789012/07',
-        contactPerson: 'Mike Davis',
-        email: 'mike@quickconnect.co.za',
-        phone: '0845678901',
+        contactPerson: 'Jane Doe',
+        email: 'jane@connectpro.co.za',
+        phone: '0836547890',
         status: 'onboarding_in_progress',
         ragScore: {
-          overall: 'red',
+          overall: 'amber',
           financial: 'amber',
           compliance: 'red',
-          performance: 'amber',
-          safety: 'red'
+          performance: 'green',
+          safety: 'amber'
         },
-        onboardingProgress: 40,
+        onboardingProgress: 65,
         documentsExpiring: 0,
         activeProjects: 0,
-        complianceIssues: 5,
-        lastActivity: new Date()
+        complianceIssues: 2,
+        lastActivity: new Date('2024-01-20')
       }
     ];
     setContractors(mockData);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: Contractor['status']) => {
     switch (status) {
-      case 'approved': return 'success';
-      case 'pending_approval': return 'warning';
-      case 'onboarding_in_progress': return 'info';
-      case 'suspended': return 'error';
-      case 'blacklisted': return 'error';
-      default: return 'default';
+      case 'approved': return 'bg-green-100 text-green-800';
+      case 'pending_approval': return 'bg-yellow-100 text-yellow-800';
+      case 'onboarding_in_progress': return 'bg-blue-100 text-blue-800';
+      case 'pending_onboarding': return 'bg-gray-100 text-gray-800';
+      case 'suspended': return 'bg-orange-100 text-orange-800';
+      case 'blacklisted': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const getRAGColor = (status: 'red' | 'amber' | 'green') => {
-    switch (status) {
-      case 'green': return '#4caf50';
-      case 'amber': return '#ff9800';
-      case 'red': return '#f44336';
-      default: return '#9e9e9e';
+  const getRagColor = (score: 'red' | 'amber' | 'green') => {
+    switch (score) {
+      case 'green': return 'bg-green-500';
+      case 'amber': return 'bg-yellow-500';
+      case 'red': return 'bg-red-500';
     }
   };
 
-  const getRAGIcon = (status: 'red' | 'amber' | 'green') => {
-    switch (status) {
-      case 'green': return <CheckCircleIcon style={{ color: getRAGColor(status) }} />;
-      case 'amber': return <WarningIcon style={{ color: getRAGColor(status) }} />;
-      case 'red': return <ErrorIcon style={{ color: getRAGColor(status) }} />;
-      default: return <ErrorIcon style={{ color: getRAGColor('red') }} />;
-    }
-  };
-
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, contractor: Contractor) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedContractor(contractor);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const stats = {
-    total: contractors.length,
-    approved: contractors.filter(c => c.status === 'approved').length,
-    onboarding: contractors.filter(c => c.status === 'onboarding_in_progress').length,
-    pendingApproval: contractors.filter(c => c.status === 'pending_approval').length,
-    redRAG: contractors.filter(c => c.ragScore.overall === 'red').length,
-    expiringDocs: contractors.reduce((sum, c) => sum + c.documentsExpiring, 0)
-  };
-
-  const filteredContractors = filterStatus === 'all' 
-    ? contractors 
-    : contractors.filter(c => c.status === filterStatus);
+  const tabs = ['All Contractors', 'Pending Onboarding', 'Active', 'Compliance Issues'];
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Contractors Portal
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setOpenOnboarding(true)}
-        >
-          Add New Contractor
-        </Button>
-      </Box>
+    <div className="ff-page-container">
+      <DashboardHeader 
+        title="Contractors Portal"
+        subtitle="Manage contractor onboarding, compliance, and performance"
+        actions={[
+          {
+            label: 'Add Contractor',
+            icon: Plus,
+            onClick: () => {},
+            variant: 'primary'
+          }
+        ]}
+      />
 
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        <Grid size={{ xs: 12, md: 2 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <BusinessIcon color="primary" sx={{ mr: 1 }} />
-                <Typography variant="h6">{stats.total}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary">
-                Total Contractors
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 2 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <CheckCircleIcon color="success" sx={{ mr: 1 }} />
-                <Typography variant="h6">{stats.approved}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary">
-                Approved
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 2 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <ScheduleIcon color="info" sx={{ mr: 1 }} />
-                <Typography variant="h6">{stats.onboarding}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary">
-                Onboarding
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 2 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <WarningIcon color="warning" sx={{ mr: 1 }} />
-                <Typography variant="h6">{stats.pendingApproval}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary">
-                Pending Approval
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 2 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <ErrorIcon color="error" sx={{ mr: 1 }} />
-                <Typography variant="h6">{stats.redRAG}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary">
-                Red RAG Score
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={{ xs: 12, md: 2 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <Badge badgeContent={stats.expiringDocs} color="error">
-                  <DescriptionIcon color="primary" sx={{ mr: 1 }} />
-                </Badge>
-                <Typography variant="h6" sx={{ ml: 2 }}>{stats.expiringDocs}</Typography>
-              </Box>
-              <Typography variant="body2" color="textSecondary">
-                Expiring Documents
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="ff-card">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Contractors</p>
+                <p className="text-2xl font-bold">{contractors.length}</p>
+              </div>
+              <Building2 className="w-8 h-8 text-blue-500" />
+            </div>
+          </div>
+        </div>
 
-      <Card>
-        <CardContent>
-          <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 2 }}>
-            <Tab label="All Contractors" />
-            <Tab label="Pending Onboarding" />
-            <Tab label="Compliance Issues" />
-            <Tab label="Document Expiry" />
-          </Tabs>
+        <div className="ff-card">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Active</p>
+                <p className="text-2xl font-bold">
+                  {contractors.filter(c => c.status === 'approved').length}
+                </p>
+              </div>
+              <CheckCircle className="w-8 h-8 text-green-500" />
+            </div>
+          </div>
+        </div>
 
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Company</TableCell>
-                  <TableCell>Contact Person</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell align="center">RAG Score</TableCell>
-                  <TableCell align="center">Onboarding</TableCell>
-                  <TableCell align="center">Projects</TableCell>
-                  <TableCell align="center">Compliance</TableCell>
-                  <TableCell>Last Activity</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredContractors.map((contractor) => (
-                  <TableRow key={contractor.id}>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar sx={{ mr: 2, bgcolor: 'primary.main' }}>
-                          <BusinessIcon />
-                        </Avatar>
-                        <Box>
-                          <Typography variant="subtitle2">
-                            {contractor.companyName}
-                          </Typography>
-                          <Typography variant="caption" color="textSecondary">
-                            {contractor.registrationNumber}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2">{contractor.contactPerson}</Typography>
-                      <Typography variant="caption" color="textSecondary">
-                        {contractor.email}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={contractor.status.replace(/_/g, ' ').toUpperCase()}
-                        color={getStatusColor(contractor.status) as any}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 0.5 }}>
-                        <Tooltip title={`Overall: ${contractor.ragScore.overall}`}>
-                          {getRAGIcon(contractor.ragScore.overall)}
-                        </Tooltip>
-                        <Tooltip title={`Financial: ${contractor.ragScore.financial}`}>
-                          <AccountBalanceIcon 
-                            fontSize="small" 
-                            style={{ color: getRAGColor(contractor.ragScore.financial) }}
-                          />
-                        </Tooltip>
-                        <Tooltip title={`Compliance: ${contractor.ragScore.compliance}`}>
-                          <VerifiedIcon 
-                            fontSize="small" 
-                            style={{ color: getRAGColor(contractor.ragScore.compliance) }}
-                          />
-                        </Tooltip>
-                        <Tooltip title={`Performance: ${contractor.ragScore.performance}`}>
-                          <TrendingUpIcon 
-                            fontSize="small" 
-                            style={{ color: getRAGColor(contractor.ragScore.performance) }}
-                          />
-                        </Tooltip>
-                        <Tooltip title={`Safety: ${contractor.ragScore.safety}`}>
-                          <SecurityIcon 
-                            fontSize="small" 
-                            style={{ color: getRAGColor(contractor.ragScore.safety) }}
-                          />
-                        </Tooltip>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Box sx={{ width: 100 }}>
-                        <LinearProgress 
-                          variant="determinate" 
-                          value={contractor.onboardingProgress}
-                          color={contractor.onboardingProgress === 100 ? 'success' : 'primary'}
-                        />
-                        <Typography variant="caption">
-                          {contractor.onboardingProgress}%
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Chip label={contractor.activeProjects} size="small" />
-                    </TableCell>
-                    <TableCell align="center">
-                      {contractor.complianceIssues > 0 ? (
-                        <Chip 
-                          label={contractor.complianceIssues} 
-                          color="error" 
-                          size="small"
-                        />
-                      ) : (
-                        <Chip 
-                          label="OK" 
-                          color="success" 
-                          size="small"
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="caption">
-                        {contractor.lastActivity.toLocaleDateString()}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton 
-                        size="small"
-                        onClick={(e) => handleMenuClick(e, contractor)}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
+        <div className="ff-card">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Pending Onboarding</p>
+                <p className="text-2xl font-bold">
+                  {contractors.filter(c => c.status === 'onboarding_in_progress').length}
+                </p>
+              </div>
+              <Clock className="w-8 h-8 text-yellow-500" />
+            </div>
+          </div>
+        </div>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleMenuClose}>View Details</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Edit Information</MenuItem>
-        <MenuItem onClick={handleMenuClose}>View Documents</MenuItem>
-        <MenuItem onClick={handleMenuClose}>RAG Assessment</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Compliance Report</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Suspend Contractor</MenuItem>
-      </Menu>
+        <div className="ff-card">
+          <div className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Compliance Issues</p>
+                <p className="text-2xl font-bold">
+                  {contractors.reduce((sum, c) => sum + c.complianceIssues, 0)}
+                </p>
+              </div>
+              <AlertTriangle className="w-8 h-8 text-red-500" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <Dialog
-        open={openOnboarding}
-        onClose={() => setOpenOnboarding(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>New Contractor Onboarding</DialogTitle>
-        <DialogContent>
-          <Alert severity="info" sx={{ mb: 2 }}>
-            Start the onboarding process for a new contractor. This will guide them through
-            all required documentation, certifications, and compliance requirements.
-          </Alert>
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              fullWidth
-              label="Company Name"
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Registration Number"
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Contact Person"
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Email Address"
-              type="email"
-              margin="normal"
-            />
-            <TextField
-              fullWidth
-              label="Phone Number"
-              margin="normal"
-            />
-          </Box>
-          <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button onClick={() => setOpenOnboarding(false)}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={() => setOpenOnboarding(false)}>
-              Start Onboarding
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
-    </Box>
+      {/* Tabs */}
+      <div className="ff-card mb-6">
+        <div className="border-b">
+          <nav className="flex space-x-8 px-6" aria-label="Tabs">
+            {tabs.map((tab, index) => (
+              <button
+                key={tab}
+                onClick={() => setSelectedTab(index)}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  selectedTab === index
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Contractors Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Company
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  RAG Score
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Active Projects
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Compliance
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {contractors.map((contractor) => (
+                <tr key={contractor.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {contractor.companyName}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {contractor.contactPerson} • {contractor.registrationNumber}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(contractor.status)}`}>
+                      {contractor.status.replace(/_/g, ' ')}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex space-x-1">
+                      <div className={`w-6 h-6 rounded ${getRagColor(contractor.ragScore.financial)}`} title="Financial" />
+                      <div className={`w-6 h-6 rounded ${getRagColor(contractor.ragScore.compliance)}`} title="Compliance" />
+                      <div className={`w-6 h-6 rounded ${getRagColor(contractor.ragScore.performance)}`} title="Performance" />
+                      <div className={`w-6 h-6 rounded ${getRagColor(contractor.ragScore.safety)}`} title="Safety" />
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {contractor.activeProjects}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {contractor.complianceIssues > 0 ? (
+                      <div className="flex items-center text-red-600">
+                        <AlertCircle className="w-4 h-4 mr-1" />
+                        {contractor.complianceIssues} issues
+                      </div>
+                    ) : (
+                      <div className="flex items-center text-green-600">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Compliant
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

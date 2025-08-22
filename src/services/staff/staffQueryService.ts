@@ -3,8 +3,7 @@ import {
   query, 
   where, 
   orderBy, 
-  getDocs,
-  Timestamp
+  getDocs
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { 
@@ -12,8 +11,6 @@ import {
   StaffDropdownOption,
   StaffSummary,
   StaffStatus,
-  Department,
-  StaffLevel,
   ProjectAssignment
 } from '@/types/staff.types';
 
@@ -43,9 +40,10 @@ export const staffQueryService = {
           position: staff.position,
           department: staff.department,
           level: staff.level,
-          currentProjectCount: staff.currentProjectCount,
-          maxProjectCount: staff.maxProjectCount,
-        }));
+          status: staff.status,
+          currentProjectCount: staff.currentProjectCount || 0,
+          maxProjectCount: staff.maxProjectCount || 5,
+        } as StaffDropdownOption));
     } catch (error) {
       console.error('Error getting active staff:', error);
       throw new Error('Failed to fetch active staff');
@@ -96,9 +94,10 @@ export const staffQueryService = {
           position: staff.position,
           department: staff.department,
           level: staff.level,
-          currentProjectCount: staff.currentProjectCount,
-          maxProjectCount: staff.maxProjectCount,
-        }));
+          status: staff.status,
+          currentProjectCount: staff.currentProjectCount || 0,
+          maxProjectCount: staff.maxProjectCount || 5,
+        } as StaffDropdownOption));
     } catch (error) {
       console.error('Error getting project managers:', error);
       throw new Error('Failed to fetch project managers');
@@ -119,8 +118,11 @@ export const staffQueryService = {
         inactiveStaff: staff.filter(s => s.status === StaffStatus.INACTIVE).length,
         staffByDepartment: {},
         staffByLevel: {},
+        staffBySkill: {},
+        averageExperience: 0,
         utilizationRate: 0,
-        averageProjectsPerPerson: 0,
+        overallocatedStaff: 0,
+        underutilizedStaff: 0,
         topPerformers: [],
       };
       
@@ -132,8 +134,10 @@ export const staffQueryService = {
       
       // Count by level
       staff.forEach(member => {
-        summary.staffByLevel[member.level] = 
-          (summary.staffByLevel[member.level] || 0) + 1;
+        if (member.level) {
+          summary.staffByLevel[member.level] = 
+            (summary.staffByLevel[member.level] || 0) + 1;
+        }
       });
       
       // Calculate utilization
@@ -142,7 +146,7 @@ export const staffQueryService = {
         const totalCapacity = activeStaff.reduce((sum, s) => sum + s.maxProjectCount, 0);
         const totalUtilized = activeStaff.reduce((sum, s) => sum + s.currentProjectCount, 0);
         summary.utilizationRate = (totalUtilized / totalCapacity) * 100;
-        summary.averageProjectsPerPerson = totalUtilized / activeStaff.length;
+        // Remove averageProjectsPerPerson as it's not in the interface
       }
       
       // Get top performers

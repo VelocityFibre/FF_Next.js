@@ -10,15 +10,17 @@ import {
   financialTransactions, 
   staffPerformance,
   clientAnalytics,
+  auditLog,
 } from '@/lib/neon/schema';
 import { eq, and, gte, lte, desc, sql, count, sum, avg } from 'drizzle-orm';
-import type { 
-  KPIMetrics,
-  NewKPIMetrics,
-  FinancialTransaction,
-  ClientAnalytics,
-  StaffPerformance
-} from '@/lib/neon/schema';
+// Types will be needed when implementing proper return types
+// import type { 
+//   KPIMetrics,
+//   NewKPIMetrics, 
+//   FinancialTransaction,
+//   ClientAnalytics,
+//   StaffPerformance
+// } from '@/lib/neon/schema';
 
 export class AnalyticsService {
   // ============================================
@@ -30,7 +32,7 @@ export class AnalyticsService {
    */
   async getProjectOverview(projectId?: string) {
     try {
-      let query = neonDb
+      const baseQuery = neonDb
         .select({
           totalProjects: count(projectAnalytics.id),
           totalBudget: sum(projectAnalytics.totalBudget),
@@ -40,10 +42,10 @@ export class AnalyticsService {
         .from(projectAnalytics);
 
       if (projectId) {
-        query = query.where(eq(projectAnalytics.projectId, projectId));
+        return await baseQuery.where(eq(projectAnalytics.projectId, projectId));
       }
 
-      return await query;
+      return await baseQuery;
     } catch (error) {
       console.error('Failed to get project overview:', error);
       throw error;
@@ -86,7 +88,12 @@ export class AnalyticsService {
    */
   async getKPIDashboard(projectId?: string, dateFrom?: Date, dateTo?: Date) {
     try {
-      let query = neonDb
+      const conditions = [];
+      if (projectId) conditions.push(eq(kpiMetrics.projectId, projectId));
+      if (dateFrom) conditions.push(gte(kpiMetrics.recordedDate, dateFrom));
+      if (dateTo) conditions.push(lte(kpiMetrics.recordedDate, dateTo));
+
+      const baseQuery = neonDb
         .select({
           metricType: kpiMetrics.metricType,
           metricName: kpiMetrics.metricName,
@@ -97,16 +104,11 @@ export class AnalyticsService {
         .from(kpiMetrics)
         .groupBy(kpiMetrics.metricType, kpiMetrics.metricName, kpiMetrics.unit);
 
-      const conditions = [];
-      if (projectId) conditions.push(eq(kpiMetrics.projectId, projectId));
-      if (dateFrom) conditions.push(gte(kpiMetrics.recordedDate, dateFrom));
-      if (dateTo) conditions.push(lte(kpiMetrics.recordedDate, dateTo));
-
       if (conditions.length > 0) {
-        query = query.where(and(...conditions));
+        return await baseQuery.where(and(...conditions));
       }
 
-      return await query;
+      return await baseQuery;
     } catch (error) {
       console.error('Failed to get KPI dashboard:', error);
       throw error;
@@ -121,33 +123,25 @@ export class AnalyticsService {
       const dateFrom = new Date();
       dateFrom.setDate(dateFrom.getDate() - days);
 
-      let query = neonDb
+      const conditions = [
+        eq(kpiMetrics.metricType, metricType),
+        gte(kpiMetrics.recordedDate, dateFrom)
+      ];
+
+      if (projectId) {
+        conditions.push(eq(kpiMetrics.projectId, projectId));
+      }
+
+      return await neonDb
         .select({
           date: sql<string>`DATE(${kpiMetrics.recordedDate})`,
           value: avg(kpiMetrics.metricValue),
           count: count(kpiMetrics.id),
         })
         .from(kpiMetrics)
-        .where(
-          and(
-            eq(kpiMetrics.metricType, metricType),
-            gte(kpiMetrics.recordedDate, dateFrom)
-          )
-        )
+        .where(and(...conditions))
         .groupBy(sql`DATE(${kpiMetrics.recordedDate})`)
         .orderBy(sql`DATE(${kpiMetrics.recordedDate})`);
-
-      if (projectId) {
-        query = query.where(
-          and(
-            eq(kpiMetrics.metricType, metricType),
-            eq(kpiMetrics.projectId, projectId),
-            gte(kpiMetrics.recordedDate, dateFrom)
-          )
-        );
-      }
-
-      return await query;
     } catch (error) {
       console.error('Failed to get KPI trends:', error);
       throw error;
@@ -163,26 +157,21 @@ export class AnalyticsService {
    */
   async getFinancialOverview(projectId?: string) {
     try {
-      let query = neonDb
+      const baseQuery = neonDb
         .select({
           totalInvoices: count(financialTransactions.id),
           totalAmount: sum(financialTransactions.amount),
-          paidAmount: sum(financialTransactions.amount).where(eq(financialTransactions.status, 'paid')),
-          pendingAmount: sum(financialTransactions.amount).where(eq(financialTransactions.status, 'pending')),
-          overdueCount: count(financialTransactions.id).where(
-            and(
-              eq(financialTransactions.status, 'pending'),
-              lte(financialTransactions.dueDate, new Date())
-            )
-          ),
+          paidAmount: sql<number>`SUM(CASE WHEN ${financialTransactions.status} = 'paid' THEN ${financialTransactions.amount} ELSE 0 END)`,
+          pendingAmount: sql<number>`SUM(CASE WHEN ${financialTransactions.status} = 'pending' THEN ${financialTransactions.amount} ELSE 0 END)`,
+          overdueCount: sql<number>`COUNT(CASE WHEN ${financialTransactions.status} = 'pending' AND ${financialTransactions.dueDate} <= NOW() THEN 1 END)`,
         })
         .from(financialTransactions);
 
       if (projectId) {
-        query = query.where(eq(financialTransactions.projectId, projectId));
+        return await baseQuery.where(eq(financialTransactions.projectId, projectId));
       }
 
-      return await query;
+      return await baseQuery;
     } catch (error) {
       console.error('Failed to get financial overview:', error);
       throw error;
@@ -200,8 +189,8 @@ export class AnalyticsService {
       return await neonDb
         .select({
           month: sql<string>`DATE_TRUNC('month', ${financialTransactions.transactionDate})`,
-          income: sum(financialTransactions.amount).where(eq(financialTransactions.transactionType, 'invoice')),
-          expenses: sum(financialTransactions.amount).where(eq(financialTransactions.transactionType, 'expense')),
+          income: sql<number>`SUM(CASE WHEN ${financialTransactions.transactionType} = 'invoice' THEN ${financialTransactions.amount} ELSE 0 END)`,
+          expenses: sql<number>`SUM(CASE WHEN ${financialTransactions.transactionType} = 'expense' THEN ${financialTransactions.amount} ELSE 0 END)`,
           netFlow: sql<number>`
             SUM(CASE WHEN ${financialTransactions.transactionType} = 'invoice' THEN ${financialTransactions.amount} ELSE 0 END) -
             SUM(CASE WHEN ${financialTransactions.transactionType} = 'expense' THEN ${financialTransactions.amount} ELSE 0 END)
@@ -226,7 +215,13 @@ export class AnalyticsService {
    */
   async getStaffPerformance(projectId?: string, periodType: string = 'monthly') {
     try {
-      let query = neonDb
+      const conditions = [eq(staffPerformance.periodType, periodType)];
+      
+      if (projectId) {
+        conditions.push(eq(staffPerformance.projectId, projectId));
+      }
+
+      return await neonDb
         .select({
           staffName: staffPerformance.staffName,
           role: staffPerformance.role,
@@ -237,19 +232,8 @@ export class AnalyticsService {
           attendanceRate: avg(staffPerformance.attendanceRate),
         })
         .from(staffPerformance)
-        .where(eq(staffPerformance.periodType, periodType))
+        .where(and(...conditions))
         .groupBy(staffPerformance.staffId, staffPerformance.staffName, staffPerformance.role);
-
-      if (projectId) {
-        query = query.where(
-          and(
-            eq(staffPerformance.periodType, periodType),
-            eq(staffPerformance.projectId, projectId)
-          )
-        );
-      }
-
-      return await query;
     } catch (error) {
       console.error('Failed to get staff performance:', error);
       throw error;
@@ -265,17 +249,17 @@ export class AnalyticsService {
    */
   async getClientAnalytics(clientId?: string) {
     try {
-      let query = neonDb
+      const baseQuery = neonDb
         .select()
         .from(clientAnalytics)
         .orderBy(desc(clientAnalytics.lifetimeValue));
 
       if (clientId) {
-        query = query.where(eq(clientAnalytics.clientId, clientId));
-        return (await query)[0];
+        const result = await baseQuery.where(eq(clientAnalytics.clientId, clientId));
+        return result[0];
       }
 
-      return await query;
+      return await baseQuery;
     } catch (error) {
       console.error('Failed to get client analytics:', error);
       throw error;

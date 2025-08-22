@@ -82,11 +82,15 @@ export const productService = {
     try {
       const product: Omit<Product, 'id'> = {
         ...data,
+        pricing: {
+          unitPrice: data.unitPrice || 0,
+          currency: data.currency || 'ZAR',
+          vatInclusive: true
+        },
         isActive: true,
-        isDiscontinued: false,
         tags: [],
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
       
       const docRef = await addDoc(collection(db, PRODUCTS_COLLECTION), product);
@@ -212,7 +216,7 @@ export const productService = {
         collection(db, PRODUCTS_COLLECTION),
         where('availability', 'in', [
           ProductAvailability.IN_STOCK,
-          ProductAvailability.LIMITED_STOCK
+          ProductAvailability.LOW_STOCK
         ]),
         where('isActive', '==', true),
         orderBy('name')
@@ -239,18 +243,20 @@ export const productService = {
     effectiveTo?: Date;
   }): Promise<string> {
     try {
-      const priceList: Omit<PriceList, 'id'> = {
+      const priceList = {
         supplierId,
         name: data.name,
-        description: data.description,
+        description: data.description || '',
         items: data.items,
-        effectiveFrom: Timestamp.fromDate(data.effectiveFrom),
-        effectiveTo: data.effectiveTo ? Timestamp.fromDate(data.effectiveTo) : undefined,
-        isActive: true,
-        version: 1,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
-      };
+        effectiveDate: data.effectiveFrom,
+        ...(data.effectiveTo && { expiryDate: data.effectiveTo }),
+        version: '1.0',
+        status: 'active',
+        currency: 'ZAR' as any,
+        createdBy: 'current-user',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      } as Omit<PriceList, 'id'>;
       
       const docRef = await addDoc(collection(db, PRICE_LISTS_COLLECTION), priceList);
       return docRef.id;
@@ -303,7 +309,9 @@ export const productService = {
       } as PriceList;
       
       // Check if within validity period
-      if (priceList.effectiveTo && priceList.effectiveTo < now) {
+      const expiryDate = priceList.expiryDate ? new Date(priceList.expiryDate) : null;
+      const nowDate = now.toDate();
+      if (expiryDate && expiryDate < nowDate) {
         return null;
       }
       
@@ -359,12 +367,12 @@ export const productService = {
       
       const batch = snapshot.docs.map(async (docSnapshot) => {
         const product = docSnapshot.data() as Product;
-        let newPrice = product.unitPrice;
+        let newPrice = product.pricing.unitPrice;
         
         if (priceAdjustment.type === 'percentage') {
-          newPrice = product.unitPrice * (1 + priceAdjustment.value / 100);
+          newPrice = product.pricing.unitPrice * (1 + priceAdjustment.value / 100);
         } else {
-          newPrice = product.unitPrice + priceAdjustment.value;
+          newPrice = product.pricing.unitPrice + priceAdjustment.value;
         }
         
         await updateDoc(doc(db, PRODUCTS_COLLECTION, docSnapshot.id), {

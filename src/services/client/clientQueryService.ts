@@ -15,8 +15,7 @@ import {
   ClientDropdownOption,
   ClientSummary,
   ClientStatus,
-  ContactHistory,
-  ContactOutcome
+  ContactHistory
 } from '@/types/client.types';
 
 /**

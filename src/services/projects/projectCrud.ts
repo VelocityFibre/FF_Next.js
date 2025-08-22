@@ -88,7 +88,7 @@ export async function createProject(data: ProjectFormData): Promise<string> {
     const user = auth.currentUser;
     if (!user) throw new Error('User not authenticated');
 
-    const projectData = {
+    const projectData: any = {
       ...data,
       status: ProjectStatus.PLANNING,
       actualProgress: 0,
@@ -96,15 +96,9 @@ export async function createProject(data: ProjectFormData): Promise<string> {
       createdBy: user.uid,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
+      startDate: data.startDate ? Timestamp.fromDate(new Date(data.startDate)) : null,
+      endDate: data.endDate ? Timestamp.fromDate(new Date(data.endDate)) : null
     };
-
-    // Convert date strings to Firestore Timestamps
-    if (data.startDate) {
-      projectData.startDate = Timestamp.fromDate(new Date(data.startDate));
-    }
-    if (data.endDate) {
-      projectData.endDate = Timestamp.fromDate(new Date(data.endDate));
-    }
 
     const docRef = await addDoc(collection(db, 'projects'), projectData);
     

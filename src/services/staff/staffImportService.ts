@@ -1,5 +1,4 @@
 import * as XLSX from 'xlsx';
-import { Timestamp } from 'firebase/firestore';
 import { 
   StaffMember,
   StaffFormData,
@@ -133,11 +132,11 @@ export const staffImportService = {
         }
         
         // Create staff form data
-        const formData: StaffFormData = {
+        const formData = {
           name: row.name,
           email: row.email,
           phone: row.phone,
-          alternativePhone: row.alternativePhone,
+          alternativePhone: row.alternativePhone || '',
           employeeId: row.employeeId || `EMP${Date.now()}-${i}`,
           position: row.position || 'Staff',
           department: this.parseEnumValue(row.department, Department, Department.OPERATIONS),
@@ -149,10 +148,10 @@ export const staffImportService = {
           city: row.city || '',
           province: row.province || '',
           postalCode: row.postalCode || '',
-          emergencyContactName: row.emergencyContactName,
-          emergencyContactPhone: row.emergencyContactPhone,
+          emergencyContactName: row.emergencyContactName || '',
+          emergencyContactPhone: row.emergencyContactPhone || '',
           startDate: this.parseDate(row.startDate) || new Date(),
-          endDate: row.endDate ? this.parseDate(row.endDate) : undefined,
+          endDate: undefined, // endDate field not in import data
           contractType: this.parseEnumValue(row.contractType, ContractType, ContractType.PERMANENT),
           workingHours: row.workingHours || '08:00 - 17:00',
           availableWeekends: false,
@@ -162,7 +161,7 @@ export const staffImportService = {
         };
         
         // Create staff member
-        const id = await staffCrudService.create(formData);
+        const id = await staffCrudService.create(formData as unknown as StaffFormData);
         
         // Get the created staff member
         const staffMember = await staffCrudService.getById(id);

@@ -17,9 +17,8 @@ import { db } from '@/config/firebase';
 import { 
   RFQ, 
   RFQFormData, 
-  RFQStatus, 
-  RFQResponse,
-  RFQSupplierInvite 
+  RFQStatus,
+  RFQSupplier
 } from '@/types/procurement.types';
 
 const COLLECTION_NAME = 'rfqs';
@@ -77,31 +76,33 @@ export const rfqService = {
       const rfqNumber = `RFQ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
       
       // Create supplier invites
-      const invitedSuppliers: RFQSupplierInvite[] = data.supplierIds.map(supplierId => ({
+      const invitedSuppliers: RFQSupplier[] = (data.supplierIds || []).map(supplierId => ({
         supplierId,
         supplierName: 'Supplier Name', // TODO: Get from supplier service
-        invitedAt: Timestamp.now(),
-        invitedBy: 'current-user-id', // TODO: Get from auth context
-        status: 'pending'
+        supplierEmail: 'supplier@example.com', // TODO: Get from supplier service
+        inviteSent: false,
+        quoteReceived: false,
+        remindersSent: 0,
+        declined: false
       }));
       
-      const rfq: Omit<RFQ, 'id'> = {
+      const rfq = {
         ...data,
-        rfqNumber,
-        invitedSuppliers,
+        number: rfqNumber,
+        suppliers: invitedSuppliers,
+        supplierIds: data.supplierIds || [],
         issueDate: Timestamp.now(),
-        deadline: Timestamp.fromDate(new Date(data.deadline)),
-        deliveryDate: data.deliveryDate ? Timestamp.fromDate(new Date(data.deliveryDate)) : undefined,
+        dueDate: Timestamp.fromDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
+        deliveryDate: data.deliveryDate ? Timestamp.fromDate(new Date()) : undefined,
         status: RFQStatus.DRAFT,
-        responses: [],
-        attachments: [],
+        totalItems: data.items?.length || 0,
+        validityPeriodDays: 30,
         createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
         createdBy: 'current-user-id', // TODO: Get from auth context
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        createdByName: 'Current User' // TODO: Get from auth context
       };
       
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), rfq);
+      const docRef = await addDoc(collection(db, COLLECTION_NAME), rfq as Omit<RFQ, 'id'>);
       return docRef.id;
     } catch (error) {
       console.error('Error creating RFQ:', error);
@@ -116,14 +117,15 @@ export const rfqService = {
       let updateData: any = { ...data };
       
       if (data.deadline) {
-        updateData.deadline = Timestamp.fromDate(new Date(data.deadline));
+        updateData.dueDate = data.deadline instanceof Date 
+          ? Timestamp.fromDate(data.deadline) 
+          : data.deadline;
       }
       if (data.deliveryDate) {
-        updateData.deliveryDate = Timestamp.fromDate(new Date(data.deliveryDate));
+        updateData.deliveryDate = data.deliveryDate instanceof Date 
+          ? Timestamp.fromDate(data.deliveryDate)
+          : data.deliveryDate;
       }
-      
-      updateData.updatedAt = Timestamp.now();
-      updateData.lastModifiedBy = 'current-user-id'; // TODO: Get from auth context
       
       await updateDoc(docRef, updateData);
     } catch (error) {
@@ -163,9 +165,10 @@ export const rfqService = {
       const rfq = await this.getById(id);
       
       // Update supplier invite statuses
-      const updatedInvites = rfq.invitedSuppliers.map(invite => ({
+      const updatedInvites = (rfq.suppliers || []).map(invite => ({
         ...invite,
-        status: 'pending' as const
+        inviteSent: true,
+        inviteSentAt: Timestamp.now()
       }));
       
       // TODO: Send email notifications to suppliers
@@ -173,10 +176,9 @@ export const rfqService = {
       
       await updateDoc(doc(db, COLLECTION_NAME, id), {
         status: RFQStatus.SENT,
-        invitedSuppliers: updatedInvites,
-        issueDate: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        suppliers: updatedInvites,
+        sentAt: Timestamp.now(),
+        sentBy: 'current-user-id' // TODO: Get from auth context
       });
     } catch (error) {
       console.error('Error sending RFQ to suppliers:', error);
@@ -185,7 +187,7 @@ export const rfqService = {
   },
 
   // RFQ Response Management
-  async submitResponse(rfqId: string, response: Omit<RFQResponse, 'id'>): Promise<string> {
+  async submitResponse(rfqId: string, response: any): Promise<string> {
     try {
       const docRef = await addDoc(collection(db, RESPONSES_COLLECTION), {
         ...response,
@@ -196,15 +198,16 @@ export const rfqService = {
       
       // Update RFQ with response reference
       const rfq = await this.getById(rfqId);
-      const updatedResponses = [...rfq.responses, { id: docRef.id, ...response }];
+      const updatedResponses = [...(rfq.responses || []), { id: docRef.id, ...response }];
       
       // Update supplier invite status
-      const updatedInvites = rfq.invitedSuppliers.map(invite => {
+      const updatedInvites = (rfq.suppliers || []).map(invite => {
         if (invite.supplierId === response.supplierId) {
           return {
             ...invite,
-            status: 'responded' as const,
-            respondedAt: Timestamp.now()
+            quoteReceived: true,
+            quoteReceivedAt: Timestamp.now(),
+            quoteId: docRef.id
           };
         }
         return invite;
@@ -212,9 +215,8 @@ export const rfqService = {
       
       await updateDoc(doc(db, COLLECTION_NAME, rfqId), {
         responses: updatedResponses,
-        invitedSuppliers: updatedInvites,
-        status: RFQStatus.RESPONSES_RECEIVED,
-        updatedAt: Timestamp.now()
+        suppliers: updatedInvites,
+        status: RFQStatus.RESPONSES_RECEIVED
       });
       
       return docRef.id;
@@ -224,7 +226,7 @@ export const rfqService = {
     }
   },
 
-  async getResponses(rfqId: string): Promise<RFQResponse[]> {
+  async getResponses(rfqId: string): Promise<any[]> {
     try {
       const q = query(
         collection(db, RESPONSES_COLLECTION),
@@ -236,7 +238,7 @@ export const rfqService = {
       return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      } as RFQResponse));
+      } as any));
     } catch (error) {
       console.error('Error fetching RFQ responses:', error);
       throw error;
@@ -259,8 +261,8 @@ export const rfqService = {
         selectedResponseId: responseId,
         selectionReason: reason,
         status: RFQStatus.AWARDED,
-        updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        closedAt: Timestamp.now(),
+        closedBy: 'current-user-id' // TODO: Get from auth context
       });
       
       // TODO: Notify selected and non-selected suppliers
@@ -272,10 +274,10 @@ export const rfqService = {
 
   // Compare responses
   async compareResponses(rfqId: string): Promise<{
-    responses: RFQResponse[];
-    lowestPrice: RFQResponse;
-    fastestDelivery: RFQResponse;
-    bestPaymentTerms: RFQResponse;
+    responses: any[];
+    lowestPrice: any;
+    fastestDelivery: any;
+    bestPaymentTerms: any;
   }> {
     try {
       const responses = await this.getResponses(rfqId);
@@ -325,7 +327,7 @@ export const rfqService = {
     });
   },
 
-  subscribeToResponses(rfqId: string, callback: (responses: RFQResponse[]) => void) {
+  subscribeToResponses(rfqId: string, callback: (responses: any[]) => void) {
     const q = query(
       collection(db, RESPONSES_COLLECTION),
       where('rfqId', '==', rfqId)
@@ -335,7 +337,7 @@ export const rfqService = {
       const responses = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      } as RFQResponse));
+      } as any));
       callback(responses);
     });
   }

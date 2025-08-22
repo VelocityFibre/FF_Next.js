@@ -9,21 +9,15 @@ import {
   query, 
   where, 
   orderBy, 
-  limit, 
   onSnapshot,
   Timestamp,
-  QueryConstraint,
   Unsubscribe
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { 
   StaffMember, 
   StaffFormData,
-  StaffFilter,
-  StaffStatus,
-  Department,
-  StaffLevel,
-  ProjectAssignment
+  StaffFilter
 } from '@/types/staff.types';
 
 /**
@@ -59,7 +53,7 @@ export const staffCrudService = {
       
       if (filter?.level?.length) {
         staffMembers = staffMembers.filter(staff => 
-          filter.level!.includes(staff.level)
+          staff.level && filter.level!.includes(staff.level)
         );
       }
       
@@ -258,7 +252,7 @@ export const staffCrudService = {
       
       if (filter?.level?.length) {
         staffMembers = staffMembers.filter(staff => 
-          filter.level!.includes(staff.level)
+          staff.level && filter.level!.includes(staff.level)
         );
       }
       

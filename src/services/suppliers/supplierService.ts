@@ -85,22 +85,42 @@ export const supplierService = {
         totalReviews: 0
       };
 
-      const supplier: Omit<Supplier, 'id'> = {
+      const supplier = {
         ...data,
+        code: `SUP-${Date.now()}`,
+        companyName: data.name,
+        businessType: data.businessType,
+        isActive: true,
+        primaryContact: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone
+        },
+        contact: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone
+        },
+        addresses: {
+          physical: {
+            street1: '',
+            city: '',
+            state: '',
+            postalCode: '',
+            country: 'South Africa'
+          }
+        },
         rating: initialRating,
-        status: SupplierStatus.PENDING,
+        status: data.status || SupplierStatus.PENDING,
         isPreferred: false,
         complianceStatus: {
-          taxCompliant: false,
-          vatRegistered: false,
-          beeLevel: undefined
+          taxCompliant: false
         },
         documents: [],
         createdAt: new Date(),
         updatedAt: new Date(),
-        createdBy: 'current-user-id', // TODO: Get from auth context
-        lastModifiedBy: 'current-user-id'
-      };
+        createdBy: 'current-user-id' // TODO: Get from auth context
+      } as Omit<Supplier, 'id'>;
       
       const docRef = await addDoc(collection(db, COLLECTION_NAME), supplier);
       return docRef.id;
@@ -185,12 +205,12 @@ export const supplierService = {
       
       // Calculate overall rating
       const ratingValues = [
-        updatedRating.quality,
-        updatedRating.delivery,
-        updatedRating.pricing,
-        updatedRating.communication,
-        updatedRating.flexibility
-      ].filter(r => r > 0);
+        (updatedRating as any).quality,
+        (updatedRating as any).delivery,
+        (updatedRating as any).pricing,
+        (updatedRating as any).communication,
+        (updatedRating as any).flexibility
+      ].filter((r: any) => r && r > 0);
       
       if (ratingValues.length > 0) {
         updatedRating.overall = ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length;
@@ -213,8 +233,7 @@ export const supplierService = {
     try {
       // This would typically calculate from orders, deliveries, etc.
       // For now, return mock data
-      const now = Timestamp.now();
-      const startDate = Timestamp.fromDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000));
+      // Timestamps removed - not used
       
       const performance: SupplierPerformance = {
         overallScore: 92,
@@ -390,12 +409,16 @@ export const supplierService = {
         active: suppliers.filter(s => s.status === SupplierStatus.ACTIVE).length,
         preferred: suppliers.filter(s => s.isPreferred).length,
         blacklisted: suppliers.filter(s => s.status === SupplierStatus.BLACKLISTED).length,
-        averageRating: suppliers.reduce((sum, s) => sum + s.rating.overall, 0) / suppliers.length || 0,
-        averagePerformance: suppliers.reduce((sum, s) => sum + s.performanceScore, 0) / suppliers.length || 0,
+        averageRating: suppliers.reduce((sum, s) => sum + (typeof s.rating === 'number' ? s.rating : s.rating?.overall || 0), 0) / suppliers.length || 0,
+        averagePerformance: suppliers.reduce((sum, s) => sum + ((s.performance as any)?.score || 0), 0) / suppliers.length || 0,
         categoryCounts: this.countByCategory(suppliers),
         topRated: suppliers
-          .filter(s => s.rating.totalReviews > 0)
-          .sort((a, b) => b.rating.overall - a.rating.overall)
+          .filter(s => typeof s.rating === 'object' && s.rating.totalReviews && s.rating.totalReviews > 0)
+          .sort((a, b) => {
+            const aRating = typeof a.rating === 'number' ? a.rating : a.rating?.overall || 0;
+            const bRating = typeof b.rating === 'number' ? b.rating : b.rating?.overall || 0;
+            return bRating - aRating;
+          })
           .slice(0, 5)
       };
     } catch (error) {

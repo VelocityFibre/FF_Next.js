@@ -281,7 +281,6 @@ export function LoginForm({ onSuccess, mode = 'login', onModeChange }: LoginForm
                     className="font-medium text-blue-600 hover:text-blue-500"
                     onClick={() => {
                       // TODO: Implement forgot password modal
-                      console.log('Forgot password clicked');
                     }}
                   >
                     Forgot password?

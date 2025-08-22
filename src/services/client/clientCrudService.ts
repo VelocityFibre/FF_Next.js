@@ -18,8 +18,7 @@ import { db } from '@/config/firebase';
 import { 
   Client, 
   ClientFormData,
-  ClientFilter,
-  ClientStatus
+  ClientFilter
 } from '@/types/client.types';
 
 /**

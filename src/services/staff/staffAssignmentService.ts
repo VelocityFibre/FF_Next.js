@@ -111,18 +111,18 @@ export const staffAssignmentService = {
       let availableStaff = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      }));
+      } as any));
       
       // Filter by availability (not at max capacity)
       availableStaff = availableStaff.filter(staff => 
-        staff.currentProjectCount < staff.maxProjectCount
+        (staff.currentProjectCount || 0) < (staff.maxProjectCount || 5)
       );
       
       // Filter by requirements if provided
       if (projectRequirements?.skills?.length) {
         availableStaff = availableStaff.filter(staff =>
           projectRequirements.skills!.some(skill => 
-            staff.skills.includes(skill)
+            (staff.skills || []).includes(skill)
           )
         );
       }

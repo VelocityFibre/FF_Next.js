@@ -29,26 +29,30 @@ export function mapFirebaseUser(user: FirebaseUser): AuthUser {
  */
 export function handleAuthError(error: unknown): AuthError {
   if (error instanceof FirebaseError) {
-    const authError: AuthError = {
-      code: error.code,
-      message: getReadableErrorMessage(error.code),
-      originalError: error,
+    const details: Record<string, unknown> = {
+      originalError: error.message,
     };
 
-    // Add specific fields based on error code
+    // Add specific field information based on error code
     switch (error.code) {
       case 'auth/invalid-email':
       case 'auth/user-not-found':
-        authError.field = 'email';
+        details.field = 'email';
         break;
       case 'auth/wrong-password':
       case 'auth/weak-password':
-        authError.field = 'password';
+        details.field = 'password';
         break;
       case 'auth/invalid-credential':
-        authError.field = 'credentials';
+        details.field = 'credentials';
         break;
     }
+
+    const authError: AuthError = {
+      code: error.code,
+      message: getReadableErrorMessage(error.code),
+      details,
+    };
 
     return authError;
   }
@@ -57,7 +61,9 @@ export function handleAuthError(error: unknown): AuthError {
   return {
     code: 'unknown',
     message: error instanceof Error ? error.message : 'An unknown error occurred',
-    originalError: error,
+    details: {
+      originalError: error instanceof Error ? error.message : 'Unknown error',
+    },
   };
 }
 

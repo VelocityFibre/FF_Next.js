@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { poleTrackerService } from '../services/poleTrackerService';
+// Use Neon service for massive scale (5000 poles per project × 10 projects)
+import { poleTrackerService } from '../services/poleTrackerNeonService';
 import { PoleTracker, PoleSearchFilters } from '../types/pole-tracker.types';
 
 const QUERY_KEY = 'pole-trackers';

@@ -8,11 +8,11 @@ import {
   onAuthStateChanged,
   User as FirebaseUser,
   setPersistence,
+  updateProfile,
   browserLocalPersistence,
   browserSessionPersistence,
   updatePassword,
   sendEmailVerification,
-  updateProfile,
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from 'firebase/auth';
@@ -124,7 +124,7 @@ class AuthService {
   async signUp(email: string, password: string, displayName?: string): Promise<AuthUser> {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     if (displayName) {
-      await result.user.updateDisplayName(displayName);
+      await updateProfile(result.user, { displayName });
     }
     return mapFirebaseUser(result.user);
   }
@@ -142,9 +142,7 @@ class AuthService {
 
       // Create user profile in Firestore
       const user = await createUserProfile(userCredential.user, {
-        displayName: credentials.displayName,
-        phoneNumber: credentials.phoneNumber,
-        department: credentials.department,
+        displayName: `${credentials.firstName} ${credentials.lastName}`.trim(),
       });
 
       return user;
@@ -160,7 +158,6 @@ class AuthService {
     try {
       await signOut(auth);
     } catch (error) {
-      console.error('Error signing out:', error);
       throw error;
     }
   }
@@ -178,7 +175,7 @@ class AuthService {
   async resetPasswordEnhanced(request: PasswordResetRequest): Promise<void> {
     try {
       await sendPasswordResetEmail(auth, request.email, {
-        url: request.redirectUrl || `${window.location.origin}/login`,
+        url: `${window.location.origin}/login`,
         handleCodeInApp: false,
       });
     } catch (error) {
@@ -213,7 +210,6 @@ class AuthService {
       // If not in Firestore, create profile
       return await getUserProfile(firebaseUser);
     } catch (error) {
-      console.error('Error getting current user:', error);
       return null;
     }
   }
@@ -237,7 +233,6 @@ class AuthService {
           const user = await getUserProfile(firebaseUser);
           callback(user);
         } catch (error) {
-          console.error('Error in auth state change:', error);
           callback(null);
         }
       } else {
@@ -309,7 +304,7 @@ class AuthService {
   /**
    * Check if user has permission
    */
-  hasPermission(permission: string): boolean {
+  hasPermission(_permission: string): boolean {
     // TODO: Implement permission check logic
     return true;
   }
@@ -333,7 +328,7 @@ class AuthService {
   /**
    * Check if user has role
    */
-  hasRole(role: string): boolean {
+  hasRole(_role: string): boolean {
     // TODO: Implement role check logic
     return true;
   }

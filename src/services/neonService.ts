@@ -1,4 +1,4 @@
-import { Pool, neon } from '@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
 
 // Neon connection configuration
 const connectionString = process.env.VITE_NEON_DATABASE_URL || process.env.NEON_DATABASE_URL;
@@ -36,7 +36,7 @@ export class NeonService {
     }
 
     try {
-      console.log('Executing Neon query:', queryText, 'with params:', params);
+      // Executing Neon query
       
       let result;
       if (params.length === 0) {

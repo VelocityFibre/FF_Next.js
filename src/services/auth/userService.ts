@@ -23,7 +23,6 @@ import {
   UserRole,
   Permission,
   ChangePasswordRequest,
-  DEFAULT_USER_PREFERENCES,
   ROLE_PERMISSIONS,
 } from '@/types/auth.types';
 import { handleAuthError } from './authHelpers';
@@ -45,21 +44,15 @@ export async function createUserProfile(
 
   // Create new user profile
   const newUser: User = {
-    uid: firebaseUser.uid,
+    id: firebaseUser.uid,
     email: firebaseUser.email || '',
     displayName: firebaseUser.displayName || additionalData?.displayName || '',
     photoURL: firebaseUser.photoURL || null,
-    phoneNumber: firebaseUser.phoneNumber || null,
-    role: UserRole.USER,
-    permissions: ROLE_PERMISSIONS[UserRole.USER],
-    isActive: true,
-    emailVerified: firebaseUser.emailVerified,
-    preferences: DEFAULT_USER_PREFERENCES,
-    metadata: {
-      createdAt: serverTimestamp(),
-      lastLoginAt: serverTimestamp(),
-      lastActivityAt: serverTimestamp(),
-    },
+    role: UserRole.VIEWER,
+    permissions: ROLE_PERMISSIONS[UserRole.VIEWER],
+    isEmailVerified: firebaseUser.emailVerified,
+    lastLoginAt: new Date(),
+    createdAt: new Date(),
     ...additionalData,
   };
 
@@ -81,16 +74,22 @@ export async function getUserProfile(firebaseUser: FirebaseUser): Promise<User> 
       userData.email !== firebaseUser.email ||
       userData.displayName !== firebaseUser.displayName ||
       userData.photoURL !== firebaseUser.photoURL ||
-      userData.emailVerified !== firebaseUser.emailVerified
+      userData.isEmailVerified !== firebaseUser.emailVerified
     ) {
       const updates = {
         email: firebaseUser.email,
         displayName: firebaseUser.displayName,
         photoURL: firebaseUser.photoURL,
-        emailVerified: firebaseUser.emailVerified,
+        isEmailVerified: firebaseUser.emailVerified,
       };
       await updateDoc(userDoc, updates);
-      return { ...userData, ...updates };
+      return { 
+        ...userData, 
+        ...updates,
+        email: updates.email || userData.email || '',
+        displayName: updates.displayName || userData.displayName || '',
+        photoURL: updates.photoURL !== undefined ? updates.photoURL : userData.photoURL
+      };
     }
     return userData;
   }
@@ -112,7 +111,6 @@ export async function getUserFromFirestore(userId: string): Promise<User | null>
     }
     return null;
   } catch (error) {
-    console.error('Error fetching user from Firestore:', error);
     return null;
   }
 }
@@ -128,7 +126,7 @@ export async function updateLastLogin(userId: string): Promise<void> {
       'metadata.lastActivityAt': serverTimestamp(),
     });
   } catch (error) {
-    console.error('Error updating last login:', error);
+    // Silent fail for analytics update
   }
 }
 
@@ -188,7 +186,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     }
     return null;
   } catch (error) {
-    console.error('Error fetching user by email:', error);
     return null;
   }
 }

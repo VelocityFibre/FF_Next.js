@@ -1,0 +1,23 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.323289">
+<testsuite name="simple-route-test.spec.ts" timestamp="2025-08-21T21:02:05.297Z" hostname="chromium" tests="1" failures="0" skipped="0" time="13.806" errors="0">
+<testcase name="Route Validation Tests › All main routes should load successfully" classname="simple-route-test.spec.ts" time="13.806">
+<system-out>
+<![CDATA[
+=== ROUTE TEST RESULTS ===
+✅ Dashboard: PASS
+✅ Projects: PASS
+✅ Pole Tracker: PASS
+✅ Staff: PASS
+✅ Contractors: PASS
+✅ Analytics: PASS
+✅ Meetings: PASS
+✅ Field App: PASS
+✅ Installations: PASS
+✅ Communications: PASS
+
+✅ Passed: 10/10
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

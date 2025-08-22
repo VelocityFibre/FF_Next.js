@@ -3,8 +3,6 @@
  */
 
 // Import shared types to avoid duplicates
-import type { SupplierContract, ServiceLevelAgreement } from './base.types';
-import { Currency, PaymentTerms } from './common.types';
 
 export interface SupplierPerformance {
   overallScore: number; // 0-100

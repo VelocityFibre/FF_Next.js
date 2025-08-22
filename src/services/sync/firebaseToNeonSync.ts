@@ -3,24 +3,18 @@
  * Syncs operational data from Firebase to analytical database
  */
 
-import { collection, getDocs, onSnapshot, query, orderBy, where, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { 
   projectAnalytics, 
-  clientAnalytics, 
-  kpiMetrics, 
-  auditLog,
-  staffPerformance,
-  materialUsage
+  clientAnalytics,
+  staffPerformance
 } from '@/lib/neon/schema';
 import type { 
   NewProjectAnalytics, 
-  NewClientAnalytics, 
-  NewKPIMetrics,
-  NewAuditLog,
-  NewStaffPerformance,
-  NewMaterialUsage
+  NewClientAnalytics,
+  NewStaffPerformance
 } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
 
@@ -38,11 +32,9 @@ export class FirebaseToNeonSync {
    */
   async startSync(intervalMinutes: number = 15): Promise<void> {
     if (this.isRunning) {
-      console.log('Sync is already running');
       return;
     }
 
-    console.log('Starting Firebase to Neon sync...');
     this.isRunning = true;
 
     // Initial full sync
@@ -54,14 +46,13 @@ export class FirebaseToNeonSync {
     // Set up periodic full sync
     this.syncInterval = setInterval(async () => {
       try {
-        console.log('Performing scheduled sync...');
         await this.performFullSync();
       } catch (error) {
         console.error('Scheduled sync failed:', error);
       }
     }, intervalMinutes * 60 * 1000);
 
-    console.log(`Sync started with ${intervalMinutes} minute intervals`);
+    // Sync started with periodic intervals
   }
 
   /**
@@ -70,7 +61,7 @@ export class FirebaseToNeonSync {
   stopSync(): void {
     if (!this.isRunning) return;
 
-    console.log('Stopping Firebase to Neon sync...');
+    // Stopping sync...
     
     // Clear interval
     if (this.syncInterval) {
@@ -83,7 +74,7 @@ export class FirebaseToNeonSync {
     this.unsubscribeFunctions = [];
 
     this.isRunning = false;
-    console.log('Sync stopped');
+    // Sync stopped
   }
 
   /**
@@ -91,8 +82,7 @@ export class FirebaseToNeonSync {
    */
   async performFullSync(): Promise<void> {
     try {
-      console.log('Starting full sync...');
-      const startTime = Date.now();
+      // const startTime = Date.now();
 
       // Run all syncs in parallel
       const results = await Promise.allSettled([
@@ -106,14 +96,14 @@ export class FirebaseToNeonSync {
       results.forEach((result, index) => {
         const syncType = ['Projects', 'Clients', 'Staff', 'Materials'][index];
         if (result.status === 'fulfilled') {
-          console.log(`✅ ${syncType} sync completed`);
+          // Sync completed successfully
         } else {
           console.error(`❌ ${syncType} sync failed:`, result.reason);
         }
       });
 
-      const duration = Date.now() - startTime;
-      console.log(`Full sync completed in ${duration}ms`);
+      // const _duration = Date.now() - startTime;
+      // Full sync completed
 
     } catch (error) {
       console.error('Full sync failed:', error);
@@ -163,7 +153,7 @@ export class FirebaseToNeonSync {
       const snapshot = await getDocs(collection(db, 'projects'));
       const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      console.log(`Syncing ${projects.length} projects...`);
+      // Syncing projects...
 
       for (const project of projects) {
         await this.syncSingleProject(project.id, project);
@@ -237,7 +227,7 @@ export class FirebaseToNeonSync {
       const snapshot = await getDocs(collection(db, 'clients'));
       const clients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      console.log(`Syncing ${clients.length} clients...`);
+      // Syncing clients...
 
       for (const client of clients) {
         await this.syncSingleClient(client.id, client);
@@ -314,7 +304,7 @@ export class FirebaseToNeonSync {
   private async syncStaffPerformance(): Promise<void> {
     try {
       // This would sync from staff collection and calculate performance metrics
-      console.log('Syncing staff performance...');
+      // Syncing staff performance...
       
       // Get staff data from Firebase
       const snapshot = await getDocs(collection(db, 'staff'));

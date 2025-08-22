@@ -58,7 +58,7 @@ const ReportsDashboard = lazy(() => import('@/modules/reports/ReportsDashboard')
 
 // New Modules (Recently Implemented)
 const ContractorsDashboard = lazy(() => import('@/modules/contractors/ContractorsDashboard').then(m => ({ default: m.default })));
-const AnalyticsDashboard = lazy(() => import('@/modules/analytics/AnalyticsDashboard').then(m => ({ default: m.default })));
+const AnalyticsDashboard = lazy(() => import('@/components/analytics/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard })));
 const CommunicationsDashboard = lazy(() => import('@/modules/communications/CommunicationsDashboard').then(m => ({ default: m.default })));
 const HomeInstallationsDashboard = lazy(() => import('@/modules/installations/HomeInstallationsDashboard').then(m => ({ default: m.default })));
 const FieldAppPortal = lazy(() => import('@/modules/field-app/FieldAppPortal').then(m => ({ default: m.default })));

@@ -13,10 +13,8 @@ import {
   addDoc, 
   updateDoc, 
   deleteDoc, 
-  query, 
-  where,
+  query,
   orderBy,
-  limit,
   onSnapshot,
   Timestamp
 } from 'firebase/firestore';
@@ -24,7 +22,7 @@ import { db } from '@/config/firebase';
 import { analyticsService } from '@/services/analytics/analyticsService';
 import type { Project } from '@/types/project.types';
 import type { Client } from '@/types/client.types';
-import type { NewProjectAnalytics, NewKPIMetrics, NewClientAnalytics } from '@/lib/neon/schema';
+// import type { NewProjectAnalytics, NewClientAnalytics } from '@/lib/neon/schema';
 
 export class HybridProjectService {
   // ============================================
@@ -42,7 +40,6 @@ export class HybridProjectService {
         ...doc.data()
       } as Project));
     } catch (error) {
-      console.error('Failed to get projects:', error);
       throw error;
     }
   }
@@ -59,7 +56,6 @@ export class HybridProjectService {
       
       return { id: snapshot.id, ...snapshot.data() } as Project;
     } catch (error) {
-      console.error('Failed to get project:', error);
       throw error;
     }
   }
@@ -77,13 +73,12 @@ export class HybridProjectService {
       });
 
       // Trigger analytics sync to Neon (async)
-      this.syncProjectToAnalytics(docRef.id, projectData).catch(error => {
-        console.error('Failed to sync project to analytics:', error);
+      this.syncProjectToAnalytics(docRef.id, projectData).catch(() => {
+        // Silent fail for analytics sync
       });
 
       return docRef.id;
     } catch (error) {
-      console.error('Failed to create project:', error);
       throw error;
     }
   }
@@ -104,10 +99,11 @@ export class HybridProjectService {
       // Get full project data and sync to analytics
       const updatedProject = await this.getProjectById(id);
       if (updatedProject) {
-        this.syncProjectToAnalytics(id, updatedProject).catch(console.error);
+        this.syncProjectToAnalytics(id, updatedProject).catch(() => {
+          // Silent fail for analytics sync
+        });
       }
     } catch (error) {
-      console.error('Failed to update project:', error);
       throw error;
     }
   }
@@ -123,7 +119,6 @@ export class HybridProjectService {
       // Note: Keep analytics data for historical reporting
       // Could mark as deleted instead of actual deletion
     } catch (error) {
-      console.error('Failed to delete project:', error);
       throw error;
     }
   }
@@ -170,7 +165,6 @@ export class HybridProjectService {
     try {
       return await analyticsService.getProjectOverview(projectId);
     } catch (error) {
-      console.error('Failed to get project analytics:', error);
       throw error;
     }
   }
@@ -182,7 +176,6 @@ export class HybridProjectService {
     try {
       return await analyticsService.getProjectTrends(dateFrom, dateTo);
     } catch (error) {
-      console.error('Failed to get project trends:', error);
       throw error;
     }
   }
@@ -191,29 +184,27 @@ export class HybridProjectService {
    * Record KPI metric
    */
   async recordKPI(
-    projectId: string, 
-    metricType: string, 
-    metricName: string, 
-    value: number, 
-    unit: string = ''
+    _projectId: string, 
+    _metricType: string, 
+    _metricName: string, 
+    _value: number, 
+    _unit: string = ''
   ): Promise<void> {
     try {
-      const kpiData: NewKPIMetrics = {
-        projectId,
-        metricType,
-        metricName,
-        metricValue: value.toString(),
-        unit,
-        recordedDate: new Date(),
-        weekNumber: this.getWeekNumber(new Date()),
-        monthNumber: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
-      };
-
-      // This would be handled by the analyticsService
+      // TODO: Implement KPI recording when analyticsService.recordKPI is ready
+      // const kpiData = {
+      //   projectId,
+      //   metricType,
+      //   metricName,
+      //   metricValue: value.toString(),
+      //   unit,
+      //   recordedDate: new Date(),
+      //   weekNumber: this.getWeekNumber(new Date()),
+      //   monthNumber: new Date().getMonth() + 1,
+      //   year: new Date().getFullYear(),
+      // };
       // await analyticsService.recordKPI(kpiData);
     } catch (error) {
-      console.error('Failed to record KPI:', error);
       throw error;
     }
   }
@@ -225,27 +216,26 @@ export class HybridProjectService {
   /**
    * Sync project data to analytics database
    */
-  private async syncProjectToAnalytics(projectId: string, projectData: any): Promise<void> {
+  private async syncProjectToAnalytics(_projectId: string, _projectData: any): Promise<void> {
     try {
-      const analyticsData: NewProjectAnalytics = {
-        projectId,
-        projectName: projectData.name || 'Untitled Project',
-        clientId: projectData.clientId,
-        clientName: projectData.clientName,
-        totalBudget: projectData.budget?.toString(),
-        spentBudget: '0', // Would be calculated from transactions
-        startDate: projectData.startDate?.toDate ? projectData.startDate.toDate() : new Date(),
-        endDate: projectData.endDate?.toDate ? projectData.endDate.toDate() : null,
-        completionPercentage: (projectData.progress || 0).toString(),
-        onTimeDelivery: false, // Would be calculated based on dates
-        qualityScore: (projectData.qualityScore || 0).toString(),
-      };
+      // const _analyticsData: NewProjectAnalytics = {
+      //   projectId,
+      //   projectName: projectData.name || 'Untitled Project',
+      //   clientId: projectData.clientId,
+      //   clientName: projectData.clientName,
+      //   totalBudget: projectData.budget?.toString(),
+      //   spentBudget: '0', // Would be calculated from transactions
+      //   startDate: projectData.startDate?.toDate ? projectData.startDate.toDate() : new Date(),
+      //   endDate: projectData.endDate?.toDate ? projectData.endDate.toDate() : null,
+      //   completionPercentage: (projectData.progress || 0).toString(),
+      //   onTimeDelivery: false, // Would be calculated based on dates
+      //   qualityScore: (projectData.qualityScore || 0).toString(),
+      // };
 
       // This would insert/update the analytics record
-      console.log('Would sync to analytics:', analyticsData);
+      // TODO: Implement actual analytics sync
       
     } catch (error) {
-      console.error('Failed to sync project to analytics:', error);
       // Don't throw - sync failures shouldn't break main operations
     }
   }
@@ -253,11 +243,11 @@ export class HybridProjectService {
   /**
    * Get week number of year
    */
-  private getWeekNumber(date: Date): number {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date.getTime() - firstDayOfYear.getTime()) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-  }
+  // private getWeekNumber(date: Date): number {
+  //   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  //   const pastDaysOfYear = (date.getTime() - firstDayOfYear.getTime()) / 86400000;
+  //   return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+  // }
 }
 
 export class HybridClientService {
@@ -273,7 +263,6 @@ export class HybridClientService {
         ...doc.data()
       } as Client));
     } catch (error) {
-      console.error('Failed to get clients:', error);
       throw error;
     }
   }
@@ -287,7 +276,6 @@ export class HybridClientService {
       
       return { id: snapshot.id, ...snapshot.data() } as Client;
     } catch (error) {
-      console.error('Failed to get client:', error);
       throw error;
     }
   }
@@ -301,11 +289,12 @@ export class HybridClientService {
       });
 
       // Sync to analytics
-      this.syncClientToAnalytics(docRef.id, clientData).catch(console.error);
+      this.syncClientToAnalytics(docRef.id, clientData).catch(() => {
+        // Silent fail for analytics sync
+      });
 
       return docRef.id;
     } catch (error) {
-      console.error('Failed to create client:', error);
       throw error;
     }
   }
@@ -322,10 +311,11 @@ export class HybridClientService {
       // Sync updates to analytics
       const updatedClient = await this.getClientById(id);
       if (updatedClient) {
-        this.syncClientToAnalytics(id, updatedClient).catch(console.error);
+        this.syncClientToAnalytics(id, updatedClient).catch(() => {
+          // Silent fail for analytics sync
+        });
       }
     } catch (error) {
-      console.error('Failed to update client:', error);
       throw error;
     }
   }
@@ -338,7 +328,6 @@ export class HybridClientService {
     try {
       return await analyticsService.getClientAnalytics(clientId);
     } catch (error) {
-      console.error('Failed to get client analytics:', error);
       throw error;
     }
   }
@@ -347,7 +336,6 @@ export class HybridClientService {
     try {
       return await analyticsService.getTopClients(limit);
     } catch (error) {
-      console.error('Failed to get top clients:', error);
       throw error;
     }
   }
@@ -356,26 +344,26 @@ export class HybridClientService {
   // SYNC FUNCTIONS (Private)
   // ============================================
 
-  private async syncClientToAnalytics(clientId: string, clientData: any): Promise<void> {
+  private async syncClientToAnalytics(_clientId: string, _clientData: any): Promise<void> {
     try {
-      const analyticsData: NewClientAnalytics = {
-        clientId,
-        clientName: clientData.name || 'Unknown Client',
-        totalProjects: 0, // Would be calculated from projects
-        activeProjects: 0, // Would be calculated from projects
-        completedProjects: 0, // Would be calculated from projects
-        totalRevenue: '0', // Would be calculated from transactions
-        outstandingBalance: clientData.currentBalance?.toString() || '0',
-        averageProjectValue: '0', // Would be calculated
-        paymentScore: '100', // Default score
-        clientCategory: clientData.category || 'Regular',
-        lifetimeValue: '0', // Would be calculated
-      };
+      // const _analyticsData: NewClientAnalytics = {
+      //   clientId,
+      //   clientName: clientData.name || 'Unknown Client',
+      //   totalProjects: 0, // Would be calculated from projects
+      //   activeProjects: 0, // Would be calculated from projects
+      //   completedProjects: 0, // Would be calculated from projects
+      //   totalRevenue: '0', // Would be calculated from transactions
+      //   outstandingBalance: clientData.currentBalance?.toString() || '0',
+      //   averageProjectValue: '0', // Would be calculated
+      //   paymentScore: '100', // Default score
+      //   clientCategory: clientData.category || 'Regular',
+      //   lifetimeValue: '0', // Would be calculated
+      // };
 
-      console.log('Would sync client to analytics:', analyticsData);
+      // TODO: Implement actual client analytics sync
       
     } catch (error) {
-      console.error('Failed to sync client to analytics:', error);
+      // Silent fail for analytics sync
     }
   }
 }

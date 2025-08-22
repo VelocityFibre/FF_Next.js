@@ -70,33 +70,34 @@ export const boqService = {
       const boqNumber = `BOQ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
       
       // Calculate totals
-      const subtotal = data.items.reduce((sum, item) => sum + item.totalPrice, 0);
-      const taxAmount = subtotal * (data.taxRate / 100);
-      const discountAmount = data.discountPercentage ? subtotal * (data.discountPercentage / 100) : 0;
+      const subtotal = data.items.reduce((sum, item) => sum + (item.amount || 0), 0);
+      const taxAmount = subtotal * ((data.taxRate || 0) / 100);
+      const discountAmount = data.discountRate ? subtotal * (data.discountRate / 100) : 0;
       const totalAmount = subtotal + taxAmount - discountAmount;
       
-      const boq: Omit<BOQ, 'id'> = {
+      const boq = {
         ...data,
-        boqNumber,
+        number: boqNumber,
         subtotal,
-        taxAmount,
-        discountAmount,
-        totalAmount,
+        vat: taxAmount,
+        vatRate: data.taxRate || 15,
+        total: totalAmount,
+        totalItems: data.items.length,
         currency: 'ZAR',
         status: BOQStatus.DRAFT,
         version: 1,
         isTemplate: false,
-        validFrom: Timestamp.fromDate(new Date(data.validFrom)),
-        validUntil: Timestamp.fromDate(new Date(data.validUntil)),
-        preparedBy: 'current-user-id', // TODO: Get from auth context
-        preparedByName: 'Current User', // TODO: Get from auth context
+        validFrom: Timestamp.fromDate(new Date()),
+        validTo: data.validUntil ? (data.validUntil instanceof Date ? Timestamp.fromDate(data.validUntil) : data.validUntil as Timestamp) : Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
         createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
         createdBy: 'current-user-id', // TODO: Get from auth context
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        createdByName: 'Current User', // TODO: Get from auth context
+        isLatestVersion: true,
+        sections: data.sections || [],
+        tags: []
       };
       
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), boq);
+      const docRef = await addDoc(collection(db, COLLECTION_NAME), boq as Omit<BOQ, 'id'>);
       return docRef.id;
     } catch (error) {
       console.error('Error creating BOQ:', error);
@@ -112,29 +113,28 @@ export const boqService = {
       let updateData: any = { ...data };
       
       if (data.items) {
-        const subtotal = data.items.reduce((sum, item) => sum + item.totalPrice, 0);
+        const subtotal = data.items.reduce((sum, item) => sum + (item.amount || 0), 0);
         const taxAmount = subtotal * ((data.taxRate || 15) / 100);
-        const discountAmount = data.discountPercentage ? subtotal * (data.discountPercentage / 100) : 0;
+        const discountAmount = data.discountRate ? subtotal * (data.discountRate / 100) : 0;
         const totalAmount = subtotal + taxAmount - discountAmount;
         
         updateData = {
           ...updateData,
           subtotal,
-          taxAmount,
-          discountAmount,
-          totalAmount
+          vat: taxAmount,
+          vatRate: data.taxRate || 15,
+          total: totalAmount,
+          totalItems: data.items.length
         };
       }
       
-      if (data.validFrom) {
-        updateData.validFrom = Timestamp.fromDate(new Date(data.validFrom));
-      }
       if (data.validUntil) {
-        updateData.validUntil = Timestamp.fromDate(new Date(data.validUntil));
+        updateData.validTo = data.validUntil instanceof Date 
+          ? Timestamp.fromDate(data.validUntil)
+          : data.validUntil;
       }
       
-      updateData.updatedAt = Timestamp.now();
-      updateData.lastModifiedBy = 'current-user-id'; // TODO: Get from auth context
+      // No updatedAt or lastModifiedBy fields in BOQ type
       
       await updateDoc(docRef, updateData);
     } catch (error) {
@@ -181,18 +181,15 @@ export const boqService = {
       
       const template: Omit<BOQ, 'id'> = {
         ...boq,
-        boqNumber: `TPL-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+        number: `TPL-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
         title: templateName,
         isTemplate: true,
-        templateName,
-        projectId: undefined,
-        clientId: undefined,
+        projectId: '',
         status: BOQStatus.DRAFT,
         version: 1,
         createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
         createdBy: 'current-user-id', // TODO: Get from auth context
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        createdByName: 'Current User' // TODO: Get from auth context
       };
       
       const docRef = await addDoc(collection(db, COLLECTION_NAME), template);
@@ -227,24 +224,22 @@ export const boqService = {
     try {
       const boq = await this.getById(boqId);
       
-      const cloned: Omit<BOQ, 'id'> = {
+      const cloned = {
         ...boq,
-        boqNumber: `BOQ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+        number: `BOQ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
         title: newTitle,
         status: BOQStatus.DRAFT,
         version: 1,
         isTemplate: false,
-        templateName: undefined,
         approvedBy: undefined,
         approvedByName: undefined,
-        approvalDate: undefined,
+        approvedAt: undefined,
         createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
         createdBy: 'current-user-id', // TODO: Get from auth context
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        createdByName: 'Current User' // TODO: Get from auth context
       };
       
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), cloned);
+      const docRef = await addDoc(collection(db, COLLECTION_NAME), cloned as unknown as Omit<BOQ, 'id'>);
       return docRef.id;
     } catch (error) {
       console.error('Error cloning BOQ:', error);
@@ -276,8 +271,8 @@ export const boqService = {
       item.description,
       item.unit,
       item.quantity.toString(),
-      item.unitPrice.toString(),
-      item.totalPrice.toString()
+      (item.unitRate || 0).toString(),
+      (item.amount || 0).toString()
     ]);
     
     const csvContent = [

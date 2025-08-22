@@ -1,3 +1,4 @@
+import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectService } from '@/services/projectService';
 import { 
@@ -281,5 +282,3 @@ export function useProjectFilters() {
   };
 }
 
-// Import React for hooks
-import React from 'react';

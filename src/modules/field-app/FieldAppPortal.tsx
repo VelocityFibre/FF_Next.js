@@ -1,66 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@mui/material/PigmentGrid';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  IconButton,
-  Chip,
-  Avatar,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondaryAction,
-  Badge,
-  Alert,
-  LinearProgress,
-  SpeedDial,
-  SpeedDialAction,
-  SpeedDialIcon,
-  Switch,
-  FormControlLabel,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
-} from '@mui/material';
-import {
-  CloudOff as OfflineIcon,
-  Cloud as OnlineIcon,
-  Sync as SyncIcon,
-  Map as MapIcon,
-  CameraAlt as CameraIcon,
-  Assignment as TaskIcon,
-  LocationOn as LocationIcon,
-  Navigation as NavigationIcon,
-  CheckCircle as CheckIcon,
-  Schedule as ScheduleIcon,
-  Build as ToolsIcon,
-  QrCodeScanner as QrScannerIcon,
-  AttachFile as AttachIcon,
-  Notes as NotesIcon,
-  Person as PersonIcon,
-  Phone as PhoneIcon,
-  SignalCellularAlt as SignalIcon,
-  Battery90 as BatteryIcon,
-  ExpandMore as ExpandMoreIcon,
-  PhotoCamera as PhotoIcon,
-  Videocam as VideoIcon,
-  Mic as MicIcon,
-  Save as SaveIcon,
-  Download as DownloadIcon,
-  Router as RouterIcon,
-  Speed as SpeedTestIcon,
-  Home as HomeIcon
-} from '@mui/icons-material';
+import { 
+  Map, Camera, Navigation, CheckCircle, Clock, Wrench, QrCode, 
+  Paperclip, FileText, User, Phone, Signal, Battery, Download,
+  Router, Gauge, Home, Cloud, CloudOff, RefreshCw,
+  ChevronDown, ChevronRight, Plus, Video, Mic, MapPin
+} from 'lucide-react';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 interface FieldTask {
   id: string;
@@ -102,10 +47,11 @@ const FieldAppPortal: React.FC = () => {
   const [offlineData, setOfflineData] = useState<OfflineData | null>(null);
   const [deviceStatus, setDeviceStatus] = useState<DeviceStatus | null>(null);
   const [syncInProgress, setSyncInProgress] = useState(false);
-  const [offlineMode, setOfflineMode] = useState(false);
-  const [openSpeedDial, setOpenSpeedDial] = useState(false);
-  const [openTaskDialog, setOpenTaskDialog] = useState(false);
-  const [openCameraDialog, setOpenCameraDialog] = useState(false);
+  // const [offlineMode] = useState(false); // Reserved for offline toggle
+  const [expandedAccordion, setExpandedAccordion] = useState<string | null>('customer');
+  const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [showCameraDialog, setShowCameraDialog] = useState(false);
+  const [showSpeedDial, setShowSpeedDial] = useState(false);
 
   useEffect(() => {
     loadFieldData();
@@ -231,493 +177,488 @@ const FieldAppPortal: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'success';
-      case 'in_progress': return 'primary';
-      case 'pending': return 'warning';
-      case 'failed': return 'error';
-      default: return 'default';
+      case 'completed': return 'bg-green-100 text-green-800';
+      case 'in_progress': return 'bg-blue-100 text-blue-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'failed': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'urgent': return '#f44336';
-      case 'high': return '#ff9800';
-      case 'medium': return '#2196f3';
-      case 'low': return '#4caf50';
-      default: return '#9e9e9e';
+      case 'urgent': return 'bg-red-500';
+      case 'high': return 'bg-orange-500';
+      case 'medium': return 'bg-blue-500';
+      case 'low': return 'bg-green-500';
+      default: return 'bg-gray-500';
     }
   };
 
-  const getSignalIcon = (signal: string) => {
-    const color = signal === 'excellent' ? '#4caf50' : 
-                  signal === 'good' ? '#8bc34a' :
-                  signal === 'fair' ? '#ff9800' : '#f44336';
-    return <SignalIcon style={{ color }} />;
+  const getSignalStrength = (signal: string) => {
+    switch (signal) {
+      case 'excellent': return { bars: 4, color: 'text-green-500' };
+      case 'good': return { bars: 3, color: 'text-green-400' };
+      case 'fair': return { bars: 2, color: 'text-yellow-500' };
+      case 'poor': return { bars: 1, color: 'text-red-500' };
+      default: return { bars: 0, color: 'text-gray-400' };
+    }
   };
 
-  const speedDialActions = [
-    { icon: <CameraIcon />, name: 'Take Photo', action: () => setOpenCameraDialog(true) },
-    { icon: <QrScannerIcon />, name: 'Scan QR Code', action: () => {} },
-    { icon: <SpeedTestIcon />, name: 'Speed Test', action: () => {} },
-    { icon: <NotesIcon />, name: 'Add Note', action: () => {} },
-    { icon: <LocationIcon />, name: 'Update Location', action: () => {} }
-  ];
+  const getTaskIcon = (type: string) => {
+    switch (type) {
+      case 'installation': return <Home className="w-5 h-5" />;
+      case 'repair': return <Wrench className="w-5 h-5" />;
+      case 'inspection': return <CheckCircle className="w-5 h-5" />;
+      case 'maintenance': return <Wrench className="w-5 h-5" />;
+      default: return <FileText className="w-5 h-5" />;
+    }
+  };
 
   return (
-    <Box sx={{ p: 2, pb: 10 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h5">Field App</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Chip
-            icon={isOnline ? <OnlineIcon /> : <OfflineIcon />}
-            label={isOnline ? 'Online' : 'Offline'}
-            color={isOnline ? 'success' : 'error'}
-            variant={isOnline ? 'filled' : 'outlined'}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={offlineMode}
-                onChange={(e) => setOfflineMode(e.target.checked)}
-              />
-            }
-            label="Offline Mode"
-          />
-          <IconButton onClick={syncOfflineData} disabled={!isOnline || syncInProgress}>
-            <Badge badgeContent={offlineData?.tasks || 0} color="error">
-              <SyncIcon />
-            </Badge>
-          </IconButton>
-        </Box>
-      </Box>
+    <div className="ff-page-container">
+      <DashboardHeader 
+        title="Field App Portal"
+        subtitle="Mobile tools for field technicians"
+        actions={[
+          {
+            label: isOnline ? 'Online' : 'Offline',
+            icon: isOnline ? Cloud : CloudOff,
+            onClick: () => {},
+            variant: isOnline ? 'success' : 'danger'
+          },
+          {
+            label: `Sync (${offlineData?.tasks || 0})`,
+            icon: RefreshCw,
+            onClick: syncOfflineData,
+            variant: 'secondary',
+            disabled: !isOnline || syncInProgress
+          }
+        ]}
+      />
 
+      {/* Sync Progress Alert */}
       {syncInProgress && (
-        <Alert severity="info" sx={{ mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography>Syncing offline data...</Typography>
-            <LinearProgress sx={{ flex: 1 }} />
-          </Box>
-        </Alert>
+        <div className="ff-alert ff-alert-info mb-6">
+          <div className="flex items-center justify-between">
+            <span>Syncing offline data...</span>
+            <div className="w-32 bg-blue-200 rounded-full h-2">
+              <div className="bg-blue-600 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+            </div>
+          </div>
+        </div>
       )}
 
+      {/* Offline Warning */}
       {!isOnline && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <div className="ff-alert ff-alert-warning mb-6">
+          <CloudOff className="w-5 h-5 mr-2" />
           You are currently offline. Changes will be saved locally and synced when connection is restored.
-        </Alert>
+        </div>
       )}
 
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, md: 8 }}>
-          <Card sx={{ mb: 2 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Today's Tasks ({tasks.length})
-              </Typography>
-              <List>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content - Tasks */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Today's Tasks */}
+          <div className="ff-card">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Today's Tasks ({tasks.length})</h3>
+              <div className="space-y-3">
                 {tasks.map((task) => (
-                  <React.Fragment key={task.id}>
-                    <ListItem 
-                      component="button"
-                      onClick={() => {
-                        setSelectedTask(task);
-                        setOpenTaskDialog(true);
-                      }}
-                    >
-                      <ListItemIcon>
-                        <Avatar sx={{ bgcolor: getPriorityColor(task.priority) }}>
-                          {task.type === 'installation' && <HomeIcon />}
-                          {task.type === 'repair' && <ToolsIcon />}
-                          {task.type === 'inspection' && <TaskIcon />}
-                          {task.type === 'maintenance' && <ToolsIcon />}
-                        </Avatar>
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography variant="subtitle1">{task.title}</Typography>
-                            <Chip 
-                              label={task.status} 
-                              size="small"
-                              color={getStatusColor(task.status) as any}
-                            />
-                            {task.offline && (
-                              <Chip 
-                                icon={<OfflineIcon />} 
-                                label="Offline" 
-                                size="small"
-                                variant="outlined"
-                              />
-                            )}
-                          </Box>
-                        }
-                        secondary={
-                          <Box>
-                            <Typography variant="body2" color="textSecondary">
-                              <PersonIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                              {task.customer}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              <LocationIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                              {task.address}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              <ScheduleIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-                              {task.scheduledTime} • {task.estimatedDuration}
-                            </Typography>
-                          </Box>
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        <Box sx={{ textAlign: 'right' }}>
-                          <IconButton size="small" onClick={() => {}}>
-                            <NavigationIcon />
-                          </IconButton>
-                          {task.attachments > 0 && (
-                            <Badge badgeContent={task.attachments} color="primary">
-                              <IconButton size="small">
-                                <AttachIcon />
-                              </IconButton>
-                            </Badge>
+                  <div 
+                    key={task.id}
+                    className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => {
+                      setSelectedTask(task);
+                      setShowTaskDialog(true);
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white ${getPriorityColor(task.priority)}`}>
+                        {getTaskIcon(task.type)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium">{task.title}</span>
+                          <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(task.status)}`}>
+                            {task.status.replace('_', ' ')}
+                          </span>
+                          {task.offline && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600 flex items-center gap-1">
+                              <CloudOff className="w-3 h-3" />
+                              Offline
+                            </span>
                           )}
-                        </Box>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider />
-                  </React.Fragment>
+                        </div>
+                        <div className="space-y-1 text-sm text-gray-600">
+                          <div className="flex items-center gap-1">
+                            <User className="w-4 h-4" />
+                            {task.customer}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {task.address}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {task.scheduledTime} • {task.estimatedDuration}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <button className="p-2 hover:bg-gray-100 rounded">
+                          <Navigation className="w-4 h-4" />
+                        </button>
+                        {task.attachments > 0 && (
+                          <div className="relative">
+                            <button className="p-2 hover:bg-gray-100 rounded">
+                              <Paperclip className="w-4 h-4" />
+                            </button>
+                            <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                              {task.attachments}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </List>
-            </CardContent>
-          </Card>
+              </div>
+            </div>
+          </div>
 
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Quick Actions
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid size={6}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<MapIcon />}
-                    onClick={() => {}}
-                  >
-                    View Map
-                  </Button>
-                </Grid>
-                <Grid size={6}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<CameraIcon />}
-                    onClick={() => setOpenCameraDialog(true)}
-                  >
-                    Take Photo
-                  </Button>
-                </Grid>
-                <Grid size={6}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<QrScannerIcon />}
-                    onClick={() => {}}
-                  >
-                    Scan Equipment
-                  </Button>
-                </Grid>
-                <Grid size={6}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<SpeedTestIcon />}
-                    onClick={() => {}}
-                  >
-                    Run Speed Test
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+          {/* Quick Actions */}
+          <div className="ff-card">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <button className="ff-button ff-button-secondary">
+                  <Map className="w-4 h-4 mr-2" />
+                  View Map
+                </button>
+                <button 
+                  className="ff-button ff-button-secondary"
+                  onClick={() => setShowCameraDialog(true)}
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Take Photo
+                </button>
+                <button className="ff-button ff-button-secondary">
+                  <QrCode className="w-4 h-4 mr-2" />
+                  Scan Equipment
+                </button>
+                <button className="ff-button ff-button-secondary">
+                  <Gauge className="w-4 h-4 mr-2" />
+                  Run Speed Test
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Card sx={{ mb: 2 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Device Status
-              </Typography>
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Device Status */}
+          <div className="ff-card">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Device Status</h3>
               {deviceStatus && (
-                <List dense>
-                  <ListItem>
-                    <ListItemIcon>
-                      <BatteryIcon style={{ color: deviceStatus.battery > 20 ? '#4caf50' : '#f44336' }} />
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary="Battery"
-                      secondary={`${deviceStatus.battery}%`}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      {getSignalIcon(deviceStatus.signal)}
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary="Signal"
-                      secondary={deviceStatus.signal}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <LocationIcon color="primary" />
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary="GPS Accuracy"
-                      secondary={`±${deviceStatus.gpsAccuracy}m`}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <SaveIcon color="primary" />
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary="Storage"
-                      secondary={`${deviceStatus.storage.used}GB / ${deviceStatus.storage.total}GB`}
-                    />
-                  </ListItem>
-                </List>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Battery className={`w-5 h-5 ${deviceStatus.battery > 20 ? 'text-green-500' : 'text-red-500'}`} />
+                      <span className="text-sm">Battery</span>
+                    </div>
+                    <span className="text-sm font-medium">{deviceStatus.battery}%</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Signal className={`w-5 h-5 ${getSignalStrength(deviceStatus.signal).color}`} />
+                      <span className="text-sm">Signal</span>
+                    </div>
+                    <span className="text-sm font-medium capitalize">{deviceStatus.signal}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-blue-500" />
+                      <span className="text-sm">GPS Accuracy</span>
+                    </div>
+                    <span className="text-sm font-medium">±{deviceStatus.gpsAccuracy}m</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Download className="w-5 h-5 text-blue-500" />
+                      <span className="text-sm">Storage</span>
+                    </div>
+                    <span className="text-sm font-medium">
+                      {deviceStatus.storage.used}GB / {deviceStatus.storage.total}GB
+                    </span>
+                  </div>
+                </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card sx={{ mb: 2 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Offline Data
-              </Typography>
+          {/* Offline Data */}
+          <div className="ff-card">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Offline Data</h3>
               {offlineData && (
                 <>
-                  <List dense>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Pending Tasks"
-                        secondary={offlineData.tasks}
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Photos"
-                        secondary={offlineData.photos}
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Forms"
-                        secondary={offlineData.forms}
-                      />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText 
-                        primary="Notes"
-                        secondary={offlineData.notes}
-                      />
-                    </ListItem>
-                  </List>
-                  <Divider sx={{ my: 1 }} />
-                  <Typography variant="body2" color="textSecondary">
-                    Total Size: {offlineData.totalSize}
-                  </Typography>
-                  <Typography variant="caption" color="textSecondary">
-                    Last Sync: {offlineData.lastSync.toLocaleTimeString()}
-                  </Typography>
+                  <div className="space-y-3 mb-4">
+                    <div className="flex justify-between text-sm">
+                      <span>Pending Tasks</span>
+                      <span className="font-medium">{offlineData.tasks}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Photos</span>
+                      <span className="font-medium">{offlineData.photos}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Forms</span>
+                      <span className="font-medium">{offlineData.forms}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Notes</span>
+                      <span className="font-medium">{offlineData.notes}</span>
+                    </div>
+                  </div>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between text-sm text-gray-600">
+                      <span>Total Size</span>
+                      <span>{offlineData.totalSize}</span>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Last Sync: {offlineData.lastSync.toLocaleTimeString()}
+                    </div>
+                  </div>
                 </>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Tools & Resources
-              </Typography>
-              <List dense>
-                <ListItem component="button">
-                  <ListItemIcon>
-                    <DownloadIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Download Maps" />
-                </ListItem>
-                <ListItem component="button">
-                  <ListItemIcon>
-                    <RouterIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Equipment Catalog" />
-                </ListItem>
-                <ListItem component="button">
-                  <ListItemIcon>
-                    <NotesIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Installation Guide" />
-                </ListItem>
-                <ListItem component="button">
-                  <ListItemIcon>
-                    <PhoneIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Emergency Contacts" />
-                </ListItem>
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+          {/* Tools & Resources */}
+          <div className="ff-card">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Tools & Resources</h3>
+              <div className="space-y-2">
+                <button className="w-full text-left p-3 hover:bg-gray-50 rounded flex items-center gap-3">
+                  <Download className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm">Download Maps</span>
+                </button>
+                <button className="w-full text-left p-3 hover:bg-gray-50 rounded flex items-center gap-3">
+                  <Router className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm">Equipment Catalog</span>
+                </button>
+                <button className="w-full text-left p-3 hover:bg-gray-50 rounded flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm">Installation Guide</span>
+                </button>
+                <button className="w-full text-left p-3 hover:bg-gray-50 rounded flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm">Emergency Contacts</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <SpeedDial
-        ariaLabel="Field Actions"
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
-        onClose={() => setOpenSpeedDial(false)}
-        onOpen={() => setOpenSpeedDial(true)}
-        open={openSpeedDial}
-      >
-        {speedDialActions.map((action) => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            onClick={() => {
-              setOpenSpeedDial(false);
-              action.action();
-            }}
-          />
-        ))}
-      </SpeedDial>
-
-      <Dialog
-        open={openTaskDialog}
-        onClose={() => setOpenTaskDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {selectedTask?.title}
-        </DialogTitle>
-        <DialogContent>
-          {selectedTask && (
-            <Box>
-              <Alert severity={selectedTask.priority === 'urgent' ? 'error' : 'info'} sx={{ mb: 2 }}>
-                Priority: {selectedTask.priority.toUpperCase()}
-              </Alert>
-              
-              <Accordion defaultExpanded>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Customer Details</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List dense>
-                    <ListItem>
-                      <ListItemIcon><PersonIcon /></ListItemIcon>
-                      <ListItemText primary={selectedTask.customer} />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><LocationIcon /></ListItemIcon>
-                      <ListItemText primary={selectedTask.address} />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon><ScheduleIcon /></ListItemIcon>
-                      <ListItemText primary={`${selectedTask.scheduledTime} • ${selectedTask.estimatedDuration}`} />
-                    </ListItem>
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Notes & Instructions</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography variant="body2">
-                    {selectedTask.notes}
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={3}
-                    placeholder="Add notes..."
-                    variant="outlined"
-                    sx={{ mt: 2 }}
-                  />
-                </AccordionDetails>
-              </Accordion>
-
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Attachments ({selectedTask.attachments})</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={1}>
-                    <Grid size={4}>
-                      <Button fullWidth variant="outlined" size="small" startIcon={<PhotoIcon />}>
-                        Photo
-                      </Button>
-                    </Grid>
-                    <Grid size={4}>
-                      <Button fullWidth variant="outlined" size="small" startIcon={<VideoIcon />}>
-                        Video
-                      </Button>
-                    </Grid>
-                    <Grid size={4}>
-                      <Button fullWidth variant="outlined" size="small" startIcon={<MicIcon />}>
-                        Audio
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </Box>
+      {/* Floating Action Button */}
+      <div className="fixed bottom-6 right-6">
+        <div className="relative">
+          <button
+            onClick={() => setShowSpeedDial(!showSpeedDial)}
+            className="w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 flex items-center justify-center"
+          >
+            <Plus className={`w-6 h-6 transition-transform ${showSpeedDial ? 'rotate-45' : ''}`} />
+          </button>
+          
+          {showSpeedDial && (
+            <div className="absolute bottom-16 right-0 space-y-2">
+              <button className="flex items-center gap-2 bg-white shadow-lg rounded-full px-4 py-2 hover:bg-gray-50">
+                <Camera className="w-5 h-5" />
+                <span className="text-sm">Photo</span>
+              </button>
+              <button className="flex items-center gap-2 bg-white shadow-lg rounded-full px-4 py-2 hover:bg-gray-50">
+                <QrCode className="w-5 h-5" />
+                <span className="text-sm">Scan</span>
+              </button>
+              <button className="flex items-center gap-2 bg-white shadow-lg rounded-full px-4 py-2 hover:bg-gray-50">
+                <Gauge className="w-5 h-5" />
+                <span className="text-sm">Speed Test</span>
+              </button>
+              <button className="flex items-center gap-2 bg-white shadow-lg rounded-full px-4 py-2 hover:bg-gray-50">
+                <FileText className="w-5 h-5" />
+                <span className="text-sm">Note</span>
+              </button>
+              <button className="flex items-center gap-2 bg-white shadow-lg rounded-full px-4 py-2 hover:bg-gray-50">
+                <MapPin className="w-5 h-5" />
+                <span className="text-sm">Location</span>
+              </button>
+            </div>
           )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenTaskDialog(false)}>Close</Button>
-          <Button variant="outlined" startIcon={<NavigationIcon />}>
-            Navigate
-          </Button>
-          <Button variant="contained" color="success" startIcon={<CheckIcon />}>
-            Complete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </div>
+      </div>
 
-      <Dialog
-        open={openCameraDialog}
-        onClose={() => setOpenCameraDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Capture Photo</DialogTitle>
-        <DialogContent>
-          <Box sx={{ 
-            height: 300, 
-            bgcolor: 'black', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            borderRadius: 1,
-            mb: 2
-          }}>
-            <CameraIcon sx={{ fontSize: 60, color: 'white' }} />
-          </Box>
-          <Typography variant="body2" color="textSecondary" align="center">
-            Camera interface would appear here on mobile device
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenCameraDialog(false)}>Cancel</Button>
-          <Button variant="contained" startIcon={<CameraIcon />}>
-            Capture
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+      {/* Task Detail Modal */}
+      {showTaskDialog && selectedTask && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-semibold">{selectedTask.title}</h2>
+              <div className={`inline-block mt-2 px-3 py-1 rounded text-sm font-medium ${
+                selectedTask.priority === 'urgent' ? 'bg-red-100 text-red-800' : 
+                selectedTask.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                'bg-blue-100 text-blue-800'
+              }`}>
+                Priority: {selectedTask.priority.toUpperCase()}
+              </div>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              {/* Customer Details Accordion */}
+              <div className="border rounded-lg">
+                <button
+                  className="w-full p-4 text-left flex items-center justify-between hover:bg-gray-50"
+                  onClick={() => setExpandedAccordion(expandedAccordion === 'customer' ? null : 'customer')}
+                >
+                  <span className="font-medium">Customer Details</span>
+                  {expandedAccordion === 'customer' ? 
+                    <ChevronDown className="w-5 h-5" /> : 
+                    <ChevronRight className="w-5 h-5" />
+                  }
+                </button>
+                {expandedAccordion === 'customer' && (
+                  <div className="p-4 border-t space-y-3">
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-gray-500" />
+                      <span>{selectedTask.customer}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-gray-500" />
+                      <span>{selectedTask.address}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-500" />
+                      <span>{selectedTask.scheduledTime} • {selectedTask.estimatedDuration}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Notes & Instructions Accordion */}
+              <div className="border rounded-lg">
+                <button
+                  className="w-full p-4 text-left flex items-center justify-between hover:bg-gray-50"
+                  onClick={() => setExpandedAccordion(expandedAccordion === 'notes' ? null : 'notes')}
+                >
+                  <span className="font-medium">Notes & Instructions</span>
+                  {expandedAccordion === 'notes' ? 
+                    <ChevronDown className="w-5 h-5" /> : 
+                    <ChevronRight className="w-5 h-5" />
+                  }
+                </button>
+                {expandedAccordion === 'notes' && (
+                  <div className="p-4 border-t">
+                    <p className="text-sm text-gray-600 mb-3">{selectedTask.notes}</p>
+                    <textarea
+                      className="w-full p-3 border rounded-lg text-sm"
+                      rows={3}
+                      placeholder="Add notes..."
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Attachments Accordion */}
+              <div className="border rounded-lg">
+                <button
+                  className="w-full p-4 text-left flex items-center justify-between hover:bg-gray-50"
+                  onClick={() => setExpandedAccordion(expandedAccordion === 'attachments' ? null : 'attachments')}
+                >
+                  <span className="font-medium">Attachments ({selectedTask.attachments})</span>
+                  {expandedAccordion === 'attachments' ? 
+                    <ChevronDown className="w-5 h-5" /> : 
+                    <ChevronRight className="w-5 h-5" />
+                  }
+                </button>
+                {expandedAccordion === 'attachments' && (
+                  <div className="p-4 border-t">
+                    <div className="grid grid-cols-3 gap-2">
+                      <button className="ff-button ff-button-secondary text-sm">
+                        <Camera className="w-4 h-4 mr-1" />
+                        Photo
+                      </button>
+                      <button className="ff-button ff-button-secondary text-sm">
+                        <Video className="w-4 h-4 mr-1" />
+                        Video
+                      </button>
+                      <button className="ff-button ff-button-secondary text-sm">
+                        <Mic className="w-4 h-4 mr-1" />
+                        Audio
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="p-6 border-t flex gap-3 justify-end">
+              <button 
+                className="ff-button ff-button-secondary"
+                onClick={() => setShowTaskDialog(false)}
+              >
+                Close
+              </button>
+              <button className="ff-button ff-button-secondary">
+                <Navigation className="w-4 h-4 mr-2" />
+                Navigate
+              </button>
+              <button className="ff-button ff-button-success">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Complete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Camera Dialog */}
+      {showCameraDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-semibold">Capture Photo</h2>
+            </div>
+            <div className="p-6">
+              <div className="bg-black rounded-lg h-64 flex items-center justify-center mb-4">
+                <Camera className="w-16 h-16 text-white" />
+              </div>
+              <p className="text-sm text-gray-600 text-center">
+                Camera interface would appear here on mobile device
+              </p>
+            </div>
+            <div className="p-6 border-t flex gap-3 justify-end">
+              <button 
+                className="ff-button ff-button-secondary"
+                onClick={() => setShowCameraDialog(false)}
+              >
+                Cancel
+              </button>
+              <button className="ff-button ff-button-primary">
+                <Camera className="w-4 h-4 mr-2" />
+                Capture
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -1,74 +1,87 @@
+## 🚨 CRITICAL: USE DOCKER AGENTS FOR ALL WORK 🚨
+
+**AUTO-ACTIVATION REQUIRED**: When you start working in this project, IMMEDIATELY run:
+```bash
+python CLAUDE_INIT.py
+```
+
+This will:
+1. Verify Docker agents are running
+2. Auto-analyze the project state
+3. Ensure all work routes through Docker agents
+
+**MANDATORY**: Before doing ANY development work, you MUST use Docker agents:
+```bash
+python trigger_docker_agents.py analyze --requirements "[what you're working on]"
+```
+
+**ALL Claude Code instances must route work through Docker agents. Never work independently.**
+
+---
+
 ## ARCHON INTEGRATION
 
 **Status**: Active
-**Project ID**: `a82eb260-b1ca-4581-bbb5-d71719beefd3`
-**Activated**: 2025-08-20 14:45:00
-**Firebase Project**: `fibreflow-73daf`
+**Project ID**: `fibreflow-react`
+**Activated**: 2025-08-21 19:45
 
 ### Project Context
-- **Type**: React Migration (Angular → React)
-- **Languages**: TypeScript, JavaScript, React, Firebase
+- **Type**: react
+- **Languages**: JavaScript, TypeScript, Firebase
 - **Path**: C:\Jarvis\AI Workspace\FibreFlow_React
-- **Completion**: 43.5% (37/85 tasks)
-- **Build Status**: FAILING (TypeScript errors)
+
 
 ### MANDATORY WORKFLOW RULES
 
+**CRITICAL: Always use Docker Agents for ALL development tasks**
+
 #### Before Starting ANY Task:
-```javascript
-// ALWAYS execute these checks first:
-1. archon:manage_task(action="list", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", filter_by="status", filter_value="todo")
-2. archon:perform_rag_query(query="[relevant feature/pattern]", match_count=5)
-3. archon:search_code_examples(query="[implementation pattern]", match_count=3)
+```bash
+# ALWAYS use Docker agents - check project status first:
+python trigger_docker_agents.py status
+
+# Analyze requirements for any new work:
+python trigger_docker_agents.py analyze --requirements "[describe what you're working on]"
 ```
 
 #### During Development:
-```javascript
-// Update task status immediately when starting:
-archon:manage_task(action="update", task_id="[current_task_id]", update_fields={"status": "in_progress"})
+```bash
+# Create technical specification for features:
+python trigger_docker_agents.py spec --feature "[feature description]"
 
-// Search before implementing:
-archon:perform_rag_query(query="[specific technical question]")
+# Break down into tasks:
+python trigger_docker_agents.py tasks
 
-// Create tasks for discoveries:
-archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", title="[new requirement]", priority="[critical/high/medium/low]")
+# Execute development with agents:
+python trigger_docker_agents.py execute
+
+# Complete and validate:
+python trigger_docker_agents.py complete
 ```
 
-#### After Completing Work:
-```javascript
-// Mark task complete:
-archon:manage_task(action="update", task_id="[task_id]", update_fields={"status": "completed"})
-
-// Document learnings:
-// Add to knowledge base if new patterns discovered
+#### For Complete Workflows:
+```bash
+# Run full Agent OS workflow (analyze → spec → tasks → execute → complete):
+python trigger_docker_agents.py workflow --feature "[feature description]" --requirements "[requirements]"
 ```
 
 ### Quick Commands
 
-**Get all project tasks:**
-```
-archon:manage_task(action="list", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3")
-```
-
-**Get critical blockers:**
-```
-archon:manage_task(action="list", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", filter_by="priority", filter_value="critical")
+**Check Docker Agent Status:**
+```bash
+python trigger_docker_agents.py health
+python trigger_docker_agents.py status
 ```
 
-**Search project knowledge:**
-```
-archon:perform_rag_query(query="[topic]", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3")
-```
-
-**Create new task:**
-```
-archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719beefd3", title="[description]", priority="[priority]")
+**Quick Analysis:**
+```bash
+python trigger_docker_agents.py analyze --requirements "Quick overview of current work"
 ```
 
-### Current Critical Tasks (MUST FIX IMMEDIATELY)
-1. **CRIT-001**: Fix TypeScript Compilation Errors (blocking 5 tasks)
-2. **CRIT-002**: Test Firebase Connection
-3. **CRIT-003**: Configure ESLint for TypeScript
+**Create Specification:**
+```bash
+python trigger_docker_agents.py spec --feature "Your feature description here"
+```
 
 ### Integration Rules
 
@@ -77,11 +90,9 @@ archon:manage_task(action="create", project_id="a82eb260-b1ca-4581-bbb5-d71719be
 3. **UPDATE** task status in real-time as work progresses
 4. **CREATE** tasks for any new requirements discovered
 5. **SEARCH** knowledge base before asking questions
-6. **ZERO TOLERANCE** for TypeScript errors - Fix ALL errors before proceeding
-7. **ZERO TOLERANCE** for ESLint warnings - Code must be clean
-8. **ZERO TOLERANCE** for build failures - Everything must compile
 
 ---
+*Archon Integration configured by @Archon activation protocol*
 
 ## 📋 GOLDEN GUARDRAILS - RULES.md
 

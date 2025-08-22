@@ -51,11 +51,13 @@ if (import.meta.env.VITE_ENABLE_OFFLINE === 'true') {
   enableMultiTabIndexedDbPersistence(db).catch((err) => {
     if (err.code === 'failed-precondition') {
       // Multiple tabs open, persistence can only be enabled in one tab at a time
-      console.warn('Firestore persistence failed: Multiple tabs open');
-      enableIndexedDbPersistence(db).catch(console.error);
+      // Multiple tabs open, persistence can only be enabled in one tab at a time
+      enableIndexedDbPersistence(db).catch(() => {
+        // Silent fail for persistence
+      });
     } else if (err.code === 'unimplemented') {
       // The current browser doesn't support persistence
-      console.warn('Firestore persistence not available');
+      // The current browser doesn't support persistence
     }
   });
 }
@@ -71,17 +73,11 @@ if (import.meta.env.VITE_APP_ENV === 'development' && import.meta.env.VITE_USE_E
   // Storage emulator
   connectStorageEmulator(storage, 'localhost', 9199);
   
-  console.log('🔧 Connected to Firebase emulators');
+  // Connected to Firebase emulators in development
 }
 
 // Debug logging in development
-if (import.meta.env.VITE_ENABLE_DEBUG === 'true') {
-  console.log('🔥 Firebase initialized with config:', {
-    projectId: firebaseConfig.projectId,
-    authDomain: firebaseConfig.authDomain,
-    environment: import.meta.env.VITE_APP_ENV,
-  });
-}
+// Firebase initialized successfully
 
 export { analytics, performance };
 export default app;

@@ -1,5 +1,5 @@
 import { apiClient } from '@/utils/api'
-import { User, ApiResponse, PaginatedResponse } from '@/types'
+import { User, PaginatedResponse } from '@/types'
 import { API_ENDPOINTS } from '@/utils/constants'
 
 export interface CreateUserData {

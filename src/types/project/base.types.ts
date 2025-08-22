@@ -44,7 +44,7 @@ export interface Project {
   deliverables?: Deliverable[];
   risks?: string[];
   dependencies?: string[];
-  kpiTargets?: ProjectKPITargets;
+  kpiTargets?: any; // TODO: Import ProjectKPITargets from kpi.types
   metadata?: ProjectMetadata;
   tags?: string[];
   attachments?: Attachment[];

@@ -131,6 +131,27 @@ export function Sidebar({ isOpen, isCollapsed, onCollapse }: SidebarProps) {
       ]
     },
     
+    // PEOPLE & MANAGEMENT Section
+    { 
+      section: 'PEOPLE & MANAGEMENT', 
+      items: [
+        { 
+          to: '/app/clients', 
+          icon: Users, 
+          label: 'Clients',
+          shortLabel: 'Clients',
+          permissions: [],
+        },
+        { 
+          to: '/app/staff', 
+          icon: Users, 
+          label: 'Staff',
+          shortLabel: 'Staff',
+          permissions: [],
+        },
+      ]
+    },
+    
     // CONTRACTORS & SUPPLIERS Section
     { 
       section: 'CONTRACTORS & SUPPLIERS', 
