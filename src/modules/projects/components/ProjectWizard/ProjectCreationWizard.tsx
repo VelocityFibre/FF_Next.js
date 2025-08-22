@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useCreateProject } from '../../hooks/useProjects';
-import { useClients } from '@/hooks/useClients';
-import { useProjectManagers } from '@/hooks/useStaff';
+// import { useCreateNeonProject, useConvertFirebaseToNeon } from '@/hooks/neon/useNeonProjects';
+// import { useNeonActiveClients } from '@/hooks/neon/useNeonClients';
+// import { useNeonProjectManagers } from '@/hooks/neon/useNeonStaff';
 import { WizardHeader } from './WizardHeader';
 import { WizardNavigation } from './WizardNavigation';
 import { BasicInfoStep } from './steps/BasicInfoStep';
@@ -11,7 +11,7 @@ import { ProjectDetailsStep } from './steps/ProjectDetailsStep';
 import { SOWUploadStep } from './steps/SOWUploadStep';
 import { ReviewStep } from './steps/ReviewStep';
 import type { FormData } from './types';
-import { ProjectPriority } from '../../types/project.types';
+import { ProjectPriority, ProjectStatus } from '../../types/project.types';
 
 export function ProjectCreationWizard() {
   const navigate = useNavigate();
@@ -22,15 +22,17 @@ export function ProjectCreationWizard() {
   const form = useForm<FormData>({
     defaultValues: {
       priority: ProjectPriority.MEDIUM,
+      status: ProjectStatus.PLANNING,
     }
   });
 
-  const { data: clients = [], isLoading: isClientsLoading } = useClients();
-  const { data: projectManagers = [], isLoading: isProjectManagersLoading } = useProjectManagers();
-  const createProject = useCreateProject();
+  const { data: clients = [], isLoading: isClientsLoading } = useNeonActiveClients();
+  const { data: projectManagers = [], isLoading: isProjectManagersLoading } = useNeonProjectManagers();
+  const createProject = useCreateNeonProject();
+  const convertToNeon = useConvertFirebaseToNeon();
 
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < 2) { // Only go to review step (step 2)
       setCurrentStep(currentStep + 1);
     }
   };
@@ -44,12 +46,23 @@ export function ProjectCreationWizard() {
   const handleSubmit = async () => {
     try {
       const formData = form.getValues();
-      const projectId = await createProject.mutateAsync(formData);
-      setCreatedProjectId(projectId);
+      console.log('Form data before conversion:', formData);
+      
+      // Convert Firebase format to Neon format
+      const neonData = convertToNeon(formData);
+      console.log('Neon data after conversion:', neonData);
+      
+      const project = await createProject.mutateAsync(neonData);
+      console.log('Project created successfully:', project);
+      
+      setCreatedProjectId(project.id);
       setProjectCreated(true);
-      setCurrentStep(2); // Move to SOW upload step
+      // Project creation complete - SOW can be uploaded separately later
+      navigate('/app/projects');
     } catch (error) {
       console.error('Failed to create project:', error);
+      // Show error to user
+      alert(`Failed to create project: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -79,8 +92,6 @@ export function ProjectCreationWizard() {
           />
         );
       case 2:
-        return <SOWUploadStep projectId={createdProjectId!} />;
-      case 3:
         return (
           <ReviewStep
             form={form}
@@ -104,9 +115,9 @@ export function ProjectCreationWizard() {
           currentStep={currentStep}
           onPrevious={handlePrevious}
           onNext={handleNext}
-          onSubmit={currentStep === 3 ? handleSubmit : handleFinish}
+          onSubmit={currentStep === 2 ? handleSubmit : handleFinish}
           isSubmitting={createProject.isPending}
-          isLastStep={currentStep === 3 || (currentStep === 2 && projectCreated)}
+          isLastStep={currentStep === 2}
         />
       </form>
     </div>

@@ -1,20 +1,8 @@
 /**
- * Project Service - Consolidated exports
- * Manages all project-related operations
+ * Project Service - Main export file
  */
 
-// CRUD operations
-export {
-  getAllProjects,
-  getProjectById,
-  createProject,
-  updateProject,
-  deleteProject,
-  getProjectsByClient,
-  getActiveProjects
-} from './projectCrud';
-
-// Phase and hierarchy management
+// Phases and hierarchy management
 export {
   generateProjectPhases,
   getProjectPhases,
@@ -50,21 +38,11 @@ export {
 } from './projectRealtime';
 
 // Create the projectService object for backward compatibility
-import * as crud from './projectCrud';
 import * as phases from './projectPhases';
 import * as stats from './projectStats';
 import * as realtime from './projectRealtime';
 
 export const projectService = {
-  // CRUD
-  getAll: crud.getAllProjects,
-  getById: crud.getProjectById,
-  create: crud.createProject,
-  update: crud.updateProject,
-  delete: crud.deleteProject,
-  getByClient: crud.getProjectsByClient,
-  getActive: crud.getActiveProjects,
-  
   // Phases
   generatePhases: phases.generateProjectPhases,
   getPhases: phases.getProjectPhases,
@@ -87,7 +65,6 @@ export const projectService = {
   calculateBudgetVariance: stats.calculateBudgetVariance,
   getProjectSummary: stats.getProjectSummary, // Direct export
   getProjectHierarchy: realtime.subscribeToProjectHierarchy, // Alias
-  updateProjectProgress: crud.updateProject, // Alias
   
   // Real-time
   subscribe: realtime.subscribeToProject,

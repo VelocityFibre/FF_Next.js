@@ -1,5 +1,5 @@
 import { UseFormReturn } from 'react-hook-form';
-import { ProjectPriority } from '../../../types/project.types';
+import { ProjectPriority, ProjectStatus } from '../../../types/project.types';
 import type { FormData } from '../types';
 
 interface ProjectDetailsStepProps {
@@ -17,101 +17,64 @@ export function ProjectDetailsStep({
 
   return (
     <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Project Location
-        </label>
-        <input
-          {...register('location.address')}
-          type="text"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Street Address"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            City
-          </label>
-          <input
-            {...register('location.city')}
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="City"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Province
-          </label>
-          <select
-            {...register('location.province')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select province</option>
-            <option value="WC">Western Cape</option>
-            <option value="GP">Gauteng</option>
-            <option value="KZN">KwaZulu-Natal</option>
-            <option value="EC">Eastern Cape</option>
-            <option value="NC">Northern Cape</option>
-            <option value="FS">Free State</option>
-            <option value="MP">Mpumalanga</option>
-            <option value="LP">Limpopo</option>
-            <option value="NW">North West</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Postal Code
-          </label>
-          <input
-            {...register('location.postalCode')}
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Postal Code"
-          />
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Budget (R)
           </label>
           <input
-            {...register('budget', { 
-              min: { value: 0, message: 'Budget must be positive' }
+            {...register('budget.totalBudget', { 
+              min: { value: 0, message: 'Budget must be positive' },
+              valueAsNumber: true
             })}
             type="number"
             step="0.01"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="0.00"
           />
-          {errors.budget && (
-            <p className="mt-1 text-sm text-red-600">{errors.budget.message}</p>
+          {errors.budget?.totalBudget && (
+            <p className="mt-1 text-sm text-red-600">{errors.budget.totalBudget.message}</p>
           )}
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Priority
+            Priority *
           </label>
           <select
-            {...register('priority')}
+            {...register('priority', { required: 'Priority is required' })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value={ProjectPriority.MEDIUM}>Medium</option>
             <option value={ProjectPriority.LOW}>Low</option>
+            <option value={ProjectPriority.MEDIUM}>Medium</option>
             <option value={ProjectPriority.HIGH}>High</option>
             <option value={ProjectPriority.CRITICAL}>Critical</option>
+          </select>
+          {errors.priority && (
+            <p className="mt-1 text-sm text-red-600">{errors.priority.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Status
+          </label>
+          <select
+            {...register('status')}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value={ProjectStatus.PLANNING}>Planning</option>
+            <option value={ProjectStatus.ACTIVE}>Active</option>
+            <option value={ProjectStatus.ON_HOLD}>On Hold</option>
+            <option value={ProjectStatus.COMPLETED}>Completed</option>
+            <option value={ProjectStatus.CANCELLED}>Cancelled</option>
           </select>
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Project Manager
+          Project Manager *
         </label>
         {isProjectManagersLoading ? (
           <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
@@ -119,7 +82,7 @@ export function ProjectDetailsStep({
           </div>
         ) : (
           <select
-            {...register('projectManagerId')}
+            {...register('projectManagerId', { required: 'Project Manager is required' })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select project manager</option>
@@ -130,6 +93,18 @@ export function ProjectDetailsStep({
             ))}
           </select>
         )}
+        {errors.projectManagerId && (
+          <p className="mt-1 text-sm text-red-600">{errors.projectManagerId.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Team Members
+        </label>
+        <div className="text-sm text-gray-500">
+          Team members can be assigned after project creation
+        </div>
       </div>
 
       <div>
@@ -137,7 +112,7 @@ export function ProjectDetailsStep({
           Notes
         </label>
         <textarea
-          {...register('notes')}
+          {...register('description')}
           rows={4}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Additional notes or requirements"

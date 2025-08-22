@@ -266,6 +266,13 @@ export const staffImportService = {
   },
 
   /**
+   * Get CSV template for import
+   */
+  getImportTemplate(): string {
+    return 'Name,Email,Phone,Employee ID,Position,Department,Emergency Contact Name,Emergency Contact Phone';
+  },
+
+  /**
    * Parse date from various formats
    */
   parseDate(dateValue: any): Date | undefined {

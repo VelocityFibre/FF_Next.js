@@ -8,6 +8,7 @@ import {
   Filter, 
   Download, 
   Upload,
+  Settings,
   Edit,
   Trash2,
   Eye,
@@ -120,7 +121,15 @@ export function StaffList() {
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => setShowImport(true)}
+            onClick={() => navigate('/app/settings/staff')}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            title="Manage positions and departments"
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Settings
+          </button>
+          <button
+            onClick={() => navigate('/app/staff/import')}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
           >
             <Upload className="h-4 w-4 mr-2" />

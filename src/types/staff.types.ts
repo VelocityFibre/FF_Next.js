@@ -90,17 +90,22 @@ export interface StaffMember {
 
 export enum Department {
   MANAGEMENT = 'management',
+  PROJECT_MANAGEMENT = 'project_management',
+  FIELD_OPERATIONS = 'field_operations',
+  NETWORK_OPERATIONS = 'network_operations',
   ENGINEERING = 'engineering',
   INSTALLATION = 'installation',
   MAINTENANCE = 'maintenance',
-  SALES = 'sales',
-  OPERATIONS = 'operations',
   QUALITY_ASSURANCE = 'quality_assurance',
-  SUPPORT = 'support',
+  TECHNICAL_SUPPORT = 'technical_support',
+  SALES = 'sales',
+  CUSTOMER_SERVICE = 'customer_service',
+  LOGISTICS = 'logistics',
   ADMINISTRATION = 'administration',
   FINANCE = 'finance',
   HR = 'hr',
   IT = 'it',
+  SAFETY = 'safety',
 }
 
 // Position enum for standardized roles
@@ -111,7 +116,7 @@ export enum Position {
   FIELD_TECHNICIAN = 'Field Technician',
   SENIOR_TECHNICIAN = 'Senior Technician',
   CABLE_JOINTER = 'Cable Jointer',
-  FIBER_SPLICER = 'Fiber Splicer',
+  FIBRE_SPLICER = 'Fibre Splicer',
   NETWORK_ENGINEER = 'Network Engineer',
   QUALITY_INSPECTOR = 'Quality Inspector',
   SAFETY_OFFICER = 'Safety Officer',
@@ -164,7 +169,7 @@ export enum ContractType {
 
 export enum Skill {
   // Technical Skills
-  FIBER_SPLICING = 'fiber_splicing',
+  FIBRE_SPLICING = 'fibre_splicing',
   OTDR_TESTING = 'otdr_testing',
   POWER_METER_TESTING = 'power_meter_testing',
   CABLE_INSTALLATION = 'cable_installation',
@@ -273,18 +278,20 @@ export enum TrainingStatus {
 // Form Types
 
 export interface StaffFormData {
+  id?: string; // For editing
   name: string;
   email: string;
   phone: string;
   alternativePhone?: string;
   employeeId: string;
   position: Position | string;
-  department: Department;
+  department: Department | string; // Allow string for new departments
   level?: StaffLevel;
   bio?: string;
   specializations?: string[];
   status: StaffStatus;
   managerId?: string;
+  reportsTo?: string; // Employee ID of manager
   skills: Skill[];
   experienceYears: number;
   address: string;

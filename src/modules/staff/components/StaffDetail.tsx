@@ -99,7 +99,7 @@ export function StaffDetail() {
           {/* Status Badge */}
           <div>
             <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(staff.status)}`}>
-              {staff.status.replace('_', ' ').toUpperCase()}
+              {staff.status?.replace('_', ' ').toUpperCase() || 'UNKNOWN'}
             </span>
           </div>
 
@@ -127,13 +127,13 @@ export function StaffDetail() {
                 </div>
               </div>
 
-              {staff.alternativePhone && (
+              {(staff.alternativePhone || staff.alternate_phone) && (
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Alternative Phone</p>
-                    <a href={`tel:${staff.alternativePhone}`} className="text-blue-600 hover:text-blue-800">
-                      {staff.alternativePhone}
+                    <a href={`tel:${staff.alternativePhone || staff.alternate_phone}`} className="text-blue-600 hover:text-blue-800">
+                      {staff.alternativePhone || staff.alternate_phone}
                     </a>
                   </div>
                 </div>
@@ -156,7 +156,7 @@ export function StaffDetail() {
               <div>
                 <p className="text-sm text-gray-500">Department</p>
                 <p className="font-medium">
-                  {staff.department.replace('_', ' ').charAt(0).toUpperCase() + staff.department.slice(1)}
+                  {staff.department?.replace('_', ' ').charAt(0).toUpperCase() + (staff.department?.slice(1) || '') || 'Not specified'}
                 </p>
               </div>
 
@@ -170,7 +170,7 @@ export function StaffDetail() {
               <div>
                 <p className="text-sm text-gray-500">Contract Type</p>
                 <p className="font-medium">
-                  {staff.contractType.replace('_', ' ').charAt(0).toUpperCase() + staff.contractType.slice(1)}
+                  {(staff.contractType || staff.type)?.replace('_', ' ').charAt(0).toUpperCase() + ((staff.contractType || staff.type)?.slice(1) || '') || 'Not specified'}
                 </p>
               </div>
 
@@ -179,22 +179,38 @@ export function StaffDetail() {
                 <div>
                   <p className="text-sm text-gray-500">Start Date</p>
                   <p className="font-medium">
-                    {staff.startDate.toDate 
-                      ? format(staff.startDate.toDate(), 'dd MMM yyyy')
-                      : 'N/A'}
+                    {(() => {
+                      const startDate = staff.startDate || staff.join_date;
+                      if (startDate) {
+                        if (startDate.toDate) {
+                          return format(startDate.toDate(), 'dd MMM yyyy');
+                        } else {
+                          return format(new Date(startDate), 'dd MMM yyyy');
+                        }
+                      }
+                      return 'N/A';
+                    })()}
                   </p>
                 </div>
               </div>
 
-              {staff.endDate && (
+              {(staff.endDate || staff.end_date) && (
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">End Date</p>
                     <p className="font-medium">
-                      {staff.endDate.toDate 
-                        ? format(staff.endDate.toDate(), 'dd MMM yyyy')
-                        : 'N/A'}
+                      {(() => {
+                        const endDate = staff.endDate || staff.end_date;
+                        if (endDate) {
+                          if (endDate.toDate) {
+                            return format(endDate.toDate(), 'dd MMM yyyy');
+                          } else {
+                            return format(new Date(endDate), 'dd MMM yyyy');
+                          }
+                        }
+                        return 'N/A';
+                      })()}
                     </p>
                   </div>
                 </div>
@@ -203,7 +219,7 @@ export function StaffDetail() {
           </div>
 
           {/* Skills */}
-          {staff.skills && staff.skills.length > 0 && (
+          {staff.skills && Array.isArray(staff.skills) && staff.skills.length > 0 && (
             <div>
               <h2 className="text-lg font-medium text-gray-900 mb-4">Skills</h2>
               <div className="flex flex-wrap gap-2">
@@ -213,7 +229,7 @@ export function StaffDetail() {
                     className="inline-flex items-center px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full"
                   >
                     <Award className="w-3 h-3 mr-1" />
-                    {skill.replace(/_/g, ' ').charAt(0).toUpperCase() + skill.slice(1)}
+                    {skill?.replace(/_/g, ' ').charAt(0).toUpperCase() + (skill?.slice(1) || '') || skill}
                   </span>
                 ))}
               </div>
@@ -227,12 +243,12 @@ export function StaffDetail() {
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm text-gray-500">Current Projects</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {staff.currentProjectCount} / {staff.maxProjectCount}
+                  {staff.currentProjectCount || 0} / {staff.maxProjectCount || 5}
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div 
                     className="bg-blue-600 h-2 rounded-full"
-                    style={{ width: `${(staff.currentProjectCount / staff.maxProjectCount) * 100}%` }}
+                    style={{ width: `${((staff.currentProjectCount || 0) / (staff.maxProjectCount || 5)) * 100}%` }}
                   />
                 </div>
               </div>
@@ -240,32 +256,26 @@ export function StaffDetail() {
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm text-gray-500">Completed Projects</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {staff.totalProjectsCompleted}
+                  {staff.totalProjectsCompleted || 0}
                 </p>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm text-gray-500">Average Rating</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {staff.averageProjectRating.toFixed(1)} / 5.0
+                  {(staff.averageProjectRating || 0).toFixed(1)} / 5.0
                 </p>
               </div>
             </div>
           </div>
 
           {/* Emergency Contact */}
-          {(staff.emergencyContactName || staff.emergencyContactPhone) && (
+          {staff.emergency_contact && (
             <div>
               <h2 className="text-lg font-medium text-gray-900 mb-4">Emergency Contact</h2>
               <div className="bg-red-50 rounded-lg p-4">
-                {staff.emergencyContactName && (
-                  <p className="font-medium text-gray-900">{staff.emergencyContactName}</p>
-                )}
-                {staff.emergencyContactPhone && (
-                  <a href={`tel:${staff.emergencyContactPhone}`} className="text-blue-600 hover:text-blue-800">
-                    {staff.emergencyContactPhone}
-                  </a>
-                )}
+                <p className="font-medium text-gray-900">Contact information available</p>
+                <p className="text-sm text-gray-600">Please check staff records for details</p>
               </div>
             </div>
           )}
@@ -276,7 +286,7 @@ export function StaffDetail() {
               <h2 className="text-lg font-medium text-gray-900 mb-4">Address</h2>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p>{staff.address}</p>
-                <p>{staff.city}, {staff.province} {staff.postalCode}</p>
+                <p>{staff.city}, {staff.state || staff.province} {staff.postal_code || staff.postalCode}</p>
               </div>
             </div>
           )}

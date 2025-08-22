@@ -1,0 +1,6861 @@
+{
+  "timestamp": "2025-08-22T16:26:15.454Z",
+  "projectPath": "C:\\Jarvis\\AI Workspace\\FibreFlow_React",
+  "entities": {
+    "dev-tools\\assets\\test-navigation.js": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testRoute",
+        "if",
+        "runTests",
+        "for",
+        "forEach"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app/dashboard",
+        "/app/meetings",
+        "/app/action-items",
+        "/app/projects",
+        "/app/pole-capture",
+        "/app/fiber-stringing",
+        "/app/drops",
+        "/app/sow-management",
+        "/app/installations",
+        "/app/tasks",
+        "/app/daily-progress",
+        "/app/clients",
+        "/app/staff",
+        "/app/contractors",
+        "/app/suppliers",
+        "/app/analytics",
+        "/app/enhanced-kpis",
+        "/app/kpi-dashboard",
+        "/app/reports",
+        "/app/communications",
+        "/app/field",
+        "/app/onemap",
+        "/app/nokia-equipment",
+        "/app/settings"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\assets\\test-navigation.js"
+    },
+    "dev-tools\\assets\\test-vf-responsive.js": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "screenshots/responsive-${viewport.name.toLowerCase()}.png",
+        "screenshots/responsive-mobile-menu-open.png"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\assets\\test-vf-responsive.js"
+    },
+    "dev-tools\\assets\\test-vf-theme.js": {
+      "services": [],
+      "components": [
+        "test"
+      ],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "screenshots/01-initial-load.png",
+        "screenshots/02-vf-theme-active.png",
+        "screenshots/03-vf-branding.png",
+        "screenshots/04-final-state.png",
+        "screenshots/error-state.png"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\assets\\test-vf-theme.js"
+    },
+    "dev-tools\\testing\\tests\\e2e\\auth-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\auth-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\comprehensive-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app",
+        "/app/projects",
+        "/app/pole-tracker",
+        "/app/staff",
+        "/app/contractors",
+        "/app/stock",
+        "/app/boq",
+        "/app/daily-progress",
+        "/app/analytics",
+        "/app/meetings",
+        "/app/tasks",
+        "/app/field-app",
+        "/app/installations",
+        "/app/communications",
+        "/app/fiber-stringing",
+        "/app/settings"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\comprehensive-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\honest-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "honest-test-01-start.png",
+        "honest-test-02-after-login.png",
+        "honest-test-03-${item.toLowerCase()}.png"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\honest-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\live-manual-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "live-test-homepage.png",
+        "live-test-after-investigation.png",
+        "navigation-test-start.png",
+        "navigation-click-${i}.png"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\live-manual-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\navigation-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "for",
+        "if",
+        "forEach"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app/dashboard",
+        "/app/meetings",
+        "/app/action-items",
+        "/app/projects",
+        "/app/pole-capture",
+        "/app/fiber-stringing",
+        "/app/drops",
+        "/app/sow-management",
+        "/app/installations",
+        "/app/tasks",
+        "/app/daily-progress",
+        "/app/clients",
+        "/app/staff",
+        "/app/contractors",
+        "/app/suppliers",
+        "/app/analytics",
+        "/app/enhanced-kpis",
+        "/app/kpi-dashboard",
+        "/app/reports",
+        "/app/communications",
+        "/app/field",
+        "/app/onemap",
+        "/app/nokia-equipment",
+        "/app/settings",
+        "screenshots/login-failure.png",
+        "screenshots/error-${route.path.replace(/\\//g, "
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\navigation-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\navigation.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app/dashboard",
+        "/app/projects",
+        "/app/clients",
+        "/app/staff",
+        "/app/contractors",
+        "/app/suppliers",
+        "/app/pole-tracker",
+        "/app/pole-tracker/list",
+        "/app/fiber-stringing",
+        "/app/drops",
+        "/app/installations",
+        "/app/home-installs",
+        "/app/home-installs/list",
+        "/app/procurement",
+        "/app/procurement/boq",
+        "/app/procurement/rfq",
+        "/app/procurement/stock",
+        "/app/procurement/orders",
+        "/app/analytics",
+        "/app/daily-progress",
+        "/app/enhanced-kpis",
+        "/app/kpi-dashboard",
+        "/app/reports",
+        "/app/communications",
+        "/app/meetings",
+        "/app/tasks",
+        "/app/action-items",
+        "/app/sow",
+        "/app/sow/list",
+        "/app/sow-management",
+        "/app/onemap",
+        "/app/nokia-equipment",
+        "/app/field",
+        "/app/pole-capture",
+        "/app/settings"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\navigation.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\neon-error-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\neon-error-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\pole-tracker.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\pole-tracker.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\procurement-test.spec.ts": {
+      "services": [],
+      "components": [
+        "isLogin"
+      ],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "for",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app/procurement",
+        "/app/procurement/boq",
+        "/app/procurement/rfq",
+        "/app/procurement/suppliers"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\procurement-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\real-manual-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "test-results/01-login-page.png",
+        "test-results/02-credentials-filled.png",
+        "test-results/03-after-login.png",
+        "test-results/04-dashboard-full.png",
+        "test-results/05-${item.toLowerCase().replace("
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\real-manual-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\e2e\\simple-route-test.spec.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app",
+        "/app/projects",
+        "/app/pole-tracker",
+        "/app/staff",
+        "/app/contractors",
+        "/app/analytics",
+        "/app/meetings",
+        "/app/field-app",
+        "/app/installations",
+        "/app/communications"
+      ],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\e2e\\simple-route-test.spec.ts"
+    },
+    "dev-tools\\testing\\tests\\global-setup.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "globalSetup"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\global-setup.ts"
+    },
+    "dev-tools\\testing\\tests\\global-teardown.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "globalTeardown"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "dev-tools\\testing\\tests\\global-teardown.ts"
+    },
+    "scripts\\createTables.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "createTables",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "VARCHAR",
+        "ON"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "scripts\\createTables.ts"
+    },
+    "scripts\\setupNeonDatabase.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "setupDatabase",
+        "if",
+        "catch",
+        "validateSchema",
+        "seedSampleData",
+        "cleanupDatabase",
+        "for",
+        "switch"
+      ],
+      "interfaces": [
+        "if"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "scripts\\setupNeonDatabase.ts"
+    },
+    "scripts\\test-firebase-connection.js": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testConnection",
+        "catch",
+        "for",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "scripts\\test-firebase-connection.js"
+    },
+    "scripts\\test-project-creation.js": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testProjectCreation",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "scripts\\test-project-creation.js"
+    },
+    "scripts\\test-project-read.js": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testProjectRead",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "scripts\\test-project-read.js"
+    },
+    "scripts\\testNeonConnection.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testConnection",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "scripts\\testNeonConnection.ts"
+    },
+    "src\\agent-os\\agents\\BaseAgent.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "catch",
+        "if",
+        "getStatus",
+        "canHandleTask",
+        "for",
+        "switch",
+        "validateTaskParameters",
+        "reportProgress",
+        "initializeMetrics",
+        "updateTaskMetrics",
+        "startHeartbeat",
+        "generateAgentId",
+        "generateMessageId"
+      ],
+      "interfaces": [
+        "for"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\agents\\BaseAgent.ts"
+    },
+    "src\\agent-os\\agents\\DevelopmentAgent.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "if",
+        "switch",
+        "catch",
+        "for",
+        "findAngularComponent",
+        "analyzeAngularComponent",
+        "convertToReact",
+        "generateFunctionalComponent",
+        "generateClassComponent",
+        "componentDidMount",
+        "render",
+        "generateReactComponent",
+        "generateComponentTypes",
+        "generateComponentTests",
+        "findAngularService",
+        "analyzeAngularService",
+        "convertServiceToHook",
+        "generateReactQueryHook",
+        "generateBasicHook",
+        "generateFirebaseService",
+        "generateFirebaseHook",
+        "getReactComponentPath",
+        "getHookPath",
+        "getServicePath",
+        "extractClassName",
+        "extractLifecycleMethods",
+        "extractTemplate",
+        "extractStyles",
+        "generateStateHooks",
+        "convertLifecycleToEffect",
+        "generateEventHandlers",
+        "convertTemplateToJSX",
+        "generateInitialState",
+        "convertLifecycleMethods",
+        "generateClassMethods",
+        "getTestValue",
+        "generateQueryHooks",
+        "generateMutationHooks",
+        "generateHookReturns",
+        "generateHookMethods",
+        "generateHookMethodReturns",
+        "generateFirebaseOperation",
+        "getAll",
+        "getById",
+        "generateReactQueryForOperation",
+        "generateHookReturnForOperation",
+        "generateHookTests",
+        "generateFirebaseTests",
+        "generateTypesFromAnalysis",
+        "generateTestsFromAnalysis"
+      ],
+      "interfaces": [],
+      "types": [
+        "as"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\agents\\DevelopmentAgent.ts"
+    },
+    "src\\agent-os\\core\\AgentOrchestrator.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "catch",
+        "if",
+        "for",
+        "generateAgentId",
+        "generateTaskId",
+        "initializeEventHandlers",
+        "handleAgentHeartbeat"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\core\\AgentOrchestrator.ts"
+    },
+    "src\\agent-os\\core\\HealthMonitor.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "startHealthChecks",
+        "for",
+        "catch",
+        "if",
+        "calculateHealthMetrics",
+        "determineHealthStatus",
+        "getDefaultMetrics",
+        "getSystemMetrics"
+      ],
+      "interfaces": [
+        "HealthCheckConfig",
+        "HealthThresholds"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\core\\HealthMonitor.ts"
+    },
+    "src\\agent-os\\core\\MessageBroker.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "registerAgent",
+        "unregisterAgent",
+        "if",
+        "acknowledgeMessage",
+        "for",
+        "startMessageProcessing",
+        "catch",
+        "scheduleRetry",
+        "insertMessageByPriority",
+        "generateMessageId"
+      ],
+      "interfaces": [
+        "MessageQueue",
+        "QueuedMessage"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\core\\MessageBroker.ts"
+    },
+    "src\\agent-os\\core\\PerformanceTracker.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "takeSnapshot",
+        "if",
+        "startPerformanceTracking",
+        "calculateSystemMetrics",
+        "calculateResourceMetrics",
+        "for",
+        "calculateTaskMetrics",
+        "populateTaskMetrics",
+        "calculateMetricTrend",
+        "calculateAgentPerformanceScore",
+        "analyzePerformanceTrends",
+        "checkForPerformanceAlerts"
+      ],
+      "interfaces": [
+        "PerformanceSnapshot",
+        "SystemMetrics",
+        "ResourceMetrics",
+        "TaskMetrics",
+        "TaskTypeMetrics",
+        "TaskPriorityMetrics",
+        "AgentTaskMetrics",
+        "PerformanceTrend",
+        "PerformanceAlert"
+      ],
+      "types": [
+        "if",
+        "metrics"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\core\\PerformanceTracker.ts"
+    },
+    "src\\agent-os\\core\\TaskDistributor.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "if",
+        "catch",
+        "for",
+        "filter",
+        "switch",
+        "selectAgentRoundRobin",
+        "selectLeastLoadedAgent",
+        "selectBestCapabilityMatch",
+        "map",
+        "selectHighestPerformingAgent",
+        "calculateAgentLoad",
+        "canAgentHandleTask"
+      ],
+      "interfaces": [
+        "TaskAssignment",
+        "AgentLoadInfo"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\core\\TaskDistributor.ts"
+    },
+    "src\\agent-os\\dashboard\\AgentDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "if",
+        "switch"
+      ],
+      "interfaces": [
+        "DashboardState",
+        "Props"
+      ],
+      "types": [
+        "DashboardTab"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\dashboard\\AgentDashboard.tsx"
+    },
+    "src\\agent-os\\dashboard\\components\\SystemOverview.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [
+        "Props",
+        "StatusCardProps",
+        "MetricCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\dashboard\\components\\SystemOverview.tsx"
+    },
+    "src\\agent-os\\examples\\basic-usage.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "basicUsageExample",
+        "catch",
+        "dashboardExample",
+        "App",
+        "eventHandlingExample",
+        "batchTaskExample",
+        "runExamples",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\examples\\basic-usage.ts"
+    },
+    "src\\agent-os\\FibreFlowAgentOS.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "catch",
+        "getSystemStatus",
+        "getOrchestrator",
+        "setupEventHandlers",
+        "for",
+        "if",
+        "isModuleComplete",
+        "calculateAverageTaskTime",
+        "getRemainingTaskCount"
+      ],
+      "interfaces": [],
+      "types": [
+        "as"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\FibreFlowAgentOS.ts"
+    },
+    "src\\agent-os\\specifications\\fibreflow-agents.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [
+        "issues"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\specifications\\fibreflow-agents.ts"
+    },
+    "src\\agent-os\\test\\basic-test.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\test\\basic-test.ts"
+    },
+    "src\\agent-os\\types\\agent.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "AgentSpecification",
+        "AgentInstance",
+        "AgentCapability",
+        "CapabilityParameter",
+        "ParameterValidation",
+        "AgentMetrics",
+        "Task",
+        "CommunicationProtocol",
+        "AuthenticationMethod",
+        "RetryPolicy",
+        "CoordinationMessage",
+        "ResourceRequirements",
+        "AgentPermission",
+        "PermissionCondition",
+        "SystemEvent",
+        "HealthStatus",
+        "HealthMetrics",
+        "ResourceUtilization",
+        "HealthIssue",
+        "TaskExecutionContext",
+        "AllocatedResource",
+        "FibreFlowTask",
+        "PerformanceMetric"
+      ],
+      "types": [
+        "system"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\types\\agent.types.ts"
+    },
+    "src\\agent-os\\utils\\logger.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "debug",
+        "info",
+        "warn",
+        "error",
+        "fatal",
+        "setLogLevel",
+        "addOutput",
+        "removeOutput",
+        "if",
+        "log",
+        "for",
+        "write",
+        "switch"
+      ],
+      "interfaces": [
+        "LogEntry"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\agent-os\\utils\\logger.ts"
+    },
+    "src\\app\\router\\components.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Loading",
+        "ProtectedRoute",
+        "if",
+        "NotFound"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\app\\router\\components.tsx"
+    },
+    "src\\app\\router\\index.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "AppRouter"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/",
+        "/login",
+        "/test/vf-theme",
+        "/app",
+        "dashboard",
+        "firebase-test",
+        "staff-debug",
+        "staff-fix",
+        "*"
+      ],
+      "collections": [],
+      "filePath": "src\\app\\router\\index.tsx"
+    },
+    "src\\app\\router\\lazyImports.ts": {
+      "services": [],
+      "components": [
+        "Clients",
+        "ClientCreate",
+        "ClientEdit",
+        "ClientDetail",
+        "Staff",
+        "StaffCreate",
+        "StaffEdit",
+        "StaffDetail",
+        "Procurement",
+        "BOQList",
+        "RFQList",
+        "Suppliers",
+        "SOWList",
+        "Project"
+      ],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\app\\router\\lazyImports.ts"
+    },
+    "src\\app\\router\\routes\\moduleRoutes.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "clients",
+        "clients/new",
+        "clients/:id/edit",
+        "clients/:id",
+        "staff",
+        "staff/new",
+        "staff/:id/edit",
+        "staff/:id",
+        "contractors",
+        "communications",
+        "analytics",
+        "field",
+        "meetings",
+        "action-items",
+        "tasks",
+        "sow",
+        "sow/list",
+        "onemap",
+        "nokia-equipment",
+        "daily-progress",
+        "enhanced-kpis",
+        "kpi-dashboard",
+        "reports",
+        "settings"
+      ],
+      "collections": [],
+      "filePath": "src\\app\\router\\routes\\moduleRoutes.tsx"
+    },
+    "src\\app\\router\\routes\\procurementRoutes.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "procurement",
+        "boq",
+        "rfq",
+        "stock",
+        "orders",
+        "suppliers"
+      ],
+      "collections": [],
+      "filePath": "src\\app\\router\\routes\\procurementRoutes.tsx"
+    },
+    "src\\app\\router\\routes\\projectRoutes.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "projects",
+        "projects/new",
+        "projects/create",
+        "projects/:id/edit",
+        "projects/:id",
+        "projects/:projectId/tracker",
+        "pole-tracker",
+        "pole-tracker/list",
+        "pole-capture",
+        "fiber-stringing",
+        "drops",
+        "sow-management",
+        "home-installs",
+        "home-installs/list",
+        "installations"
+      ],
+      "collections": [],
+      "filePath": "src\\app\\router\\routes\\projectRoutes.tsx"
+    },
+    "src\\components\\analytics\\AnalyticsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "AnalyticsDashboard",
+        "catch",
+        "if"
+      ],
+      "interfaces": [
+        "DashboardData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\analytics\\AnalyticsDashboard.tsx"
+    },
+    "src\\components\\auth\\GoogleSignInButton.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "GoogleSignInButton"
+      ],
+      "interfaces": [
+        "GoogleSignInButtonProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\auth\\GoogleSignInButton.tsx"
+    },
+    "src\\components\\auth\\LoginForm.tsx": {
+      "services": [],
+      "components": [
+        "Login"
+      ],
+      "hooks": [],
+      "methods": [
+        "LoginForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [
+        "LoginFormProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\auth\\LoginForm.tsx"
+    },
+    "src\\components\\auth\\LoginPage.tsx": {
+      "services": [],
+      "components": [
+        "Login"
+      ],
+      "hooks": [],
+      "methods": [
+        "LoginPage",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\auth\\LoginPage.tsx"
+    },
+    "src\\components\\auth\\ProtectedRoute.tsx": {
+      "services": [],
+      "components": [
+        "Unauthorized"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProtectedRoute",
+        "if",
+        "UnauthorizedComponent",
+        "catch",
+        "AdminRoute",
+        "ManagerRoute",
+        "StaffRoute"
+      ],
+      "interfaces": [
+        "ProtectedRouteProps",
+        "UnauthorizedComponentProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\auth\\ProtectedRoute.tsx"
+    },
+    "src\\components\\clients\\ClientImport.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientImport",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\clients\\ClientImport.tsx"
+    },
+    "src\\components\\dashboard\\DashboardHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "DashboardHeader"
+      ],
+      "interfaces": [
+        "ActionButton",
+        "DashboardHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\dashboard\\DashboardHeader.tsx"
+    },
+    "src\\components\\dashboard\\StatCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StatCard",
+        "if"
+      ],
+      "interfaces": [
+        "StatCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\dashboard\\StatCard.tsx"
+    },
+    "src\\components\\dev\\FirebaseDebug.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "FirebaseDebug",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\dev\\FirebaseDebug.tsx"
+    },
+    "src\\components\\dev\\FirebaseTest.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "FirebaseTest",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\dev\\FirebaseTest.tsx"
+    },
+    "src\\components\\dev\\StaffDebug.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffDebug",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\dev\\StaffDebug.tsx"
+    },
+    "src\\components\\error\\ErrorBoundary.tsx": {
+      "services": [],
+      "components": [
+        "Wrapped"
+      ],
+      "hooks": [
+        "useErrorHandler"
+      ],
+      "methods": [
+        "constructor",
+        "getDerivedStateFromError",
+        "componentDidCatch",
+        "if",
+        "render",
+        "useErrorHandler"
+      ],
+      "interfaces": [
+        "Props",
+        "State"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\error\\ErrorBoundary.tsx"
+    },
+    "src\\components\\ErrorBoundary.tsx": {
+      "services": [],
+      "components": [
+        "Wrapped"
+      ],
+      "hooks": [],
+      "methods": [
+        "getDerivedStateFromError",
+        "componentDidCatch",
+        "render",
+        "if"
+      ],
+      "interfaces": [
+        "Props",
+        "State"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\ErrorBoundary.tsx"
+    },
+    "src\\components\\layout\\AppLayout.tsx": {
+      "services": [],
+      "components": [
+        "get"
+      ],
+      "hooks": [],
+      "methods": [
+        "AppLayout",
+        "if"
+      ],
+      "interfaces": [
+        "PageMeta"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\AppLayout.tsx"
+    },
+    "src\\components\\layout\\Header.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "userMenuRef",
+        "userToUse"
+      ],
+      "methods": [
+        "Header",
+        "catch",
+        "if"
+      ],
+      "interfaces": [
+        "HeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\Header.tsx"
+    },
+    "src\\components\\layout\\Layout.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "LayoutProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\Layout.tsx"
+    },
+    "src\\components\\layout\\sidebar\\CollapseToggle.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "CollapseToggle"
+      ],
+      "interfaces": [
+        "CollapseToggleProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\sidebar\\CollapseToggle.tsx"
+    },
+    "src\\components\\layout\\sidebar\\NavigationMenu.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "NavigationMenu",
+        "if"
+      ],
+      "interfaces": [
+        "NavigationMenuProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\sidebar\\NavigationMenu.tsx"
+    },
+    "src\\components\\layout\\sidebar\\SidebarHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SidebarHeader"
+      ],
+      "interfaces": [
+        "SidebarHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\sidebar\\SidebarHeader.tsx"
+    },
+    "src\\components\\layout\\sidebar\\types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "NavItem",
+        "NavSection",
+        "SidebarProps",
+        "SidebarStyles"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\sidebar\\types.ts"
+    },
+    "src\\components\\layout\\sidebar\\userUtils.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\sidebar\\userUtils.ts"
+    },
+    "src\\components\\layout\\Sidebar.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Sidebar"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\layout\\Sidebar.tsx"
+    },
+    "src\\components\\settings\\VFLogoUpload.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "VFLogoUpload",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [
+        "if"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\settings\\VFLogoUpload.tsx"
+    },
+    "src\\components\\sow\\EnhancedSOWDisplay.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "EnhancedSOWDisplay",
+        "if"
+      ],
+      "interfaces": [
+        "EnhancedSOWDisplayProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\sow\\EnhancedSOWDisplay.tsx"
+    },
+    "src\\components\\sow\\NeonSOWDisplay.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "NeonSOWDisplay",
+        "if"
+      ],
+      "interfaces": [
+        "NeonSOWDisplayProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\sow\\NeonSOWDisplay.tsx"
+    },
+    "src\\components\\sow\\SOWDataViewer.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SOWDataViewer",
+        "if",
+        "catch"
+      ],
+      "interfaces": [
+        "SOWDataViewerProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\sow\\SOWDataViewer.tsx"
+    },
+    "src\\components\\sow\\SOWUploadWizard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SOWUploadWizard",
+        "if",
+        "catch",
+        "switch",
+        "for"
+      ],
+      "interfaces": [
+        "SOWUploadStep",
+        "SOWUploadWizardProps"
+      ],
+      "types": [
+        "const"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\sow\\SOWUploadWizard.tsx"
+    },
+    "src\\components\\staff\\StaffImport.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffImport",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\staff\\StaffImport.tsx"
+    },
+    "src\\components\\theme\\ThemeToggle.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ThemeToggle",
+        "if"
+      ],
+      "interfaces": [
+        "ThemeToggleProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\theme\\ThemeToggle.tsx"
+    },
+    "src\\components\\ui\\LoadingSpinner.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "LoadingSpinner",
+        "InlineSpinner",
+        "LoadingOverlay"
+      ],
+      "interfaces": [
+        "LoadingSpinnerProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\ui\\LoadingSpinner.tsx"
+    },
+    "src\\components\\ui\\VFLogo.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [
+        "VFLogoProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\components\\ui\\VFLogo.tsx"
+    },
+    "src\\config\\firebase.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\config\\firebase.ts"
+    },
+    "src\\config\\themes.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getTheme",
+        "getThemeDisplayName",
+        "getThemeDescription",
+        "isDarkTheme"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\config\\themes.ts"
+    },
+    "src\\contexts\\AuthContext.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useAuth"
+      ],
+      "methods": [
+        "AuthProvider",
+        "useAuth",
+        "if"
+      ],
+      "interfaces": [
+        "AuthContextType"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\contexts\\AuthContext.tsx"
+    },
+    "src\\contexts\\ThemeContext.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useTheme",
+        "useThemeClasses"
+      ],
+      "methods": [
+        "useTheme",
+        "if",
+        "ThemeProvider",
+        "catch",
+        "useThemeClasses"
+      ],
+      "interfaces": [
+        "ThemeProviderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\contexts\\ThemeContext.tsx"
+    },
+    "src\\hooks\\neon\\useNeonBOQ.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useNeonBOQs",
+        "useNeonBOQ",
+        "useNeonBOQsByProject",
+        "useNeonBOQItems",
+        "useNeonBOQStats",
+        "useNeonExportBOQ",
+        "useCreateNeonBOQ",
+        "useUpdateNeonBOQ",
+        "useDeleteNeonBOQ",
+        "useApproveNeonBOQ",
+        "useRejectNeonBOQ",
+        "useCloneNeonBOQ",
+        "useCreateNeonBOQItem",
+        "useUpdateNeonBOQItem",
+        "useDeleteNeonBOQItem",
+        "useImportNeonBOQFromExcel"
+      ],
+      "methods": [
+        "useNeonBOQs",
+        "useNeonBOQ",
+        "useNeonBOQsByProject",
+        "useNeonBOQItems",
+        "useNeonBOQStats",
+        "useNeonExportBOQ",
+        "useCreateNeonBOQ",
+        "if",
+        "useUpdateNeonBOQ",
+        "useDeleteNeonBOQ",
+        "useApproveNeonBOQ",
+        "useRejectNeonBOQ",
+        "useCloneNeonBOQ",
+        "useCreateNeonBOQItem",
+        "useUpdateNeonBOQItem",
+        "useDeleteNeonBOQItem",
+        "useImportNeonBOQFromExcel"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\neon\\useNeonBOQ.ts"
+    },
+    "src\\hooks\\neon\\useNeonClients.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useNeonClients",
+        "useNeonClient",
+        "useNeonActiveClients",
+        "useNeonClientStats",
+        "useNeonSearchClients",
+        "useCreateNeonClient",
+        "useUpdateNeonClient",
+        "useDeleteNeonClient"
+      ],
+      "methods": [
+        "useNeonClients",
+        "useNeonClient",
+        "useNeonActiveClients",
+        "useNeonClientStats",
+        "useNeonSearchClients",
+        "useCreateNeonClient",
+        "useUpdateNeonClient",
+        "useDeleteNeonClient"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\neon\\useNeonClients.ts"
+    },
+    "src\\hooks\\neon\\useNeonProjects.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useNeonProjects",
+        "useNeonProject",
+        "useNeonProjectsByClient",
+        "useNeonProjectsByManager",
+        "useNeonProjectStats",
+        "useNeonProjectsWithDetails",
+        "useCreateNeonProject",
+        "useUpdateNeonProject",
+        "useDeleteNeonProject",
+        "useConvertFirebaseToNeon"
+      ],
+      "methods": [
+        "useNeonProjects",
+        "useNeonProject",
+        "useNeonProjectsByClient",
+        "useNeonProjectsByManager",
+        "useNeonProjectStats",
+        "useNeonProjectsWithDetails",
+        "useCreateNeonProject",
+        "useUpdateNeonProject",
+        "useDeleteNeonProject",
+        "useConvertFirebaseToNeon"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\neon\\useNeonProjects.ts"
+    },
+    "src\\hooks\\neon\\useNeonRFQ.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useNeonRFQs",
+        "useNeonRFQ",
+        "useNeonRFQsByProject",
+        "useNeonOpenRFQs",
+        "useNeonRFQItems",
+        "useNeonRFQResponses",
+        "useNeonVendorResponse",
+        "useNeonCompareRFQResponses",
+        "useNeonRFQStats",
+        "useNeonExportRFQ",
+        "useGenerateNeonRFQNumber",
+        "useCreateNeonRFQ",
+        "useUpdateNeonRFQ",
+        "useDeleteNeonRFQ",
+        "usePublishNeonRFQ",
+        "useCloseNeonRFQ",
+        "useAwardNeonRFQ",
+        "useCreateNeonRFQItem",
+        "useUpdateNeonRFQItem",
+        "useDeleteNeonRFQItem",
+        "useBulkCreateNeonRFQItems",
+        "useSubmitNeonRFQResponse",
+        "useUpdateNeonRFQResponse",
+        "useEvaluateNeonRFQResponse",
+        "useShortlistNeonRFQResponse"
+      ],
+      "methods": [
+        "useNeonRFQs",
+        "useNeonRFQ",
+        "useNeonRFQsByProject",
+        "useNeonOpenRFQs",
+        "useNeonRFQItems",
+        "useNeonRFQResponses",
+        "useNeonVendorResponse",
+        "useNeonCompareRFQResponses",
+        "useNeonRFQStats",
+        "useNeonExportRFQ",
+        "useGenerateNeonRFQNumber",
+        "useCreateNeonRFQ",
+        "if",
+        "useUpdateNeonRFQ",
+        "useDeleteNeonRFQ",
+        "usePublishNeonRFQ",
+        "useCloseNeonRFQ",
+        "useAwardNeonRFQ",
+        "useCreateNeonRFQItem",
+        "useUpdateNeonRFQItem",
+        "useDeleteNeonRFQItem",
+        "useBulkCreateNeonRFQItems",
+        "useSubmitNeonRFQResponse",
+        "useUpdateNeonRFQResponse",
+        "useEvaluateNeonRFQResponse",
+        "useShortlistNeonRFQResponse"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\neon\\useNeonRFQ.ts"
+    },
+    "src\\hooks\\neon\\useNeonSOW.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useNeonSOWs",
+        "useNeonSOW",
+        "useNeonSOWsByProject",
+        "useNeonSOWMilestones",
+        "useNeonSOWMilestoneProgress",
+        "useNeonSOWStats",
+        "useNeonExportSOW",
+        "useCreateNeonSOW",
+        "useUpdateNeonSOW",
+        "useDeleteNeonSOW",
+        "useSignNeonSOWByClient",
+        "useSignNeonSOWByCompany",
+        "useCloneNeonSOW",
+        "useAmendNeonSOW",
+        "useCreateNeonSOWMilestone",
+        "useUpdateNeonSOWMilestone",
+        "useDeleteNeonSOWMilestone",
+        "useCompleteNeonSOWMilestone",
+        "useApproveNeonSOWMilestone",
+        "useMarkNeonSOWMilestoneAsPaid",
+        "useImportNeonSOW"
+      ],
+      "methods": [
+        "useNeonSOWs",
+        "useNeonSOW",
+        "useNeonSOWsByProject",
+        "useNeonSOWMilestones",
+        "useNeonSOWMilestoneProgress",
+        "useNeonSOWStats",
+        "useNeonExportSOW",
+        "useCreateNeonSOW",
+        "if",
+        "useUpdateNeonSOW",
+        "useDeleteNeonSOW",
+        "useSignNeonSOWByClient",
+        "useSignNeonSOWByCompany",
+        "useCloneNeonSOW",
+        "useAmendNeonSOW",
+        "useCreateNeonSOWMilestone",
+        "useUpdateNeonSOWMilestone",
+        "useDeleteNeonSOWMilestone",
+        "useCompleteNeonSOWMilestone",
+        "useApproveNeonSOWMilestone",
+        "useMarkNeonSOWMilestoneAsPaid",
+        "useImportNeonSOW"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\neon\\useNeonSOW.ts"
+    },
+    "src\\hooks\\neon\\useNeonStaff.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useNeonStaff",
+        "useNeonStaffMember",
+        "useNeonProjectManagers",
+        "useNeonActiveStaff",
+        "useNeonStaffStats",
+        "useNeonSearchStaff",
+        "useNeonStaffByDepartment",
+        "useCreateNeonStaff",
+        "useUpdateNeonStaff",
+        "useDeleteNeonStaff"
+      ],
+      "methods": [
+        "useNeonStaff",
+        "useNeonStaffMember",
+        "useNeonProjectManagers",
+        "useNeonActiveStaff",
+        "useNeonStaffStats",
+        "useNeonSearchStaff",
+        "useNeonStaffByDepartment",
+        "useCreateNeonStaff",
+        "useUpdateNeonStaff",
+        "useDeleteNeonStaff"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\neon\\useNeonStaff.ts"
+    },
+    "src\\hooks\\useClients.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useClients",
+        "useActiveClients",
+        "useClient",
+        "useClientSummary",
+        "useContactHistory",
+        "useCreateClient",
+        "useUpdateClient",
+        "useDeleteClient",
+        "useUpdateClientMetrics",
+        "useAddContactHistory",
+        "useClientFilters",
+        "useClientSelection"
+      ],
+      "methods": [
+        "useClients",
+        "useActiveClients",
+        "useClient",
+        "useClientSummary",
+        "useContactHistory",
+        "useCreateClient",
+        "useUpdateClient",
+        "useDeleteClient",
+        "useUpdateClientMetrics",
+        "useAddContactHistory",
+        "useClientFilters",
+        "useClientSelection"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\useClients.ts"
+    },
+    "src\\hooks\\useNeonSOW.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useProjectSOW",
+        "useProjectSOWSummary",
+        "usePolesWithDrops",
+        "useNeonHealth",
+        "useNeonQuery",
+        "useHasSOWData"
+      ],
+      "methods": [
+        "useProjectSOW",
+        "useProjectSOWSummary",
+        "usePolesWithDrops",
+        "useNeonHealth",
+        "useHasSOWData"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\useNeonSOW.ts"
+    },
+    "src\\hooks\\useProjects.ts": {
+      "services": [],
+      "components": [
+        "useProject"
+      ],
+      "hooks": [
+        "useProjects",
+        "useProject",
+        "useProjectHierarchy",
+        "useProjectSummary",
+        "useCreateProject",
+        "useUpdateProject",
+        "useDeleteProject",
+        "useInitializeProjectPhases",
+        "useUpdateProjectProgress",
+        "useProjectSubscription",
+        "useProjectsSubscription",
+        "useProjectForm",
+        "useProjectFilters"
+      ],
+      "methods": [
+        "useProjects",
+        "useProject",
+        "useProjectHierarchy",
+        "useProjectSummary",
+        "useCreateProject",
+        "useUpdateProject",
+        "useDeleteProject",
+        "useInitializeProjectPhases",
+        "useUpdateProjectProgress",
+        "useProjectSubscription",
+        "useProjectsSubscription",
+        "useProjectForm",
+        "if",
+        "useProjectFilters"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\useProjects.ts"
+    },
+    "src\\hooks\\useSOW.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useSOWService",
+        "useProjectSOW",
+        "useProjectPoles",
+        "useProjectDrops",
+        "useProjectFibre"
+      ],
+      "methods": [
+        "useSOWService",
+        "if",
+        "useProjectSOW",
+        "useProjectPoles",
+        "useProjectDrops",
+        "useProjectFibre"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\useSOW.ts"
+    },
+    "src\\hooks\\useStaff.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useStaff",
+        "useActiveStaff",
+        "useProjectManagers",
+        "useStaffMember",
+        "useStaffSummary",
+        "useProjectAssignments",
+        "useCreateStaff",
+        "useUpdateStaff",
+        "useDeleteStaff",
+        "useAssignStaffToProject",
+        "useUpdateStaffProjectCount",
+        "useStaffFilters",
+        "useStaffSelection",
+        "useProjectManagerSelection"
+      ],
+      "methods": [
+        "useStaff",
+        "useActiveStaff",
+        "useProjectManagers",
+        "useStaffMember",
+        "useStaffSummary",
+        "useProjectAssignments",
+        "useCreateStaff",
+        "useUpdateStaff",
+        "useDeleteStaff",
+        "useAssignStaffToProject",
+        "useUpdateStaffProjectCount",
+        "useStaffFilters",
+        "useStaffSelection",
+        "useProjectManagerSelection"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\useStaff.ts"
+    },
+    "src\\hooks\\useUsers.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useUsers",
+        "useUser",
+        "useCurrentUser",
+        "useCreateUser",
+        "useUpdateUser",
+        "useUpdateProfile",
+        "useDeleteUser"
+      ],
+      "methods": [
+        "useUsers",
+        "useUser",
+        "useCurrentUser",
+        "useCreateUser",
+        "useUpdateUser",
+        "useUpdateProfile",
+        "useDeleteUser"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\hooks\\useUsers.ts"
+    },
+    "src\\lib\\neon\\connection.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "safety"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\lib\\neon\\connection.ts"
+    },
+    "src\\lib\\neon\\schema.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [
+        "ProjectAnalytics",
+        "NewProjectAnalytics",
+        "KPIMetrics",
+        "NewKPIMetrics",
+        "FinancialTransaction",
+        "NewFinancialTransaction",
+        "MaterialUsage",
+        "NewMaterialUsage",
+        "StaffPerformance",
+        "NewStaffPerformance",
+        "ReportCache",
+        "NewReportCache",
+        "AuditLog",
+        "NewAuditLog",
+        "ClientAnalytics",
+        "NewClientAnalytics"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\lib\\neon\\schema.ts"
+    },
+    "src\\lib\\neon-sql.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "createNeonClient"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\lib\\neon-sql.ts"
+    },
+    "src\\lib\\neon.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "if"
+      ],
+      "interfaces": [
+        "NeonProject",
+        "NeonClient",
+        "NeonStaff",
+        "NeonBOQ",
+        "NeonBOQItem",
+        "NeonSOW",
+        "NeonSOWMilestone",
+        "NeonRFQ",
+        "NeonRFQItem",
+        "NeonRFQResponse"
+      ],
+      "types": [
+        "QueryResult",
+        "SingleResult"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\lib\\neon.ts"
+    },
+    "src\\modules\\action-items\\ActionItemsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ActionItemsDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\action-items\\ActionItemsDashboard.tsx"
+    },
+    "src\\modules\\analytics\\AnalyticsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [
+        "DailyProgress",
+        "ProjectMetrics",
+        "TeamPerformance"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\analytics\\AnalyticsDashboard.tsx"
+    },
+    "src\\modules\\clients\\ClientCreatePage.tsx": {
+      "services": [],
+      "components": [
+        "ClientCreate"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientCreatePage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\ClientCreatePage.tsx"
+    },
+    "src\\modules\\clients\\ClientDetailPage.tsx": {
+      "services": [],
+      "components": [
+        "ClientDetail"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientDetailPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\ClientDetailPage.tsx"
+    },
+    "src\\modules\\clients\\ClientEditPage.tsx": {
+      "services": [],
+      "components": [
+        "ClientEdit"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientEditPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\ClientEditPage.tsx"
+    },
+    "src\\modules\\clients\\ClientsPage.tsx": {
+      "services": [],
+      "components": [
+        "Clients"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientsPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\ClientsPage.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientAnalytics.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientAnalytics",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientAnalytics.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientDetail.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientDetail",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientDetail.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientDetailSections.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientInfoSection",
+        "switch",
+        "ContactDetailsSection",
+        "CompanyDetailsSection",
+        "AddressDetailsSection",
+        "FinancialDetailsSection",
+        "ProjectMetricsSection",
+        "ServiceTypesSection",
+        "NotesSection"
+      ],
+      "interfaces": [
+        "SectionProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientDetailSections.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientForm.tsx": {
+      "services": [],
+      "components": [
+        "Client"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientForm.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientFormSections.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "BasicInfoSection",
+        "CompanyDetailsSection",
+        "AddressSection",
+        "FinancialSection",
+        "CommunicationSection"
+      ],
+      "interfaces": [
+        "SectionProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientFormSections.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientList",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientList.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientListHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientListHeader"
+      ],
+      "interfaces": [
+        "ClientListHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientListHeader.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientSummaryCards.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientSummaryCards"
+      ],
+      "interfaces": [
+        "ClientSummary",
+        "ClientSummaryCardsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientSummaryCards.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientTable.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientTable"
+      ],
+      "interfaces": [
+        "ClientTableProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientTable.tsx"
+    },
+    "src\\modules\\clients\\components\\ClientTableRow.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientTableRow"
+      ],
+      "interfaces": [
+        "ClientTableRowProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\components\\ClientTableRow.tsx"
+    },
+    "src\\modules\\clients\\utils\\clientUtils.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\clients\\utils\\clientUtils.ts"
+    },
+    "src\\modules\\communications\\CommunicationsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [
+        "Meeting",
+        "ActionItem",
+        "Notification"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\communications\\CommunicationsDashboard.tsx"
+    },
+    "src\\modules\\contractors\\ContractorsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [
+        "Contractor"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\contractors\\ContractorsDashboard.tsx"
+    },
+    "src\\modules\\daily-progress\\DailyProgressDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "DailyProgressDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\daily-progress\\DailyProgressDashboard.tsx"
+    },
+    "src\\modules\\dashboard\\components\\ProjectOverviewCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectOverviewCard",
+        "if"
+      ],
+      "interfaces": [
+        "Project",
+        "ProjectOverviewCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\dashboard\\components\\ProjectOverviewCard.tsx"
+    },
+    "src\\modules\\dashboard\\components\\QuickActions.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "QuickActions"
+      ],
+      "interfaces": [
+        "QuickActionItem",
+        "QuickActionsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\dashboard\\components\\QuickActions.tsx"
+    },
+    "src\\modules\\dashboard\\components\\RecentActivityFeed.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "RecentActivityFeed",
+        "if"
+      ],
+      "interfaces": [
+        "ActivityItem",
+        "RecentActivityFeedProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\dashboard\\components\\RecentActivityFeed.tsx"
+    },
+    "src\\modules\\dashboard\\components\\StatsCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StatsCard",
+        "if"
+      ],
+      "interfaces": [
+        "StatsCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\dashboard\\components\\StatsCard.tsx"
+    },
+    "src\\modules\\dashboard\\Dashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Dashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\dashboard\\Dashboard.tsx"
+    },
+    "src\\modules\\field-app\\components\\DeviceStatus.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "DeviceStatus",
+        "switch"
+      ],
+      "interfaces": [
+        "DeviceStatusProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\components\\DeviceStatus.tsx"
+    },
+    "src\\modules\\field-app\\components\\FieldAppPortal.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "FieldAppPortal"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\components\\FieldAppPortal.tsx"
+    },
+    "src\\modules\\field-app\\components\\OfflineStatus.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "OfflineStatus"
+      ],
+      "interfaces": [
+        "OfflineStatusProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\components\\OfflineStatus.tsx"
+    },
+    "src\\modules\\field-app\\components\\TaskCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TaskCard",
+        "switch"
+      ],
+      "interfaces": [
+        "TaskCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\components\\TaskCard.tsx"
+    },
+    "src\\modules\\field-app\\components\\TaskDialog.tsx": {
+      "services": [],
+      "components": [
+        "Task"
+      ],
+      "hooks": [],
+      "methods": [
+        "TaskDialog",
+        "if"
+      ],
+      "interfaces": [
+        "TaskDialogProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\components\\TaskDialog.tsx"
+    },
+    "src\\modules\\field-app\\components\\TechnicianCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TechnicianCard",
+        "switch"
+      ],
+      "interfaces": [
+        "TechnicianCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\components\\TechnicianCard.tsx"
+    },
+    "src\\modules\\field-app\\types\\field-app.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "FieldTask",
+        "OfflineData",
+        "FieldTechnician",
+        "DeviceStatus"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\field-app\\types\\field-app.types.ts"
+    },
+    "src\\modules\\installations\\HomeInstallationsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [
+        "Installation"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\installations\\HomeInstallationsDashboard.tsx"
+    },
+    "src\\modules\\installations\\models\\installation.model.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "HomeInstallation",
+        "CustomerDetails",
+        "InstallationAddress",
+        "SchedulingInfo",
+        "RescheduleRecord",
+        "TechnicalDetails",
+        "EquipmentUsed",
+        "TestingResults",
+        "InstallationDocument",
+        "BillingInfo",
+        "QualityCheck",
+        "ChecklistItem",
+        "InstallationTimeline",
+        "InstallationNote",
+        "InstallationMetrics",
+        "TechnicianPerformance"
+      ],
+      "types": [
+        "InstallationType",
+        "InstallationStatus",
+        "DocumentType"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\installations\\models\\installation.model.ts"
+    },
+    "src\\modules\\kpi-dashboard\\KPIDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "KPIDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\kpi-dashboard\\KPIDashboard.tsx"
+    },
+    "src\\modules\\kpis\\EnhancedKPIDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "EnhancedKPIDashboard",
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\kpis\\EnhancedKPIDashboard.tsx"
+    },
+    "src\\modules\\meetings\\components\\MeetingCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "MeetingCard",
+        "switch"
+      ],
+      "interfaces": [
+        "MeetingCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\components\\MeetingCard.tsx"
+    },
+    "src\\modules\\meetings\\components\\MeetingDetailModal.tsx": {
+      "services": [],
+      "components": [
+        "MeetingDetail"
+      ],
+      "hooks": [],
+      "methods": [
+        "MeetingDetailModal"
+      ],
+      "interfaces": [
+        "MeetingDetailModalProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\components\\MeetingDetailModal.tsx"
+    },
+    "src\\modules\\meetings\\components\\MeetingForm.tsx": {
+      "services": [],
+      "components": [
+        "Meeting"
+      ],
+      "hooks": [],
+      "methods": [
+        "MeetingForm"
+      ],
+      "interfaces": [
+        "MeetingFormProps"
+      ],
+      "types": [
+        "FormData"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\components\\MeetingForm.tsx"
+    },
+    "src\\modules\\meetings\\components\\MeetingsList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "MeetingsList",
+        "if"
+      ],
+      "interfaces": [
+        "MeetingsListProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\components\\MeetingsList.tsx"
+    },
+    "src\\modules\\meetings\\components\\MeetingsSidebar.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "MeetingsSidebar"
+      ],
+      "interfaces": [
+        "MeetingsSidebarProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\components\\MeetingsSidebar.tsx"
+    },
+    "src\\modules\\meetings\\components\\MeetingStatsCards.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "MeetingStatsCards"
+      ],
+      "interfaces": [
+        "MeetingStatsCardsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\components\\MeetingStatsCards.tsx"
+    },
+    "src\\modules\\meetings\\MeetingsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "MeetingsDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\MeetingsDashboard.tsx"
+    },
+    "src\\modules\\meetings\\types\\meeting.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "Meeting",
+        "ActionItem",
+        "Participant",
+        "UpcomingMeeting"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\types\\meeting.types.ts"
+    },
+    "src\\modules\\meetings\\utils\\meetingUtils.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\meetings\\utils\\meetingUtils.ts"
+    },
+    "src\\modules\\nokia-equipment\\NokiaEquipmentDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "NokiaEquipmentDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\nokia-equipment\\NokiaEquipmentDashboard.tsx"
+    },
+    "src\\modules\\onemap\\OneMapDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "OneMapDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\onemap\\OneMapDashboard.tsx"
+    },
+    "src\\modules\\procurement\\boq\\BOQListPage.tsx": {
+      "services": [],
+      "components": [
+        "BOQList"
+      ],
+      "hooks": [],
+      "methods": [
+        "BOQListPage",
+        "filter",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\boq\\BOQListPage.tsx"
+    },
+    "src\\modules\\procurement\\components\\BOQCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "BOQCard",
+        "switch"
+      ],
+      "interfaces": [
+        "BOQCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\components\\BOQCard.tsx"
+    },
+    "src\\modules\\procurement\\components\\ProcurementAnalytics.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProcurementAnalytics"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\components\\ProcurementAnalytics.tsx"
+    },
+    "src\\modules\\procurement\\components\\RFQCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "RFQCard",
+        "switch"
+      ],
+      "interfaces": [
+        "RFQCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\components\\RFQCard.tsx"
+    },
+    "src\\modules\\procurement\\hooks\\useBOQ.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useBOQs",
+        "useBOQ",
+        "useBOQTemplates",
+        "useCreateBOQ",
+        "useUpdateBOQ",
+        "useDeleteBOQ",
+        "useUpdateBOQStatus",
+        "useCloneBOQ",
+        "useCreateBOQTemplate",
+        "useExportBOQ"
+      ],
+      "methods": [
+        "useBOQs",
+        "useBOQ",
+        "useBOQTemplates",
+        "useCreateBOQ",
+        "useUpdateBOQ",
+        "useDeleteBOQ",
+        "useUpdateBOQStatus",
+        "useCloneBOQ",
+        "useCreateBOQTemplate",
+        "useExportBOQ"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\hooks\\useBOQ.ts"
+    },
+    "src\\modules\\procurement\\hooks\\useRFQ.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useRFQs",
+        "useRFQ",
+        "useRFQResponses",
+        "useCompareRFQResponses",
+        "useCreateRFQ",
+        "useUpdateRFQ",
+        "useDeleteRFQ",
+        "useUpdateRFQStatus",
+        "useSendRFQ",
+        "useSubmitRFQResponse",
+        "useSelectRFQResponse",
+        "useRFQSubscription",
+        "useRFQResponsesSubscription"
+      ],
+      "methods": [
+        "useRFQs",
+        "useRFQ",
+        "useRFQResponses",
+        "useCompareRFQResponses",
+        "useCreateRFQ",
+        "useUpdateRFQ",
+        "useDeleteRFQ",
+        "useUpdateRFQStatus",
+        "useSendRFQ",
+        "useSubmitRFQResponse",
+        "useSelectRFQResponse"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\hooks\\useRFQ.ts"
+    },
+    "src\\modules\\procurement\\ProcurementOverview.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProcurementOverview"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\ProcurementOverview.tsx"
+    },
+    "src\\modules\\procurement\\ProcurementPage.tsx": {
+      "services": [],
+      "components": [
+        "Procurement"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProcurementPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [
+        "/app/procurement",
+        "/app/procurement/stock",
+        "/app/procurement/boq",
+        "/app/procurement/rfq",
+        "/app/procurement/orders",
+        "/app/procurement/suppliers"
+      ],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\ProcurementPage.tsx"
+    },
+    "src\\modules\\procurement\\rfq\\RFQListPage.tsx": {
+      "services": [],
+      "components": [
+        "RFQList"
+      ],
+      "hooks": [],
+      "methods": [
+        "RFQListPage",
+        "filter",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\procurement\\rfq\\RFQListPage.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\DeleteConfirmDialog.tsx": {
+      "services": [],
+      "components": [
+        "DeleteConfirm"
+      ],
+      "hooks": [],
+      "methods": [
+        "DeleteConfirmDialog"
+      ],
+      "interfaces": [
+        "DeleteConfirmDialogProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\DeleteConfirmDialog.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\index.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectDetail",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\index.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\ProjectDocuments.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectDocuments",
+        "if"
+      ],
+      "interfaces": [
+        "ProjectDocumentsProps"
+      ],
+      "types": [
+        "as"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\ProjectDocuments.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\ProjectHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectHeader"
+      ],
+      "interfaces": [
+        "ProjectHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\ProjectHeader.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\ProjectOverview.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectOverview"
+      ],
+      "interfaces": [
+        "ProjectOverviewProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\ProjectOverview.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\ProjectProgress.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectProgress"
+      ],
+      "interfaces": [
+        "ProjectProgressProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\ProjectProgress.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\ProjectTabs.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectTabs"
+      ],
+      "interfaces": [
+        "ProjectTabsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\ProjectTabs.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectDetail\\ProjectTeam.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectTeam",
+        "if"
+      ],
+      "interfaces": [
+        "ProjectTeamProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectDetail\\ProjectTeam.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectForm.tsx": {
+      "services": [],
+      "components": [
+        "Project"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProjectForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "FormData"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectForm.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectList",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectList.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectListHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectListHeader"
+      ],
+      "interfaces": [
+        "ProjectListHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectListHeader.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectSummaryCards.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectSummaryCards"
+      ],
+      "interfaces": [
+        "ProjectSummary",
+        "ProjectSummaryCardsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectSummaryCards.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectTable.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectTable"
+      ],
+      "interfaces": [
+        "ProjectTableProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectTable.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\ProjectCreationWizard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectCreationWizard",
+        "if",
+        "catch",
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\ProjectCreationWizard.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\steps\\BasicInfoStep.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "BasicInfoStep",
+        "if",
+        "populateLocation",
+        "catch"
+      ],
+      "interfaces": [
+        "BasicInfoStepProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\steps\\BasicInfoStep.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\steps\\ProjectDetailsStep.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectDetailsStep"
+      ],
+      "interfaces": [
+        "ProjectDetailsStepProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\steps\\ProjectDetailsStep.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\steps\\ReviewStep.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ReviewStep"
+      ],
+      "interfaces": [
+        "ReviewStepProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\steps\\ReviewStep.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\steps\\SOWUploadStep.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SOWUploadStep"
+      ],
+      "interfaces": [
+        "SOWUploadStepProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\steps\\SOWUploadStep.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "WizardStep"
+      ],
+      "types": [
+        "FormData"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\types.ts"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\WizardHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "WizardHeader"
+      ],
+      "interfaces": [
+        "WizardHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\WizardHeader.tsx"
+    },
+    "src\\modules\\projects\\components\\ProjectWizard\\WizardNavigation.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "WizardNavigation"
+      ],
+      "interfaces": [
+        "WizardNavigationProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\ProjectWizard\\WizardNavigation.tsx"
+    },
+    "src\\modules\\projects\\components\\SOWUploadSection.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SOWUploadSection",
+        "if",
+        "switch",
+        "catch"
+      ],
+      "interfaces": [
+        "SOWFile",
+        "SOWUploadSectionProps"
+      ],
+      "types": [
+        "setFiles",
+        "using"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\components\\SOWUploadSection.tsx"
+    },
+    "src\\modules\\projects\\drops\\DropsManagement.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "DropsManagement",
+        "if",
+        "switch"
+      ],
+      "interfaces": [
+        "Drop",
+        "DropsStats"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\drops\\DropsManagement.tsx"
+    },
+    "src\\modules\\projects\\fiber-stringing\\FiberStringingDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "FiberStringingDashboard",
+        "if",
+        "switch"
+      ],
+      "interfaces": [
+        "FiberSection",
+        "FiberStats"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\fiber-stringing\\FiberStringingDashboard.tsx"
+    },
+    "src\\modules\\projects\\home-installs\\components\\HomeInstallsHeader.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "HomeInstallsHeader"
+      ],
+      "interfaces": [
+        "HomeInstallsHeaderProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\home-installs\\components\\HomeInstallsHeader.tsx"
+    },
+    "src\\modules\\projects\\home-installs\\components\\HomeInstallsTable.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "HomeInstallsTable",
+        "switch",
+        "if"
+      ],
+      "interfaces": [
+        "HomeInstallsTableProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\home-installs\\components\\HomeInstallsTable.tsx"
+    },
+    "src\\modules\\projects\\home-installs\\HomeInstallsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "HomeInstallsDashboard",
+        "catch",
+        "if"
+      ],
+      "interfaces": [
+        "InstallStats"
+      ],
+      "types": [],
+      "routes": [
+        "/app/home-installs/schedule",
+        "/app/home-installs/list",
+        "/app/home-installs/teams",
+        "/app/home-installs/map",
+        "/app/home-installs/equipment",
+        "/app/home-installs/qc",
+        "/app/home-installs/photos",
+        "/app/home-installs/tests",
+        "/app/home-installs/reports"
+      ],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\home-installs\\HomeInstallsDashboard.tsx"
+    },
+    "src\\modules\\projects\\home-installs\\HomeInstallsList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "HomeInstallsList",
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\home-installs\\HomeInstallsList.tsx"
+    },
+    "src\\modules\\projects\\home-installs\\types\\home-install.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "HomeInstall",
+        "HomeInstallFormData",
+        "HomeInstallFilter",
+        "HomeInstallStats"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\home-installs\\types\\home-install.types.ts"
+    },
+    "src\\modules\\projects\\home-installs\\utils\\homeInstallsHelpers.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "switch",
+        "exportInstallsToCSV"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\home-installs\\utils\\homeInstallsHelpers.ts"
+    },
+    "src\\modules\\projects\\hooks\\useProjects.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useProjects",
+        "useProject",
+        "useProjectsByClient",
+        "useProjectsByManager",
+        "useCreateProject",
+        "useUpdateProject",
+        "useDeleteProject",
+        "useUpdateProjectStatus",
+        "useUpdateProjectProgress",
+        "useAddTeamMember",
+        "useRemoveTeamMember"
+      ],
+      "methods": [
+        "useProjects",
+        "useProject",
+        "useProjectsByClient",
+        "useProjectsByManager",
+        "useCreateProject",
+        "useUpdateProject",
+        "useDeleteProject",
+        "useUpdateProjectStatus",
+        "useUpdateProjectProgress",
+        "useAddTeamMember",
+        "useRemoveTeamMember"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\hooks\\useProjects.ts"
+    },
+    "src\\modules\\projects\\pole-tracker\\hooks\\usePoleTracker.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "usePoleTrackers",
+        "usePoleTracker",
+        "useProjectPoles",
+        "useCreatePole",
+        "useUpdatePole",
+        "useDeletePole",
+        "usePoleStatistics",
+        "usePendingSyncPoles"
+      ],
+      "methods": [
+        "usePoleTrackers",
+        "usePoleTracker",
+        "useProjectPoles",
+        "useCreatePole",
+        "useUpdatePole",
+        "useDeletePole",
+        "usePoleStatistics",
+        "usePendingSyncPoles"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\hooks\\usePoleTracker.ts"
+    },
+    "src\\modules\\projects\\pole-tracker\\mobile\\PoleCaptureMobile.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "PoleCaptureMobile",
+        "if"
+      ],
+      "interfaces": [
+        "PoleFormData",
+        "PoleCaptureMobileProps",
+        "PhotoCapture"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\mobile\\PoleCaptureMobile.tsx"
+    },
+    "src\\modules\\projects\\pole-tracker\\PoleTrackerDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "PoleTrackerDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\PoleTrackerDashboard.tsx"
+    },
+    "src\\modules\\projects\\pole-tracker\\PoleTrackerDetail.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "PoleTrackerDetail"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\PoleTrackerDetail.tsx"
+    },
+    "src\\modules\\projects\\pole-tracker\\PoleTrackerList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "PoleTrackerList",
+        "switch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\PoleTrackerList.tsx"
+    },
+    "src\\modules\\projects\\pole-tracker\\services\\poleStatistics.ts": {
+      "services": [
+        "PoleStatisticsService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for"
+      ],
+      "interfaces": [
+        "PoleStatistics"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\services\\poleStatistics.ts"
+    },
+    "src\\modules\\projects\\pole-tracker\\services\\poleTrackerNeonService.ts": {
+      "services": [
+        "PoleTrackerNeonService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "getProjectStatistics"
+      ],
+      "interfaces": [
+        "NeonPole"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\services\\poleTrackerNeonService.ts"
+    },
+    "src\\modules\\projects\\pole-tracker\\services\\poleTrackerService.ts": {
+      "services": [
+        "PoleTrackerService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [
+        "Pole"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\services\\poleTrackerService.ts"
+    },
+    "src\\modules\\projects\\pole-tracker\\services\\poleValidation.ts": {
+      "services": [
+        "PoleValidationService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "validateDropCount"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\services\\poleValidation.ts"
+    },
+    "src\\modules\\projects\\pole-tracker\\types\\pole-tracker.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "StatusHistoryEntry",
+        "PoleTracker",
+        "PolePhoto",
+        "QualityCheck",
+        "PoleSearchFilters",
+        "PoleListItem",
+        "PoleTrackerResponse",
+        "PoleValidationResult",
+        "PoleFormData",
+        "PoleStatistics",
+        "PoleProgressMetrics",
+        "DropData"
+      ],
+      "types": [
+        "PoleData"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\pole-tracker\\types\\pole-tracker.types.ts"
+    },
+    "src\\modules\\projects\\ProjectCreatePage.tsx": {
+      "services": [],
+      "components": [
+        "ProjectCreate"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProjectCreatePage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\ProjectCreatePage.tsx"
+    },
+    "src\\modules\\projects\\ProjectEditPage.tsx": {
+      "services": [],
+      "components": [
+        "ProjectEdit"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProjectEditPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\ProjectEditPage.tsx"
+    },
+    "src\\modules\\projects\\ProjectsPage.tsx": {
+      "services": [],
+      "components": [
+        "Projects"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProjectsPage",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\ProjectsPage.tsx"
+    },
+    "src\\modules\\projects\\services\\projectService.ts": {
+      "services": [
+        "ProjectService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\services\\projectService.ts"
+    },
+    "src\\modules\\projects\\services\\sowService.ts": {
+      "services": [
+        "SOWService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "validateFile",
+        "if",
+        "map"
+      ],
+      "interfaces": [],
+      "types": [
+        "not",
+        "async"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\services\\sowService.ts"
+    },
+    "src\\modules\\projects\\sow\\services\\sowDropImport.ts": {
+      "services": [
+        "SOWDropImportService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\sow\\services\\sowDropImport.ts"
+    },
+    "src\\modules\\projects\\sow\\services\\sowFiberImport.ts": {
+      "services": [
+        "SOWFiberImportService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\sow\\services\\sowFiberImport.ts"
+    },
+    "src\\modules\\projects\\sow\\services\\sowPoleImport.ts": {
+      "services": [
+        "SOWPoleImportService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\sow\\services\\sowPoleImport.ts"
+    },
+    "src\\modules\\projects\\sow\\services\\sowTrackerService.ts": {
+      "services": [
+        "SOWTrackerService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\sow\\services\\sowTrackerService.ts"
+    },
+    "src\\modules\\projects\\sow\\SOWManagement.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SOWManagement",
+        "switch"
+      ],
+      "interfaces": [
+        "SOW",
+        "SOWMilestone",
+        "SOWApproval",
+        "SOWDocument"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\sow\\SOWManagement.tsx"
+    },
+    "src\\modules\\projects\\sow\\types\\sowImport.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "PoleImportRow",
+        "DropImportRow",
+        "FiberImportRow",
+        "SOWImportData",
+        "SOWImportSummary",
+        "ImportValidationResult",
+        "ImportProgress"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\sow\\types\\sowImport.types.ts"
+    },
+    "src\\modules\\projects\\tracker\\components\\TrackerFilters.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TrackerFilters"
+      ],
+      "interfaces": [
+        "TrackerFiltersProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\tracker\\components\\TrackerFilters.tsx"
+    },
+    "src\\modules\\projects\\tracker\\components\\TrackerStats.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TrackerStats"
+      ],
+      "interfaces": [
+        "TrackerStatsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\tracker\\components\\TrackerStats.tsx"
+    },
+    "src\\modules\\projects\\tracker\\components\\TrackerTable.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TrackerTable",
+        "switch",
+        "TrackerRowDetails"
+      ],
+      "interfaces": [
+        "TrackerTableProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\tracker\\components\\TrackerTable.tsx"
+    },
+    "src\\modules\\projects\\tracker\\hooks\\useTrackerData.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useTrackerData"
+      ],
+      "methods": [
+        "useTrackerData",
+        "calculateProgress",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\tracker\\hooks\\useTrackerData.ts"
+    },
+    "src\\modules\\projects\\tracker\\types\\tracker.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "BaseTracker",
+        "PoleTracker",
+        "DropTracker",
+        "FiberTracker",
+        "StatusHistoryEntry",
+        "QualityCheck",
+        "TrackerPhoto",
+        "ImportBatch",
+        "ImportError",
+        "PoleImportRow",
+        "DropImportRow",
+        "FiberImportRow",
+        "TrackerGridItem",
+        "TrackerFilters",
+        "TrackerStatistics"
+      ],
+      "types": [
+        "TrackerType",
+        "alias",
+        "TrackerItem"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\tracker\\types\\tracker.types.ts"
+    },
+    "src\\modules\\projects\\tracker\\UnifiedTrackerGrid.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "UnifiedTrackerGrid",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\tracker\\UnifiedTrackerGrid.tsx"
+    },
+    "src\\modules\\projects\\types\\project.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "Project",
+        "ProjectLocation",
+        "ProjectTeamMember",
+        "ProjectMilestone",
+        "ProjectRisk",
+        "ProjectUpdate",
+        "ProjectDocument",
+        "ProjectProgress",
+        "ProjectPhase",
+        "PhaseTask",
+        "ProjectBudget",
+        "BudgetCategory",
+        "SOWDocument",
+        "ProjectFilters",
+        "ProjectSortOptions",
+        "ProjectListQuery",
+        "CreateProjectRequest",
+        "UpdateProjectRequest",
+        "ProjectAnalytics"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\projects\\types\\project.types.ts"
+    },
+    "src\\modules\\reports\\ReportsDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ReportsDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\reports\\ReportsDashboard.tsx"
+    },
+    "src\\modules\\sow\\SOWDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SOWDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\sow\\SOWDashboard.tsx"
+    },
+    "src\\modules\\sow\\SOWListPage.tsx": {
+      "services": [],
+      "components": [
+        "SOWList"
+      ],
+      "hooks": [],
+      "methods": [
+        "SOWListPage",
+        "catch",
+        "if",
+        "switch"
+      ],
+      "interfaces": [
+        "SOWListItem"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\sow\\SOWListPage.tsx"
+    },
+    "src\\modules\\staff\\components\\StaffAnalytics.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffAnalytics",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\components\\StaffAnalytics.tsx"
+    },
+    "src\\modules\\staff\\components\\StaffDetail.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffDetail",
+        "catch",
+        "if",
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\components\\StaffDetail.tsx"
+    },
+    "src\\modules\\staff\\components\\StaffForm.tsx": {
+      "services": [],
+      "components": [
+        "Staff"
+      ],
+      "hooks": [],
+      "methods": [
+        "StaffForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\components\\StaffForm.tsx"
+    },
+    "src\\modules\\staff\\components\\StaffFormSections.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "PersonalInfoSection",
+        "EmploymentSection",
+        "AddressSection",
+        "EmergencyContactSection",
+        "AvailabilitySection",
+        "SkillsSection"
+      ],
+      "interfaces": [
+        "SectionProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\components\\StaffFormSections.tsx"
+    },
+    "src\\modules\\staff\\components\\StaffList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffList",
+        "catch",
+        "switch",
+        "if",
+        "setFilter"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\components\\StaffList.tsx"
+    },
+    "src\\modules\\staff\\StaffCreatePage.tsx": {
+      "services": [],
+      "components": [
+        "StaffCreate"
+      ],
+      "hooks": [],
+      "methods": [
+        "StaffCreatePage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\StaffCreatePage.tsx"
+    },
+    "src\\modules\\staff\\StaffDetailPage.tsx": {
+      "services": [],
+      "components": [
+        "StaffDetail"
+      ],
+      "hooks": [],
+      "methods": [
+        "StaffDetailPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\StaffDetailPage.tsx"
+    },
+    "src\\modules\\staff\\StaffEditPage.tsx": {
+      "services": [],
+      "components": [
+        "StaffEdit"
+      ],
+      "hooks": [],
+      "methods": [
+        "StaffEditPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\StaffEditPage.tsx"
+    },
+    "src\\modules\\staff\\StaffPage.tsx": {
+      "services": [],
+      "components": [
+        "Staff"
+      ],
+      "hooks": [],
+      "methods": [
+        "StaffPage"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\staff\\StaffPage.tsx"
+    },
+    "src\\modules\\suppliers\\components\\SupplierCard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "SupplierCard",
+        "switch"
+      ],
+      "interfaces": [
+        "SupplierCardProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\suppliers\\components\\SupplierCard.tsx"
+    },
+    "src\\modules\\suppliers\\hooks\\useSuppliers.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "useSuppliers",
+        "useSupplier",
+        "usePreferredSuppliers",
+        "useSearchSuppliers",
+        "useSuppliersByCategory",
+        "useSupplierStatistics",
+        "useCreateSupplier",
+        "useUpdateSupplier",
+        "useDeleteSupplier",
+        "useUpdateSupplierStatus",
+        "useSetPreferredSupplier",
+        "useUpdateSupplierRating",
+        "useCalculateSupplierPerformance",
+        "useUpdateSupplierCompliance",
+        "useAddSupplierDocument",
+        "useSupplierSubscription"
+      ],
+      "methods": [
+        "useSuppliers",
+        "useSupplier",
+        "usePreferredSuppliers",
+        "useSearchSuppliers",
+        "useSuppliersByCategory",
+        "useSupplierStatistics",
+        "useCreateSupplier",
+        "useUpdateSupplier",
+        "useDeleteSupplier",
+        "useUpdateSupplierStatus",
+        "useSetPreferredSupplier",
+        "useUpdateSupplierRating",
+        "useCalculateSupplierPerformance",
+        "useUpdateSupplierCompliance",
+        "useAddSupplierDocument"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\suppliers\\hooks\\useSuppliers.ts"
+    },
+    "src\\modules\\suppliers\\SuppliersPage.tsx": {
+      "services": [],
+      "components": [
+        "Suppliers"
+      ],
+      "hooks": [],
+      "methods": [
+        "SuppliersPage",
+        "filter",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\suppliers\\SuppliersPage.tsx"
+    },
+    "src\\modules\\tasks\\TasksDashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TasksDashboard"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\modules\\tasks\\TasksDashboard.tsx"
+    },
+    "src\\pages\\ClientDetail.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ClientDetail",
+        "catch",
+        "if",
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ClientDetail.tsx"
+    },
+    "src\\pages\\ClientForm\\AddressFields.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "AddressFields"
+      ],
+      "interfaces": [
+        "AddressFieldsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ClientForm\\AddressFields.tsx"
+    },
+    "src\\pages\\ClientForm\\ClientFormFields.tsx": {
+      "services": [],
+      "components": [
+        "Client"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientFormFields"
+      ],
+      "interfaces": [
+        "ClientFormFieldsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ClientForm\\ClientFormFields.tsx"
+    },
+    "src\\pages\\ClientForm\\ContactFields.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ContactFields"
+      ],
+      "interfaces": [
+        "ContactFieldsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ClientForm\\ContactFields.tsx"
+    },
+    "src\\pages\\ClientForm\\index.tsx": {
+      "services": [],
+      "components": [
+        "Client"
+      ],
+      "hooks": [],
+      "methods": [
+        "ClientForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ClientForm\\index.tsx"
+    },
+    "src\\pages\\ClientForm\\ServiceBillingFields.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ServiceBillingFields",
+        "if"
+      ],
+      "interfaces": [
+        "ServiceBillingFieldsProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ClientForm\\ServiceBillingFields.tsx"
+    },
+    "src\\pages\\Dashboard.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Dashboard",
+        "catch"
+      ],
+      "interfaces": [
+        "StatCardData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\Dashboard.tsx"
+    },
+    "src\\pages\\HomePage.tsx": {
+      "services": [],
+      "components": [
+        "Home"
+      ],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\HomePage.tsx"
+    },
+    "src\\pages\\MigrateToNeon.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "MigrateToNeon",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\MigrateToNeon.tsx"
+    },
+    "src\\pages\\ProjectDetail.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "switch",
+        "ProjectDetail",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ProjectDetail.tsx"
+    },
+    "src\\pages\\ProjectForm.tsx": {
+      "services": [],
+      "components": [
+        "Project"
+      ],
+      "hooks": [],
+      "methods": [
+        "ProjectForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ProjectForm.tsx"
+    },
+    "src\\pages\\Projects.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Projects",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\Projects.tsx"
+    },
+    "src\\pages\\ProjectsDebug.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "ProjectsDebug",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\ProjectsDebug.tsx"
+    },
+    "src\\pages\\Settings.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Settings"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\Settings.tsx"
+    },
+    "src\\pages\\StaffDataFix.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffDataFix",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\StaffDataFix.tsx"
+    },
+    "src\\pages\\StaffDetail.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffDetail",
+        "catch",
+        "if",
+        "switch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\StaffDetail.tsx"
+    },
+    "src\\pages\\StaffForm.tsx": {
+      "services": [],
+      "components": [
+        "Staff"
+      ],
+      "hooks": [],
+      "methods": [
+        "StaffForm",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\StaffForm.tsx"
+    },
+    "src\\pages\\StaffList.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "StaffList",
+        "catch",
+        "switch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\StaffList.tsx"
+    },
+    "src\\pages\\test\\VFThemeTest.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "VFThemeTest"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\pages\\test\\VFThemeTest.tsx"
+    },
+    "src\\scripts\\add-all-missing-columns.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "addAllMissingColumns",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "FROM"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\add-all-missing-columns.ts"
+    },
+    "src\\scripts\\add-missing-columns.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "addMissingColumns",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "FROM"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\add-missing-columns.ts"
+    },
+    "src\\scripts\\check-client-data-structure.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkClientDataStructure",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "is"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-client-data-structure.ts"
+    },
+    "src\\scripts\\check-client-schema.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkSchema"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-client-schema.ts"
+    },
+    "src\\scripts\\check-columns-detailed.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkColumnsDetailed",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-columns-detailed.ts"
+    },
+    "src\\scripts\\check-database-schema.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkDatabaseSchema",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-database-schema.ts"
+    },
+    "src\\scripts\\check-hein-client.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkHeinClient"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-hein-client.ts"
+    },
+    "src\\scripts\\check-staff-schema.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkStaffSchema",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-staff-schema.ts"
+    },
+    "src\\scripts\\check-tables.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "checkTables",
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "FROM"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\check-tables.ts"
+    },
+    "src\\scripts\\clean-setup-database.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "log",
+        "cleanAndSetupDatabase",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\clean-setup-database.ts"
+    },
+    "src\\scripts\\debug-delete-detailed.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "debugDeleteDetailed",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\debug-delete-detailed.ts"
+    },
+    "src\\scripts\\debug-delete.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "debugDelete",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\debug-delete.ts"
+    },
+    "src\\scripts\\debug-projects-frontend.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "function",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\debug-projects-frontend.ts"
+    },
+    "src\\scripts\\debug-staff-positions.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "debugStaffPositions",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\debug-staff-positions.ts"
+    },
+    "src\\scripts\\debug-verification.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "debugVerification"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\debug-verification.ts"
+    },
+    "src\\scripts\\fixStaffData.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "fixStaffData",
+        "if",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\fixStaffData.ts"
+    },
+    "src\\scripts\\force-create-lowercase.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "forceCreateLowercase",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "VARCHAR",
+        "ON"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\force-create-lowercase.ts"
+    },
+    "src\\scripts\\migrate-to-neon.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "log",
+        "migrateClients",
+        "for",
+        "if",
+        "catch",
+        "migrateStaff",
+        "mapClientType",
+        "mapClientStatus",
+        "mapEmploymentType",
+        "mapStaffStatus",
+        "runMigration"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\migrate-to-neon.ts"
+    },
+    "src\\scripts\\neon-node.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\neon-node.ts"
+    },
+    "src\\scripts\\reset-test-client.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "resetTestClient",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\reset-test-client.ts"
+    },
+    "src\\scripts\\setup-neon-database.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "log",
+        "setupNeonDatabase",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\setup-neon-database.ts"
+    },
+    "src\\scripts\\test-client-adapter.ts": {
+      "services": [],
+      "components": [
+        "category",
+        "payment"
+      ],
+      "hooks": [],
+      "methods": [
+        "convertNeonToFirebaseClient",
+        "testClientAdapter",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "to"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-client-adapter.ts"
+    },
+    "src\\scripts\\test-client-data.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testClientData",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-client-data.ts"
+    },
+    "src\\scripts\\test-client-service-crud.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testClientServiceCRUD",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-client-service-crud.ts"
+    },
+    "src\\scripts\\test-client-service.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testClientService",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-client-service.ts"
+    },
+    "src\\scripts\\test-client-update.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testClientUpdate",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-client-update.ts"
+    },
+    "src\\scripts\\test-csv-parsing-only.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testCSVParsingOnly",
+        "for",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-csv-parsing-only.ts"
+    },
+    "src\\scripts\\test-delete-fixed.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testDeleteFixed",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-delete-fixed.ts"
+    },
+    "src\\scripts\\test-full-crud.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testFullCRUD",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-full-crud.ts"
+    },
+    "src\\scripts\\test-geolocation.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testGeolocation",
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-geolocation.ts"
+    },
+    "src\\scripts\\test-gps-parser.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testGPSParser",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-gps-parser.ts"
+    },
+    "src\\scripts\\test-neon-direct.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testNeonAdapter",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-neon-direct.ts"
+    },
+    "src\\scripts\\test-neon-projects-display.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testNeonProjectsDisplay",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-neon-projects-display.ts"
+    },
+    "src\\scripts\\test-project-manager-filter.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testProjectManagerFilter",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-project-manager-filter.ts"
+    },
+    "src\\scripts\\test-project-managers.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testProjectManagers",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-project-managers.ts"
+    },
+    "src\\scripts\\test-staff-crud.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testStaffCRUD",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-staff-crud.ts"
+    },
+    "src\\scripts\\test-staff-import.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testStaffImport",
+        "if",
+        "catch",
+        "testCSVParsing",
+        "for"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-staff-import.ts"
+    },
+    "src\\scripts\\test-staff-neon.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "testStaffNeon",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\test-staff-neon.ts"
+    },
+    "src\\scripts\\update-projects-schema.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "updateProjectsSchema",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\scripts\\update-projects-schema.ts"
+    },
+    "src\\services\\analytics\\analyticsService.ts": {
+      "services": [
+        "AnalyticsService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getProjectOverview",
+        "if",
+        "catch",
+        "getProjectTrends",
+        "getKPIDashboard",
+        "getKPITrends",
+        "getFinancialOverview",
+        "getCashFlowTrends",
+        "getStaffPerformance",
+        "getClientAnalytics",
+        "getTopClients",
+        "getExecutiveSummary",
+        "logAction",
+        "getAuditTrail"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\analytics\\analyticsService.ts"
+    },
+    "src\\services\\auth\\authHelpers.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "mapFirebaseUser",
+        "handleAuthError",
+        "if",
+        "switch",
+        "getReadableErrorMessage"
+      ],
+      "interfaces": [
+        "for",
+        "AuthUser"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\auth\\authHelpers.ts"
+    },
+    "src\\services\\auth\\authService.ts": {
+      "services": [
+        "AuthService"
+      ],
+      "components": [],
+      "hooks": [
+        "userCredential",
+        "user"
+      ],
+      "methods": [
+        "constructor",
+        "catch",
+        "if",
+        "isAuthenticated",
+        "hasPermission",
+        "hasAnyPermission",
+        "hasAllPermissions",
+        "hasRole",
+        "hasAnyRole"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\auth\\authService.ts"
+    },
+    "src\\services\\auth\\userService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "userDoc",
+        "userSnapshot",
+        "userData",
+        "usersRef",
+        "user"
+      ],
+      "methods": [
+        "if",
+        "catch",
+        "hasPermission",
+        "hasAnyPermission",
+        "hasAllPermissions"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\auth\\userService.ts"
+    },
+    "src\\services\\client\\clientCrudService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch",
+        "forEach"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\client\\clientCrudService.ts"
+    },
+    "src\\services\\client\\clientExportService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getImportTemplate",
+        "getInstructionsData"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\client\\clientExportService.ts"
+    },
+    "src\\services\\client\\clientImportService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "catch",
+        "if",
+        "parseNumber"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\client\\clientImportService.ts"
+    },
+    "src\\services\\client\\clientNeonAdapter.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "convertNeonToFirebaseClient",
+        "catch",
+        "convertFirebaseToNeonClient",
+        "mapNeonTypeToCategory",
+        "mapCategoryToNeonType",
+        "mapNeonStatus",
+        "mapFirebaseStatusToNeon",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [
+        "to",
+        "function"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\client\\clientNeonAdapter.ts"
+    },
+    "src\\services\\client\\clientQueryService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\client\\clientQueryService.ts"
+    },
+    "src\\services\\core\\ApiClient.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "user"
+      ],
+      "methods": [
+        "constructor",
+        "setupInterceptors",
+        "if",
+        "catch",
+        "transformError",
+        "generateRequestId",
+        "setBaseURL",
+        "setTimeout",
+        "setDefaultHeader"
+      ],
+      "interfaces": [
+        "ApiError",
+        "ApiResponse"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\core\\ApiClient.ts"
+    },
+    "src\\services\\core\\BaseService.ts": {
+      "services": [
+        "BaseService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "if",
+        "mapFirebaseError",
+        "catch"
+      ],
+      "interfaces": [
+        "ServiceResponse",
+        "ServiceOptions"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\core\\BaseService.ts"
+    },
+    "src\\services\\core\\FormatterService.ts": {
+      "services": [
+        "FormatterService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "currency",
+        "catch",
+        "number",
+        "if",
+        "percentage",
+        "date",
+        "time",
+        "relativeTime",
+        "for",
+        "duration",
+        "fileSize",
+        "phone",
+        "address",
+        "fullName",
+        "initials",
+        "truncate",
+        "capitalize",
+        "camelToTitle",
+        "json",
+        "url",
+        "cleanText"
+      ],
+      "interfaces": [
+        "CurrencyOptions",
+        "DateFormatOptions",
+        "NumberFormatOptions"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\core\\FormatterService.ts"
+    },
+    "src\\services\\core\\NotificationService.ts": {
+      "services": [
+        "NotificationService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "success",
+        "error",
+        "warning",
+        "info",
+        "loading",
+        "dismiss",
+        "dismissAll",
+        "configure",
+        "getDefaultOptions",
+        "operationSuccess",
+        "operationError",
+        "validationError",
+        "networkError",
+        "permissionError"
+      ],
+      "interfaces": [
+        "NotificationOptions",
+        "NotificationConfig"
+      ],
+      "types": [
+        "NotificationType"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\core\\NotificationService.ts"
+    },
+    "src\\services\\core\\StorageService.ts": {
+      "services": [
+        "StorageService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "switch",
+        "catch",
+        "remove",
+        "clear",
+        "getSize",
+        "cleanExpired",
+        "getNamespacedKey",
+        "clearStorageByPrefix",
+        "for",
+        "calculateStorageSize"
+      ],
+      "interfaces": [
+        "StorageOptions",
+        "StorageItem"
+      ],
+      "types": [
+        "StorageType"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\core\\StorageService.ts"
+    },
+    "src\\services\\core\\ValidationService.ts": {
+      "services": [
+        "ValidationService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "sanitize",
+        "isEmpty",
+        "formatErrors"
+      ],
+      "interfaces": [],
+      "types": [
+        "ValidationResult",
+        "ValidationRule",
+        "ValidationSchema"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\core\\ValidationService.ts"
+    },
+    "src\\services\\hybrid\\hybridService.ts": {
+      "services": [
+        "HybridProjectService",
+        "HybridClientService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "getProjectAnalytics",
+        "getProjectTrends",
+        "catch",
+        "getWeekNumber",
+        "getClientAnalytics",
+        "getTopClients"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\hybrid\\hybridService.ts"
+    },
+    "src\\services\\neon\\boqService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for"
+      ],
+      "interfaces": [
+        "CreateBOQData",
+        "CreateBOQItemData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neon\\boqService.ts"
+    },
+    "src\\services\\neon\\clientService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [
+        "CreateClientData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neon\\clientService.ts"
+    },
+    "src\\services\\neon\\projectService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [
+        "CreateProjectData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neon\\projectService.ts"
+    },
+    "src\\services\\neon\\rfqService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for"
+      ],
+      "interfaces": [
+        "CreateRFQData",
+        "CreateRFQItemData",
+        "CreateRFQResponseData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neon\\rfqService.ts"
+    },
+    "src\\services\\neon\\sowService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for"
+      ],
+      "interfaces": [
+        "CreateSOWData",
+        "CreateSOWMilestoneData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neon\\sowService.ts"
+    },
+    "src\\services\\neon\\staffService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [
+        "CreateStaffData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neon\\staffService.ts"
+    },
+    "src\\services\\neonService.ts": {
+      "services": [
+        "NeonService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch"
+      ],
+      "interfaces": [
+        "NeonQueryResult"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neonService.ts"
+    },
+    "src\\services\\neonSOWService.ts": {
+      "services": [
+        "NeonSOWService"
+      ],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getTableName",
+        "initializeTables",
+        "catch",
+        "uploadPoles",
+        "for",
+        "uploadDrops",
+        "uploadFibre",
+        "updateProjectSummary",
+        "getProjectSOWData",
+        "checkHealth"
+      ],
+      "interfaces": [
+        "NeonPoleData",
+        "NeonDropData",
+        "NeonFibreData"
+      ],
+      "types": [
+        "VARCHAR"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\neonSOWService.ts"
+    },
+    "src\\services\\procurement\\boqService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getAll",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [
+        "await"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\procurement\\boqService.ts"
+    },
+    "src\\services\\procurement\\rfqService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getAll",
+        "if",
+        "catch",
+        "map"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\procurement\\rfqService.ts"
+    },
+    "src\\services\\projects\\projectCrud.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "user"
+      ],
+      "methods": [
+        "if",
+        "catch",
+        "for"
+      ],
+      "interfaces": [],
+      "types": [
+        "if"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\projects\\projectCrud.ts"
+    },
+    "src\\services\\projects\\projectPhases.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [
+        "user"
+      ],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\projects\\projectPhases.ts"
+    },
+    "src\\services\\projects\\projectRealtime.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for",
+        "unsubscribeAll"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\projects\\projectRealtime.ts"
+    },
+    "src\\services\\projects\\projectStats.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "if",
+        "calculateAverageProgress"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\projects\\projectStats.ts"
+    },
+    "src\\services\\sowDataProcessor.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "for",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\sowDataProcessor.ts"
+    },
+    "src\\services\\staff\\staffAssignmentService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\staff\\staffAssignmentService.ts"
+    },
+    "src\\services\\staff\\staffCrudService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch",
+        "forEach"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\staff\\staffCrudService.ts"
+    },
+    "src\\services\\staff\\staffExportService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getImportTemplate"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\staff\\staffExportService.ts"
+    },
+    "src\\services\\staff\\staffImportService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "for",
+        "if",
+        "catch"
+      ],
+      "interfaces": [
+        "const"
+      ],
+      "types": [
+        "status"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\staff\\staffImportService.ts"
+    },
+    "src\\services\\staff\\staffNeonAdapter.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "convertNeonToFirebaseStaff",
+        "convertFirebaseToNeonStaff",
+        "mapNeonTypeToEmploymentType",
+        "mapEmploymentTypeToNeon",
+        "mapNeonStatusToFirebase",
+        "mapFirebaseStatusToNeon",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [
+        "to",
+        "function"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\staff\\staffNeonAdapter.ts"
+    },
+    "src\\services\\staff\\staffQueryService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "forEach",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\staff\\staffQueryService.ts"
+    },
+    "src\\services\\suppliers\\productService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getAllProducts",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\suppliers\\productService.ts"
+    },
+    "src\\services\\suppliers\\supplierService.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "getAll",
+        "if",
+        "catch",
+        "getStatistics",
+        "countByCategory"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\suppliers\\supplierService.ts"
+    },
+    "src\\services\\sync\\firebaseToNeonSync.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch",
+        "stopSync",
+        "setupRealtimeSync",
+        "for",
+        "calculateOnTimeDelivery",
+        "calculateClientMetrics",
+        "calculatePaymentScore",
+        "classifyClient"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\sync\\firebaseToNeonSync.ts"
+    },
+    "src\\services\\userService.ts": {
+      "services": [
+        "UserService"
+      ],
+      "components": [],
+      "hooks": [
+        "userService"
+      ],
+      "methods": [],
+      "interfaces": [
+        "CreateUserData",
+        "UpdateUserData",
+        "UserListParams"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\services\\userService.ts"
+    },
+    "src\\shared\\components\\ui\\Button.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "ButtonProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\shared\\components\\ui\\Button.tsx"
+    },
+    "src\\shared\\components\\ui\\Card.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "Card",
+        "CardHeader",
+        "CardTitle",
+        "CardContent"
+      ],
+      "interfaces": [
+        "CardProps",
+        "CardHeaderProps",
+        "CardTitleProps",
+        "CardContentProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\shared\\components\\ui\\Card.tsx"
+    },
+    "src\\shared\\components\\ui\\Input.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "InputProps"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\shared\\components\\ui\\Input.tsx"
+    },
+    "src\\test\\setup.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "constructor",
+        "disconnect",
+        "observe",
+        "unobserve"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\test\\setup.ts"
+    },
+    "src\\test-neon.tsx": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "TestNeon",
+        "if",
+        "catch"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\test-neon.tsx"
+    },
+    "src\\types\\auth.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "User",
+        "UserProfile",
+        "UserPreferences",
+        "AuthState",
+        "LoginCredentials",
+        "RegisterCredentials",
+        "PasswordResetRequest",
+        "ChangePasswordRequest",
+        "AuthError"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\auth.types.ts"
+    },
+    "src\\types\\client.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "Client",
+        "AddressFormData",
+        "ClientFormData",
+        "ClientFilter",
+        "ClientSummary",
+        "ContactHistory",
+        "ClientDropdownOption",
+        "ClientMetrics",
+        "ClientImportRow",
+        "ClientImportResult",
+        "ClientImportError"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\client.types.ts"
+    },
+    "src\\types\\env.d.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "ImportMetaEnv",
+        "ImportMeta"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\env.d.ts"
+    },
+    "src\\types\\index.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "User",
+        "ApiResponse",
+        "PaginatedResponse",
+        "ApiError",
+        "MigrationStatus"
+      ],
+      "types": [
+        "UserRole"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\index.ts"
+    },
+    "src\\types\\procurement\\boq.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "BOQ",
+        "BOQSection",
+        "BOQItem",
+        "BOQTemplate",
+        "BOQRevision",
+        "BOQComparison",
+        "BOQFormData"
+      ],
+      "types": [
+        "BOQStatusType"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\procurement\\boq.types.ts"
+    },
+    "src\\types\\procurement\\purchase-order.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "PurchaseOrder",
+        "POItem",
+        "PODelivery",
+        "PODeliveryItem",
+        "POPayment",
+        "POApproval"
+      ],
+      "types": [
+        "POStatus",
+        "DeliveryStatus",
+        "PaymentStatus"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\procurement\\purchase-order.types.ts"
+    },
+    "src\\types\\procurement\\rfq.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "RFQ",
+        "RFQItem",
+        "RFQSupplier",
+        "Quote",
+        "QuoteItem",
+        "QuoteComparison",
+        "RFQFormData",
+        "RFQResponse"
+      ],
+      "types": [
+        "RFQStatusType",
+        "QuoteStatusType"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\procurement\\rfq.types.ts"
+    },
+    "src\\types\\procurement\\stock.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "StockItem",
+        "StockMovement",
+        "StockTake",
+        "StockTakeItem"
+      ],
+      "types": [
+        "StockStatus",
+        "MaterialCategory",
+        "UnitOfMeasure",
+        "Currency"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\procurement\\stock.types.ts"
+    },
+    "src\\types\\procurement.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [
+        "definitions"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\procurement.types.ts"
+    },
+    "src\\types\\project\\base.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "Project",
+        "TeamMember",
+        "Subcontractor",
+        "Milestone",
+        "Deliverable",
+        "ProjectDocument",
+        "ProjectMetadata",
+        "Attachment",
+        "Comment"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\base.types.ts"
+    },
+    "src\\types\\project\\form.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "ProjectFormData",
+        "ProjectFilter",
+        "ProjectSummary",
+        "ProjectSearch",
+        "ProjectExport"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\form.types.ts"
+    },
+    "src\\types\\project\\hierarchy.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "Phase",
+        "Step",
+        "Task",
+        "ChecklistItem",
+        "TaskComment",
+        "ProjectHierarchy",
+        "PhaseHierarchy",
+        "StepHierarchy"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\hierarchy.types.ts"
+    },
+    "src\\types\\project\\index.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [
+        "exports"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\index.ts"
+    },
+    "src\\types\\project\\kpi.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "ProjectKPITargets",
+        "KPITarget",
+        "KPIDataPoint",
+        "ProjectPerformance",
+        "ProjectMetrics"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\kpi.types.ts"
+    },
+    "src\\types\\project\\sow.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SOWDocument",
+        "SOWRevision",
+        "SOWApproval"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\sow.types.ts"
+    },
+    "src\\types\\project\\template.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "ProjectTemplate",
+        "PhaseTemplate",
+        "StepTemplate",
+        "TaskTemplate"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\project\\template.types.ts"
+    },
+    "src\\types\\sow\\base.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SOWData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\sow\\base.types.ts"
+    },
+    "src\\types\\sow\\calculation.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SOWCalculations",
+        "ImportSummary",
+        "ValidationResults",
+        "ImportError",
+        "DataQualityIssue",
+        "ValidationCategory",
+        "ValidationCheck",
+        "EntityValidation",
+        "EntityValidationDetail",
+        "RelationshipValidation",
+        "CapacityValidation",
+        "CostValidation",
+        "TimelineValidation",
+        "ResourceValidation",
+        "ResourceRequirement",
+        "ResourceAvailability",
+        "ResourceConflict",
+        "ComplianceCheck",
+        "ValidationIssue"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\sow\\calculation.types.ts"
+    },
+    "src\\types\\sow\\drop.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "DropData",
+        "SpeedTestResult"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\sow\\drop.types.ts"
+    },
+    "src\\types\\sow\\fibre.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "FibreData",
+        "RoutePoint",
+        "FibreTestResult",
+        "MaintenanceRecord"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\sow\\fibre.types.ts"
+    },
+    "src\\types\\sow\\pole.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "PoleData",
+        "MaintenanceSchedule"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\sow\\pole.types.ts"
+    },
+    "src\\types\\sow.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SOWData",
+        "PoleData",
+        "DropData",
+        "FibreData",
+        "SOWCalculations",
+        "KPITargets",
+        "ImportSummary",
+        "ValidationResults",
+        "ValidationError",
+        "ExcelImportResult",
+        "ImportError",
+        "SheetDetectionResult",
+        "FieldMapping",
+        "SOWImportFormData",
+        "SOWImportProgress",
+        "SOWSessionData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\sow.types.ts"
+    },
+    "src\\types\\staff.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "StaffMember",
+        "Certification",
+        "Equipment",
+        "TrainingRecord",
+        "StaffFormData",
+        "StaffFilter",
+        "StaffSummary",
+        "StaffDropdownOption",
+        "ProjectAssignment",
+        "PerformanceReview",
+        "Timesheet",
+        "StaffImportRow",
+        "StaffImportResult",
+        "StaffImportError"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\staff.types.ts"
+    },
+    "src\\types\\supplier\\base.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SupplierContract",
+        "Supplier",
+        "ContactInfo",
+        "AlternativeContact",
+        "Address",
+        "BankingInfo",
+        "ComplianceStatus",
+        "SupplierDocument",
+        "Certification",
+        "ServiceLevelAgreement",
+        "Attachment"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\supplier\\base.types.ts"
+    },
+    "src\\types\\supplier\\form.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SupplierFormData",
+        "SupplierQuickAdd",
+        "SupplierImportData",
+        "SupplierSearchFilters",
+        "SupplierBulkAction"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\supplier\\form.types.ts"
+    },
+    "src\\types\\supplier\\index.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [],
+      "types": [
+        "exports"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\supplier\\index.ts"
+    },
+    "src\\types\\supplier\\performance.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "SupplierPerformance",
+        "SupplierRating",
+        "SupplierReview",
+        "moved"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\supplier\\performance.types.ts"
+    },
+    "src\\types\\supplier\\product.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "Product",
+        "ProductSpecification",
+        "Dimensions",
+        "BulkPricing",
+        "VolumeDiscount",
+        "CategoryDiscount",
+        "PriceList",
+        "PriceListItem",
+        "ProductFormData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\supplier\\product.types.ts"
+    },
+    "src\\types\\theme.types.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [],
+      "interfaces": [
+        "ThemeColors",
+        "ThemeConfig",
+        "ThemeContextType",
+        "ThemePreference"
+      ],
+      "types": [
+        "ThemeName"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\types\\theme.types.ts"
+    },
+    "src\\utils\\api.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\api.ts"
+    },
+    "src\\utils\\cn.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "cn"
+      ],
+      "interfaces": [],
+      "types": [
+        "ClassValue"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\cn.ts"
+    },
+    "src\\utils\\dateHelpers.ts": {
+      "services": [],
+      "components": [
+        "safe"
+      ],
+      "hooks": [],
+      "methods": [
+        "safeToISOString",
+        "if",
+        "catch",
+        "safeToDate",
+        "safeFormatDate"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\dateHelpers.ts"
+    },
+    "src\\utils\\firebase-test.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "catch",
+        "getAuthState"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\firebase-test.ts"
+    },
+    "src\\utils\\geoLocation.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "if",
+        "catch",
+        "mapToSouthAfricanProvince",
+        "for",
+        "validateSouthAfricanGPS"
+      ],
+      "interfaces": [
+        "LocationData"
+      ],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\geoLocation.ts"
+    },
+    "src\\utils\\helpers.ts": {
+      "services": [],
+      "components": [],
+      "hooks": [],
+      "methods": [
+        "cn",
+        "formatDate",
+        "capitalize",
+        "truncate",
+        "isEmpty",
+        "generateId",
+        "formatFileSize",
+        "for",
+        "if"
+      ],
+      "interfaces": [],
+      "types": [
+        "ClassValue"
+      ],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\helpers.ts"
+    },
+    "src\\utils\\safeOperations.ts": {
+      "services": [],
+      "components": [
+        "safe"
+      ],
+      "hooks": [],
+      "methods": [
+        "safeCapitalize",
+        "safeFirstChar",
+        "safeFormatEnum",
+        "for",
+        "if",
+        "safeJsonStringify",
+        "safeNumber",
+        "safeBoolean",
+        "safeLength",
+        "safeTrim",
+        "safeGetInitials",
+        "safeFormatCurrency",
+        "safeFormatPercent"
+      ],
+      "interfaces": [],
+      "types": [],
+      "routes": [],
+      "collections": [],
+      "filePath": "src\\utils\\safeOperations.ts"
+    }
+  },
+  "summary": {
+    "totalFiles": 365,
+    "totalEntities": 2205,
+    "services": 22,
+    "components": 55,
+    "hooks": 223,
+    "methods": 1153,
+    "interfaces": 467,
+    "types": 82,
+    "routes": 203,
+    "collections": 0
+  }
+}

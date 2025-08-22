@@ -1,11 +1,16 @@
 import { 
   StaffFormData, 
-  Department,
   StaffLevel,
   StaffStatus,
   ContractType,
   Skill
 } from '@/types/staff.types';
+import { 
+  StaffPosition, 
+  StaffDepartment,
+  getPositionsByDepartment 
+} from '@/types/staff-hierarchy.types';
+import { useStaff } from '@/hooks/useStaff';
 
 interface SectionProps {
   formData: StaffFormData;
@@ -99,6 +104,21 @@ export function PersonalInfoSection({ formData, handleInputChange }: SectionProp
 }
 
 export function EmploymentSection({ formData, handleInputChange }: SectionProps) {
+  const { data: staffList } = useStaff(); // Get all staff for Reports To dropdown
+  
+  // Filter positions based on selected department
+  const availablePositions = formData.department 
+    ? getPositionsByDepartment(formData.department)
+    : Object.values(StaffPosition);
+
+  // Get potential managers (exclude current staff member if editing)
+  const potentialManagers = staffList?.filter(staff => 
+    staff.id !== formData.id && 
+    ['MD', 'CCSO', 'BDO', 'Head', 'Manager'].some(title => 
+      staff.position?.includes(title)
+    )
+  ) || [];
+
   return (
     <div>
       <h2 className="text-lg font-medium text-gray-900 mb-4">Employment Details</h2>
@@ -109,12 +129,14 @@ export function EmploymentSection({ formData, handleInputChange }: SectionProps)
           </label>
           <select
             value={formData.department}
-            onChange={(e) => handleInputChange('department', e.target.value as Department)}
+            onChange={(e) => handleInputChange('department', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
           >
-            {Object.values(Department).map(dept => (
+            <option value="">Select Department</option>
+            {Object.values(StaffDepartment).map(dept => (
               <option key={dept} value={dept}>
-                {dept.replace('_', ' ').charAt(0).toUpperCase() + dept.slice(1)}
+                {dept}
               </option>
             ))}
           </select>
@@ -124,14 +146,37 @@ export function EmploymentSection({ formData, handleInputChange }: SectionProps)
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Position *
           </label>
-          <input
-            type="text"
-            required
+          <select
             value={formData.position}
             onChange={(e) => handleInputChange('position', e.target.value)}
-            placeholder="e.g., Senior Technician"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+            required
+          >
+            <option value="">Select Position</option>
+            {availablePositions.map(position => (
+              <option key={position} value={position}>
+                {position}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Reports To
+          </label>
+          <select
+            value={formData.reportsTo || ''}
+            onChange={(e) => handleInputChange('reportsTo', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">No Direct Manager</option>
+            {potentialManagers.map(manager => (
+              <option key={manager.id} value={manager.id}>
+                {manager.name} - {manager.position}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
@@ -206,7 +251,7 @@ export function EmploymentSection({ formData, handleInputChange }: SectionProps)
           <input
             type="date"
             required
-            value={formData.startDate instanceof Date ? formData.startDate.toISOString().split('T')[0] : ''}
+            value={formData.startDate instanceof Date && !isNaN(formData.startDate.getTime()) ? formData.startDate.toISOString().split('T')[0] : ''}
             onChange={(e) => handleInputChange('startDate', new Date(e.target.value))}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />

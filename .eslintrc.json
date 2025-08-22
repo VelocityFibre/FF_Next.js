@@ -58,8 +58,6 @@
         "**/*.config.js",
         "**/examples/**/*",
         "**/demo/**/*",
-        "src/agent-os/**/*",
-        "src/archon/**/*"
       ],
       "rules": {
         "max-lines": "off",
@@ -88,7 +86,5 @@
     "**/setup.ts",
     "**/setupTests.ts",
     "src/test/**",
-    "src/agent-os/**",
-    "src/archon/**"
   ]
 }

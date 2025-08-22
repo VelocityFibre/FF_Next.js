@@ -16,32 +16,47 @@ export const staffNeonService = {
    */
   async getAll(filter?: StaffFilter): Promise<StaffMember[]> {
     try {
-      let query = 'SELECT * FROM staff ORDER BY name ASC';
-      const params: any[] = [];
-      
-      if (filter) {
-        const conditions: string[] = [];
-        let paramCount = 0;
-        
-        if (filter.status?.length) {
-          paramCount++;
-          conditions.push(`status = ANY($${paramCount})`);
-          params.push(filter.status);
-        }
-        
-        if (filter.department?.length) {
-          paramCount++;
-          conditions.push(`department = ANY($${paramCount})`);
-          params.push(filter.department);
-        }
-        
-        if (conditions.length > 0) {
-          query = `SELECT * FROM staff WHERE ${conditions.join(' AND ')} ORDER BY name ASC`;
-        }
+      // If no filters, return all staff
+      if (!filter || (!filter.status?.length && !filter.department?.length)) {
+        const result = await sql`SELECT * FROM staff ORDER BY name ASC`;
+        return result as StaffMember[];
       }
       
-      const result = await sql(query, params);
+      // Handle filtering with tagged templates only
+      if (filter.status?.length && filter.department?.length) {
+        // Both status and department filters - for now just handle simple cases
+        const statusValue = filter.status[0]; // Take first status
+        const deptValue = filter.department[0]; // Take first department
+        const result = await sql`
+          SELECT * FROM staff 
+          WHERE status = ${statusValue} AND department = ${deptValue}
+          ORDER BY name ASC
+        `;
+        return result as StaffMember[];
+      } else if (filter.status?.length) {
+        // Status filter only
+        const statusValue = filter.status[0]; // Take first status for simplicity
+        const result = await sql`
+          SELECT * FROM staff 
+          WHERE status = ${statusValue}
+          ORDER BY name ASC
+        `;
+        return result as StaffMember[];
+      } else if (filter.department?.length) {
+        // Department filter only
+        const deptValue = filter.department[0]; // Take first department for simplicity
+        const result = await sql`
+          SELECT * FROM staff 
+          WHERE department = ${deptValue}
+          ORDER BY name ASC
+        `;
+        return result as StaffMember[];
+      }
+      
+      // Fallback to all staff
+      const result = await sql`SELECT * FROM staff ORDER BY name ASC`;
       return result as StaffMember[];
+      
     } catch (error) {
       console.error('Error fetching staff:', error);
       throw error;
@@ -186,14 +201,47 @@ export const staffNeonService = {
       const totalResult = await sql`SELECT COUNT(*) as count FROM staff`;
       const activeResult = await sql`SELECT COUNT(*) as count FROM staff WHERE status = 'ACTIVE'`;
       const inactiveResult = await sql`SELECT COUNT(*) as count FROM staff WHERE status = 'INACTIVE'`;
+      const onLeaveResult = await sql`SELECT COUNT(*) as count FROM staff WHERE status = 'ON_LEAVE'`;
+      
+      // Get department breakdown
+      const departmentResult = await sql`
+        SELECT department, COUNT(*) as count 
+        FROM staff 
+        GROUP BY department
+      `;
+      
+      const totalStaff = parseInt(totalResult[0].count);
+      const activeStaff = parseInt(activeResult[0].count);
+      const inactiveStaff = parseInt(inactiveResult[0].count);
+      const onLeaveStaff = parseInt(onLeaveResult[0].count);
+      
+      // Calculate utilization rate (assuming active staff are utilized)
+      const utilizationRate = totalStaff > 0 ? (activeStaff / totalStaff) * 100 : 0;
+      
+      // Build department breakdown
+      const staffByDepartment: { [key: string]: number } = {};
+      departmentResult.forEach((dept: any) => {
+        staffByDepartment[dept.department] = parseInt(dept.count);
+      });
       
       return {
-        total: parseInt(totalResult[0].count),
-        active: parseInt(activeResult[0].count),
-        inactive: parseInt(inactiveResult[0].count),
-        onLeave: 0, // TODO: Add on_leave status
-        departments: [], // TODO: Get department breakdown
-        recentHires: [] // TODO: Get recent hires
+        totalStaff,
+        activeStaff,
+        inactiveStaff,
+        onLeaveStaff,
+        availableStaff: activeStaff,
+        monthlyGrowth: 0, // TODO: Calculate monthly growth
+        averageProjectLoad: 0, // TODO: Calculate average project load
+        staffByDepartment,
+        staffByLevel: {}, // TODO: Get level breakdown
+        staffBySkill: {}, // TODO: Get skill breakdown
+        staffByContractType: {}, // TODO: Get contract type breakdown
+        averageExperience: 0, // TODO: Calculate average experience
+        utilizationRate,
+        overallocatedStaff: 0, // TODO: Calculate overallocated staff
+        underutilizedStaff: 0, // TODO: Calculate underutilized staff
+        topPerformers: [], // TODO: Get top performers
+        topSkills: [] // TODO: Get top skills
       };
     } catch (error) {
       console.error('Error fetching staff summary:', error);

@@ -1,0 +1,5 @@
+Name,Email,Phone,Employee ID,Position,Department,Emergency Contact Name,Emergency Contact Phone
+John Smith,john.smith@example.com,555-0001,EMP001,Project Manager,Engineering,Jane Smith,555-0002
+Sarah Johnson,sarah.johnson@example.com,555-0003,EMP002,Developer,Engineering,Mike Johnson,555-0004
+Michael Brown,michael.brown@example.com,555-0005,EMP003,Designer,Design,Lisa Brown,555-0006
+Emily Davis,emily.davis@example.com,555-0007,EMP004,QA Tester,Quality Assurance,Tom Davis,555-0008

@@ -90,3 +90,5 @@ storybook-static
 
 # Vite
 .vitenul
+
+/generated/prisma

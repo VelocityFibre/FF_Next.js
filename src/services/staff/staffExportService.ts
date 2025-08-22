@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 import { StaffMember } from '@/types/staff.types';
-import { staffCrudService } from './staffCrudService';
+import { staffNeonService } from './staffNeonService';
 
 /**
  * Export and template generation for staff
@@ -11,7 +11,7 @@ export const staffExportService = {
    */
   async exportToExcel(staff?: StaffMember[]): Promise<Blob> {
     // Get all staff if not provided
-    const dataToExport = staff || await staffCrudService.getAll();
+    const dataToExport = staff || await staffNeonService.getAll();
     
     // Transform data for export
     const exportData = dataToExport.map(s => ({

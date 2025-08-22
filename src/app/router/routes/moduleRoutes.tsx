@@ -9,6 +9,8 @@ import {
   StaffCreatePage,
   StaffEditPage,
   StaffDetailPage,
+  StaffImport,
+  StaffSettings,
   ContractorsDashboard,
   CommunicationsDashboard,
   AnalyticsDashboard,
@@ -75,6 +77,14 @@ export const moduleRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <StaffCreatePage />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'staff/import',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <StaffImport />
       </Suspense>
     ),
   },
@@ -224,6 +234,14 @@ export const moduleRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <Settings />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'settings/staff',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <StaffSettings />
       </Suspense>
     ),
   },

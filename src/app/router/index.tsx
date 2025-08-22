@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout';
 import { FirebaseTest } from '@/components/dev/FirebaseTest';
 import { StaffDebug } from '@/components/dev/StaffDebug';
-import { StaffDataFix } from '@/pages/StaffDataFix';
+// import { StaffDataFix } from '@/pages/StaffDataFix';
 import { LoginPage } from '@/components/auth/LoginPage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Dashboard, VFThemeTest } from './lazyImports';
@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
           },
           {
             path: 'staff-fix',
-            element: <StaffDataFix />,
+            element: <div>Staff Data Fix - Removed</div>,
           },
           // Default redirect
           {

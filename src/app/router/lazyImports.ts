@@ -15,6 +15,8 @@ export const StaffPage = lazy(() => import('@/modules/staff/StaffPage').then(m =
 export const StaffCreatePage = lazy(() => import('@/modules/staff/StaffCreatePage').then(m => ({ default: m.StaffCreatePage })));
 export const StaffEditPage = lazy(() => import('@/modules/staff/StaffEditPage').then(m => ({ default: m.StaffEditPage })));
 export const StaffDetailPage = lazy(() => import('@/modules/staff/StaffDetailPage').then(m => ({ default: m.StaffDetailPage })));
+export const StaffImport = lazy(() => import('@/modules/staff/StaffImport').then(m => ({ default: m.StaffImport })));
+export const StaffSettings = lazy(() => import('@/modules/settings/StaffSettings').then(m => ({ default: m.StaffSettings })));
 
 // Procurement Module
 export const ProcurementPage = lazy(() => import('@/modules/procurement/ProcurementPage').then(m => ({ default: m.ProcurementPage })));
@@ -61,8 +63,8 @@ export const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-trac
 export const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.SOWManagement })));
 
 // Legacy pages
-export const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
-export const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));
-export const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
+// export const Projects = lazy(() => import('@/modules/projects/ProjectsPage').then(m => ({ default: m.ProjectsPage })));
+// export const ProjectForm = lazy(() => import('@/modules/projects/components/ProjectForm').then(m => ({ default: m.ProjectForm })));
+// export const ProjectDetail = lazy(() => import('@/modules/projects/components/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
 export const Settings = lazy(() => import('@/pages/Settings').then(m => ({ default: m.Settings })));
 export const ProjectCreationWizard = lazy(() => import('@/modules/projects/components/ProjectCreationWizard').then(m => ({ default: m.ProjectCreationWizard })));

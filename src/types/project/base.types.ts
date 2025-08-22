@@ -157,7 +157,7 @@ export enum ProjectStatus {
 }
 
 export enum ProjectType {
-  FIBER = 'fiber',
+  FIBRE = 'fibre',
   NETWORK = 'network',
   INFRASTRUCTURE = 'infrastructure',
   MAINTENANCE = 'maintenance',

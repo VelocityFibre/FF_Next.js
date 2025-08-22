@@ -20,7 +20,15 @@ export const staffService = {
   getProjectManagers: staffNeonService.getProjectManagers,
   getStaffSummary: staffNeonService.getStaffSummary,
   
-  // Import/Export operations
+  // Import operations
+  importFromCSV: staffImportService.importFromCSV,
+  importFromExcel: staffImportService.importFromExcel,
+  getImportTemplate: staffImportService.getImportTemplate || (() => 'Name,Email,Phone,Employee ID,Position,Department'),
+  
+  // Export operations
+  exportToExcel: staffExportService.exportToExcel,
+  
+  // Legacy structure for backward compatibility
   import: staffImportService,
   export: staffExportService,
 };

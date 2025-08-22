@@ -280,6 +280,7 @@ export interface CreateProjectRequest {
   description?: string;
   startDate: string;
   endDate: string;
+  durationMonths?: number; // Duration in months for automatic end date calculation
   location: ProjectLocation;
   clientId: string;
   projectManagerId: string;

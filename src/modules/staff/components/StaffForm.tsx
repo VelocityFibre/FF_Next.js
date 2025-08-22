@@ -8,7 +8,8 @@ import {
   StaffStatus,
   StaffLevel,
   ContractType,
-  Skill 
+  Skill,
+  Position 
 } from '@/types/staff.types';
 import {
   PersonalInfoSection,
@@ -31,15 +32,17 @@ export function StaffForm() {
   const updateMutation = useUpdateStaff();
 
   const [formData, setFormData] = useState<StaffFormData>({
+    id: id || undefined,
     name: '',
     email: '',
     phone: '',
     alternativePhone: '',
     employeeId: '',
     position: '',
-    department: Department.OPERATIONS,
+    department: '',
     level: StaffLevel.JUNIOR,
     status: StaffStatus.ACTIVE,
+    reportsTo: '',
     skills: [],
     experienceYears: 0,
     specializations: [],
@@ -68,6 +71,7 @@ export function StaffForm() {
         : new Date(staff.startDate);
 
       setFormData({
+        id: staff.id,
         name: staff.name,
         email: staff.email,
         phone: staff.phone,
@@ -77,6 +81,7 @@ export function StaffForm() {
         department: staff.department,
         level: staff.level || StaffLevel.JUNIOR,
         status: staff.status,
+        reportsTo: staff.reportsTo || '',
         skills: staff.skills || [],
         experienceYears: staff.experienceYears || 0,
         specializations: staff.specializations || [],

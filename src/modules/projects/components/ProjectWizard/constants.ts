@@ -22,16 +22,9 @@ export const wizardSteps: WizardStep[] = [
     component: 'details'
   },
   {
-    id: 'sow',
-    title: 'Statement of Work',
-    description: 'Upload SOW documents and specifications',
-    icon: FileSpreadsheet,
-    component: 'sow'
-  },
-  {
     id: 'review',
-    title: 'Review & Submit',
-    description: 'Review all information before creating',
+    title: 'Review & Create',
+    description: 'Review all information and create project',
     icon: CheckCircle,
     component: 'review'
   }
