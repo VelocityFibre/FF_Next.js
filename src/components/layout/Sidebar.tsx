@@ -383,80 +383,80 @@ export function Sidebar({ isOpen, isCollapsed, onCollapse }: SidebarProps) {
           borderRight: `1px solid ${sidebarStyles.borderColor}`
         }}
       >
-        {/* Scrollable container for entire sidebar content */}
-        <div className="flex flex-col h-full overflow-hidden">
-          {/* Logo/Brand Section - Fixed at top */}
-          <div 
-            className={`py-6 px-4 border-b flex-shrink-0 ${isCollapsed ? 'px-2' : ''}`}
-            style={{ borderColor: sidebarStyles.borderColor }}
-          >
-            <div className="flex items-center justify-center">
-              {/* Use VFLogo for all themes */}
-              <VFLogo 
-                size={isCollapsed ? 'medium' : 'large'} 
-                className="mx-auto"
-              />
+        {/* Single scrollable container for ALL sidebar content */}
+        <div className="flex flex-col h-full">
+          <nav className="flex-1 overflow-y-auto py-4 custom-scrollbar">
+            {/* Logo/Brand Section - Now scrollable */}
+            <div 
+              className={`py-6 px-4 border-b mb-4 ${isCollapsed ? 'px-2' : ''}`}
+              style={{ borderColor: sidebarStyles.borderColor }}
+            >
+              <div className="flex items-center justify-center">
+                {/* Use VFLogo for all themes */}
+                <VFLogo 
+                  size={isCollapsed ? 'medium' : 'large'} 
+                  className="mx-auto"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* User Profile Section */}
-          <div 
-            className={`p-4 border-b flex-shrink-0 ${isCollapsed ? 'px-2' : ''}`}
-            style={{ borderColor: sidebarStyles.borderColor }}
-          >
-            {isCollapsed ? (
-              /* Collapsed view - centered avatar with tooltip */
-              <div className="flex justify-center">
-                <div 
-                  className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0 relative group cursor-pointer"
-                  title={`${getUserName()} - ${getUserRole()}`}
-                >
-                  <span className="text-white font-semibold text-sm">
-                    {getUserInitials()}
-                  </span>
-                  
-                  {/* Tooltip for collapsed view */}
+            {/* User Profile Section - Now scrollable */}
+            <div 
+              className={`p-4 border-b mb-4 ${isCollapsed ? 'px-2' : ''}`}
+              style={{ borderColor: sidebarStyles.borderColor }}
+            >
+              {isCollapsed ? (
+                /* Collapsed view - centered avatar with tooltip */
+                <div className="flex justify-center">
                   <div 
-                    className="absolute left-full ml-2 px-3 py-2 text-sm rounded-md shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap"
-                    style={{
-                      backgroundColor: themeConfig.colors.surface.elevated,
-                      color: themeConfig.colors.text.primary,
-                      borderColor: themeConfig.colors.border.primary
-                    }}
+                    className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0 relative group cursor-pointer"
+                    title={`${getUserName()} - ${getUserRole()}`}
                   >
-                    <div className="font-medium">{getUserName()}</div>
-                    <div className="text-xs opacity-75">{getUserRole()}</div>
+                    <span className="text-white font-semibold text-sm">
+                      {getUserInitials()}
+                    </span>
+                    
+                    {/* Tooltip for collapsed view */}
+                    <div 
+                      className="absolute left-full ml-2 px-3 py-2 text-sm rounded-md shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap"
+                      style={{
+                        backgroundColor: themeConfig.colors.surface.elevated,
+                        color: themeConfig.colors.text.primary,
+                        borderColor: themeConfig.colors.border.primary
+                      }}
+                    >
+                      <div className="font-medium">{getUserName()}</div>
+                      <div className="text-xs opacity-75">{getUserRole()}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              /* Expanded view - full user info */
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-semibold text-sm">
-                    {getUserInitials()}
-                  </span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div 
-                    className="font-medium text-sm truncate"
-                    style={{ color: sidebarStyles.textColor }}
-                  >
-                    {getUserName()}
+              ) : (
+                /* Expanded view - full user info */
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-semibold text-sm">
+                      {getUserInitials()}
+                    </span>
                   </div>
-                  <div 
-                    className="text-xs truncate"
-                    style={{ color: sidebarStyles.textColorTertiary }}
-                  >
-                    {getUserRole()}
+                  <div className="flex-1 min-w-0">
+                    <div 
+                      className="font-medium text-sm truncate"
+                      style={{ color: sidebarStyles.textColor }}
+                    >
+                      {getUserName()}
+                    </div>
+                    <div 
+                      className="text-xs truncate"
+                      style={{ color: sidebarStyles.textColorTertiary }}
+                    >
+                      {getUserRole()}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Navigation - Scrollable */}
-          <nav className="flex-1 overflow-y-auto py-4 custom-scrollbar min-h-0">
+            {/* Navigation Menu Items - Now part of the same scroll area */}
           {visibleNavItems.map((section, idx) => (
             <div key={idx} className={`${isCollapsed ? 'px-2' : 'px-4'} mb-6`}>
               {!isCollapsed && (
