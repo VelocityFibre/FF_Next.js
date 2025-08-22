@@ -33,21 +33,35 @@ export const staffImportService = {
           // Create header mapping to normalize CSV headers to expected field names
           const headerMapping: Record<string, string> = {
             'Name': 'name',
+            'email': 'email',
             'Email': 'email', 
+            'phone': 'phone',
             'Phone': 'phone',
+            'employee id': 'employeeId',
             'Employee ID': 'employeeId',
+            'position': 'position',
             'Position': 'position',
+            'department': 'department',
             'Department': 'department',
+            'department ': 'department', // Handle trailing space
             'Primary Group': 'department', // Map Primary Group to department
+            'reports to': 'managerName',
+            'reports to ': 'managerName', // Handle trailing space
+            'Reports To': 'managerName',
             'Level': 'level',
             'Status': 'status',
             'Skills': 'skills',
+            'address': 'address',
             'Address': 'address',
+            'city': 'city',
             'City': 'city',
+            'province': 'province',
             'Province': 'province',
+            'postalCode': 'postalCode',
             'Postal Code': 'postalCode',
             'Emergency Contact Name': 'emergencyContactName',
             'Emergency Contact Phone': 'emergencyContactPhone',
+            'start date': 'startDate',
             'Start Date': 'startDate',
             'Contract Type': 'contractType',
             'Working Hours': 'workingHours',
@@ -172,6 +186,24 @@ export const staffImportService = {
           continue;
         }
         
+        // Handle manager name to UUID conversion by looking up existing staff
+        let reportsTo: string | undefined = undefined;
+        if (row.managerName && row.managerName.trim() && row.managerName.trim() !== '') {
+          const managerName = row.managerName.trim();
+          try {
+            // Look up manager by name in existing staff
+            const managerUuid = await this.findManagerByName(managerName);
+            if (managerUuid) {
+              reportsTo = managerUuid;
+              console.log(`✅ Found manager "${managerName}" for ${row.name}`);
+            } else {
+              console.log(`⚠️ Manager "${managerName}" not found for ${row.name} - will be set to no manager`);
+            }
+          } catch (error) {
+            console.log(`❌ Error looking up manager "${managerName}" for ${row.name}:`, error);
+          }
+        }
+        
         // Create staff form data that matches StaffFormData interface
         const formData = {
           name: row.name,
@@ -183,6 +215,7 @@ export const staffImportService = {
           department: row.department || 'Operations',
           employmentType: 'full_time' as any, // Default employment type
           status: 'active' as any, // Default status
+          reportsTo: reportsTo, // Will be undefined if no manager or can't resolve
           salary: 0,
           joinDate: new Date().toISOString(),
           endDate: undefined,
@@ -271,7 +304,45 @@ export const staffImportService = {
    * Get CSV template for import
    */
   getImportTemplate(): string {
-    return 'Name,Email,Phone,Employee ID,Position,Department,Emergency Contact Name,Emergency Contact Phone';
+    return 'employee id,name,email,phone,position,department,reports to,address,city,province,postalCode,start date';
+  },
+
+  /**
+   * Find manager UUID by name in existing staff
+   */
+  async findManagerByName(managerName: string): Promise<string | null> {
+    try {
+      // Import staffService dynamically to avoid circular imports
+      const { staffService } = await import('../staffService');
+      
+      // Get all existing staff to search for the manager
+      const allStaff = await staffService.getAll();
+      
+      // Find manager by exact name match (case-insensitive)
+      const manager = allStaff.find(staff => 
+        staff.name.toLowerCase().trim() === managerName.toLowerCase().trim()
+      );
+      
+      if (manager && manager.id) {
+        return manager.id;
+      }
+      
+      // Try partial name matching if exact match fails
+      const partialMatch = allStaff.find(staff => 
+        staff.name.toLowerCase().includes(managerName.toLowerCase().trim()) ||
+        managerName.toLowerCase().includes(staff.name.toLowerCase().trim())
+      );
+      
+      if (partialMatch && partialMatch.id) {
+        console.log(`📝 Using partial match: "${partialMatch.name}" for manager "${managerName}"`);
+        return partialMatch.id;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error looking up manager by name:', error);
+      return null;
+    }
   },
 
   /**

@@ -18,6 +18,9 @@ import {
   ProjectMetricsSection,
   NotesSection
 } from './ContractorDetailSections';
+import { TeamManagement } from './teams/TeamManagement';
+import { AssignmentManagement } from './assignments/AssignmentManagement';
+import { RAGDashboard } from './RAGDashboard';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
@@ -208,43 +211,17 @@ export function ContractorView() {
       )}
 
       {activeTab === 'teams' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Contractor Teams</h3>
-            <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-              Add Team
-            </button>
-          </div>
-          <p className="text-gray-500">Team management feature coming soon.</p>
-        </div>
+        <TeamManagement 
+          contractorId={contractor.id} 
+          contractorName={contractor.companyName} 
+        />
       )}
 
       {activeTab === 'assignments' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Project Assignments</h3>
-            <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-              New Assignment
-            </button>
-          </div>
-          
-          {contractor.totalProjects > 0 ? (
-            <div className="text-gray-600">
-              <p className="mb-4">
-                This contractor has {contractor.activeProjects} active assignment{contractor.activeProjects !== 1 ? 's' : ''} and{' '}
-                {contractor.completedProjects} completed project{contractor.completedProjects !== 1 ? 's' : ''}.
-              </p>
-              <button
-                onClick={() => navigate(`/app/projects?contractorId=${id}`)}
-                className="text-blue-600 hover:text-blue-700 font-medium"
-              >
-                View All Assignments →
-              </button>
-            </div>
-          ) : (
-            <p className="text-gray-500">No project assignments found for this contractor.</p>
-          )}
-        </div>
+        <AssignmentManagement 
+          contractorId={contractor.id} 
+          contractorName={contractor.companyName} 
+        />
       )}
 
       {activeTab === 'documents' && (

@@ -153,8 +153,18 @@ export const staffNeonService = {
    */
   async create(data: StaffFormData): Promise<StaffMember> {
     try {
+      // Debug logging for troubleshooting UUID errors
+      console.log('Creating staff member with data:', {
+        employeeId: data.employeeId,
+        name: data.name,
+        reportsTo: data.reportsTo,
+        reportsToType: typeof data.reportsTo,
+        reportsToValue: JSON.stringify(data.reportsTo)
+      });
+      
       // Handle empty string for UUID fields - convert to null
-      const reportsTo = data.reportsTo && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      const reportsTo = data.reportsTo && typeof data.reportsTo === 'string' && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      console.log('Processed reportsTo value:', reportsTo, 'Type:', typeof reportsTo);
       
       const result = await sql`
         INSERT INTO staff (
@@ -179,8 +189,18 @@ export const staffNeonService = {
    */
   async createOrUpdate(data: StaffFormData): Promise<StaffMember> {
     try {
+      // Debug logging for troubleshooting UUID errors
+      console.log('Creating or updating staff member with data:', {
+        employeeId: data.employeeId,
+        name: data.name,
+        reportsTo: data.reportsTo,
+        reportsToType: typeof data.reportsTo,
+        reportsToValue: JSON.stringify(data.reportsTo)
+      });
+      
       // Handle empty string for UUID fields - convert to null
-      const reportsTo = data.reportsTo && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      const reportsTo = data.reportsTo && typeof data.reportsTo === 'string' && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      console.log('Processed reportsTo value:', reportsTo, 'Type:', typeof reportsTo);
       
       // Check if staff member exists by employee_id
       const existing = await sql`
