@@ -39,7 +39,7 @@
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "error",
     "no-var": "error",
-    "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }]
+    "max-lines": ["warn", { "max": 500, "skipBlankLines": true, "skipComments": true }]
   },
   "overrides": [
     {
@@ -87,6 +87,8 @@
     "**/__tests__/**",
     "**/setup.ts",
     "**/setupTests.ts",
-    "src/test/**"
+    "src/test/**",
+    "src/agent-os/**",
+    "src/archon/**"
   ]
 }

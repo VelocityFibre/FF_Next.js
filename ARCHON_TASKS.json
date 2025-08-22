@@ -1,0 +1,570 @@
+{
+  "archon_project_id": "a82eb260-b1ca-4581-bbb5-d71719beefd3",
+  "project_name": "FibreFlow React Migration",
+  "project_path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React",
+  "last_updated": "2025-08-21T20:30:00Z",
+  "sync_status": "ready",
+  
+  "tasks": [
+    {
+      "task_id": "CRIT-001",
+      "archon_id": null,
+      "title": "Fix TypeScript Compilation Errors",
+      "description": "Multiple TypeScript errors preventing build. Check tsconfig.json, resolve type mismatches, fix import errors",
+      "status": "completed",
+      "priority": "critical",
+      "category": "bug",
+      "estimated_hours": 8,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": ["HIGH-001", "HIGH-002", "HIGH-003", "HIGH-004", "MED-004"],
+      "tags": ["typescript", "build", "blocker"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-21T17:00:00Z"
+    },
+    {
+      "task_id": "CRIT-002",
+      "archon_id": null,
+      "title": "Test Firebase Connection",
+      "description": "Verify Firebase auth and Firestore connectivity. Test login, data read/write, offline persistence",
+      "status": "completed",
+      "priority": "critical",
+      "category": "testing",
+      "estimated_hours": 4,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["firebase", "auth", "database"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-21T17:00:00Z"
+    },
+    {
+      "task_id": "CRIT-003",
+      "archon_id": null,
+      "title": "Configure ESLint for TypeScript",
+      "description": "Set up ESLint with TypeScript parser, React rules, and Prettier integration",
+      "status": "completed",
+      "priority": "critical",
+      "category": "configuration",
+      "estimated_hours": 4,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["eslint", "typescript", "code-quality"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-21T17:00:00Z"
+    },
+    {
+      "task_id": "HIGH-001",
+      "archon_id": null,
+      "title": "Implement Pole Tracker UI Components",
+      "description": "Complete pole tracker module with desktop and mobile interfaces",
+      "status": "todo",
+      "priority": "high",
+      "category": "feature",
+      "estimated_hours": 32,
+      "assigned_to": null,
+      "blockers": ["CRIT-001"],
+      "blocked_tasks": ["MED-009"],
+      "tags": ["pole-tracker", "ui", "mobile", "offline"],
+      "subtasks": [
+        {
+          "id": "HIGH-001-1",
+          "title": "Desktop pole management interface",
+          "status": "todo",
+          "estimated_hours": 8
+        },
+        {
+          "id": "HIGH-001-2",
+          "title": "Mobile capture app",
+          "status": "todo",
+          "estimated_hours": 8
+        },
+        {
+          "id": "HIGH-001-3",
+          "title": "GPS location tracking",
+          "status": "todo",
+          "estimated_hours": 4
+        },
+        {
+          "id": "HIGH-001-4",
+          "title": "Photo capture (6 required photos)",
+          "status": "todo",
+          "estimated_hours": 4
+        },
+        {
+          "id": "HIGH-001-5",
+          "title": "Offline queue system",
+          "status": "todo",
+          "estimated_hours": 4
+        },
+        {
+          "id": "HIGH-001-6",
+          "title": "Bulk import/export",
+          "status": "todo",
+          "estimated_hours": 2
+        },
+        {
+          "id": "HIGH-001-7",
+          "title": "Real-time sync",
+          "status": "todo",
+          "estimated_hours": 2
+        }
+      ],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-25T17:00:00Z"
+    },
+    {
+      "task_id": "HIGH-002",
+      "archon_id": null,
+      "title": "Complete Project Hierarchy Visualization",
+      "description": "4-level hierarchy: Project > Phase > Step > Task with interactive navigation",
+      "status": "todo",
+      "priority": "high",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": ["CRIT-001"],
+      "blocked_tasks": [],
+      "tags": ["visualization", "hierarchy", "ui"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-24T17:00:00Z"
+    },
+    {
+      "task_id": "HIGH-003",
+      "archon_id": null,
+      "title": "Build Contractors Module",
+      "description": "Complete contractor management system with profiles, assignments, and payments",
+      "status": "todo",
+      "priority": "high",
+      "category": "feature",
+      "estimated_hours": 28,
+      "assigned_to": null,
+      "blockers": ["CRIT-001"],
+      "blocked_tasks": [],
+      "tags": ["contractors", "management", "payments"],
+      "subtasks": [
+        {
+          "id": "HIGH-003-1",
+          "title": "Contractor profiles",
+          "status": "todo",
+          "estimated_hours": 6
+        },
+        {
+          "id": "HIGH-003-2",
+          "title": "Task assignments",
+          "status": "todo",
+          "estimated_hours": 6
+        },
+        {
+          "id": "HIGH-003-3",
+          "title": "Performance tracking",
+          "status": "todo",
+          "estimated_hours": 6
+        },
+        {
+          "id": "HIGH-003-4",
+          "title": "Payment processing",
+          "status": "todo",
+          "estimated_hours": 6
+        },
+        {
+          "id": "HIGH-003-5",
+          "title": "Document management",
+          "status": "todo",
+          "estimated_hours": 4
+        }
+      ],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-26T17:00:00Z"
+    },
+    {
+      "task_id": "HIGH-004",
+      "archon_id": null,
+      "title": "Implement SOW Data Management",
+      "description": "Statement of Work management with editor, approvals, and calculations",
+      "status": "todo",
+      "priority": "high",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": ["CRIT-001"],
+      "blocked_tasks": [],
+      "tags": ["sow", "approvals", "finance"],
+      "subtasks": [
+        {
+          "id": "HIGH-004-1",
+          "title": "SOW editor",
+          "status": "todo",
+          "estimated_hours": 6
+        },
+        {
+          "id": "HIGH-004-2",
+          "title": "Item management",
+          "status": "todo",
+          "estimated_hours": 4
+        },
+        {
+          "id": "HIGH-004-3",
+          "title": "Approval workflow",
+          "status": "todo",
+          "estimated_hours": 4
+        },
+        {
+          "id": "HIGH-004-4",
+          "title": "Value calculations",
+          "status": "todo",
+          "estimated_hours": 3
+        },
+        {
+          "id": "HIGH-004-5",
+          "title": "SOW templates",
+          "status": "todo",
+          "estimated_hours": 3
+        }
+      ],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-24T17:00:00Z"
+    },
+    {
+      "task_id": "HIGH-005",
+      "archon_id": null,
+      "title": "Create Core Services Setup",
+      "description": "Foundation services for the entire application",
+      "status": "todo",
+      "priority": "high",
+      "category": "infrastructure",
+      "estimated_hours": 12,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["services", "infrastructure", "utilities"],
+      "subtasks": [
+        {
+          "id": "HIGH-005-1",
+          "title": "Base service class/patterns",
+          "status": "todo",
+          "estimated_hours": 2
+        },
+        {
+          "id": "HIGH-005-2",
+          "title": "API interceptors",
+          "status": "todo",
+          "estimated_hours": 2
+        },
+        {
+          "id": "HIGH-005-3",
+          "title": "Notification service",
+          "status": "todo",
+          "estimated_hours": 2
+        },
+        {
+          "id": "HIGH-005-4",
+          "title": "Storage service (localStorage wrapper)",
+          "status": "todo",
+          "estimated_hours": 2
+        },
+        {
+          "id": "HIGH-005-5",
+          "title": "Date formatting utilities",
+          "status": "todo",
+          "estimated_hours": 2
+        },
+        {
+          "id": "HIGH-005-6",
+          "title": "Number formatting utilities (ZAR currency)",
+          "status": "todo",
+          "estimated_hours": 2
+        }
+      ],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-22T17:00:00Z"
+    },
+    {
+      "task_id": "MED-001",
+      "archon_id": null,
+      "title": "Data Display Components",
+      "description": "Complete set of data display components for tables and lists",
+      "status": "todo",
+      "priority": "medium",
+      "category": "components",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["components", "ui", "data-display"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-30T17:00:00Z"
+    },
+    {
+      "task_id": "MED-002",
+      "archon_id": null,
+      "title": "Feedback Components",
+      "description": "User feedback components including modals, tooltips, and alerts",
+      "status": "todo",
+      "priority": "medium",
+      "category": "components",
+      "estimated_hours": 16,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["components", "ui", "feedback"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-30T17:00:00Z"
+    },
+    {
+      "task_id": "MED-003",
+      "archon_id": null,
+      "title": "Form Components",
+      "description": "Advanced form components with validation and date/time pickers",
+      "status": "todo",
+      "priority": "medium",
+      "category": "components",
+      "estimated_hours": 16,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["components", "forms", "validation"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-08-30T17:00:00Z"
+    },
+    {
+      "task_id": "MED-004",
+      "archon_id": null,
+      "title": "Project Management Module",
+      "description": "Complete project management system with hierarchy and Gantt charts",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 48,
+      "assigned_to": null,
+      "blockers": ["HIGH-001", "HIGH-002"],
+      "blocked_tasks": ["MED-005", "LOW-007"],
+      "tags": ["projects", "management", "gantt"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-05T17:00:00Z"
+    },
+    {
+      "task_id": "MED-005",
+      "archon_id": null,
+      "title": "Fiber & Installations Sub-modules",
+      "description": "Fiber stringing and home installation tracking",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 28,
+      "assigned_to": null,
+      "blockers": ["MED-004"],
+      "blocked_tasks": [],
+      "tags": ["fiber", "installations", "tracking"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-07T17:00:00Z"
+    },
+    {
+      "task_id": "MED-006",
+      "archon_id": null,
+      "title": "Daily Progress KPI Module",
+      "description": "KPI tracking and reporting dashboard",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": ["LOW-001"],
+      "tags": ["kpi", "dashboard", "analytics"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-03T17:00:00Z"
+    },
+    {
+      "task_id": "MED-007",
+      "archon_id": null,
+      "title": "Analytics & Reports Module",
+      "description": "Comprehensive reporting system with export capabilities",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 28,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["analytics", "reports", "export"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-05T17:00:00Z"
+    },
+    {
+      "task_id": "MED-008",
+      "archon_id": null,
+      "title": "Communications Module",
+      "description": "Internal messaging and notification system",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["messaging", "notifications", "communication"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-04T17:00:00Z"
+    },
+    {
+      "task_id": "MED-009",
+      "archon_id": null,
+      "title": "Field App Mobile Interface",
+      "description": "Mobile-optimized interface for field workers",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 36,
+      "assigned_to": null,
+      "blockers": ["HIGH-001"],
+      "blocked_tasks": [],
+      "tags": ["mobile", "field-app", "responsive"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-08T17:00:00Z"
+    },
+    {
+      "task_id": "MED-010",
+      "archon_id": null,
+      "title": "Task Management System",
+      "description": "Task assignment and tracking system",
+      "status": "todo",
+      "priority": "medium",
+      "category": "feature",
+      "estimated_hours": 28,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["tasks", "management", "assignments"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-06T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-001",
+      "archon_id": null,
+      "title": "Enhanced KPIs Dashboard",
+      "description": "Advanced KPI visualizations and drill-downs",
+      "status": "todo",
+      "priority": "low",
+      "category": "enhancement",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": ["MED-006"],
+      "blocked_tasks": [],
+      "tags": ["kpi", "visualization", "enhancement"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-15T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-002",
+      "archon_id": null,
+      "title": "Offline Support with Service Workers",
+      "description": "Full offline capability with service workers and caching",
+      "status": "todo",
+      "priority": "low",
+      "category": "enhancement",
+      "estimated_hours": 28,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["offline", "pwa", "service-workers"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-15T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-003",
+      "archon_id": null,
+      "title": "LoadingSkeleton component",
+      "description": "Better loading states with skeleton screens",
+      "status": "todo",
+      "priority": "low",
+      "category": "components",
+      "estimated_hours": 4,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["components", "loading", "ux"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-10T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-004",
+      "archon_id": null,
+      "title": "Error logging service",
+      "description": "Centralized error tracking with Sentry or similar",
+      "status": "todo",
+      "priority": "low",
+      "category": "infrastructure",
+      "estimated_hours": 8,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["logging", "errors", "monitoring"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-10T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-005",
+      "archon_id": null,
+      "title": "OneMap Data Grid Interface",
+      "description": "Map visualization integration for geographic data",
+      "status": "todo",
+      "priority": "low",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["maps", "visualization", "geographic"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-12T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-006",
+      "archon_id": null,
+      "title": "Nokia Equipment Data Module",
+      "description": "Equipment tracking and management system",
+      "status": "todo",
+      "priority": "low",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": [],
+      "blocked_tasks": [],
+      "tags": ["equipment", "nokia", "inventory"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-12T17:00:00Z"
+    },
+    {
+      "task_id": "LOW-007",
+      "archon_id": null,
+      "title": "Gantt Chart for Projects",
+      "description": "Interactive Gantt chart for project timeline visualization",
+      "status": "todo",
+      "priority": "low",
+      "category": "feature",
+      "estimated_hours": 20,
+      "assigned_to": null,
+      "blockers": ["MED-004"],
+      "blocked_tasks": [],
+      "tags": ["gantt", "visualization", "timeline"],
+      "created_at": "2025-08-20T14:45:00Z",
+      "due_date": "2025-09-14T17:00:00Z"
+    }
+  ],
+  
+  "archon_commands": {
+    "list_all_tasks": "archon:manage_task(action='list', project_id='a82eb260-b1ca-4581-bbb5-d71719beefd3')",
+    "list_todo_tasks": "archon:manage_task(action='list', project_id='a82eb260-b1ca-4581-bbb5-d71719beefd3', filter_by='status', filter_value='todo')",
+    "list_critical_tasks": "archon:manage_task(action='list', project_id='a82eb260-b1ca-4581-bbb5-d71719beefd3', filter_by='priority', filter_value='critical')",
+    "update_task_status": "archon:manage_task(action='update', task_id='[TASK_ID]', update_fields={'status': 'in_progress'})",
+    "create_new_task": "archon:manage_task(action='create', project_id='a82eb260-b1ca-4581-bbb5-d71719beefd3', title='[TITLE]', description='[DESC]', priority='[PRIORITY]')"
+  },
+  
+  "sync_instructions": {
+    "to_import": "Use archon:import_tasks(project_id='a82eb260-b1ca-4581-bbb5-d71719beefd3', file='ARCHON_TASKS.json')",
+    "to_sync": "Run archon:sync_project(project_id='a82eb260-b1ca-4581-bbb5-d71719beefd3')",
+    "manual_create": "For each task, use the create_new_task command template above"
+  }
+}
