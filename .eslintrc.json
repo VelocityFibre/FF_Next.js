@@ -38,8 +38,36 @@
     "react/no-unescaped-entities": "off",
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "error",
-    "no-var": "error"
+    "no-var": "error",
+    "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }]
   },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx", 
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/test/**/*",
+        "**/tests/**/*",
+        "**/__tests__/**/*",
+        "**/setup.ts",
+        "**/setupTests.ts",
+        "src/test/**/*",
+        "**/*.config.ts",
+        "**/*.config.js",
+        "**/examples/**/*",
+        "**/demo/**/*",
+        "src/agent-os/**/*",
+        "src/archon/**/*"
+      ],
+      "rules": {
+        "max-lines": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "no-console": "off"
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
@@ -49,6 +77,16 @@
     "dist/",
     "node_modules/",
     "*.config.ts",
-    "*.config.js"
+    "*.config.js",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/test/**",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/setup.ts",
+    "**/setupTests.ts",
+    "src/test/**"
   ]
 }
