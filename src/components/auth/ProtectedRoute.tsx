@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+// import { Navigate, useLocation } from 'react-router-dom';
+// import { useAuth } from '@/contexts/AuthContext';
 import { Permission, UserRole } from '@/types/auth.types';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+// import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -16,13 +16,20 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({
   children,
-  requireAuth = true,
-  requiredPermissions = [],
-  requiredRoles = [],
-  requireAllPermissions = false,
-  fallbackPath = '/login',
-  unauthorizedComponent,
+  // Commented out unused props for development mode
+  // requireAuth = true,
+  // requiredPermissions = [],
+  // requiredRoles = [],
+  // requireAllPermissions = false,
+  // fallbackPath = '/login',
+  // unauthorizedComponent,
 }: ProtectedRouteProps) {
+  // DEVELOPMENT MODE: Bypass authentication for easier testing
+  // TODO: Remove this bypass when implementing RBAC
+  return <>{children}</>;
+
+  // Original auth logic (commented out for development)
+  /*
   const { 
     currentUser, 
     isAuthenticated, 
@@ -94,8 +101,12 @@ export function ProtectedRoute({
 
   // User has all required permissions and roles
   return <>{children}</>;
+  */
 }
 
+// DEVELOPMENT MODE: UnauthorizedComponent commented out
+// TODO: Restore when implementing RBAC
+/*
 interface UnauthorizedComponentProps {
   requiredRoles?: UserRole[];
   requiredPermissions?: Permission[];
@@ -200,6 +211,7 @@ function UnauthorizedComponent({
     </div>
   );
 }
+*/
 
 // Convenience components for common use cases
 export function AdminRoute({ children }: { children: ReactNode }) {

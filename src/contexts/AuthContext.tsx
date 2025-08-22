@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { authService, AuthUser } from '@/services/authService';
+// import { authService, AuthUser } from '@/services/authService'; // Commented out for development mode
+import { AuthUser } from '@/services/authService';
 import {
   User,
   UserRole,
@@ -47,16 +48,47 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  // DEVELOPMENT MODE: Mock user data for easier testing
+  // TODO: Remove this mock data when implementing RBAC
+  const mockUser: User = {
+    id: 'dev-user-123',
+    email: 'dev@fibreflow.com',
+    displayName: 'Development User',
+    photoURL: null,
+    role: UserRole.SUPER_ADMIN,
+    permissions: [
+      Permission.PROJECTS_READ,
+      Permission.PROJECTS_CREATE,
+      Permission.STAFF_READ,
+      Permission.STAFF_CREATE,
+      Permission.SYSTEM_ADMIN,
+    ],
+    isEmailVerified: true,
+    lastLoginAt: new Date(),
+    createdAt: new Date(),
+  };
+
+  const mockAuthUser: AuthUser = {
+    uid: 'dev-user-123',
+    email: 'dev@fibreflow.com',
+    displayName: 'Development User',
+    photoURL: null,
+    emailVerified: true,
+  };
+
   // Legacy state for backward compatibility
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user] = useState<AuthUser | null>(mockAuthUser);
+  const [loading] = useState(false); // No loading in dev mode
   const [error, setError] = useState<string | null>(null);
   
   // Enhanced state with RBAC
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser] = useState<User | null>(mockUser);
+  const [isAuthenticated] = useState(true); // Always authenticated in dev mode
 
   useEffect(() => {
+    // DEVELOPMENT MODE: Skip Firebase auth listeners
+    // TODO: Restore auth listeners when implementing RBAC
+    /* 
     // Set up enhanced auth state listener
     const unsubscribeEnhanced = authService.onAuthStateChangedEnhanced((user) => {
       setCurrentUser(user);
@@ -73,186 +105,129 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       unsubscribeEnhanced();
       unsubscribeLegacy();
     };
+    */
   }, []);
 
+  // DEVELOPMENT MODE: Mock auth methods
+  // TODO: Restore real auth methods when implementing RBAC
+  
   // Legacy methods for backward compatibility
-  const signInWithEmail = async (email: string, password: string) => {
-    try {
-      setError(null);
-      const user = await authService.signInWithEmail(email, password);
-      setUser(user);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to sign in';
-      setError(message);
-      throw err;
-    }
+  const signInWithEmail = async (_email: string, _password: string) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock signInWithEmail called');
   };
 
   const signInWithGoogle = async () => {
-    try {
-      setError(null);
-      const user = await authService.signInWithGoogle();
-      setUser(user);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to sign in with Google';
-      setError(message);
-      throw err;
-    }
+    // Mock implementation - do nothing in development
+    console.log('Mock signInWithGoogle called');
   };
 
-  const signUp = async (email: string, password: string, displayName?: string) => {
-    try {
-      setError(null);
-      const user = await authService.signUp(email, password, displayName);
-      setUser(user);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to create account';
-      setError(message);
-      throw err;
-    }
+  const signUp = async (_email: string, _password: string, _displayName?: string) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock signUp called');
   };
 
-  const resetPassword = async (email: string) => {
-    try {
-      setError(null);
-      await authService.resetPassword(email);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to send password reset email';
-      setError(message);
-      throw err;
-    }
+  const resetPassword = async (_email: string) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock resetPassword called');
   };
 
   // Enhanced methods with RBAC
-  const signInWithEmailEnhanced = async (credentials: LoginCredentials) => {
-    try {
-      setError(null);
-      const user = await authService.signInWithEmailEnhanced(credentials);
-      setCurrentUser(user);
-      setIsAuthenticated(true);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to sign in';
-      setError(message);
-      throw err;
-    }
+  const signInWithEmailEnhanced = async (_credentials: LoginCredentials) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock signInWithEmailEnhanced called');
   };
 
-  const signInWithGoogleEnhanced = async (rememberMe = false) => {
-    try {
-      setError(null);
-      const user = await authService.signInWithGoogleEnhanced(rememberMe);
-      setCurrentUser(user);
-      setIsAuthenticated(true);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to sign in with Google';
-      setError(message);
-      throw err;
-    }
+  const signInWithGoogleEnhanced = async (_rememberMe = false) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock signInWithGoogleEnhanced called');
   };
 
-  const registerWithEmail = async (credentials: RegisterCredentials) => {
-    try {
-      setError(null);
-      const user = await authService.registerWithEmail(credentials);
-      setCurrentUser(user);
-      setIsAuthenticated(true);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to create account';
-      setError(message);
-      throw err;
-    }
+  const registerWithEmail = async (_credentials: RegisterCredentials) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock registerWithEmail called');
   };
 
   const signOut = async () => {
-    try {
-      setError(null);
-      await authService.signOut();
-      setUser(null);
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to sign out';
-      setError(message);
-      throw err;
-    }
+    // Mock implementation - do nothing in development
+    console.log('Mock signOut called - logout disabled in development mode');
   };
 
-  const resetPasswordEnhanced = async (request: PasswordResetRequest) => {
-    try {
-      setError(null);
-      await authService.resetPasswordEnhanced(request);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to send password reset email';
-      setError(message);
-      throw err;
-    }
+  const resetPasswordEnhanced = async (_request: PasswordResetRequest) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock resetPasswordEnhanced called');
   };
 
-  const changePassword = async (request: ChangePasswordRequest) => {
-    try {
-      setError(null);
-      await authService.changePassword(request.currentPassword, request.newPassword);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to change password';
-      setError(message);
-      throw err;
-    }
+  const changePassword = async (_request: ChangePasswordRequest) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock changePassword called');
   };
 
   const sendEmailVerification = async () => {
-    try {
-      setError(null);
-      await authService.sendEmailVerification();
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to send verification email';
-      setError(message);
-      throw err;
-    }
+    // Mock implementation - do nothing in development
+    console.log('Mock sendEmailVerification called');
   };
 
-  const updateProfile = async (updates: Partial<User>) => {
-    try {
-      setError(null);
-      if (!currentUser) {
-        throw new Error('No authenticated user');
-      }
-      const profileUpdates: { displayName?: string; photoURL?: string } = {};
-      if (updates.displayName) profileUpdates.displayName = updates.displayName;
-      if (updates.photoURL) profileUpdates.photoURL = updates.photoURL;
-      await authService.updateUserProfile(profileUpdates);
-      // Refresh user data
-      await refreshUser();
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to update profile';
-      setError(message);
-      throw err;
-    }
+  const updateProfile = async (_updates: Partial<User>) => {
+    // Mock implementation - do nothing in development
+    console.log('Mock updateProfile called');
   };
 
   // Permission checking methods
-  const hasPermission = (permission: Permission): boolean => {
+  const hasPermission = (_permission: Permission): boolean => {
+    // DEVELOPMENT MODE: Always return true for easier testing
+    // TODO: Restore proper permission checking when implementing RBAC
+    return true;
+    
+    // Original logic (commented out for development)
+    /*
     if (!currentUser) return false;
     return authService.hasPermission(permission);
+    */
   };
 
-  const hasAnyPermission = (permissions: Permission[]): boolean => {
+  const hasAnyPermission = (_permissions: Permission[]): boolean => {
+    // DEVELOPMENT MODE: Always return true for easier testing
+    return true;
+    
+    // Original logic (commented out for development)
+    /*
     if (!currentUser) return false;
     return authService.hasAnyPermission(permissions);
+    */
   };
 
-  const hasAllPermissions = (permissions: Permission[]): boolean => {
+  const hasAllPermissions = (_permissions: Permission[]): boolean => {
+    // DEVELOPMENT MODE: Always return true for easier testing
+    return true;
+    
+    // Original logic (commented out for development)
+    /*
     if (!currentUser) return false;
     return authService.hasAllPermissions(permissions);
+    */
   };
 
-  const hasRole = (role: UserRole): boolean => {
+  const hasRole = (_role: UserRole): boolean => {
+    // DEVELOPMENT MODE: Always return true for easier testing
+    return true;
+    
+    // Original logic (commented out for development)
+    /*
     if (!currentUser) return false;
     return authService.hasRole(role);
+    */
   };
 
-  const hasAnyRole = (roles: UserRole[]): boolean => {
+  const hasAnyRole = (_roles: UserRole[]): boolean => {
+    // DEVELOPMENT MODE: Always return true for easier testing
+    return true;
+    
+    // Original logic (commented out for development)
+    /*
     if (!currentUser) return false;
     return currentUser?.role ? roles.includes(currentUser.role as UserRole) : false;
+    */
   };
 
   // Utility methods
@@ -261,15 +236,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshUser = async () => {
-    try {
-      const user = await authService.getCurrentUserEnhanced();
-      setCurrentUser(user);
-      setIsAuthenticated(!!user);
-    } catch (err) {
-      console.error('Error refreshing user:', err);
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-    }
+    // Mock implementation - do nothing in development
+    console.log('Mock refreshUser called');
   };
 
   const value: AuthContextType = {

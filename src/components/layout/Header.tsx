@@ -46,7 +46,7 @@ export function Header({
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { signOut, currentUser } = useAuth();
+  const { currentUser } = useAuth();
   // Theme hook ready for future use
   // const { theme } = useTheme();
 
@@ -66,12 +66,20 @@ export function Header({
   }, []);
 
   const handleLogout = async () => {
+    // DEVELOPMENT MODE: Disable logout functionality
+    // TODO: Restore logout when implementing RBAC
+    console.log('Logout disabled in development mode');
+    return;
+    
+    // Original logout logic (commented out for development)
+    /*
     try {
       await signOut();
       navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
     }
+    */
   };
 
   const getUserInitials = () => {
