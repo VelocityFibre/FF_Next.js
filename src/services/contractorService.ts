@@ -7,6 +7,7 @@ import { contractorCrudService } from './contractor/contractorCrudService';
 import { contractorTeamService } from './contractor/contractorTeamService';
 import { contractorDocumentService } from './contractor/contractorDocumentService';
 import { ragScoringService } from './contractor/ragScoringService';
+import { contractorOnboardingService } from './contractor/contractorOnboardingService';
 
 export const contractorService = {
   // Core CRUD operations
@@ -20,6 +21,9 @@ export const contractorService = {
   
   // RAG scoring system
   rag: ragScoringService,
+  
+  // Onboarding workflow
+  onboarding: contractorOnboardingService,
 };
 
 // Export individual services for direct access if needed
@@ -28,6 +32,7 @@ export {
   contractorTeamService,
   contractorDocumentService,
   ragScoringService,
+  contractorOnboardingService,
 };
 
 // Re-export types for convenience

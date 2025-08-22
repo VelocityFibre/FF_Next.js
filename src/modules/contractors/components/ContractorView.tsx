@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Edit, Trash2, Building2, Users, FileText, Briefcase } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Building2, Users, FileText, Briefcase, CheckCircle } from 'lucide-react';
 import { contractorService } from '@/services/contractorService';
 import { Contractor } from '@/types/contractor.types';
 import {
@@ -21,6 +21,8 @@ import {
 import { TeamManagement } from './teams/TeamManagement';
 import { AssignmentManagement } from './assignments/AssignmentManagement';
 import { RAGDashboard } from './RAGDashboard';
+import { OnboardingWorkflow } from './onboarding/OnboardingWorkflow';
+import { DocumentManagement } from './documents/DocumentManagement';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
@@ -31,7 +33,7 @@ export function ContractorView() {
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'teams' | 'assignments' | 'documents'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'teams' | 'assignments' | 'documents' | 'onboarding'>('overview');
 
   useEffect(() => {
     const loadContractor = async () => {
@@ -186,6 +188,17 @@ export function ContractorView() {
               <FileText className="w-4 h-4" />
               Documents ({contractor.documentsExpiring})
             </button>
+            <button
+              onClick={() => setActiveTab('onboarding')}
+              className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${
+                activeTab === 'onboarding'
+                  ? 'text-blue-600 border-b-2 border-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <CheckCircle className="w-4 h-4" />
+              Onboarding
+            </button>
           </div>
         </div>
       </div>
@@ -206,6 +219,7 @@ export function ContractorView() {
           <div className="space-y-6">
             <PerformanceMetricsSection contractor={contractor} />
             <ProjectMetricsSection contractor={contractor} />
+            <RAGDashboard contractorId={contractor.id} />
           </div>
         </div>
       )}
@@ -225,24 +239,17 @@ export function ContractorView() {
       )}
 
       {activeTab === 'documents' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Documents</h3>
-            <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-              Upload Document
-            </button>
-          </div>
-          
-          {contractor.documentsExpiring > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-              <p className="text-yellow-800">
-                ⚠️ {contractor.documentsExpiring} document{contractor.documentsExpiring !== 1 ? 's' : ''} expiring soon
-              </p>
-            </div>
-          )}
-          
-          <p className="text-gray-500">Document management feature coming soon.</p>
-        </div>
+        <DocumentManagement 
+          contractorId={contractor.id} 
+          contractorName={contractor.companyName} 
+        />
+      )}
+
+      {activeTab === 'onboarding' && (
+        <OnboardingWorkflow 
+          contractorId={contractor.id} 
+          contractorName={contractor.companyName} 
+        />
       )}
 
       {/* Delete Confirmation Modal */}

@@ -85,8 +85,11 @@ export const staffImportService = {
             
             // Debug logging for first few rows
             if (i <= 3) {
+              console.log(`Row ${i + 1} headers:`, headers);
+              console.log(`Row ${i + 1} values:`, values);
               console.log(`Row ${i + 1} data:`, row);
-              console.log(`Row ${i + 1} name field:`, row.name);
+              console.log(`Row ${i + 1} employeeId:`, row.employeeId);
+              console.log(`Row ${i + 1} name:`, row.name);
             }
             
             rows.push(row as StaffImportRow);
@@ -155,7 +158,7 @@ export const staffImportService = {
         }
         
         // Validate required fields
-        if (!row.name) {
+        if (!row.name || row.name.trim() === '') {
           console.log(`Row ${rowNumber} missing name. Row object:`, row);
           errors.push({
             row: rowNumber,
@@ -166,7 +169,7 @@ export const staffImportService = {
           continue;
         }
         
-        if (!row.email) {
+        if (!row.email || row.email.trim() === '') {
           errors.push({
             row: rowNumber,
             field: 'email',
@@ -176,11 +179,24 @@ export const staffImportService = {
           continue;
         }
         
-        if (!row.phone) {
+        if (!row.phone || row.phone.trim() === '') {
           errors.push({
             row: rowNumber,
             field: 'phone',
             message: 'Phone is required'
+          });
+          failed++;
+          continue;
+        }
+        
+        // Validate employeeId - this is critical for database constraint
+        if (!row.employeeId || row.employeeId.trim() === '') {
+          console.log(`Row ${rowNumber} missing employeeId. Available fields:`, Object.keys(row));
+          console.log(`Row ${rowNumber} full data:`, row);
+          errors.push({
+            row: rowNumber,
+            field: 'employeeId',
+            message: 'Employee ID is required'
           });
           failed++;
           continue;
@@ -204,13 +220,20 @@ export const staffImportService = {
           }
         }
         
+        // Ensure employeeId is never null or empty
+        const employeeId = row.employeeId && row.employeeId.trim() !== '' 
+          ? row.employeeId.trim() 
+          : `AUTO_${Date.now()}_${i}`;
+        
+        console.log(`Processing row ${rowNumber}: employeeId="${employeeId}", name="${row.name}"`);
+        
         // Create staff form data that matches StaffFormData interface
         const formData = {
-          name: row.name,
-          email: row.email,
-          phone: row.phone || '',
+          name: row.name.trim(),
+          email: row.email.trim(),
+          phone: row.phone.trim() || '',
           alternatePhone: row.alternativePhone || '',
-          employeeId: row.employeeId || `EMP${Date.now()}-${i}`,
+          employeeId: employeeId,
           position: row.position || 'Staff',
           department: row.department || 'Operations',
           employmentType: 'full_time' as any, // Default employment type

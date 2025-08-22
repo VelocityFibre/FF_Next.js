@@ -162,6 +162,19 @@ export const staffNeonService = {
         reportsToValue: JSON.stringify(data.reportsTo)
       });
       
+      // Validate required fields before database call
+      if (!data.employeeId || data.employeeId.trim() === '') {
+        throw new Error('Employee ID is required and cannot be empty');
+      }
+      
+      if (!data.name || data.name.trim() === '') {
+        throw new Error('Name is required and cannot be empty');
+      }
+      
+      if (!data.email || data.email.trim() === '') {
+        throw new Error('Email is required and cannot be empty');
+      }
+      
       // Handle empty string for UUID fields - convert to null
       const reportsTo = data.reportsTo && typeof data.reportsTo === 'string' && data.reportsTo.trim() !== '' ? data.reportsTo : null;
       console.log('Processed reportsTo value:', reportsTo, 'Type:', typeof reportsTo);
@@ -197,6 +210,19 @@ export const staffNeonService = {
         reportsToType: typeof data.reportsTo,
         reportsToValue: JSON.stringify(data.reportsTo)
       });
+      
+      // Validate required fields before database call
+      if (!data.employeeId || data.employeeId.trim() === '') {
+        throw new Error('Employee ID is required and cannot be empty');
+      }
+      
+      if (!data.name || data.name.trim() === '') {
+        throw new Error('Name is required and cannot be empty');
+      }
+      
+      if (!data.email || data.email.trim() === '') {
+        throw new Error('Email is required and cannot be empty');
+      }
       
       // Handle empty string for UUID fields - convert to null
       const reportsTo = data.reportsTo && typeof data.reportsTo === 'string' && data.reportsTo.trim() !== '' ? data.reportsTo : null;
