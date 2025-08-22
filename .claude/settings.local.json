@@ -23,7 +23,12 @@
       "Bash(firebase deploy:*)",
       "Bash(firebase apps:sdkconfig:*)",
       "Bash(firebase projects:list:*)",
-      "Bash(firebase auth:export:*)"
+      "Bash(firebase auth:export:*)",
+      "Bash(firebase apps:list:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:fibreflow-292c7.web.app)"
     ],
     "deny": [],
     "ask": []

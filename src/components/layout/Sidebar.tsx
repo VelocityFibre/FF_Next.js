@@ -404,13 +404,39 @@ export function Sidebar({ isOpen, isCollapsed, onCollapse }: SidebarProps) {
             className={`p-4 border-b flex-shrink-0 ${isCollapsed ? 'px-2' : ''}`}
             style={{ borderColor: sidebarStyles.borderColor }}
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-semibold text-sm">
-                  {getUserInitials()}
-                </span>
+            {isCollapsed ? (
+              /* Collapsed view - centered avatar with tooltip */
+              <div className="flex justify-center">
+                <div 
+                  className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0 relative group cursor-pointer"
+                  title={`${getUserName()} - ${getUserRole()}`}
+                >
+                  <span className="text-white font-semibold text-sm">
+                    {getUserInitials()}
+                  </span>
+                  
+                  {/* Tooltip for collapsed view */}
+                  <div 
+                    className="absolute left-full ml-2 px-3 py-2 text-sm rounded-md shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap"
+                    style={{
+                      backgroundColor: themeConfig.colors.surface.elevated,
+                      color: themeConfig.colors.text.primary,
+                      borderColor: themeConfig.colors.border.primary
+                    }}
+                  >
+                    <div className="font-medium">{getUserName()}</div>
+                    <div className="text-xs opacity-75">{getUserRole()}</div>
+                  </div>
+                </div>
               </div>
-              {!isCollapsed && (
+            ) : (
+              /* Expanded view - full user info */
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-semibold text-sm">
+                    {getUserInitials()}
+                  </span>
+                </div>
                 <div className="flex-1 min-w-0">
                   <div 
                     className="font-medium text-sm truncate"
@@ -425,8 +451,8 @@ export function Sidebar({ isOpen, isCollapsed, onCollapse }: SidebarProps) {
                     {getUserRole()}
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Navigation - Scrollable */}
