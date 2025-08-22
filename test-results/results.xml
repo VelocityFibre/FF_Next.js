@@ -1,21 +1,50 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="16.323289">
-<testsuite name="simple-route-test.spec.ts" timestamp="2025-08-21T21:02:05.297Z" hostname="chromium" tests="1" failures="0" skipped="0" time="13.806" errors="0">
-<testcase name="Route Validation Tests › All main routes should load successfully" classname="simple-route-test.spec.ts" time="13.806">
-<system-out>
-<![CDATA[
-=== ROUTE TEST RESULTS ===
-✅ Dashboard: PASS
-✅ Projects: PASS
-✅ Pole Tracker: PASS
-✅ Staff: PASS
-✅ Contractors: PASS
-✅ Analytics: PASS
-✅ Meetings: PASS
-✅ Field App: PASS
-✅ Installations: PASS
-✅ Communications: PASS
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="16.246314">
+<testsuite name="procurement-test.spec.ts" timestamp="2025-08-22T01:07:49.612Z" hostname="chromium" tests="1" failures="1" skipped="0" time="13.377" errors="0">
+<testcase name="Procurement Module Tests › Procurement routes should be accessible" classname="procurement-test.spec.ts" time="13.377">
+<failure message="procurement-test.spec.ts:6:3 Procurement routes should be accessible" type="FAILURE">
+<![CDATA[  [chromium] › procurement-test.spec.ts:6:3 › Procurement Module Tests › Procurement routes should be accessible 
 
-✅ Passed: 10/10
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 4
+    Received: 0
+
+       99 |     // Routes are valid if they either pass or require authentication (means they exist)
+      100 |     const validRoutes = passed + authRequired;
+    > 101 |     expect(validRoutes).toBe(procurementRoutes.length);
+          |                         ^
+      102 |   });
+      103 | });
+        at C:\Jarvis\AI Workspace\FibreFlow_React\tests\e2e\procurement-test.spec.ts:101:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[✅ Login successful
+❌ Procurement Overview: /app/procurement (FAIL)
+❌ BOQ List: /app/procurement/boq (FAIL)
+❌ RFQ List: /app/procurement/rfq (FAIL)
+❌ Suppliers Management: /app/procurement/suppliers (FAIL)
+
+Sidebar has Procurement: ✅
+
+✅ Passed: 0/4
+🔐 Auth Required: 0/4
+
+[[ATTACHMENT|procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\video.webm]]
+
+[[ATTACHMENT|procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\error-context.md]]
 ]]>
 </system-out>
 </testcase>

@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://localhost:5173';
-const LOGIN_EMAIL = 'test@example.com';
-const LOGIN_PASSWORD = 'password123';
+const LOGIN_EMAIL = 'demo@demo.com';
+const LOGIN_PASSWORD = 'demo123';
 
 // Test configuration
 test.describe.configure({ mode: 'serial' });

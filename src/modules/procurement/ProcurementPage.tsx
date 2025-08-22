@@ -1,17 +1,17 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Package, FileText, Send, ShoppingCart, BarChart3, Layers } from 'lucide-react';
+import { Package, FileText, Send, ShoppingCart, BarChart3, Truck } from 'lucide-react';
 
 export function ProcurementPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: BarChart3, path: '/procurement' },
-    { id: 'stock', label: 'Stock', icon: Package, path: '/procurement/stock' },
-    { id: 'boq', label: 'BOQ', icon: FileText, path: '/procurement/boq' },
-    { id: 'rfq', label: 'RFQ', icon: Send, path: '/procurement/rfq' },
-    { id: 'orders', label: 'Orders', icon: ShoppingCart, path: '/procurement/orders' },
-    { id: 'suppliers', label: 'Suppliers', icon: Layers, path: '/procurement/suppliers' },
+    { id: 'overview', label: 'Overview', icon: BarChart3, path: '/app/procurement' },
+    { id: 'stock', label: 'Stock', icon: Package, path: '/app/procurement/stock' },
+    { id: 'boq', label: 'BOQ', icon: FileText, path: '/app/procurement/boq' },
+    { id: 'rfq', label: 'RFQ', icon: Send, path: '/app/procurement/rfq' },
+    { id: 'orders', label: 'Orders', icon: ShoppingCart, path: '/app/procurement/orders' },
+    { id: 'suppliers', label: 'Suppliers', icon: Truck, path: '/app/procurement/suppliers' },
   ];
 
   const activeTab = tabs.find(tab => 

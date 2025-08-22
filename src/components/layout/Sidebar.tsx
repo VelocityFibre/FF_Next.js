@@ -18,6 +18,7 @@ import {
   Cable,
   Droplets,
   FileSignature,
+  ShoppingCart,
   MapPin,
   Camera,
   Briefcase,
@@ -152,22 +153,50 @@ export function Sidebar({ isOpen, isCollapsed, onCollapse }: SidebarProps) {
       ]
     },
     
-    // CONTRACTORS & SUPPLIERS Section
+    // PROCUREMENT Section
     { 
-      section: 'CONTRACTORS & SUPPLIERS', 
+      section: 'PROCUREMENT', 
+      items: [
+        { 
+          to: '/app/procurement', 
+          icon: ShoppingCart, 
+          label: 'Procurement',
+          shortLabel: 'Procure',
+          permissions: [],
+        },
+        { 
+          to: '/app/procurement/boq', 
+          icon: FileText, 
+          label: 'Bill of Quantities',
+          shortLabel: 'BOQ',
+          permissions: [],
+        },
+        { 
+          to: '/app/procurement/rfq', 
+          icon: FileText, 
+          label: 'Request for Quote',
+          shortLabel: 'RFQ',
+          permissions: [],
+        },
+        { 
+          to: '/app/procurement/suppliers', 
+          icon: Truck, 
+          label: 'Suppliers',
+          shortLabel: 'Supply',
+          permissions: [],
+        },
+      ]
+    },
+    
+    // CONTRACTORS Section
+    { 
+      section: 'CONTRACTORS', 
       items: [
         { 
           to: '/app/contractors', 
           icon: Briefcase, 
           label: 'Contractors Portal',
           shortLabel: 'Contract',
-          permissions: [],
-        },
-        { 
-          to: '/app/suppliers', 
-          icon: Truck, 
-          label: 'Suppliers',
-          shortLabel: 'Supply',
           permissions: [],
         },
       ]

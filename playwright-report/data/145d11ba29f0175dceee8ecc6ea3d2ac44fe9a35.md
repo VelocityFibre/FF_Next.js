@@ -1,0 +1,501 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img "Logo" [ref=e10]
+      - generic [ref=e12]:
+        - generic [ref=e14]: DE
+        - generic [ref=e15]:
+          - generic [ref=e16]: demo@demo.com
+          - generic [ref=e17]: VIEWER
+      - navigation [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: MAIN
+          - generic [ref=e21]:
+            - link "Dashboard" [ref=e22] [cursor=pointer]:
+              - /url: /app/dashboard
+              - img [ref=e23] [cursor=pointer]
+              - generic [ref=e28] [cursor=pointer]: Dashboard
+            - link "Meetings" [ref=e29] [cursor=pointer]:
+              - /url: /app/meetings
+              - img [ref=e30] [cursor=pointer]
+              - generic [ref=e35] [cursor=pointer]: Meetings
+            - link "Action Items" [ref=e36] [cursor=pointer]:
+              - /url: /app/action-items
+              - img [ref=e37] [cursor=pointer]
+              - generic [ref=e40] [cursor=pointer]: Action Items
+        - generic [ref=e41]:
+          - generic [ref=e42]: PROJECT MANAGEMENT
+          - generic [ref=e43]:
+            - link "Projects" [ref=e44] [cursor=pointer]:
+              - /url: /app/projects
+              - img [ref=e45] [cursor=pointer]
+              - generic [ref=e47] [cursor=pointer]: Projects
+            - link "Pole Capture" [ref=e48] [cursor=pointer]:
+              - /url: /app/pole-capture
+              - img [ref=e49] [cursor=pointer]
+              - generic [ref=e52] [cursor=pointer]: Pole Capture
+            - link "Fiber Stringing" [ref=e53] [cursor=pointer]:
+              - /url: /app/fiber-stringing
+              - img [ref=e54] [cursor=pointer]
+              - generic [ref=e58] [cursor=pointer]: Fiber Stringing
+            - link "Drops Management" [ref=e59] [cursor=pointer]:
+              - /url: /app/drops
+              - img [ref=e60] [cursor=pointer]
+              - generic [ref=e63] [cursor=pointer]: Drops Management
+            - link "SOW Management" [ref=e64] [cursor=pointer]:
+              - /url: /app/sow-management
+              - img [ref=e65] [cursor=pointer]
+              - generic [ref=e68] [cursor=pointer]: SOW Management
+            - link "Home Installations" [ref=e69] [cursor=pointer]:
+              - /url: /app/installations
+              - img [ref=e70] [cursor=pointer]
+              - generic [ref=e73] [cursor=pointer]: Home Installations
+            - link "Task Management" [ref=e74] [cursor=pointer]:
+              - /url: /app/tasks
+              - img [ref=e75] [cursor=pointer]
+              - generic [ref=e78] [cursor=pointer]: Task Management
+            - link "Daily Progress" [ref=e79] [cursor=pointer]:
+              - /url: /app/daily-progress
+              - img [ref=e80] [cursor=pointer]
+              - generic [ref=e82] [cursor=pointer]: Daily Progress
+        - generic [ref=e83]:
+          - generic [ref=e84]: PEOPLE & MANAGEMENT
+          - generic [ref=e85]:
+            - link "Clients" [ref=e86] [cursor=pointer]:
+              - /url: /app/clients
+              - img [ref=e87] [cursor=pointer]
+              - generic [ref=e92] [cursor=pointer]: Clients
+            - link "Staff" [ref=e93] [cursor=pointer]:
+              - /url: /app/staff
+              - img [ref=e94] [cursor=pointer]
+              - generic [ref=e99] [cursor=pointer]: Staff
+        - generic [ref=e100]:
+          - generic [ref=e101]: PROCUREMENT
+          - generic [ref=e102]:
+            - link "Procurement" [ref=e103] [cursor=pointer]:
+              - /url: /app/procurement
+              - img [ref=e104] [cursor=pointer]
+              - generic [ref=e108] [cursor=pointer]: Procurement
+            - link "Bill of Quantities" [ref=e109] [cursor=pointer]:
+              - /url: /app/procurement/boq
+              - img [ref=e110] [cursor=pointer]
+              - generic [ref=e113] [cursor=pointer]: Bill of Quantities
+            - link "Request for Quote" [ref=e114] [cursor=pointer]:
+              - /url: /app/procurement/rfq
+              - img [ref=e115] [cursor=pointer]
+              - generic [ref=e118] [cursor=pointer]: Request for Quote
+            - link "Suppliers" [ref=e119] [cursor=pointer]:
+              - /url: /app/procurement/suppliers
+              - img [ref=e120] [cursor=pointer]
+              - generic [ref=e125] [cursor=pointer]: Suppliers
+        - generic [ref=e126]:
+          - generic [ref=e127]: CONTRACTORS
+          - link "Contractors Portal" [ref=e129] [cursor=pointer]:
+            - /url: /app/contractors
+            - img [ref=e130] [cursor=pointer]
+            - generic [ref=e133] [cursor=pointer]: Contractors Portal
+        - generic [ref=e134]:
+          - generic [ref=e135]: ANALYTICS
+          - generic [ref=e136]:
+            - link "Analytics Dashboard" [ref=e137] [cursor=pointer]:
+              - /url: /app/analytics
+              - img [ref=e138] [cursor=pointer]
+              - generic [ref=e140] [cursor=pointer]: Analytics Dashboard
+            - link "Enhanced KPIs" [ref=e141] [cursor=pointer]:
+              - /url: /app/enhanced-kpis
+              - img [ref=e142] [cursor=pointer]
+              - generic [ref=e145] [cursor=pointer]: Enhanced KPIs
+            - link "KPI Dashboard" [ref=e146] [cursor=pointer]:
+              - /url: /app/kpi-dashboard
+              - img [ref=e147] [cursor=pointer]
+              - generic [ref=e149] [cursor=pointer]: KPI Dashboard
+            - link "Reports" [ref=e150] [cursor=pointer]:
+              - /url: /app/reports
+              - img [ref=e151] [cursor=pointer]
+              - generic [ref=e154] [cursor=pointer]: Reports
+        - generic [ref=e155]:
+          - generic [ref=e156]: COMMUNICATIONS
+          - generic [ref=e157]:
+            - link "Communications Portal" [ref=e158] [cursor=pointer]:
+              - /url: /app/communications
+              - img [ref=e159] [cursor=pointer]
+              - generic [ref=e161] [cursor=pointer]: Communications Portal
+            - link "Meetings" [ref=e162] [cursor=pointer]:
+              - /url: /app/meetings
+              - img [ref=e163] [cursor=pointer]
+              - generic [ref=e168] [cursor=pointer]: Meetings
+            - link "Action Items" [ref=e169] [cursor=pointer]:
+              - /url: /app/action-items
+              - img [ref=e170] [cursor=pointer]
+              - generic [ref=e173] [cursor=pointer]: Action Items
+        - generic [ref=e174]:
+          - generic [ref=e175]: FIELD OPERATIONS
+          - generic [ref=e176]:
+            - link "Field App Portal" [ref=e177] [cursor=pointer]:
+              - /url: /app/field
+              - img [ref=e178] [cursor=pointer]
+              - generic [ref=e180] [cursor=pointer]: Field App Portal
+            - link "OneMap Data Grid" [ref=e181] [cursor=pointer]:
+              - /url: /app/onemap
+              - img [ref=e182] [cursor=pointer]
+              - generic [ref=e185] [cursor=pointer]: OneMap Data Grid
+            - link "Nokia Equipment" [ref=e186] [cursor=pointer]:
+              - /url: /app/nokia-equipment
+              - img [ref=e187] [cursor=pointer]
+              - generic [ref=e189] [cursor=pointer]: Nokia Equipment
+        - generic [ref=e190]:
+          - generic [ref=e191]: SYSTEM
+          - link "Settings" [ref=e193] [cursor=pointer]:
+            - /url: /app/settings
+            - img [ref=e194] [cursor=pointer]
+            - generic [ref=e197] [cursor=pointer]: Settings
+      - button "Collapse" [ref=e199] [cursor=pointer]:
+        - img [ref=e200] [cursor=pointer]
+        - generic [ref=e202] [cursor=pointer]: Collapse
+  - generic [ref=e203]:
+    - banner [ref=e204]:
+      - generic [ref=e206]:
+        - generic [ref=e208]:
+          - navigation [ref=e209]:
+            - generic [ref=e211]: Home
+            - generic [ref=e212]:
+              - img [ref=e213]
+              - generic [ref=e215]: Dashboard
+          - heading "Dashboard" [level=1] [ref=e216]
+        - generic [ref=e217]:
+          - generic [ref=e218]:
+            - textbox "Search projects, clients..." [ref=e219]
+            - img [ref=e220]
+          - 'button "Current theme: Light" [ref=e224] [cursor=pointer]':
+            - img [ref=e225] [cursor=pointer]
+          - button "Sync data" [ref=e231] [cursor=pointer]:
+            - img [ref=e232] [cursor=pointer]
+          - button "2" [ref=e238] [cursor=pointer]:
+            - img [ref=e239] [cursor=pointer]
+            - generic [ref=e242] [cursor=pointer]: "2"
+          - button "DE demo@demo.com VIEWER" [ref=e244] [cursor=pointer]:
+            - generic [ref=e246] [cursor=pointer]: DE
+            - generic [ref=e247] [cursor=pointer]:
+              - paragraph [ref=e248] [cursor=pointer]: demo@demo.com
+              - paragraph [ref=e249] [cursor=pointer]: VIEWER
+    - main [ref=e250]:
+      - generic [ref=e252]:
+        - generic [ref=e254]:
+          - generic [ref=e255]:
+            - heading "Good morning, there" [level=1] [ref=e256]
+            - paragraph [ref=e257]: Welcome to your FibreFlow dashboard. Here's what's happening with your projects.
+          - generic [ref=e258]:
+            - generic [ref=e259]:
+              - generic [ref=e260]: Today
+              - generic [ref=e261]: Friday, August 22, 2025
+            - img [ref=e263]
+        - generic [ref=e265]:
+          - generic [ref=e267]:
+            - generic [ref=e268]:
+              - paragraph [ref=e269]: Active Projects
+              - generic [ref=e270]:
+                - paragraph [ref=e271]: "7"
+                - generic [ref=e272]:
+                  - img [ref=e273]
+                  - generic [ref=e276]: 12.5%
+              - paragraph [ref=e277]: vs last month
+            - img [ref=e279]
+          - generic [ref=e282]:
+            - generic [ref=e283]:
+              - paragraph [ref=e284]: Team Members
+              - generic [ref=e285]:
+                - paragraph [ref=e286]: "45"
+                - generic [ref=e287]:
+                  - img [ref=e288]
+                  - generic [ref=e291]: 8.3%
+              - paragraph [ref=e292]: new this month
+            - img [ref=e294]
+          - generic [ref=e300]:
+            - generic [ref=e301]:
+              - paragraph [ref=e302]: Tasks Completed
+              - generic [ref=e303]:
+                - paragraph [ref=e304]: "234"
+                - generic [ref=e305]:
+                  - img [ref=e306]
+                  - generic [ref=e309]: 5.2%
+              - paragraph [ref=e310]: vs last week
+            - img [ref=e312]
+          - generic [ref=e316]:
+            - generic [ref=e317]:
+              - paragraph [ref=e318]: Open Issues
+              - generic [ref=e319]:
+                - paragraph [ref=e320]: "8"
+                - generic [ref=e321]:
+                  - img [ref=e322]
+                  - generic [ref=e325]: 2.1%
+              - paragraph [ref=e326]: requires attention
+            - img [ref=e328]
+          - generic [ref=e331]:
+            - generic [ref=e332]:
+              - paragraph [ref=e333]: Poles Installed
+              - generic [ref=e334]:
+                - paragraph [ref=e335]: 1.2K
+                - generic [ref=e336]:
+                  - img [ref=e337]
+                  - generic [ref=e340]: 15.7%
+              - paragraph [ref=e341]: ahead of target
+            - img [ref=e343]
+          - generic [ref=e347]:
+            - generic [ref=e348]:
+              - paragraph [ref=e349]: Material Deliveries
+              - generic [ref=e350]:
+                - paragraph [ref=e351]: "156"
+                - generic [ref=e352]:
+                  - img [ref=e353]
+                  - generic [ref=e356]: 4.2%
+              - paragraph [ref=e357]: vs last month
+            - img [ref=e359]
+        - generic [ref=e363]:
+          - generic [ref=e365]:
+            - generic [ref=e366]:
+              - generic [ref=e367]:
+                - img [ref=e368]
+                - heading "Active Projects" [level=3] [ref=e370]
+              - generic [ref=e371]:
+                - button "All" [ref=e372] [cursor=pointer]
+                - button "Active" [ref=e373] [cursor=pointer]
+                - button "Planning" [ref=e374] [cursor=pointer]
+            - generic [ref=e375]:
+              - generic [ref=e376] [cursor=pointer]:
+                - generic [ref=e377] [cursor=pointer]:
+                  - generic [ref=e378] [cursor=pointer]:
+                    - heading "VF Network Expansion - Phase 1" [level=4] [ref=e379] [cursor=pointer]
+                    - generic [ref=e380] [cursor=pointer]:
+                      - generic [ref=e381] [cursor=pointer]:
+                        - img [ref=e382] [cursor=pointer]
+                        - generic [ref=e385] [cursor=pointer]: Cape Town Central
+                      - generic [ref=e386] [cursor=pointer]:
+                        - img [ref=e387] [cursor=pointer]
+                        - generic [ref=e392] [cursor=pointer]: 12 members
+                      - generic [ref=e393] [cursor=pointer]:
+                        - img [ref=e394] [cursor=pointer]
+                        - generic [ref=e396] [cursor=pointer]: Jun 30
+                  - generic [ref=e397] [cursor=pointer]:
+                    - img [ref=e399] [cursor=pointer]
+                    - generic [ref=e401] [cursor=pointer]: Active
+                - generic [ref=e403] [cursor=pointer]:
+                  - generic [ref=e404] [cursor=pointer]:
+                    - generic [ref=e405] [cursor=pointer]: "Progress: 34/51 tasks"
+                    - generic [ref=e406] [cursor=pointer]: 67%
+                  - generic [ref=e409] [cursor=pointer]:
+                    - generic [ref=e410] [cursor=pointer]: Started Jan 15
+                    - generic [ref=e411] [cursor=pointer]:
+                      - img [ref=e412] [cursor=pointer]
+                      - generic [ref=e415] [cursor=pointer]: 418 days overdue
+              - generic [ref=e416] [cursor=pointer]:
+                - generic [ref=e417] [cursor=pointer]:
+                  - generic [ref=e418] [cursor=pointer]:
+                    - heading "Stellenbosch Fibre Rollout" [level=4] [ref=e419] [cursor=pointer]
+                    - generic [ref=e420] [cursor=pointer]:
+                      - generic [ref=e421] [cursor=pointer]:
+                        - img [ref=e422] [cursor=pointer]
+                        - generic [ref=e425] [cursor=pointer]: Stellenbosch
+                      - generic [ref=e426] [cursor=pointer]:
+                        - img [ref=e427] [cursor=pointer]
+                        - generic [ref=e432] [cursor=pointer]: 8 members
+                      - generic [ref=e433] [cursor=pointer]:
+                        - img [ref=e434] [cursor=pointer]
+                        - generic [ref=e436] [cursor=pointer]: Aug 15
+                  - generic [ref=e438] [cursor=pointer]: Active
+                - generic [ref=e440] [cursor=pointer]:
+                  - generic [ref=e441] [cursor=pointer]:
+                    - generic [ref=e442] [cursor=pointer]: "Progress: 12/52 tasks"
+                    - generic [ref=e443] [cursor=pointer]: 23%
+                  - generic [ref=e446] [cursor=pointer]:
+                    - generic [ref=e447] [cursor=pointer]: Started Feb 1
+                    - generic [ref=e448] [cursor=pointer]:
+                      - img [ref=e449] [cursor=pointer]
+                      - generic [ref=e452] [cursor=pointer]: 372 days overdue
+              - generic [ref=e453] [cursor=pointer]:
+                - generic [ref=e454] [cursor=pointer]:
+                  - generic [ref=e455] [cursor=pointer]:
+                    - heading "Paarl Industrial Zone" [level=4] [ref=e456] [cursor=pointer]
+                    - generic [ref=e457] [cursor=pointer]:
+                      - generic [ref=e458] [cursor=pointer]:
+                        - img [ref=e459] [cursor=pointer]
+                        - generic [ref=e462] [cursor=pointer]: Paarl
+                      - generic [ref=e463] [cursor=pointer]:
+                        - img [ref=e464] [cursor=pointer]
+                        - generic [ref=e469] [cursor=pointer]: 6 members
+                      - generic [ref=e470] [cursor=pointer]:
+                        - img [ref=e471] [cursor=pointer]
+                        - generic [ref=e473] [cursor=pointer]: Sep 30
+                  - generic [ref=e475] [cursor=pointer]: Planning
+                - generic [ref=e477] [cursor=pointer]:
+                  - generic [ref=e478] [cursor=pointer]:
+                    - generic [ref=e479] [cursor=pointer]: "Progress: 2/38 tasks"
+                    - generic [ref=e480] [cursor=pointer]: 5%
+                  - generic [ref=e483] [cursor=pointer]:
+                    - generic [ref=e484] [cursor=pointer]: Started Mar 1
+                    - generic [ref=e485] [cursor=pointer]:
+                      - img [ref=e486] [cursor=pointer]
+                      - generic [ref=e489] [cursor=pointer]: 326 days overdue
+          - generic [ref=e491]:
+            - generic [ref=e492]:
+              - img [ref=e493]
+              - heading "Quick Actions" [level=3] [ref=e494]
+            - generic [ref=e495]:
+              - button "New Project Start a new fibre installation project" [ref=e496] [cursor=pointer]:
+                - generic [ref=e497] [cursor=pointer]:
+                  - img [ref=e499] [cursor=pointer]
+                  - generic:
+                    - heading "New Project" [level=4]
+                    - paragraph: Start a new fibre installation project
+              - button "Add Staff Register new team member" [ref=e501] [cursor=pointer]:
+                - generic [ref=e502] [cursor=pointer]:
+                  - img [ref=e504] [cursor=pointer]
+                  - generic:
+                    - heading "Add Staff" [level=4]
+                    - paragraph: Register new team member
+              - button "Upload SOW Upload Statement of Work document" [ref=e507] [cursor=pointer]:
+                - generic [ref=e508] [cursor=pointer]:
+                  - img [ref=e510] [cursor=pointer]
+                  - generic:
+                    - heading "Upload SOW" [level=4]
+                    - paragraph: Upload Statement of Work document
+              - button "Schedule Meeting Plan team or client meeting" [ref=e513] [cursor=pointer]:
+                - generic [ref=e514] [cursor=pointer]:
+                  - img [ref=e516] [cursor=pointer]
+                  - generic:
+                    - heading "Schedule Meeting" [level=4]
+                    - paragraph: Plan team or client meeting
+              - button "Report Issue Log project issue or concern" [ref=e518] [cursor=pointer]:
+                - generic [ref=e519] [cursor=pointer]:
+                  - img [ref=e521] [cursor=pointer]
+                  - generic:
+                    - heading "Report Issue" [level=4]
+                    - paragraph: Log project issue or concern
+              - button "Pole Tracker View and update pole installations" [ref=e523] [cursor=pointer]:
+                - generic [ref=e524] [cursor=pointer]:
+                  - img [ref=e526] [cursor=pointer]
+                  - generic:
+                    - heading "Pole Tracker" [level=4]
+                    - paragraph: View and update pole installations
+              - button "Inventory Check stock and materials" [ref=e529] [cursor=pointer]:
+                - generic [ref=e530] [cursor=pointer]:
+                  - img [ref=e532] [cursor=pointer]
+                  - generic:
+                    - heading "Inventory" [level=4]
+                    - paragraph: Check stock and materials
+              - button "Analytics View project performance metrics" [ref=e536] [cursor=pointer]:
+                - generic [ref=e537] [cursor=pointer]:
+                  - img [ref=e539] [cursor=pointer]
+                  - generic:
+                    - heading "Analytics" [level=4]
+                    - paragraph: View project performance metrics
+        - generic [ref=e542]:
+          - generic [ref=e544]:
+            - img [ref=e545]
+            - heading "Recent Activity" [level=3] [ref=e548]
+          - generic [ref=e549]:
+            - generic [ref=e552]:
+              - img [ref=e554]
+              - generic [ref=e558]:
+                - generic [ref=e559]:
+                  - generic [ref=e560]:
+                    - generic [ref=e561]: Sarah Johnson
+                    - generic [ref=e562]: (Field Technician)
+                  - paragraph [ref=e563]: Completed pole installation at Strand Beach Road
+                  - generic [ref=e564]:
+                    - img [ref=e565]
+                    - generic [ref=e568] [cursor=pointer]: VF Network Expansion - Phase 1
+                  - generic [ref=e570]:
+                    - img [ref=e571]
+                    - generic [ref=e574]: Strand Beach Road
+                - generic [ref=e575]: 8/19/2024
+            - generic [ref=e578]:
+              - img [ref=e580]
+              - generic [ref=e584]:
+                - generic [ref=e585]:
+                  - generic [ref=e586]:
+                    - generic [ref=e587]: Mike Peters
+                    - generic [ref=e588]: (Project Manager)
+                  - paragraph [ref=e589]: Updated project timeline and resource allocation
+                  - generic [ref=e590]:
+                    - img [ref=e591]
+                    - generic [ref=e594] [cursor=pointer]: Stellenbosch Fibre Rollout
+                  - generic [ref=e597]: 67% complete
+                - generic [ref=e598]: 8/19/2024
+            - generic [ref=e601]:
+              - img [ref=e603]
+              - generic [ref=e609]:
+                - generic [ref=e610]:
+                  - generic [ref=e611]:
+                    - generic [ref=e612]: Lisa Chen
+                    - generic [ref=e613]: (Team Lead)
+                  - paragraph [ref=e614]: Assigned 3 new technicians to installation crew
+                  - generic [ref=e615]:
+                    - img [ref=e616]
+                    - generic [ref=e619] [cursor=pointer]: Paarl Industrial Zone
+                - generic [ref=e620]: 8/19/2024
+            - generic [ref=e623]:
+              - img [ref=e625]
+              - generic [ref=e628]:
+                - generic [ref=e629]:
+                  - generic [ref=e630]:
+                    - generic [ref=e631]: David Wilson
+                    - generic [ref=e632]: (Site Supervisor)
+                  - paragraph [ref=e633]: Reported underground cable damage during excavation
+                  - generic [ref=e634]:
+                    - img [ref=e635]
+                    - generic [ref=e638] [cursor=pointer]: VF Network Expansion - Phase 1
+                  - generic [ref=e639]:
+                    - generic [ref=e640]:
+                      - img [ref=e641]
+                      - generic [ref=e644]: Main Road Junction
+                    - generic [ref=e645]: HIGH
+                - generic [ref=e646]: 8/19/2024
+            - generic [ref=e648]:
+              - img [ref=e650]
+              - generic [ref=e653]:
+                - generic [ref=e654]:
+                  - generic [ref=e655]:
+                    - generic [ref=e656]: Team Alpha
+                    - generic [ref=e657]: (Installation Team)
+                  - paragraph [ref=e658]: Reached 50% completion milestone ahead of schedule
+                  - generic [ref=e659]:
+                    - img [ref=e660]
+                    - generic [ref=e663] [cursor=pointer]: Stellenbosch Fibre Rollout
+                  - generic [ref=e666]: 50% complete
+                - generic [ref=e667]: 8/19/2024
+        - generic [ref=e668]:
+          - generic [ref=e669]:
+            - img [ref=e670]
+            - heading "Performance Metrics" [level=3] [ref=e673]
+          - generic [ref=e674]:
+            - generic [ref=e675]:
+              - generic [ref=e676]: 94.2%
+              - generic [ref=e677]: Quality Score
+            - generic [ref=e678]:
+              - generic [ref=e679]: 87%
+              - generic [ref=e680]: On-Time Delivery
+            - generic [ref=e681]:
+              - generic [ref=e682]: "15.3"
+              - generic [ref=e683]: Avg. Task Time (hrs)
+            - generic [ref=e684]:
+              - generic [ref=e685]: R2.4M
+              - generic [ref=e686]: Revenue This Month
+    - contentinfo [ref=e687]:
+      - generic [ref=e688]:
+        - generic [ref=e690]: © 2025 FibreFlow. All rights reserved.
+        - generic [ref=e691]:
+          - generic [ref=e694]: System Online
+          - generic [ref=e695]:
+            - img [ref=e696]
+            - generic [ref=e698]: Secure Connection
+          - generic [ref=e699]:
+            - img [ref=e700]
+            - generic [ref=e702]: React v18.3+
+        - generic [ref=e704]:
+          - generic [ref=e705]: Migrated to React with
+          - img [ref=e706]
+          - generic [ref=e708]: by VF Team
+```

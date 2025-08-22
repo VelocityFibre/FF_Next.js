@@ -14,6 +14,13 @@ from pathlib import Path
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8')
 
+# Install Docker Agent Enforcer import hook
+try:
+    import docker_agent_enforcer
+    print("✅ Docker Agent Enforcer active - all imports will trigger Docker agent checks")
+except Exception as e:
+    print(f"⚠️  Could not install Docker Agent Enforcer: {e}")
+
 def auto_activate_docker_agents():
     """Automatically activate Docker agents for this project."""
     

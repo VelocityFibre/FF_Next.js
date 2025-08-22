@@ -1,4 +1,4 @@
-import { Package, FileText, Send, ShoppingCart, AlertCircle, DollarSign, Clock } from 'lucide-react';
+import { Package, FileText, Send, ShoppingCart, AlertCircle, DollarSign, Clock, Truck } from 'lucide-react';
 import { useBOQs } from './hooks/useBOQ';
 import { useRFQs } from './hooks/useRFQ';
 import { BOQStatus, RFQStatus } from '@/types/procurement.types';
@@ -44,6 +44,12 @@ export function ProcurementOverview() {
       icon: Package,
       color: 'bg-purple-500',
       onClick: () => navigate('/procurement/stock'),
+    },
+    {
+      label: 'Manage Suppliers',
+      icon: Truck,
+      color: 'bg-indigo-500',
+      onClick: () => navigate('/procurement/suppliers'),
     },
     {
       label: 'Purchase Orders',

@@ -16,7 +16,9 @@
       "mcp__ide__executeCode",
       "Bash(test:*)",
       "Bash(mv:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run typecheck:*)"
     ],
     "deny": [],
     "ask": []

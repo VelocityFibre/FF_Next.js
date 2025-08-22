@@ -149,21 +149,21 @@
   },
   "suites": [
     {
-      "title": "simple-route-test.spec.ts",
-      "file": "simple-route-test.spec.ts",
+      "title": "procurement-test.spec.ts",
+      "file": "procurement-test.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Route Validation Tests",
-          "file": "simple-route-test.spec.ts",
+          "title": "Procurement Module Tests",
+          "file": "procurement-test.spec.ts",
           "line": 5,
           "column": 6,
           "specs": [
             {
-              "title": "All main routes should load successfully",
-              "ok": true,
+              "title": "Procurement routes should be accessible",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -176,59 +176,87 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 13806,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 13377,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4\u001b[39m\nReceived: \u001b[31m0\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts:101:25",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts",
+                          "column": 25,
+                          "line": 101
+                        },
+                        "snippet": "\u001b[0m \u001b[90m  99 |\u001b[39m     \u001b[90m// Routes are valid if they either pass or require authentication (means they exist)\u001b[39m\n \u001b[90m 100 |\u001b[39m     \u001b[36mconst\u001b[39m validRoutes \u001b[33m=\u001b[39m passed \u001b[33m+\u001b[39m authRequired\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 101 |\u001b[39m     expect(validRoutes)\u001b[33m.\u001b[39mtoBe(procurementRoutes\u001b[33m.\u001b[39mlength)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 102 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 103 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts",
+                            "column": 25,
+                            "line": 101
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\n   99 |     // Routes are valid if they either pass or require authentication (means they exist)\n  100 |     const validRoutes = passed + authRequired;\n> 101 |     expect(validRoutes).toBe(procurementRoutes.length);\n      |                         ^\n  102 |   });\n  103 | });\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts:101:25"
+                        }
+                      ],
                       "stdout": [
                         {
-                          "text": "\n=== ROUTE TEST RESULTS ===\n"
+                          "text": "✅ Login successful\n"
                         },
                         {
-                          "text": "✅ Dashboard: PASS\n"
+                          "text": "❌ Procurement Overview: /app/procurement (FAIL)\n"
                         },
                         {
-                          "text": "✅ Projects: PASS\n"
+                          "text": "❌ BOQ List: /app/procurement/boq (FAIL)\n"
                         },
                         {
-                          "text": "✅ Pole Tracker: PASS\n"
+                          "text": "❌ RFQ List: /app/procurement/rfq (FAIL)\n"
                         },
                         {
-                          "text": "✅ Staff: PASS\n"
+                          "text": "❌ Suppliers Management: /app/procurement/suppliers (FAIL)\n"
                         },
                         {
-                          "text": "✅ Contractors: PASS\n"
+                          "text": "\nSidebar has Procurement: ✅\n"
                         },
                         {
-                          "text": "✅ Analytics: PASS\n"
+                          "text": "\n✅ Passed: 0/4\n"
                         },
                         {
-                          "text": "✅ Meetings: PASS\n"
-                        },
-                        {
-                          "text": "✅ Field App: PASS\n"
-                        },
-                        {
-                          "text": "✅ Installations: PASS\n"
-                        },
-                        {
-                          "text": "✅ Communications: PASS\n"
-                        },
-                        {
-                          "text": "\n✅ Passed: 10/10\n"
+                          "text": "🔐 Auth Required: 0/4\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-21T21:02:06.712Z",
+                      "startTime": "2025-08-22T01:07:51.213Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\test-results\\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\test-results\\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\test-results\\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts",
+                        "column": 25,
+                        "line": 101
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "188d34322a0f3a866eaf-2eb7608abf7a7076eddf",
-              "file": "simple-route-test.spec.ts",
+              "id": "7cf6257b3dbec18ddb56-70e52c5c656c6ad8b215",
+              "file": "procurement-test.spec.ts",
               "line": 6,
               "column": 3
             }
@@ -239,11 +267,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-21T21:02:04.899Z",
-    "duration": 16323.289,
-    "expected": 1,
+    "startTime": "2025-08-22T01:07:49.180Z",
+    "duration": 16246.314,
+    "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 1,
     "flaky": 0
   }
 }

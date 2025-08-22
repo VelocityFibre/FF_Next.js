@@ -238,7 +238,11 @@ export const router = createBrowserRouter([
               },
               {
                 path: 'suppliers',
-                element: <div className="p-6">Supplier Management (Coming Soon)</div>,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <SuppliersPage />
+                  </Suspense>
+                ),
               },
             ],
           },
@@ -279,14 +283,6 @@ export const router = createBrowserRouter([
             element: (
               <Suspense fallback={<Loading />}>
                 <ContractorsDashboard />
-              </Suspense>
-            ),
-          },
-          {
-            path: 'suppliers',
-            element: (
-              <Suspense fallback={<Loading />}>
-                <SuppliersPage />
               </Suspense>
             ),
           },

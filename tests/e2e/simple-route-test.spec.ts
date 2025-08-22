@@ -6,8 +6,8 @@ test.describe('Route Validation Tests', () => {
   test('All main routes should load successfully', async ({ page }) => {
     // Login first
     await page.goto(`${BASE_URL}/login`);
-    await page.fill('input[type="email"]', 'test@example.com');
-    await page.fill('input[type="password"]', 'password123');
+    await page.fill('input[type="email"]', 'demo@demo.com');
+    await page.fill('input[type="password"]', 'demo123');
     await page.click('button[type="submit"]');
     
     // Wait for navigation
