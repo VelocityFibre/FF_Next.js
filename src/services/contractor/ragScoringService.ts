@@ -3,7 +3,7 @@
  * Calculates comprehensive scores based on performance, financial stability, and capabilities
  */
 
-import { db } from '@/lib/neon/db';
+import { db } from '@/lib/neon/connection';
 import { contractors, projectAssignments, contractorTeams } from '@/lib/neon/schema';
 import { eq, avg, count, sql, desc } from 'drizzle-orm';
 

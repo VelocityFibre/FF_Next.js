@@ -18,12 +18,63 @@ export const StaffDetailPage = lazy(() => import('@/modules/staff/StaffDetailPag
 export const StaffImport = lazy(() => import('@/modules/staff/StaffImport').then(m => ({ default: m.StaffImport })));
 export const StaffSettings = lazy(() => import('@/modules/settings/StaffSettings').then(m => ({ default: m.StaffSettings })));
 
-// Procurement Module
-export const ProcurementPage = lazy(() => import('@/modules/procurement/ProcurementPage').then(m => ({ default: m.ProcurementPage })));
-export const ProcurementOverview = lazy(() => import('@/modules/procurement/ProcurementOverview').then(m => ({ default: m.ProcurementOverview })));
-export const BOQListPage = lazy(() => import('@/modules/procurement/boq/BOQListPage').then(m => ({ default: m.BOQListPage })));
-export const RFQListPage = lazy(() => import('@/modules/procurement/rfq/RFQListPage').then(m => ({ default: m.RFQListPage })));
+// Procurement Module - Main Layout
+export const ProcurementLayout = lazy(() => import('@/modules/procurement/components/layout/ProcurementLayout').then(m => ({ default: m.ProcurementLayout })));
+export const ProcurementDashboard = lazy(() => import('@/modules/procurement/components/ProcurementDashboard').then(m => ({ default: m.ProcurementDashboard })));
+
+// BOQ Management
+export const BOQDashboard = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQDashboard })));
+export const BOQCreate = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQCreate })));
+export const BOQEdit = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQEdit })));
+export const BOQView = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQView })));
+export const BOQList = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQList })));
+export const BOQUpload = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQUpload })));
+export const BOQMappingReview = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQMappingReview })));
+export const BOQViewer = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQViewer })));
+export const BOQHistory = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQHistory })));
+
+// RFQ Management
+export const RFQDashboard = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQDashboard })));
+export const RFQCreate = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQCreate })));
+export const RFQEdit = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQEdit })));
+export const RFQView = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQView })));
+export const RFQList = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQList })));
+export const RFQBuilder = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQBuilder })));
+export const RFQDistribution = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQDistribution })));
+export const RFQTracking = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQTracking })));
+export const RFQArchive = lazy(() => import('@/modules/procurement/rfq/components').then(m => ({ default: m.RFQArchive })));
+
+// Quote Evaluation
+export const QuoteEvaluationDashboard = lazy(() => import('@/modules/procurement/quote-evaluation/components').then(m => ({ default: m.QuoteEvaluationDashboard })));
+export const QuoteComparison = lazy(() => import('@/modules/procurement/quote-evaluation/components').then(m => ({ default: m.QuoteComparison })));
+export const EvaluationMatrix = lazy(() => import('@/modules/procurement/quote-evaluation/components').then(m => ({ default: m.EvaluationMatrix })));
+export const AwardProcess = lazy(() => import('@/modules/procurement/quote-evaluation/components').then(m => ({ default: m.AwardProcess })));
+export const QuoteHistory = lazy(() => import('@/modules/procurement/quote-evaluation/components').then(m => ({ default: m.QuoteHistory })));
+
+// Stock Management
+export const StockManagementDashboard = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.StockManagementDashboard })));
+export const StockDashboard = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.StockDashboard })));
+export const GoodsReceipt = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.GoodsReceipt })));
+export const StockMovements = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.StockMovements })));
+export const DrumTracking = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.DrumTracking })));
+
+// Purchase Orders
+export const PurchaseOrderDashboard = lazy(() => import('@/modules/procurement/purchase-orders/components').then(m => ({ default: m.PurchaseOrderDashboard })));
+export const PurchaseOrderCreate = lazy(() => import('@/modules/procurement/purchase-orders/components').then(m => ({ default: m.PurchaseOrderCreate })));
+export const PurchaseOrderEdit = lazy(() => import('@/modules/procurement/purchase-orders/components').then(m => ({ default: m.PurchaseOrderEdit })));
+export const PurchaseOrderView = lazy(() => import('@/modules/procurement/purchase-orders/components').then(m => ({ default: m.PurchaseOrderView })));
+export const PurchaseOrderList = lazy(() => import('@/modules/procurement/purchase-orders/components').then(m => ({ default: m.PurchaseOrderList })));
+
+// Supplier Portal
+export const SupplierPortalDashboard = lazy(() => import('@/modules/procurement/supplier-portal/components').then(m => ({ default: m.SupplierPortalDashboard })));
 export const SuppliersPage = lazy(() => import('@/modules/suppliers/SuppliersPage').then(m => ({ default: m.SuppliersPage })));
+
+// Reporting
+export const ProcurementReporting = lazy(() => import('@/modules/procurement/reporting/components').then(m => ({ default: m.ProcurementReporting })));
+export const ProcurementKPIDashboard = lazy(() => import('@/modules/procurement/reporting/components').then(m => ({ default: m.ProcurementKPIDashboard })));
+export const CostAnalysis = lazy(() => import('@/modules/procurement/reporting/components').then(m => ({ default: m.CostAnalysis })));
+export const SupplierPerformance = lazy(() => import('@/modules/procurement/reporting/components').then(m => ({ default: m.SupplierPerformance })));
+export const ComplianceReports = lazy(() => import('@/modules/procurement/reporting/components').then(m => ({ default: m.ComplianceReports })));
 
 // Communications Module
 export const MeetingsDashboard = lazy(() => import('@/modules/meetings/MeetingsDashboard').then(m => ({ default: m.MeetingsDashboard })));

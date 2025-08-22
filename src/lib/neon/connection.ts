@@ -20,6 +20,9 @@ const sql = neon(neonUrl);
 // Create Drizzle instance
 export const neonDb = drizzle(sql, { schema: neonTables });
 
+// Alias for backward compatibility
+export const db = neonDb;
+
 // Connection test utility
 export async function testNeonConnection(): Promise<boolean> {
   try {

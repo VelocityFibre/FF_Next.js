@@ -540,26 +540,11 @@ export const contractorDocuments = pgTable('contractor_documents', {
   return {
     contractorDocIdx: index('contractor_doc_idx').on(table.contractorId),
     docTypeIdx: index('doc_type_idx').on(table.documentType),
-    expiryIdx: index('expiry_idx').on(table.expiryDate),
+    docExpiryIdx: index('contractor_doc_expiry_idx').on(table.expiryDate),
   }
 });
 
-// Export all tables
-export const neonTables = {
-  projectAnalytics,
-  kpiMetrics,
-  financialTransactions,
-  materialUsage,
-  staffPerformance,
-  reportCache,
-  auditLog,
-  clientAnalytics,
-  contractors,
-  contractorTeams,
-  teamMembers,
-  projectAssignments,
-  contractorDocuments,
-};
+// Original tables (will be combined with procurement tables below)
 
 // Type exports for TypeScript
 export type ProjectAnalytics = typeof projectAnalytics.$inferSelect;
@@ -600,3 +585,737 @@ export type NewProjectAssignment = typeof projectAssignments.$inferInsert;
 
 export type ContractorDocument = typeof contractorDocuments.$inferSelect;
 export type NewContractorDocument = typeof contractorDocuments.$inferInsert;
+
+// ============================================
+// PROCUREMENT PORTAL TABLES
+// ============================================
+
+// BOQ (Bill of Quantities) Management
+export const boqs = pgTable('boqs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: varchar('project_id', { length: 255 }).notNull(), // Firebase project ID
+  
+  // BOQ Details
+  version: varchar('version', { length: 50 }).notNull(),
+  title: text('title'),
+  description: text('description'),
+  
+  // Status and Workflow
+  status: varchar('status', { length: 20 }).notNull().default('draft'), // draft, mapping_review, approved, archived
+  mappingStatus: varchar('mapping_status', { length: 20 }).default('pending'), // pending, in_progress, completed, failed
+  mappingConfidence: decimal('mapping_confidence', { precision: 5, scale: 2 }), // 0-100
+  
+  // Upload Information
+  uploadedBy: varchar('uploaded_by', { length: 255 }).notNull(),
+  uploadedAt: timestamp('uploaded_at').defaultNow().notNull(),
+  fileName: text('file_name'),
+  fileUrl: text('file_url'),
+  fileSize: integer('file_size'), // bytes
+  
+  // Approval Workflow
+  approvedBy: varchar('approved_by', { length: 255 }),
+  approvedAt: timestamp('approved_at'),
+  rejectedBy: varchar('rejected_by', { length: 255 }),
+  rejectedAt: timestamp('rejected_at'),
+  rejectionReason: text('rejection_reason'),
+  
+  // Metadata
+  itemCount: integer('item_count').default(0),
+  mappedItems: integer('mapped_items').default(0),
+  unmappedItems: integer('unmapped_items').default(0),
+  exceptionsCount: integer('exceptions_count').default(0),
+  
+  // Totals
+  totalEstimatedValue: decimal('total_estimated_value', { precision: 15, scale: 2 }),
+  currency: varchar('currency', { length: 3 }).default('ZAR'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    projectIdIdx: index('boq_project_id_idx').on(table.projectId),
+    statusIdx: index('boq_status_idx').on(table.status),
+    uploadedByIdx: index('boq_uploaded_by_idx').on(table.uploadedBy),
+    versionUnique: unique('boq_project_version_unique').on(table.projectId, table.version),
+  }
+});
+
+// BOQ Items
+export const boqItems = pgTable('boq_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  boqId: uuid('boq_id').notNull().references(() => boqs.id, { onDelete: 'cascade' }),
+  projectId: varchar('project_id', { length: 255 }).notNull(), // Denormalized for performance
+  
+  // Line Item Details
+  lineNumber: integer('line_number').notNull(),
+  itemCode: varchar('item_code', { length: 100 }),
+  description: text('description').notNull(),
+  category: varchar('category', { length: 100 }),
+  subcategory: varchar('subcategory', { length: 100 }),
+  
+  // Quantities and Units
+  quantity: decimal('quantity', { precision: 15, scale: 4 }).notNull(),
+  uom: varchar('uom', { length: 20 }).notNull(), // unit of measure
+  unitPrice: decimal('unit_price', { precision: 15, scale: 2 }),
+  totalPrice: decimal('total_price', { precision: 15, scale: 2 }),
+  
+  // Project Structure
+  phase: varchar('phase', { length: 100 }),
+  task: varchar('task', { length: 100 }),
+  site: varchar('site', { length: 100 }),
+  location: varchar('location', { length: 100 }),
+  
+  // Catalog Mapping
+  catalogItemId: varchar('catalog_item_id', { length: 255 }),
+  catalogItemCode: varchar('catalog_item_code', { length: 100 }),
+  catalogItemName: text('catalog_item_name'),
+  mappingConfidence: decimal('mapping_confidence', { precision: 5, scale: 2 }),
+  mappingStatus: varchar('mapping_status', { length: 20 }).default('pending'), // pending, mapped, manual, exception
+  
+  // Technical Specifications
+  specifications: json('specifications'),
+  technicalNotes: text('technical_notes'),
+  alternativeItems: json('alternative_items'), // Array of alternative catalog items
+  
+  // Procurement Status
+  procurementStatus: varchar('procurement_status', { length: 20 }).default('pending'), // pending, rfq_created, quoted, awarded, ordered
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    boqItemIdx: index('boq_item_boq_id_idx').on(table.boqId),
+    projectItemIdx: index('boq_item_project_id_idx').on(table.projectId),
+    lineNumberIdx: index('boq_item_line_number_idx').on(table.boqId, table.lineNumber),
+    catalogMappingIdx: index('boq_item_catalog_mapping_idx').on(table.catalogItemId),
+    procurementStatusIdx: index('boq_item_procurement_status_idx').on(table.procurementStatus),
+    lineNumberUnique: unique('boq_item_line_number_unique').on(table.boqId, table.lineNumber),
+  }
+});
+
+// BOQ Mapping Exceptions
+export const boqExceptions = pgTable('boq_exceptions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  boqId: uuid('boq_id').notNull().references(() => boqs.id, { onDelete: 'cascade' }),
+  boqItemId: uuid('boq_item_id').notNull().references(() => boqItems.id, { onDelete: 'cascade' }),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Exception Details
+  exceptionType: varchar('exception_type', { length: 50 }).notNull(), // no_match, multiple_matches, data_issue, manual_review
+  severity: varchar('severity', { length: 20 }).notNull().default('medium'), // low, medium, high, critical
+  
+  // Issue Description
+  issueDescription: text('issue_description').notNull(),
+  suggestedAction: text('suggested_action'),
+  systemSuggestions: json('system_suggestions'), // Array of suggested mappings
+  
+  // Resolution
+  status: varchar('status', { length: 20 }).notNull().default('open'), // open, in_review, resolved, ignored
+  resolvedBy: varchar('resolved_by', { length: 255 }),
+  resolvedAt: timestamp('resolved_at'),
+  resolutionNotes: text('resolution_notes'),
+  resolutionAction: varchar('resolution_action', { length: 50 }), // manual_mapping, catalog_update, item_split, item_ignore
+  
+  // Assignment
+  assignedTo: varchar('assigned_to', { length: 255 }),
+  assignedAt: timestamp('assigned_at'),
+  priority: varchar('priority', { length: 20 }).default('medium'), // low, medium, high, urgent
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    boqExceptionIdx: index('boq_exception_boq_id_idx').on(table.boqId),
+    itemExceptionIdx: index('boq_exception_item_id_idx').on(table.boqItemId),
+    statusIdx: index('boq_exception_status_idx').on(table.status),
+    assignedToIdx: index('boq_exception_assigned_idx').on(table.assignedTo),
+  }
+});
+
+// RFQ (Request for Quote) Management
+export const rfqs = pgTable('rfqs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // RFQ Details
+  rfqNumber: varchar('rfq_number', { length: 100 }).notNull().unique(),
+  title: text('title').notNull(),
+  description: text('description'),
+  
+  // Status and Timeline
+  status: varchar('status', { length: 20 }).notNull().default('draft'), // draft, issued, responses_received, evaluated, awarded, cancelled
+  issueDate: timestamp('issue_date'),
+  responseDeadline: timestamp('response_deadline').notNull(),
+  extendedDeadline: timestamp('extended_deadline'),
+  closedAt: timestamp('closed_at'),
+  
+  // Created By
+  createdBy: varchar('created_by', { length: 255 }).notNull(),
+  issuedBy: varchar('issued_by', { length: 255 }),
+  
+  // Terms and Conditions
+  paymentTerms: text('payment_terms'),
+  deliveryTerms: text('delivery_terms'),
+  validityPeriod: integer('validity_period'), // days
+  currency: varchar('currency', { length: 3 }).default('ZAR'),
+  
+  // Evaluation Criteria
+  evaluationCriteria: json('evaluation_criteria'), // Weighted criteria object
+  technicalRequirements: text('technical_requirements'),
+  
+  // Supplier Management
+  invitedSuppliers: json('invited_suppliers'), // Array of supplier IDs
+  respondedSuppliers: json('responded_suppliers'), // Array of supplier IDs who responded
+  
+  // Totals and Statistics
+  itemCount: integer('item_count').default(0),
+  totalBudgetEstimate: decimal('total_budget_estimate', { precision: 15, scale: 2 }),
+  lowestQuoteValue: decimal('lowest_quote_value', { precision: 15, scale: 2 }),
+  highestQuoteValue: decimal('highest_quote_value', { precision: 15, scale: 2 }),
+  averageQuoteValue: decimal('average_quote_value', { precision: 15, scale: 2 }),
+  
+  // Award Information
+  awardedAt: timestamp('awarded_at'),
+  awardedTo: varchar('awarded_to', { length: 255 }), // Supplier ID
+  awardNotes: text('award_notes'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    projectRfqIdx: index('rfq_project_id_idx').on(table.projectId),
+    statusIdx: index('rfq_status_idx').on(table.status),
+    rfqNumberIdx: index('rfq_number_idx').on(table.rfqNumber),
+    deadlineIdx: index('rfq_deadline_idx').on(table.responseDeadline),
+  }
+});
+
+// RFQ Items
+export const rfqItems = pgTable('rfq_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  rfqId: uuid('rfq_id').notNull().references(() => rfqs.id, { onDelete: 'cascade' }),
+  boqItemId: uuid('boq_item_id').references(() => boqItems.id),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Item Details (copied from BOQ for historical record)
+  lineNumber: integer('line_number').notNull(),
+  itemCode: varchar('item_code', { length: 100 }),
+  description: text('description').notNull(),
+  category: varchar('category', { length: 100 }),
+  
+  // Quantities
+  quantity: decimal('quantity', { precision: 15, scale: 4 }).notNull(),
+  uom: varchar('uom', { length: 20 }).notNull(),
+  budgetPrice: decimal('budget_price', { precision: 15, scale: 2 }),
+  
+  // Technical Requirements
+  specifications: json('specifications'),
+  technicalRequirements: text('technical_requirements'),
+  acceptableAlternatives: json('acceptable_alternatives'),
+  
+  // Evaluation
+  evaluationWeight: decimal('evaluation_weight', { precision: 5, scale: 2 }).default('1.0'),
+  isCriticalItem: boolean('is_critical_item').default(false),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    rfqItemIdx: index('rfq_item_rfq_id_idx').on(table.rfqId),
+    boqReferenceIdx: index('rfq_item_boq_reference_idx').on(table.boqItemId),
+    lineNumberUnique: unique('rfq_item_line_unique').on(table.rfqId, table.lineNumber),
+  }
+});
+
+// Supplier Invitations
+export const supplierInvitations = pgTable('supplier_invitations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  rfqId: uuid('rfq_id').notNull().references(() => rfqs.id, { onDelete: 'cascade' }),
+  supplierId: varchar('supplier_id', { length: 255 }).notNull(),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Invitation Details
+  supplierName: text('supplier_name').notNull(),
+  supplierEmail: varchar('supplier_email', { length: 255 }).notNull(),
+  contactPerson: text('contact_person'),
+  
+  // Status Tracking
+  invitationStatus: varchar('invitation_status', { length: 20 }).notNull().default('sent'), // sent, viewed, responded, declined, expired
+  invitedAt: timestamp('invited_at').defaultNow().notNull(),
+  viewedAt: timestamp('viewed_at'),
+  respondedAt: timestamp('responded_at'),
+  declinedAt: timestamp('declined_at'),
+  
+  // Authentication for supplier portal
+  accessToken: varchar('access_token', { length: 255 }).unique(),
+  tokenExpiresAt: timestamp('token_expires_at'),
+  magicLinkToken: varchar('magic_link_token', { length: 255 }),
+  lastLoginAt: timestamp('last_login_at'),
+  
+  // Communication
+  invitationMessage: text('invitation_message'),
+  declineReason: text('decline_reason'),
+  remindersSent: integer('reminders_sent').default(0),
+  lastReminderAt: timestamp('last_reminder_at'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    rfqSupplierIdx: index('supplier_invitation_rfq_supplier_idx').on(table.rfqId, table.supplierId),
+    supplierIdx: index('supplier_invitation_supplier_idx').on(table.supplierId),
+    statusIdx: index('supplier_invitation_status_idx').on(table.invitationStatus),
+    tokenIdx: index('supplier_invitation_token_idx').on(table.accessToken),
+    rfqSupplierUnique: unique('rfq_supplier_unique').on(table.rfqId, table.supplierId),
+  }
+});
+
+// Quotes
+export const quotes = pgTable('quotes', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  rfqId: uuid('rfq_id').notNull().references(() => rfqs.id, { onDelete: 'cascade' }),
+  supplierId: varchar('supplier_id', { length: 255 }).notNull(),
+  supplierInvitationId: uuid('supplier_invitation_id').references(() => supplierInvitations.id),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Quote Details
+  quoteNumber: varchar('quote_number', { length: 100 }),
+  quoteReference: varchar('quote_reference', { length: 100 }),
+  
+  // Status and Dates
+  status: varchar('status', { length: 20 }).notNull().default('draft'), // draft, submitted, under_review, accepted, rejected, expired
+  submissionDate: timestamp('submission_date').defaultNow(),
+  validUntil: timestamp('valid_until').notNull(),
+  
+  // Financial Summary
+  totalValue: decimal('total_value', { precision: 15, scale: 2 }).notNull(),
+  subtotal: decimal('subtotal', { precision: 15, scale: 2 }),
+  taxAmount: decimal('tax_amount', { precision: 15, scale: 2 }),
+  discountAmount: decimal('discount_amount', { precision: 15, scale: 2 }),
+  currency: varchar('currency', { length: 3 }).default('ZAR'),
+  
+  // Terms
+  leadTime: integer('lead_time'), // days
+  paymentTerms: text('payment_terms'),
+  deliveryTerms: text('delivery_terms'),
+  warrantyTerms: text('warranty_terms'),
+  validityPeriod: integer('validity_period'), // days
+  
+  // Additional Information
+  notes: text('notes'),
+  terms: text('terms'),
+  conditions: text('conditions'),
+  
+  // Evaluation
+  evaluationScore: decimal('evaluation_score', { precision: 5, scale: 2 }),
+  technicalScore: decimal('technical_score', { precision: 5, scale: 2 }),
+  commercialScore: decimal('commercial_score', { precision: 5, scale: 2 }),
+  evaluationNotes: text('evaluation_notes'),
+  isWinner: boolean('is_winner').default(false),
+  
+  // Award Information
+  awardedAt: timestamp('awarded_at'),
+  rejectedAt: timestamp('rejected_at'),
+  rejectionReason: text('rejection_reason'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    rfqQuoteIdx: index('quote_rfq_id_idx').on(table.rfqId),
+    supplierQuoteIdx: index('quote_supplier_id_idx').on(table.supplierId),
+    statusIdx: index('quote_status_idx').on(table.status),
+    submissionDateIdx: index('quote_submission_date_idx').on(table.submissionDate),
+  }
+});
+
+// Quote Items
+export const quoteItems = pgTable('quote_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  quoteId: uuid('quote_id').notNull().references(() => quotes.id, { onDelete: 'cascade' }),
+  rfqItemId: uuid('rfq_item_id').notNull().references(() => rfqItems.id),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Item Reference (from RFQ)
+  lineNumber: integer('line_number').notNull(),
+  itemCode: varchar('item_code', { length: 100 }),
+  description: text('description').notNull(),
+  
+  // Quoted Quantities and Pricing
+  quotedQuantity: decimal('quoted_quantity', { precision: 15, scale: 4 }),
+  unitPrice: decimal('unit_price', { precision: 15, scale: 2 }).notNull(),
+  totalPrice: decimal('total_price', { precision: 15, scale: 2 }).notNull(),
+  discountPercentage: decimal('discount_percentage', { precision: 5, scale: 2 }),
+  discountAmount: decimal('discount_amount', { precision: 15, scale: 2 }),
+  
+  // Alternative Offerings
+  alternateOffered: boolean('alternate_offered').default(false),
+  alternateDescription: text('alternate_description'),
+  alternatePartNumber: varchar('alternate_part_number', { length: 100 }),
+  alternateUnitPrice: decimal('alternate_unit_price', { precision: 15, scale: 2 }),
+  
+  // Delivery and Terms
+  leadTime: integer('lead_time'), // days
+  minimumOrderQuantity: decimal('minimum_order_quantity', { precision: 15, scale: 4 }),
+  packagingUnit: varchar('packaging_unit', { length: 50 }),
+  
+  // Technical Information
+  manufacturerName: varchar('manufacturer_name', { length: 255 }),
+  partNumber: varchar('part_number', { length: 100 }),
+  modelNumber: varchar('model_number', { length: 100 }),
+  technicalNotes: text('technical_notes'),
+  complianceCertificates: json('compliance_certificates'),
+  
+  // Evaluation
+  technicalCompliance: boolean('technical_compliance').default(true),
+  commercialScore: decimal('commercial_score', { precision: 5, scale: 2 }),
+  technicalScore: decimal('technical_score', { precision: 5, scale: 2 }),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    quoteItemIdx: index('quote_item_quote_id_idx').on(table.quoteId),
+    rfqItemReferenceIdx: index('quote_item_rfq_reference_idx').on(table.rfqItemId),
+    lineNumberUnique: unique('quote_item_line_unique').on(table.quoteId, table.lineNumber),
+  }
+});
+
+// Quote Documents (certificates, technical sheets, etc.)
+export const quoteDocuments = pgTable('quote_documents', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  quoteId: uuid('quote_id').notNull().references(() => quotes.id, { onDelete: 'cascade' }),
+  quoteItemId: uuid('quote_item_id').references(() => quoteItems.id),
+  
+  // Document Details
+  documentType: varchar('document_type', { length: 50 }).notNull(), // certificate, datasheet, warranty, compliance, other
+  documentName: text('document_name').notNull(),
+  fileName: text('file_name').notNull(),
+  fileUrl: text('file_url').notNull(),
+  fileSize: integer('file_size'), // bytes
+  mimeType: varchar('mime_type', { length: 100 }),
+  
+  // Metadata
+  description: text('description'),
+  isRequired: boolean('is_required').default(false),
+  validUntil: timestamp('valid_until'),
+  
+  uploadedAt: timestamp('uploaded_at').defaultNow(),
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => {
+  return {
+    quoteDocIdx: index('quote_document_quote_id_idx').on(table.quoteId),
+    itemDocIdx: index('quote_document_item_id_idx').on(table.quoteItemId),
+    docTypeIdx: index('quote_document_type_idx').on(table.documentType),
+  }
+});
+
+// Stock Management
+export const stockPositions = pgTable('stock_positions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Item Details
+  itemCode: varchar('item_code', { length: 100 }).notNull(),
+  itemName: text('item_name').notNull(),
+  description: text('description'),
+  category: varchar('category', { length: 100 }),
+  uom: varchar('uom', { length: 20 }).notNull(),
+  
+  // Stock Quantities
+  onHandQuantity: decimal('on_hand_quantity', { precision: 15, scale: 4 }).default('0'),
+  reservedQuantity: decimal('reserved_quantity', { precision: 15, scale: 4 }).default('0'),
+  availableQuantity: decimal('available_quantity', { precision: 15, scale: 4 }).default('0'),
+  inTransitQuantity: decimal('in_transit_quantity', { precision: 15, scale: 4 }).default('0'),
+  
+  // Valuation
+  averageUnitCost: decimal('average_unit_cost', { precision: 15, scale: 2 }),
+  totalValue: decimal('total_value', { precision: 15, scale: 2 }),
+  
+  // Location
+  warehouseLocation: varchar('warehouse_location', { length: 100 }),
+  binLocation: varchar('bin_location', { length: 50 }),
+  
+  // Reorder Information
+  reorderLevel: decimal('reorder_level', { precision: 15, scale: 4 }),
+  maxStockLevel: decimal('max_stock_level', { precision: 15, scale: 4 }),
+  economicOrderQuantity: decimal('economic_order_quantity', { precision: 15, scale: 4 }),
+  
+  // Tracking
+  lastMovementDate: timestamp('last_movement_date'),
+  lastCountDate: timestamp('last_count_date'),
+  nextCountDue: timestamp('next_count_due'),
+  
+  // Status
+  isActive: boolean('is_active').default(true),
+  stockStatus: varchar('stock_status', { length: 20 }).default('normal'), // normal, low, critical, excess, obsolete
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    projectStockIdx: index('stock_position_project_idx').on(table.projectId),
+    itemCodeIdx: index('stock_position_item_code_idx').on(table.projectId, table.itemCode),
+    categoryIdx: index('stock_position_category_idx').on(table.category),
+    stockStatusIdx: index('stock_position_status_idx').on(table.stockStatus),
+    projectItemUnique: unique('stock_position_project_item_unique').on(table.projectId, table.itemCode),
+  }
+});
+
+// Stock Movements
+export const stockMovements = pgTable('stock_movements', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Movement Details
+  movementType: varchar('movement_type', { length: 20 }).notNull(), // ASN, GRN, ISSUE, RETURN, TRANSFER, ADJUSTMENT
+  referenceNumber: varchar('reference_number', { length: 100 }).notNull(),
+  referenceType: varchar('reference_type', { length: 50 }), // PO, RFQ, WORK_ORDER, MANUAL
+  referenceId: varchar('reference_id', { length: 255 }),
+  
+  // Locations
+  fromLocation: varchar('from_location', { length: 100 }),
+  toLocation: varchar('to_location', { length: 100 }),
+  fromProjectId: varchar('from_project_id', { length: 255 }),
+  toProjectId: varchar('to_project_id', { length: 255 }),
+  
+  // Status and Dates
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, confirmed, completed, cancelled
+  movementDate: timestamp('movement_date').notNull(),
+  confirmedAt: timestamp('confirmed_at'),
+  
+  // Personnel
+  requestedBy: varchar('requested_by', { length: 255 }),
+  authorizedBy: varchar('authorized_by', { length: 255 }),
+  processedBy: varchar('processed_by', { length: 255 }),
+  
+  // Notes and Documentation
+  notes: text('notes'),
+  reason: text('reason'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    projectMovementIdx: index('stock_movement_project_idx').on(table.projectId),
+    typeIdx: index('stock_movement_type_idx').on(table.movementType),
+    statusIdx: index('stock_movement_status_idx').on(table.status),
+    referenceIdx: index('stock_movement_reference_idx').on(table.referenceType, table.referenceId),
+    movementDateIdx: index('stock_movement_date_idx').on(table.movementDate),
+  }
+});
+
+// Stock Movement Items
+export const stockMovementItems = pgTable('stock_movement_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  movementId: uuid('movement_id').notNull().references(() => stockMovements.id, { onDelete: 'cascade' }),
+  stockPositionId: uuid('stock_position_id').references(() => stockPositions.id),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Item Details
+  itemCode: varchar('item_code', { length: 100 }).notNull(),
+  itemName: text('item_name').notNull(),
+  description: text('description'),
+  uom: varchar('uom', { length: 20 }).notNull(),
+  
+  // Quantities
+  plannedQuantity: decimal('planned_quantity', { precision: 15, scale: 4 }).notNull(),
+  actualQuantity: decimal('actual_quantity', { precision: 15, scale: 4 }),
+  receivedQuantity: decimal('received_quantity', { precision: 15, scale: 4 }),
+  
+  // Costing
+  unitCost: decimal('unit_cost', { precision: 15, scale: 2 }),
+  totalCost: decimal('total_cost', { precision: 15, scale: 2 }),
+  
+  // Lot/Serial Tracking
+  lotNumbers: json('lot_numbers'), // Array of lot numbers
+  serialNumbers: json('serial_numbers'), // Array of serial numbers
+  
+  // Status
+  itemStatus: varchar('item_status', { length: 20 }).default('pending'), // pending, confirmed, completed, damaged, rejected
+  
+  // Quality Control
+  qualityCheckRequired: boolean('quality_check_required').default(false),
+  qualityCheckStatus: varchar('quality_check_status', { length: 20 }), // pending, passed, failed, waived
+  qualityNotes: text('quality_notes'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    movementItemIdx: index('stock_movement_item_movement_idx').on(table.movementId),
+    stockPositionIdx: index('stock_movement_item_position_idx').on(table.stockPositionId),
+    itemCodeIdx: index('stock_movement_item_code_idx').on(table.itemCode),
+  }
+});
+
+// Cable Drum Tracking (Special case for cable materials)
+export const cableDrums = pgTable('cable_drums', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  stockPositionId: uuid('stock_position_id').references(() => stockPositions.id),
+  
+  // Drum Identification
+  drumNumber: varchar('drum_number', { length: 100 }).notNull(),
+  serialNumber: varchar('serial_number', { length: 100 }),
+  supplierDrumId: varchar('supplier_drum_id', { length: 100 }),
+  
+  // Cable Details
+  cableType: varchar('cable_type', { length: 100 }).notNull(),
+  cableSpecification: text('cable_specification'),
+  manufacturerName: varchar('manufacturer_name', { length: 255 }),
+  partNumber: varchar('part_number', { length: 100 }),
+  
+  // Drum Measurements
+  originalLength: decimal('original_length', { precision: 10, scale: 2 }).notNull(), // meters
+  currentLength: decimal('current_length', { precision: 10, scale: 2 }).notNull(),
+  usedLength: decimal('used_length', { precision: 10, scale: 2 }).default('0'),
+  
+  // Physical Properties
+  drumWeight: decimal('drum_weight', { precision: 10, scale: 2 }), // kg
+  cableWeight: decimal('cable_weight', { precision: 10, scale: 2 }), // kg
+  drumDiameter: decimal('drum_diameter', { precision: 8, scale: 2 }), // mm
+  
+  // Location and Status
+  currentLocation: varchar('current_location', { length: 100 }),
+  drumCondition: varchar('drum_condition', { length: 20 }).default('good'), // good, damaged, returnable
+  installationStatus: varchar('installation_status', { length: 20 }).default('available'), // available, in_use, completed, returned
+  
+  // Tracking History
+  lastMeterReading: decimal('last_meter_reading', { precision: 10, scale: 2 }),
+  lastReadingDate: timestamp('last_reading_date'),
+  lastUsedDate: timestamp('last_used_date'),
+  
+  // Quality and Testing
+  testCertificate: text('test_certificate'),
+  installationNotes: text('installation_notes'),
+  
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    projectDrumIdx: index('cable_drum_project_idx').on(table.projectId),
+    drumNumberIdx: index('cable_drum_number_idx').on(table.projectId, table.drumNumber),
+    serialNumberIdx: index('cable_drum_serial_idx').on(table.serialNumber),
+    locationIdx: index('cable_drum_location_idx').on(table.currentLocation),
+    statusIdx: index('cable_drum_status_idx').on(table.installationStatus),
+    drumNumberUnique: unique('cable_drum_project_number_unique').on(table.projectId, table.drumNumber),
+  }
+});
+
+// Drum Usage History
+export const drumUsageHistory = pgTable('drum_usage_history', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  drumId: uuid('drum_id').notNull().references(() => cableDrums.id, { onDelete: 'cascade' }),
+  projectId: varchar('project_id', { length: 255 }).notNull(),
+  
+  // Usage Details
+  usageDate: timestamp('usage_date').notNull(),
+  poleNumber: varchar('pole_number', { length: 100 }),
+  sectionId: varchar('section_id', { length: 255 }),
+  workOrderId: varchar('work_order_id', { length: 255 }),
+  
+  // Measurements
+  previousReading: decimal('previous_reading', { precision: 10, scale: 2 }).notNull(),
+  currentReading: decimal('current_reading', { precision: 10, scale: 2 }).notNull(),
+  usedLength: decimal('used_length', { precision: 10, scale: 2 }).notNull(),
+  
+  // Personnel and Equipment
+  technicianId: varchar('technician_id', { length: 255 }),
+  technicianName: text('technician_name'),
+  equipmentUsed: text('equipment_used'),
+  
+  // Installation Details
+  installationType: varchar('installation_type', { length: 50 }), // overhead, underground, building
+  installationNotes: text('installation_notes'),
+  qualityNotes: text('quality_notes'),
+  
+  // GPS Coordinates
+  startCoordinates: json('start_coordinates'), // {lat, lng}
+  endCoordinates: json('end_coordinates'), // {lat, lng}
+  
+  createdAt: timestamp('created_at').defaultNow(),
+}, (table) => {
+  return {
+    drumUsageIdx: index('drum_usage_drum_id_idx').on(table.drumId),
+    projectUsageIdx: index('drum_usage_project_idx').on(table.projectId),
+    dateIdx: index('drum_usage_date_idx').on(table.usageDate),
+    poleIdx: index('drum_usage_pole_idx').on(table.poleNumber),
+  }
+});
+
+// Export updated tables object
+export const neonTables = {
+  // Existing tables
+  projectAnalytics,
+  kpiMetrics,
+  financialTransactions,
+  materialUsage,
+  staffPerformance,
+  reportCache,
+  auditLog,
+  clientAnalytics,
+  contractors,
+  contractorTeams,
+  teamMembers,
+  projectAssignments,
+  contractorDocuments,
+  // New Procurement tables
+  boqs,
+  boqItems,
+  boqExceptions,
+  rfqs,
+  rfqItems,
+  supplierInvitations,
+  quotes,
+  quoteItems,
+  quoteDocuments,
+  stockPositions,
+  stockMovements,
+  stockMovementItems,
+  cableDrums,
+  drumUsageHistory,
+};
+
+// Procurement Type Exports for TypeScript
+export type BOQ = typeof boqs.$inferSelect;
+export type NewBOQ = typeof boqs.$inferInsert;
+
+export type BOQItem = typeof boqItems.$inferSelect;
+export type NewBOQItem = typeof boqItems.$inferInsert;
+
+export type BOQException = typeof boqExceptions.$inferSelect;
+export type NewBOQException = typeof boqExceptions.$inferInsert;
+
+export type RFQ = typeof rfqs.$inferSelect;
+export type NewRFQ = typeof rfqs.$inferInsert;
+
+export type RFQItem = typeof rfqItems.$inferSelect;
+export type NewRFQItem = typeof rfqItems.$inferInsert;
+
+export type SupplierInvitation = typeof supplierInvitations.$inferSelect;
+export type NewSupplierInvitation = typeof supplierInvitations.$inferInsert;
+
+export type Quote = typeof quotes.$inferSelect;
+export type NewQuote = typeof quotes.$inferInsert;
+
+export type QuoteItem = typeof quoteItems.$inferSelect;
+export type NewQuoteItem = typeof quoteItems.$inferInsert;
+
+export type QuoteDocument = typeof quoteDocuments.$inferSelect;
+export type NewQuoteDocument = typeof quoteDocuments.$inferInsert;
+
+export type StockPosition = typeof stockPositions.$inferSelect;
+export type NewStockPosition = typeof stockPositions.$inferInsert;
+
+export type StockMovement = typeof stockMovements.$inferSelect;
+export type NewStockMovement = typeof stockMovements.$inferInsert;
+
+export type StockMovementItem = typeof stockMovementItems.$inferSelect;
+export type NewStockMovementItem = typeof stockMovementItems.$inferInsert;
+
+export type CableDrum = typeof cableDrums.$inferSelect;
+export type NewCableDrum = typeof cableDrums.$inferInsert;
+
+export type DrumUsageHistory = typeof drumUsageHistory.$inferSelect;
+export type NewDrumUsageHistory = typeof drumUsageHistory.$inferInsert;

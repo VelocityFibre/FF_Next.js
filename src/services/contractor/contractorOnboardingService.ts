@@ -3,7 +3,7 @@
  * Manages document verification, compliance checks, and approval process
  */
 
-import { db } from '@/lib/neon/db';
+import { db } from '@/lib/neon/connection';
 import { contractors, contractorDocuments } from '@/lib/neon/schema';
 import { eq, and } from 'drizzle-orm';
 import { ContractorDocument, DocumentType } from '@/types/contractor.types';

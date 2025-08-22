@@ -111,6 +111,25 @@ export function useCreateStaff() {
 }
 
 /**
+ * Hook to create or update a staff member (upsert operation)
+ */
+export function useCreateOrUpdateStaff() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (data: StaffFormData) => staffService.createOrUpdate(data),
+    onSuccess: () => {
+      // Invalidate and refetch all staff queries since we don't know if it was create or update
+      queryClient.invalidateQueries({ queryKey: staffKeys.all });
+    },
+    onError: (error: Error) => {
+      console.error('Failed to create or update staff member:', error);
+      throw error;
+    },
+  });
+}
+
+/**
  * Hook to update a staff member
  */
 export function useUpdateStaff() {

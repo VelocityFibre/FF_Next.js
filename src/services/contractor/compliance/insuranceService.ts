@@ -3,7 +3,7 @@
  * Following FibreFlow patterns and staying under 250 lines
  */
 
-import { db } from '@/lib/neon/db';
+import { db } from '@/lib/neon/connection';
 import { contractors, contractorDocuments } from '@/lib/neon/schema';
 import { eq, and, lt, gte } from 'drizzle-orm';
 import { InsurancePolicy, InsuranceClaim } from './complianceTypes';

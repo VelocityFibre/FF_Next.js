@@ -1,4 +1,4 @@
-employee id,name,email,phone,position,department ,reports to ,address,city,province,postalCode,start date
+Employee ID,name,email,phone,position,department ,reports to ,address,city,province,postalCode,start date
 VF001,Kylin Musgrave,kylin@velocityfibre.co.za ,+27 00 000 0000,Admin,Service Delivery,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
 VF002,Janice George,janice@velocityfibre.co.za,+27 00 000 0000,Admin,Service Delivery,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
 VF003,Lenardt Meyer,lenardt@velocityfibre.co.za,+27 00 000 0000,ProjectManager,Operations,Wian Musgrave,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01

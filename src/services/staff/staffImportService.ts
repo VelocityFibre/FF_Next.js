@@ -227,6 +227,16 @@ export const staffImportService = {
         
         console.log(`Processing row ${rowNumber}: employeeId="${employeeId}", name="${row.name}"`);
         
+        // COMPREHENSIVE DEBUG LOGGING - IMPORT SERVICE TRACING
+        console.log(`🔍 IMPORT SERVICE - Processing row ${rowNumber}:`);
+        console.log('Raw CSV row data:', row);
+        console.log('Manager lookup result:', {
+          managerName: row.managerName,
+          resolvedUuid: reportsTo,
+          reportsToType: typeof reportsTo,
+          reportsToValue: JSON.stringify(reportsTo)
+        });
+        
         // Create staff form data that matches StaffFormData interface
         const formData = {
           name: row.name.trim(),
@@ -255,6 +265,13 @@ export const staffImportService = {
           certifications: [],
           notes: ''
         };
+        
+        console.log('Generated formData for staffService:', {
+          name: formData.name,
+          employeeId: formData.employeeId,
+          reportsTo: formData.reportsTo,
+          reportsToType: typeof formData.reportsTo
+        });
         
         // Create or update staff member based on overwrite setting
         const staffMember = overwriteExisting 

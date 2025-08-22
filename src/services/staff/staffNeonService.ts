@@ -153,14 +153,18 @@ export const staffNeonService = {
    */
   async create(data: StaffFormData): Promise<StaffMember> {
     try {
-      // Debug logging for troubleshooting UUID errors
-      console.log('Creating staff member with data:', {
-        employeeId: data.employeeId,
-        name: data.name,
-        reportsTo: data.reportsTo,
-        reportsToType: typeof data.reportsTo,
-        reportsToValue: JSON.stringify(data.reportsTo)
-      });
+      // COMPREHENSIVE DEBUG LOGGING - UUID ERROR TRACING
+      console.log('🔍 CREATE METHOD - Full debugging trace:');
+      console.log('1. Raw input data:', JSON.stringify(data, null, 2));
+      console.log('2. reportsTo field analysis:');
+      console.log('   - Raw value:', data.reportsTo);
+      console.log('   - Type:', typeof data.reportsTo);
+      console.log('   - String representation:', String(data.reportsTo));
+      console.log('   - JSON stringify:', JSON.stringify(data.reportsTo));
+      console.log('   - Is undefined?', data.reportsTo === undefined);
+      console.log('   - Is null?', data.reportsTo === null);
+      console.log('   - Is empty string?', data.reportsTo === '');
+      console.log('   - Trimmed length:', data.reportsTo ? String(data.reportsTo).trim().length : 'N/A');
       
       // Validate required fields before database call
       if (!data.employeeId || data.employeeId.trim() === '') {
@@ -175,24 +179,67 @@ export const staffNeonService = {
         throw new Error('Email is required and cannot be empty');
       }
       
-      // Handle empty string for UUID fields - convert to null
-      const reportsTo = data.reportsTo && typeof data.reportsTo === 'string' && data.reportsTo.trim() !== '' ? data.reportsTo : null;
-      console.log('Processed reportsTo value:', reportsTo, 'Type:', typeof reportsTo);
+      // ULTRA-SAFE UUID PROCESSING - Multiple validation layers
+      let processedReportsTo: string | null = null;
+      
+      console.log('3. UUID Processing steps:');
+      
+      // Step 1: Check if reportsTo exists and is not undefined/null
+      if (data.reportsTo !== undefined && data.reportsTo !== null) {
+        console.log('   Step 1: reportsTo is not undefined/null');
+        
+        // Step 2: Convert to string and check if not empty
+        const reportsToString = String(data.reportsTo).trim();
+        console.log('   Step 2: Converted to string and trimmed:', `"${reportsToString}"`);
+        
+        // Step 3: Validate it's a non-empty string
+        if (reportsToString !== '' && reportsToString !== 'undefined' && reportsToString !== 'null') {
+          console.log('   Step 3: String is valid, using as UUID');
+          processedReportsTo = reportsToString;
+        } else {
+          console.log('   Step 3: String is empty/invalid, setting to null');
+          processedReportsTo = null;
+        }
+      } else {
+        console.log('   Step 1: reportsTo is undefined/null, setting to null');
+        processedReportsTo = null;
+      }
+      
+      console.log('4. Final processed reportsTo:', processedReportsTo);
+      console.log('5. Final processed reportsTo type:', typeof processedReportsTo);
+      
+      // TRIPLE CHECK - Absolutely ensure no empty strings
+      if (processedReportsTo === '') {
+        console.log('🚨 EMERGENCY: Empty string detected at final check, converting to null');
+        processedReportsTo = null;
+      }
+      
+      console.log('6. Pre-SQL final value:', processedReportsTo);
       
       const result = await sql`
         INSERT INTO staff (
           employee_id, name, email, phone, department, position, 
           status, join_date, reports_to, created_at, updated_at
         ) VALUES (
-          ${data.employeeId}, ${data.name}, ${data.email}, ${data.phone},
+          ${data.employeeId.trim()}, ${data.name.trim()}, ${data.email.trim()}, ${data.phone.trim()},
           ${data.department}, ${data.position}, ${data.status || 'ACTIVE'},
-          ${data.startDate || new Date()}, ${reportsTo}, 
+          ${data.startDate || new Date()}, ${processedReportsTo}, 
           NOW(), NOW()
         ) RETURNING *
       `;
+      
+      console.log('✅ CREATE SUCCESS - Staff member created:', result[0]);
       return result[0] as StaffMember;
     } catch (error) {
-      console.error('Error creating staff member:', error);
+      console.error('❌ CREATE ERROR - Detailed error info:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        inputData: data,
+        processedData: {
+          employeeId: data.employeeId,
+          reportsTo: data.reportsTo
+        }
+      });
       throw error;
     }
   },
@@ -202,14 +249,17 @@ export const staffNeonService = {
    */
   async createOrUpdate(data: StaffFormData): Promise<StaffMember> {
     try {
-      // Debug logging for troubleshooting UUID errors
-      console.log('Creating or updating staff member with data:', {
-        employeeId: data.employeeId,
-        name: data.name,
-        reportsTo: data.reportsTo,
-        reportsToType: typeof data.reportsTo,
-        reportsToValue: JSON.stringify(data.reportsTo)
-      });
+      // COMPREHENSIVE DEBUG LOGGING - CREATE OR UPDATE METHOD
+      console.log('🔍 CREATE_OR_UPDATE METHOD - Full debugging trace:');
+      console.log('1. Raw input data:', JSON.stringify(data, null, 2));
+      console.log('2. reportsTo field analysis:');
+      console.log('   - Raw value:', data.reportsTo);
+      console.log('   - Type:', typeof data.reportsTo);
+      console.log('   - String representation:', String(data.reportsTo));
+      console.log('   - JSON stringify:', JSON.stringify(data.reportsTo));
+      console.log('   - Is undefined?', data.reportsTo === undefined);
+      console.log('   - Is null?', data.reportsTo === null);
+      console.log('   - Is empty string?', data.reportsTo === '');
       
       // Validate required fields before database call
       if (!data.employeeId || data.employeeId.trim() === '') {
@@ -224,9 +274,42 @@ export const staffNeonService = {
         throw new Error('Email is required and cannot be empty');
       }
       
-      // Handle empty string for UUID fields - convert to null
-      const reportsTo = data.reportsTo && typeof data.reportsTo === 'string' && data.reportsTo.trim() !== '' ? data.reportsTo : null;
-      console.log('Processed reportsTo value:', reportsTo, 'Type:', typeof reportsTo);
+      // ULTRA-SAFE UUID PROCESSING - Multiple validation layers
+      let processedReportsTo: string | null = null;
+      
+      console.log('3. UUID Processing steps:');
+      
+      // Step 1: Check if reportsTo exists and is not undefined/null
+      if (data.reportsTo !== undefined && data.reportsTo !== null) {
+        console.log('   Step 1: reportsTo is not undefined/null');
+        
+        // Step 2: Convert to string and check if not empty
+        const reportsToString = String(data.reportsTo).trim();
+        console.log('   Step 2: Converted to string and trimmed:', `"${reportsToString}"`);
+        
+        // Step 3: Validate it's a non-empty string
+        if (reportsToString !== '' && reportsToString !== 'undefined' && reportsToString !== 'null') {
+          console.log('   Step 3: String is valid, using as UUID');
+          processedReportsTo = reportsToString;
+        } else {
+          console.log('   Step 3: String is empty/invalid, setting to null');
+          processedReportsTo = null;
+        }
+      } else {
+        console.log('   Step 1: reportsTo is undefined/null, setting to null');
+        processedReportsTo = null;
+      }
+      
+      console.log('4. Final processed reportsTo:', processedReportsTo);
+      console.log('5. Final processed reportsTo type:', typeof processedReportsTo);
+      
+      // TRIPLE CHECK - Absolutely ensure no empty strings
+      if (processedReportsTo === '') {
+        console.log('🚨 EMERGENCY: Empty string detected at final check, converting to null');
+        processedReportsTo = null;
+      }
+      
+      console.log('6. Pre-SQL final value:', processedReportsTo);
       
       // Check if staff member exists by employee_id
       const existing = await sql`
@@ -235,7 +318,9 @@ export const staffNeonService = {
       
       if (existing.length > 0) {
         // Update existing staff member
-        console.log(`Updating existing staff member with employee ID: ${data.employeeId}`);
+        console.log(`✏️ UPDATING existing staff member with employee ID: ${data.employeeId}`);
+        console.log('7. Pre-UPDATE SQL final value:', processedReportsTo);
+        
         const result = await sql`
           UPDATE staff SET
             name = ${data.name},
@@ -244,15 +329,19 @@ export const staffNeonService = {
             department = ${data.department},
             position = ${data.position},
             status = ${data.status || 'ACTIVE'},
-            reports_to = ${reportsTo},
+            reports_to = ${processedReportsTo},
             updated_at = NOW()
           WHERE employee_id = ${data.employeeId}
           RETURNING *
         `;
+        
+        console.log('✅ UPDATE SUCCESS - Staff member updated:', result[0]);
         return result[0] as StaffMember;
       } else {
         // Create new staff member
-        console.log(`Creating new staff member with employee ID: ${data.employeeId}`);
+        console.log(`➕ CREATING new staff member with employee ID: ${data.employeeId}`);
+        console.log('7. Pre-INSERT SQL final value:', processedReportsTo);
+        
         const result = await sql`
           INSERT INTO staff (
             employee_id, name, email, phone, department, position, 
@@ -260,14 +349,24 @@ export const staffNeonService = {
           ) VALUES (
             ${data.employeeId}, ${data.name}, ${data.email}, ${data.phone},
             ${data.department}, ${data.position}, ${data.status || 'ACTIVE'},
-            ${data.startDate || new Date()}, ${reportsTo}, 
+            ${data.startDate || new Date()}, ${processedReportsTo}, 
             NOW(), NOW()
           ) RETURNING *
         `;
+        
+        console.log('✅ INSERT SUCCESS - Staff member created:', result[0]);
         return result[0] as StaffMember;
       }
     } catch (error) {
-      console.error('Error creating or updating staff member:', error);
+      console.error('❌ CREATE_OR_UPDATE ERROR - Detailed error info:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace',
+        inputData: data,
+        processedData: {
+          employeeId: data.employeeId,
+          reportsTo: data.reportsTo
+        }
+      });
       throw error;
     }
   },

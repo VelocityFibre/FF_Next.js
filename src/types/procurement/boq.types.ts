@@ -1,251 +1,255 @@
-import { Timestamp } from 'firebase/firestore';
-import { UnitOfMeasure, Currency } from './stock.types';
-
 // ============= BOQ (Bill of Quantities) Types =============
+// Updated to match Drizzle database schema
 
+// BOQ Status enumeration matching database schema
 export enum BOQStatus {
   DRAFT = 'draft',
-  REVIEW = 'review',
-  PENDING_REVIEW = 'pending_review',
+  MAPPING_REVIEW = 'mapping_review',
   APPROVED = 'approved',
-  REVISED = 'revised',
-  REJECTED = 'rejected',
-  EXPIRED = 'expired',
-  CANCELLED = 'cancelled'
+  ARCHIVED = 'archived'
 }
 
-export type BOQStatusType = 'draft' | 'review' | 'pending_review' | 'approved' | 'revised' | 'rejected' | 'expired' | 'cancelled';
+export type BOQStatusType = 'draft' | 'mapping_review' | 'approved' | 'archived';
 
+// Mapping Status enumeration
+export enum MappingStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  FAILED = 'failed'
+}
+
+export type MappingStatusType = 'pending' | 'in_progress' | 'completed' | 'failed';
+
+// BOQ Item Mapping Status
+export enum BOQItemMappingStatus {
+  PENDING = 'pending',
+  MAPPED = 'mapped',
+  MANUAL = 'manual',
+  EXCEPTION = 'exception'
+}
+
+export type BOQItemMappingStatusType = 'pending' | 'mapped' | 'manual' | 'exception';
+
+// BOQ Item Procurement Status
+export enum ProcurementStatus {
+  PENDING = 'pending',
+  RFQ_CREATED = 'rfq_created',
+  QUOTED = 'quoted',
+  AWARDED = 'awarded',
+  ORDERED = 'ordered'
+}
+
+export type ProcurementStatusType = 'pending' | 'rfq_created' | 'quoted' | 'awarded' | 'ordered';
+
+// Main BOQ interface matching database schema exactly
 export interface BOQ {
-  id?: string;
-  number: string; // Unique BOQ number
-  title: string;
-  projectId: string;
-  projectName: string;
-  projectCode?: string;
-  clientName?: string;
-  totalAmount?: number;
-  isTemplate?: boolean;
-  validUntil?: Timestamp;
+  id: string;
+  projectId: string; // Firebase project ID
   
-  // Version control
-  version: number;
-  isLatestVersion: boolean;
-  previousVersionId?: string;
+  // BOQ Details
+  version: string;
+  title?: string;
+  description?: string;
   
-  // Status
+  // Status and Workflow
   status: BOQStatusType;
+  mappingStatus?: MappingStatusType;
+  mappingConfidence?: number; // 0-100
   
-  // Items
-  sections: BOQSection[];
-  items: BOQItem[];
+  // Upload Information
+  uploadedBy: string;
+  uploadedAt: Date;
+  fileName?: string;
+  fileUrl?: string;
+  fileSize?: number; // bytes
+  
+  // Approval Workflow
+  approvedBy?: string;
+  approvedAt?: Date;
+  rejectedBy?: string;
+  rejectedAt?: Date;
+  rejectionReason?: string;
+  
+  // Metadata
+  itemCount: number;
+  mappedItems: number;
+  unmappedItems: number;
+  exceptionsCount: number;
   
   // Totals
-  totalItems: number;
-  subtotal: number;
-  vat: number;
-  vatRate: number;
-  total: number;
-  currency: Currency;
+  totalEstimatedValue?: number;
+  currency: string; // Default 'ZAR'
   
-  // Validity
-  validFrom: Timestamp;
-  validTo: Timestamp;
-  
-  // Metadata
-  description?: string;
-  terms?: string;
-  notes?: string;
-  tags: string[];
-  attachments?: string[];
-  
-  // Workflow
-  createdAt: Timestamp;
-  createdBy: string;
-  createdByName: string;
-  
-  reviewedBy?: string;
-  reviewedByName?: string;
-  reviewedAt?: Timestamp;
-  reviewNotes?: string;
-  
-  approvedBy?: string;
-  approvedByName?: string;
-  approvedAt?: Timestamp;
-  approvalNotes?: string;
-  
-  revisedBy?: string;
-  revisedByName?: string;
-  revisedAt?: Timestamp;
-  revisionReason?: string;
+  // Timestamps
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface BOQSection {
-  id: string;
-  name: string;
-  description?: string;
-  order: number;
-  items: string[]; // Item IDs in this section
-  subtotal: number;
-}
-
+// BOQ Item interface matching database schema
 export interface BOQItem {
   id: string;
-  sectionId?: string;
-  
-  // Item details
-  itemCode: string;
-  itemName: string;
-  description?: string;
-  specifications?: string;
-  
-  // Quantities
-  quantity: number;
-  unit: UnitOfMeasure;
-  wastagePercent?: number;
-  totalQuantity: number; // Including wastage
-  
-  // Pricing
-  unitRate: number;
-  amount: number;
-  currency: Currency;
-  
-  // Stock reference
-  stockItemId?: string;
-  isStockItem: boolean;
-  
-  // Status
-  isOptional?: boolean;
-  isIncluded: boolean;
-  
-  // Metadata
-  supplierName?: string;
-  supplierId?: string;
-  leadTimeDays?: number;
-  notes?: string;
-  
-  // Order in BOQ
-  order: number;
-}
-
-export interface BOQTemplate {
-  id?: string;
-  name: string;
-  description?: string;
-  category: string;
-  
-  // Template items
-  sections: BOQSection[];
-  items: Omit<BOQItem, 'id'>[];
-  
-  // Usage
-  usageCount: number;
-  lastUsedAt?: Timestamp;
-  
-  // Metadata
-  tags: string[];
-  isActive: boolean;
-  createdAt: Timestamp;
-  createdBy: string;
-  updatedAt: Timestamp;
-  updatedBy: string;
-}
-
-export interface BOQRevision {
-  id?: string;
   boqId: string;
-  boqNumber: string;
+  projectId: string; // Denormalized for performance
   
-  // Version info
-  fromVersion: number;
-  toVersion: number;
+  // Line Item Details
+  lineNumber: number;
+  itemCode?: string;
+  description: string;
+  category?: string;
+  subcategory?: string;
   
-  // Changes
-  changeType: 'price_update' | 'quantity_change' | 'item_addition' | 'item_removal' | 'specification_change' | 'other';
-  changeSummary: string;
-  changeDetails?: {
-    itemsAdded?: string[];
-    itemsRemoved?: string[];
-    itemsModified?: string[];
-    priceChanges?: Array<{
-      itemId: string;
-      oldPrice: number;
-      newPrice: number;
-    }>;
-    quantityChanges?: Array<{
-      itemId: string;
-      oldQuantity: number;
-      newQuantity: number;
-    }>;
-  };
+  // Quantities and Units
+  quantity: number;
+  uom: string; // unit of measure
+  unitPrice?: number;
+  totalPrice?: number;
   
-  // Impact
-  costImpact: number;
-  costImpactPercent: number;
+  // Project Structure
+  phase?: string;
+  task?: string;
+  site?: string;
+  location?: string;
   
-  // Metadata
-  reason: string;
-  requestedBy?: string;
-  requestedByName?: string;
+  // Catalog Mapping
+  catalogItemId?: string;
+  catalogItemCode?: string;
+  catalogItemName?: string;
+  mappingConfidence?: number; // 0-100
+  mappingStatus: BOQItemMappingStatusType;
   
-  createdAt: Timestamp;
-  createdBy: string;
-  createdByName: string;
+  // Technical Specifications
+  specifications?: Record<string, any>;
+  technicalNotes?: string;
+  alternativeItems?: any[]; // Array of alternative catalog items
   
-  approvedBy?: string;
-  approvedByName?: string;
-  approvedAt?: Timestamp;
+  // Procurement Status
+  procurementStatus: ProcurementStatusType;
+  
+  // Timestamps
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface BOQComparison {
-  boq1Id: string;
-  boq1Number: string;
-  boq1Version: number;
+// BOQ Exception interface for mapping issues
+export interface BOQException {
+  id: string;
+  boqId: string;
+  boqItemId: string;
+  projectId: string;
   
-  boq2Id: string;
-  boq2Number: string;
-  boq2Version: number;
+  // Exception Details
+  exceptionType: 'no_match' | 'multiple_matches' | 'data_issue' | 'manual_review';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   
-  // Differences
-  itemsOnlyInBoq1: BOQItem[];
-  itemsOnlyInBoq2: BOQItem[];
-  itemsInBoth: Array<{
-    item: BOQItem;
-    boq1Quantity: number;
-    boq2Quantity: number;
-    quantityDiff: number;
-    boq1Price: number;
-    boq2Price: number;
-    priceDiff: number;
-  }>;
+  // Issue Description
+  issueDescription: string;
+  suggestedAction?: string;
+  systemSuggestions?: any[]; // Array of suggested mappings
   
-  // Totals comparison
-  boq1Total: number;
-  boq2Total: number;
-  totalDifference: number;
-  totalDifferencePercent: number;
+  // Resolution
+  status: 'open' | 'in_review' | 'resolved' | 'ignored';
+  resolvedBy?: string;
+  resolvedAt?: Date;
+  resolutionNotes?: string;
+  resolutionAction?: 'manual_mapping' | 'catalog_update' | 'item_split' | 'item_ignore';
   
-  // Metadata
-  comparedAt: Timestamp;
-  comparedBy: string;
+  // Assignment
+  assignedTo?: string;
+  assignedAt?: Date;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  
+  // Timestamps
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Alternative catalog item suggestion
+export interface AlternativeItem {
+  catalogItemId: string;
+  catalogItemCode: string;
+  catalogItemName: string;
+  matchingScore: number; // 0-100
+  priceVariance?: number;
+  specifications?: Record<string, any>;
+}
+
+// Mapping suggestion for automated catalog matching
+export interface MappingSuggestion {
+  catalogItemId: string;
+  catalogItemCode: string;
+  catalogItemName: string;
+  confidence: number; // 0-100
+  matchingCriteria: {
+    descriptionMatch?: number;
+    codeMatch?: number;
+    specificationMatch?: number;
+    categoryMatch?: number;
+  };
+  priceEstimate?: number;
+  leadTimeEstimate?: number;
+}
+
+// BOQ Import data structure (for Excel/CSV uploads)
+export interface BOQImportData {
+  fileName: string;
+  fileSize: number;
+  projectId: string;
+  version: string;
+  title?: string;
+  description?: string;
+  uploadedBy: string;
+  rows: BOQImportRow[];
+}
+
+export interface BOQImportRow {
+  lineNumber: number;
+  itemCode?: string;
+  description: string;
+  category?: string;
+  subcategory?: string;
+  quantity: number;
+  uom: string;
+  unitPrice?: number;
+  totalPrice?: number;
+  phase?: string;
+  task?: string;
+  site?: string;
+  location?: string;
+  specifications?: string;
+  technicalNotes?: string;
 }
 
 // Form data for creating/updating BOQ
 export interface BOQFormData {
-  number?: string;
-  title: string;
-  projectId?: string;
-  projectName?: string;
-  clientId?: string;
-  clientName?: string;
-  sections?: BOQSection[];
-  items: BOQItem[];
-  notes?: string;
-  termsAndConditions?: string;
-  validUntil?: Date | Timestamp;
+  version: string;
+  title?: string;
+  description?: string;
+  projectId: string;
   currency?: string;
-  taxRate?: number;
-  discountRate?: number;
-  markup?: number;
-  contingency?: number;
 }
+
+// BOQ with populated items (for display)
+export interface BOQWithItems extends BOQ {
+  items: BOQItem[];
+  exceptions: BOQException[];
+}
+
+// BOQ statistics for dashboard
+export interface BOQStats {
+  totalBOQs: number;
+  activeBOQs: number;
+  approvedBOQs: number;
+  pendingApproval: number;
+  totalItems: number;
+  mappedItems: number;
+  unmappedItems: number;
+  exceptionsCount: number;
+  totalValue: number;
+  averageValue: number;
+}
+
+// Type exports that match Drizzle inferred types
+export type { BOQ as DrizzleBOQ, NewBOQ as NewDrizzleBOQ } from '../../lib/neon/schema';
+export type { BOQItem as DrizzleBOQItem, NewBOQItem as NewDrizzleBOQItem } from '../../lib/neon/schema';
+export type { BOQException as DrizzleBOQException, NewBOQException as NewDrizzleBOQException } from '../../lib/neon/schema';
