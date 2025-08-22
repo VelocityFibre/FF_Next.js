@@ -7,8 +7,9 @@ import {
   enableMultiTabIndexedDbPersistence 
 } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
-import { getAnalytics, isSupported } from 'firebase/analytics';
-import { getPerformance } from 'firebase/performance';
+// Analytics and Performance disabled to prevent API key errors
+// import { getAnalytics, isSupported } from 'firebase/analytics';
+// import { getPerformance } from 'firebase/performance';
 
 // Firebase configuration
 // Note: These are public keys protected by Firebase Security Rules
@@ -30,21 +31,22 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Initialize Analytics (only in production and if supported)
+// Analytics and Performance Monitoring disabled to prevent installation errors
+// These features require additional API enablement in Google Cloud Console
 let analytics = null;
-if (import.meta.env.VITE_ENABLE_ANALYTICS === 'true') {
-  isSupported().then((supported) => {
-    if (supported) {
-      analytics = getAnalytics(app);
-    }
-  });
-}
-
-// Initialize Performance Monitoring (only in production)
 let performance = null;
-if (import.meta.env.VITE_APP_ENV === 'production') {
-  performance = getPerformance(app);
-}
+
+// Uncomment when APIs are enabled:
+// if (import.meta.env.VITE_ENABLE_ANALYTICS === 'true') {
+//   isSupported().then((supported) => {
+//     if (supported) {
+//       analytics = getAnalytics(app);
+//     }
+//   });
+// }
+// if (import.meta.env.VITE_APP_ENV === 'production') {
+//   performance = getPerformance(app);
+// }
 
 // Enable offline persistence for Firestore
 if (import.meta.env.VITE_ENABLE_OFFLINE === 'true') {

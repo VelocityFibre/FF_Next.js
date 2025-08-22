@@ -21,7 +21,9 @@
       "Bash(npm run typecheck:*)",
       "Bash(git push:*)",
       "Bash(firebase deploy:*)",
-      "Bash(firebase apps:sdkconfig:*)"
+      "Bash(firebase apps:sdkconfig:*)",
+      "Bash(firebase projects:list:*)",
+      "Bash(firebase auth:export:*)"
     ],
     "deny": [],
     "ask": []
