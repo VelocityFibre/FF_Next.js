@@ -1,6 +1,6 @@
 import VFLogo from '@/components/ui/VFLogo';
 import { getUserInitials, getUserName, getUserRole } from './userUtils';
-import type { User } from 'firebase/auth';
+import type { User } from '@/types/auth.types';
 import type { SidebarStyles } from './types';
 import type { ThemeConfig } from '@/types/theme.types';
 

@@ -22,11 +22,56 @@ export function ProjectDetailsStep({
           Project Location
         </label>
         <input
-          {...register('location')}
+          {...register('location.address')}
           type="text"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="City, Region"
+          placeholder="Street Address"
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            City
+          </label>
+          <input
+            {...register('location.city')}
+            type="text"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="City"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Province
+          </label>
+          <select
+            {...register('location.province')}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select province</option>
+            <option value="WC">Western Cape</option>
+            <option value="GP">Gauteng</option>
+            <option value="KZN">KwaZulu-Natal</option>
+            <option value="EC">Eastern Cape</option>
+            <option value="NC">Northern Cape</option>
+            <option value="FS">Free State</option>
+            <option value="MP">Mpumalanga</option>
+            <option value="LP">Limpopo</option>
+            <option value="NW">North West</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Postal Code
+          </label>
+          <input
+            {...register('location.postalCode')}
+            type="text"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Postal Code"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

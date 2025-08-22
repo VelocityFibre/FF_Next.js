@@ -90,6 +90,7 @@ export enum ClientStatus {
   SUSPENDED = 'suspended',
   PROSPECT = 'prospect',
   FORMER = 'former',
+  CHURNED = 'churned',
 }
 
 export enum ClientType {

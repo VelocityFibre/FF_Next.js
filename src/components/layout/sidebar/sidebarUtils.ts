@@ -1,9 +1,10 @@
 import type { NavSection, SidebarStyles } from './types';
 import type { ThemeConfig } from '@/types/theme.types';
+import type { Permission } from '@/types/auth.types';
 
 export const filterNavigationItems = (
   navItems: NavSection[], 
-  hasPermission: (permission: string) => boolean
+  hasPermission: (permission: Permission) => boolean
 ): NavSection[] => {
   return navItems.map(section => ({
     ...section,

@@ -20,6 +20,7 @@ interface DashboardHeaderProps {
   onRefresh?: () => void;
   onExport?: () => void;
   showActions?: boolean;
+  isRefreshing?: boolean;
 }
 
 export function DashboardHeader({ 
@@ -28,7 +29,8 @@ export function DashboardHeader({
   actions = [],
   onRefresh, 
   onExport, 
-  showActions = true 
+  showActions = true,
+  isRefreshing = false
 }: DashboardHeaderProps) {
   const { currentUser } = useAuth();
 
@@ -83,8 +85,8 @@ export function DashboardHeader({
       {showActions && actions.length === 0 && (
         <div className="ff-header-legacy-actions">
           {onRefresh && (
-            <button onClick={onRefresh} className="ff-button ff-button-secondary">
-              <RefreshCw className="w-4 h-4" />
+            <button onClick={onRefresh} className="ff-button ff-button-secondary" disabled={isRefreshing}>
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh
             </button>
           )}

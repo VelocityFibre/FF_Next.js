@@ -1,5 +1,5 @@
 import { 
-  Clock, Wrench, CheckCircle, MapPin, User, 
+  Clock, Wrench, CheckCircle, MapPin, 
   AlertTriangle, ChevronRight, Paperclip 
 } from 'lucide-react';
 import { cn } from '@/utils/cn';

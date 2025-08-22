@@ -27,7 +27,7 @@ export class DevelopmentAgent extends BaseAgent {
     this.logger.info('Development Agent initialized');
   }
 
-  protected async executeTaskInternal(task: Task, context: TaskExecutionContext): Promise<any> {
+  protected async executeTaskInternal(task: Task, context: TaskExecutionContext): Promise<unknown> {
     this.logger.info(`Executing development task: ${task.type}`);
 
     switch (task.type) {
@@ -59,7 +59,7 @@ export class DevelopmentAgent extends BaseAgent {
 
   // Task-specific implementations
 
-  private async handleAngularToReactMigration(task: Task, _context: TaskExecutionContext): Promise<any> {
+  private async handleAngularToReactMigration(task: Task, _context: TaskExecutionContext): Promise<unknown> {
     this.validateTaskParameters(task, ['angularComponent', 'reactComponent']);
     
     const { angularComponent, reactComponent, preserveLogic = true, useHooks = true } = task.parameters;
@@ -112,7 +112,7 @@ export class DevelopmentAgent extends BaseAgent {
     }
   }
 
-  private async handleComponentGeneration(task: Task, _context: TaskExecutionContext): Promise<any> {
+  private async handleComponentGeneration(task: Task, _context: TaskExecutionContext): Promise<unknown> {
     this.validateTaskParameters(task, ['componentName']);
     
     const { componentName, props = {}, styling = 'tailwindcss' } = task.parameters;
@@ -157,7 +157,7 @@ export class DevelopmentAgent extends BaseAgent {
     }
   }
 
-  private async handleServiceMigration(task: Task, _context: TaskExecutionContext): Promise<any> {
+  private async handleServiceMigration(task: Task, _context: TaskExecutionContext): Promise<unknown> {
     this.validateTaskParameters(task, ['angularService']);
     
     const { angularService, useReactQuery = true } = task.parameters;
@@ -207,7 +207,7 @@ export class DevelopmentAgent extends BaseAgent {
     }
   }
 
-  private async handleFirebaseIntegration(task: Task, _context: TaskExecutionContext): Promise<any> {
+  private async handleFirebaseIntegration(task: Task, _context: TaskExecutionContext): Promise<unknown> {
     this.validateTaskParameters(task, ['collection', 'operations']);
     
     const { collection, operations, realtime = false } = task.parameters;
@@ -291,7 +291,7 @@ export class DevelopmentAgent extends BaseAgent {
     }
   }
 
-  private analyzeAngularComponent(code: string): any {
+  private analyzeAngularComponent(code: string): ComponentAnalysis {
     // Simplified Angular component analysis
     // In a real implementation, this would use AST parsing
     return {
@@ -306,7 +306,7 @@ export class DevelopmentAgent extends BaseAgent {
     };
   }
 
-  private convertToReact(analysis: any, options: any): string {
+  private convertToReact(analysis: ComponentAnalysis, options: ConversionOptions): string {
     const { componentName, useHooks } = options;
     
     if (useHooks) {
@@ -316,7 +316,7 @@ export class DevelopmentAgent extends BaseAgent {
     }
   }
 
-  private generateFunctionalComponent(analysis: any, componentName: string): string {
+  private generateFunctionalComponent(analysis: ComponentAnalysis, componentName: string): string {
     return `import React, { useState, useEffect } from 'react';
 import { ${componentName}Props } from './${componentName}.types';
 
@@ -342,7 +342,7 @@ export const ${componentName}: React.FC<${componentName}Props> = (props) => {
 };`;
   }
 
-  private generateClassComponent(analysis: any, componentName: string): string {
+  private generateClassComponent(analysis: ComponentAnalysis, componentName: string): string {
     return `import React, { Component } from 'react';
 import { ${componentName}Props, ${componentName}State } from './${componentName}.types';
 
@@ -371,7 +371,7 @@ export class ${componentName} extends Component<${componentName}Props, ${compone
 }`;
   }
 
-  private generateReactComponent(componentName: string, props: any, styling: string): string {
+  private generateReactComponent(componentName: string, props: ComponentProps, styling: string): string {
     return `import React from 'react';
 import { ${componentName}Props } from './${componentName}.types';
 ${styling === 'tailwindcss' ? '' : `import './${componentName}.css';`}

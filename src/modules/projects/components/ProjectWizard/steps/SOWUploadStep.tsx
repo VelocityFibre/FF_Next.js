@@ -2,9 +2,10 @@ import { SOWUploadSection } from '../../SOWUploadSection';
 
 interface SOWUploadStepProps {
   projectId?: string;
+  onUploadComplete?: () => void;
 }
 
-export function SOWUploadStep({ projectId }: SOWUploadStepProps) {
+export function SOWUploadStep({ projectId, onUploadComplete }: SOWUploadStepProps) {
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -19,10 +20,8 @@ export function SOWUploadStep({ projectId }: SOWUploadStepProps) {
       {projectId ? (
         <SOWUploadSection 
           projectId={projectId}
-          onUploadComplete={() => {
-            // Handle upload completion
-            console.log('SOW upload completed');
-          }}
+          projectName="New Project"
+          onComplete={onUploadComplete || (() => {})}
         />
       ) : (
         <div className="text-center py-8 text-gray-500">

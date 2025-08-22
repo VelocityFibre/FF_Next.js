@@ -18,7 +18,7 @@ export function MeetingForm({ meeting, isOpen, onClose, onSave }: MeetingFormPro
   const [agendaItems, setAgendaItems] = useState<string[]>(meeting?.agenda || ['']);
   const [participants, setParticipants] = useState<string[]>(meeting?.participants || ['']);
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
     defaultValues: meeting ? {
       ...meeting,
       date: meeting.date,

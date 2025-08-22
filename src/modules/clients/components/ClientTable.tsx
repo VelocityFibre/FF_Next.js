@@ -2,9 +2,9 @@ import type { Client } from '@/types/client.types';
 import { ClientTableRow } from './ClientTableRow';
 
 interface ClientTableProps {
-  clients?: Client[];
+  clients: Client[] | undefined;
   isLoading: boolean;
-  error?: Error | null;
+  error: Error | null | undefined;
   onDelete: (id: string) => void;
 }
 

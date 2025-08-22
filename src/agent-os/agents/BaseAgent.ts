@@ -80,7 +80,7 @@ export abstract class BaseAgent extends EventEmitter {
   /**
    * Execute a task
    */
-  async executeTask(task: Task): Promise<any> {
+  async executeTask(task: Task): Promise<unknown> {
     const executionContext: TaskExecutionContext = {
       taskId: task.id,
       agentId: this.instance.id,
@@ -150,7 +150,7 @@ export abstract class BaseAgent extends EventEmitter {
   /**
    * Send a message to another agent
    */
-  async sendMessage(toAgentId: string, messageType: MessageType, payload: any, priority: MessagePriority = MessagePriority.NORMAL): Promise<void> {
+  async sendMessage(toAgentId: string, messageType: MessageType, payload: unknown, priority: MessagePriority = MessagePriority.NORMAL): Promise<void> {
     if (!this.messageBroker) {
       throw new Error('Message broker not initialized');
     }
@@ -173,7 +173,7 @@ export abstract class BaseAgent extends EventEmitter {
   /**
    * Broadcast a message to all agents
    */
-  async broadcastMessage(messageType: MessageType, payload: any, priority: MessagePriority = MessagePriority.NORMAL): Promise<void> {
+  async broadcastMessage(messageType: MessageType, payload: unknown, priority: MessagePriority = MessagePriority.NORMAL): Promise<void> {
     if (!this.messageBroker) {
       throw new Error('Message broker not initialized');
     }
@@ -264,7 +264,7 @@ export abstract class BaseAgent extends EventEmitter {
   /**
    * Execute a task with agent-specific logic
    */
-  protected abstract executeTaskInternal(task: Task, context: TaskExecutionContext): Promise<any>;
+  protected abstract executeTaskInternal(task: Task, context: TaskExecutionContext): Promise<unknown>;
 
   /**
    * Agent-specific shutdown logic
@@ -278,19 +278,19 @@ export abstract class BaseAgent extends EventEmitter {
 
     try {
       switch (message.type) {
-        case 'TASK_REQUEST' as any:
+        case MessageType.TASK_REQUEST:
           await this.handleTaskRequest(message);
           break;
         
-        case 'COORDINATION_REQUEST' as any:
+        case MessageType.COORDINATION_REQUEST:
           await this.handleCoordinationRequest(message);
           break;
         
-        case 'STATUS_UPDATE' as any:
+        case MessageType.STATUS_UPDATE:
           await this.handleStatusUpdate(message);
           break;
         
-        case 'SHUTDOWN_SIGNAL' as any:
+        case MessageType.SHUTDOWN_SIGNAL:
           await this.handleShutdownSignal(message);
           break;
         
@@ -318,7 +318,7 @@ export abstract class BaseAgent extends EventEmitter {
         // Send response
         await this.sendMessage(
           message.fromAgentId,
-          'TASK_RESPONSE' as any,
+          MessageType.TASK_RESPONSE,
           { taskId: task.id, status: 'completed', result: task.result },
           MessagePriority.HIGH
         );
@@ -326,7 +326,7 @@ export abstract class BaseAgent extends EventEmitter {
         // Send error response
         await this.sendMessage(
           message.fromAgentId,
-          'TASK_RESPONSE' as any,
+          MessageType.TASK_RESPONSE,
           { taskId: task.id, status: 'failed', error: error instanceof Error ? error.message : String(error) },
           MessagePriority.HIGH
         );
@@ -335,7 +335,7 @@ export abstract class BaseAgent extends EventEmitter {
       // Reject task
       await this.sendMessage(
         message.fromAgentId,
-        'TASK_RESPONSE' as any,
+        MessageType.TASK_RESPONSE,
         { taskId: task.id, status: 'rejected', reason: 'Cannot handle task' },
         MessagePriority.NORMAL
       );

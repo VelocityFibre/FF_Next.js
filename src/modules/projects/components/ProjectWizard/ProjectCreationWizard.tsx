@@ -44,8 +44,8 @@ export function ProjectCreationWizard() {
   const handleSubmit = async () => {
     try {
       const formData = form.getValues();
-      const result = await createProject.mutateAsync(formData);
-      setCreatedProjectId(result.id);
+      const projectId = await createProject.mutateAsync(formData);
+      setCreatedProjectId(projectId);
       setProjectCreated(true);
       setCurrentStep(2); // Move to SOW upload step
     } catch (error) {
@@ -57,8 +57,8 @@ export function ProjectCreationWizard() {
     navigate('/app/projects');
   };
 
-  const selectedClient = clients.find(c => c.id === form.watch('clientId'));
-  const selectedProjectManager = projectManagers.find(pm => pm.id === form.watch('projectManagerId'));
+  const selectedClient = clients?.find(c => c.id === form.watch('clientId'));
+  const selectedProjectManager = projectManagers?.find(pm => pm.id === form.watch('projectManagerId'));
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -66,7 +66,7 @@ export function ProjectCreationWizard() {
         return (
           <BasicInfoStep
             form={form}
-            clients={clients}
+            clients={clients?.map(c => ({ id: c.id!, name: c.name })) || []}
             isClientsLoading={isClientsLoading}
           />
         );
@@ -79,13 +79,13 @@ export function ProjectCreationWizard() {
           />
         );
       case 2:
-        return <SOWUploadStep projectId={createdProjectId} />;
+        return <SOWUploadStep projectId={createdProjectId!} />;
       case 3:
         return (
           <ReviewStep
             form={form}
-            clientName={selectedClient?.name}
-            projectManagerName={selectedProjectManager?.name}
+            clientName={selectedClient?.name || 'Unknown'}
+            projectManagerName={selectedProjectManager?.name || 'Unassigned'}
           />
         );
       default:

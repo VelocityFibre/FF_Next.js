@@ -1,6 +1,6 @@
 import { 
   Calendar, Clock, MapPin, Video, Users, 
-  ChevronRight, CheckCircle, X 
+  CheckCircle, Edit, Trash2
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { Meeting } from '../types/meeting.types';

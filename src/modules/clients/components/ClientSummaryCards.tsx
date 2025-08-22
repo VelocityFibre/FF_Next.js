@@ -3,12 +3,13 @@ import { Building2, Users, DollarSign, TrendingUp, AlertCircle } from 'lucide-re
 interface ClientSummary {
   totalClients: number;
   activeClients: number;
-  totalProjects: number;
+  prospectClients?: number;
+  totalProjects?: number;
   totalProjectValue: number;
-  averageProjectValue: number;
-  clientsWithActiveProjects: number;
-  monthlyGrowthRate: number;
-  highPriorityClients: number;
+  averageProjectValue?: number;
+  clientsWithActiveProjects?: number;
+  monthlyGrowthRate?: number;
+  highPriorityClients?: number;
 }
 
 interface ClientSummaryCardsProps {
@@ -51,7 +52,7 @@ export function ClientSummaryCards({ summary }: ClientSummaryCardsProps) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">Total Projects</p>
-            <p className="text-2xl font-semibold text-gray-900">{summary.totalProjects}</p>
+            <p className="text-2xl font-semibold text-gray-900">{summary.totalProjects || 0}</p>
           </div>
           <TrendingUp className="h-8 w-8 text-orange-500" />
         </div>
@@ -71,7 +72,7 @@ export function ClientSummaryCards({ summary }: ClientSummaryCardsProps) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">High Priority</p>
-            <p className="text-2xl font-semibold text-red-600">{summary.highPriorityClients}</p>
+            <p className="text-2xl font-semibold text-red-600">{summary.highPriorityClients || 0}</p>
           </div>
           <AlertCircle className="h-8 w-8 text-red-500" />
         </div>

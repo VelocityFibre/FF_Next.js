@@ -28,7 +28,7 @@ export interface AgentInstance {
   metrics: AgentMetrics;
   communicationProtocols: CommunicationProtocol[];
   lastHeartbeat: Date;
-  configuration?: Record<string, any>;
+  configuration?: Record<string, unknown>;
 }
 
 export interface AgentCapability {
@@ -46,7 +46,7 @@ export interface CapabilityParameter {
   name: string;
   type: 'string' | 'number' | 'boolean' | 'object' | 'array';
   required: boolean;
-  default?: any;
+  default?: unknown;
   validation?: ParameterValidation;
 }
 
@@ -54,7 +54,7 @@ export interface ParameterValidation {
   min?: number;
   max?: number;
   pattern?: string;
-  enum?: any[];
+  enum?: unknown[];
 }
 
 export enum CapabilityType {
@@ -108,7 +108,7 @@ export interface Task {
   status: TaskStatus;
   assignedAgentId?: string;
   requiredCapabilities: string[];
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
   dependencies: string[];
   estimatedDuration: number; // milliseconds
   actualDuration?: number;
@@ -116,12 +116,12 @@ export interface Task {
   updatedAt: Date;
   startedAt?: Date;
   completedAt?: Date;
-  result?: any;
+  result?: unknown;
   error?: string;
   retryCount: number;
   maxRetries: number;
   tags: string[];
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export enum TaskType {
@@ -233,7 +233,7 @@ export interface CoordinationMessage {
   type: MessageType;
   fromAgentId: string;
   toAgentId?: string; // undefined for broadcast
-  payload: any;
+  payload: unknown;
   timestamp: Date;
   correlationId?: string;
   priority: MessagePriority;
@@ -306,7 +306,7 @@ export enum PermissionAction {
 export interface PermissionCondition {
   field: string;
   operator: 'EQUALS' | 'NOT_EQUALS' | 'IN' | 'NOT_IN' | 'CONTAINS';
-  value: any;
+  value: unknown;
 }
 
 export interface SystemEvent {
@@ -314,7 +314,7 @@ export interface SystemEvent {
   type: SystemEventType;
   timestamp: Date;
   source: string;
-  data: any;
+  data: unknown;
   severity: EventSeverity;
 }
 
@@ -393,7 +393,7 @@ export interface TaskExecutionContext {
   taskId: string;
   agentId: string;
   startTime: Date;
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
   resources: AllocatedResource[];
   environment: Record<string, string>;
 }

@@ -1,4 +1,4 @@
-import type { User } from 'firebase/auth';
+import type { User } from '@/types/auth.types';
 
 export const getUserInitials = (user: User | null): string => {
   if (user?.displayName) {
@@ -20,6 +20,6 @@ export const getUserName = (user: User | null): string => {
 };
 
 export const getUserRole = (user: User | null): string => {
-  const role = (user as any)?.role;
+  const role = user?.role;
   return role?.replace('_', ' ').toUpperCase() || 'USER';
 };

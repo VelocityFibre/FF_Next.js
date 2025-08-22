@@ -287,6 +287,7 @@ export interface CreateProjectRequest {
   budget?: Partial<ProjectBudget>;
   teamMembers?: string[]; // Staff IDs
   metadata?: Record<string, any>;
+  notes?: string; // Additional notes field
 }
 
 export interface UpdateProjectRequest extends Partial<CreateProjectRequest> {

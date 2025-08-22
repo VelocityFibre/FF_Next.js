@@ -32,3 +32,11 @@ export interface Participant {
   role: string;
   avatar?: string;
 }
+
+export interface UpcomingMeeting {
+  id: string;
+  title: string;
+  time: string;
+  type: string;
+  participants: number;
+}

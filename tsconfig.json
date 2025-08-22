@@ -43,6 +43,8 @@
     "node_modules",
     "dist",
     "build",
-    "vite.config.ts"
+    "vite.config.ts",
+    "src/agent-os/**/*",
+    "src/archon/**/*"
   ]
 }

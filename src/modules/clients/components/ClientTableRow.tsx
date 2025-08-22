@@ -106,7 +106,7 @@ export function ClientTableRow({ client, onDelete }: ClientTableRowProps) {
             <Edit className="h-4 w-4" />
           </button>
           <button
-            onClick={() => onDelete(client.id)}
+            onClick={() => onDelete(client.id!)}
             className="p-1 text-gray-400 hover:text-red-600"
             title="Delete"
           >

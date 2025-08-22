@@ -1,4 +1,4 @@
-import { Cloud, CloudOff, RefreshCw, Download } from 'lucide-react';
+import { Cloud, CloudOff, RefreshCw } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { OfflineData } from '../types/field-app.types';
 
