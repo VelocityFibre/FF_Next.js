@@ -35,6 +35,8 @@ export function ProjectForm() {
   const isEditMode = !!projectId;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [duration, setDuration] = useState<number>(6); // Default 6 months
+  const [calculatedEndDate, setCalculatedEndDate] = useState<string>('');
   
   const { data: project, isLoading: projectLoading } = useProject(projectId || '');
   const { data: clients, isLoading: clientsLoading } = useClients();
@@ -48,6 +50,8 @@ export function ProjectForm() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue
   } = useForm<FormData>({
     defaultValues: {
       priority: ProjectPriority.MEDIUM,
@@ -57,9 +61,33 @@ export function ProjectForm() {
     },
   });
 
+  const startDate = watch('startDate');
+
+  // Calculate end date when start date or duration changes
+  useEffect(() => {
+    if (startDate && duration) {
+      const start = new Date(startDate);
+      const end = new Date(start);
+      end.setMonth(end.getMonth() + duration);
+      
+      // Format as YYYY-MM-DD for input[type="date"]
+      const endDateString = end.toISOString().split('T')[0];
+      setCalculatedEndDate(endDateString);
+      setValue('endDate', endDateString);
+    }
+  }, [startDate, duration, setValue]);
+
   // Load project data in edit mode
   useEffect(() => {
     if (isEditMode && project) {
+      const start = new Date(project.startDate);
+      const end = new Date(project.endDate);
+      
+      // Calculate duration in months
+      const monthsDiff = (end.getFullYear() - start.getFullYear()) * 12 + 
+                        (end.getMonth() - start.getMonth());
+      setDuration(Math.max(1, monthsDiff));
+      
       reset({
         name: project.name,
         description: project.description || '',
@@ -163,50 +191,68 @@ export function ProjectForm() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Start Date *
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-text-tertiary" />
-                <input
-                  type="date"
-                  {...register('startDate', { required: 'Start date is required' })}
-                  className={cn(
-                    "w-full pl-10 pr-4 py-2 border rounded-lg bg-background-primary text-text-primary",
-                    "focus:outline-none focus:ring-2",
-                    errors.startDate 
-                      ? "border-error-500 focus:ring-error-500" 
-                      : "border-border-primary focus:ring-border-focus"
-                  )}
-                />
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Start Date *
+                </label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-text-tertiary" />
+                  <input
+                    type="date"
+                    {...register('startDate', { required: 'Start date is required' })}
+                    className={cn(
+                      "w-full pl-10 pr-4 py-2 border rounded-lg bg-background-primary text-text-primary",
+                      "focus:outline-none focus:ring-2",
+                      errors.startDate 
+                        ? "border-error-500 focus:ring-error-500" 
+                        : "border-border-primary focus:ring-border-focus"
+                    )}
+                  />
+                </div>
+                {errors.startDate && (
+                  <p className="mt-1 text-sm text-error-600">{errors.startDate.message}</p>
+                )}
               </div>
-              {errors.startDate && (
-                <p className="mt-1 text-sm text-error-600">{errors.startDate.message}</p>
-              )}
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                End Date *
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-text-tertiary" />
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Duration (Months) *
+                </label>
                 <input
-                  type="date"
-                  {...register('endDate', { required: 'End date is required' })}
-                  className={cn(
-                    "w-full pl-10 pr-4 py-2 border rounded-lg bg-background-primary text-text-primary",
-                    "focus:outline-none focus:ring-2",
-                    errors.endDate 
-                      ? "border-error-500 focus:ring-error-500" 
-                      : "border-border-primary focus:ring-border-focus"
-                  )}
+                  type="number"
+                  min="1"
+                  max="120"
+                  value={duration}
+                  onChange={(e) => setDuration(parseInt(e.target.value) || 1)}
+                  className="w-full px-4 py-2 border rounded-lg bg-background-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-border-focus"
+                  placeholder="Duration in months"
                 />
+                <p className="mt-1 text-xs text-text-secondary">
+                  Project duration in months
+                </p>
               </div>
-              {errors.endDate && (
-                <p className="mt-1 text-sm text-error-600">{errors.endDate.message}</p>
-              )}
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  End Date (Calculated)
+                </label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-text-tertiary" />
+                  <input
+                    type="date"
+                    {...register('endDate', { required: 'End date is required' })}
+                    value={calculatedEndDate}
+                    readOnly
+                    className="w-full pl-10 pr-4 py-2 border rounded-lg bg-surface-secondary text-text-secondary cursor-not-allowed"
+                  />
+                </div>
+                {startDate && duration && (
+                  <p className="mt-1 text-xs text-text-secondary">
+                    Auto-calculated based on start date and duration
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>

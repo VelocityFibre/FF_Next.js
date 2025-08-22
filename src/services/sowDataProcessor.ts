@@ -164,7 +164,7 @@ export class SOWDataProcessor {
   }
 
   // Helper function to extract value from multiple possible column names
-  private extractValue(row: any, possibleKeys: string[]): string | undefined {
+  private extractValue(row: Record<string, unknown>, possibleKeys: string[]): string | undefined {
     for (const key of possibleKeys) {
       // Try exact match
       if (row[key] !== undefined && row[key] !== null && row[key] !== '') {
@@ -184,7 +184,7 @@ export class SOWDataProcessor {
   }
 
   // Helper function to extract number
-  private extractNumber(row: any, possibleKeys: string[]): number | undefined {
+  private extractNumber(row: Record<string, unknown>, possibleKeys: string[]): number | undefined {
     const value = this.extractValue(row, possibleKeys);
     if (value) {
       const num = parseFloat(value);
@@ -194,7 +194,7 @@ export class SOWDataProcessor {
   }
 
   // Helper function to extract date
-  private extractDate(row: any, possibleKeys: string[]): string | undefined {
+  private extractDate(row: Record<string, unknown>, possibleKeys: string[]): string | undefined {
     const value = this.extractValue(row, possibleKeys);
     if (value) {
       try {
@@ -211,7 +211,7 @@ export class SOWDataProcessor {
   }
 
   // Helper function to parse boolean
-  private parseBoolean(row: any, possibleKeys: string[]): boolean | undefined {
+  private parseBoolean(row: Record<string, unknown>, possibleKeys: string[]): boolean | undefined {
     const value = this.extractValue(row, possibleKeys);
     if (value) {
       const lowerValue = value.toLowerCase();

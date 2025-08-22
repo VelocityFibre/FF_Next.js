@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -74,6 +74,8 @@ export function ProjectCreationWizard() {
     drops?: any[];
     fibre?: any[];
   }>({});
+  const [duration, setDuration] = useState<number>(6); // Default 6 months
+  const [calculatedEndDate, setCalculatedEndDate] = useState<string>('');
 
   const { data: clients, isLoading: clientsLoading } = useClients();
   const { data: projectManagers, isLoading: managersLoading } = useProjectManagers();
@@ -84,7 +86,8 @@ export function ProjectCreationWizard() {
     formState: { errors },
     watch,
     getValues,
-    trigger
+    trigger,
+    setValue
   } = useForm<FormData>({
     defaultValues: {
       priority: ProjectPriority.MEDIUM,
@@ -95,6 +98,21 @@ export function ProjectCreationWizard() {
   });
 
   const formValues = watch();
+  const startDate = watch('startDate');
+
+  // Calculate end date when start date or duration changes
+  useEffect(() => {
+    if (startDate && duration) {
+      const start = new Date(startDate);
+      const end = new Date(start);
+      end.setMonth(end.getMonth() + duration);
+      
+      // Format as YYYY-MM-DD for input[type="date"]
+      const endDateString = end.toISOString().split('T')[0];
+      setCalculatedEndDate(endDateString);
+      setValue('endDate', endDateString);
+    }
+  }, [startDate, duration, setValue]);
 
   const handleNext = async () => {
     // Validate current step
@@ -317,7 +335,7 @@ export function ProjectCreationWizard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-2">
                   Start Date *
@@ -343,24 +361,40 @@ export function ProjectCreationWizard() {
 
               <div>
                 <label className="block text-sm font-medium text-text-primary mb-2">
-                  End Date *
+                  Duration (Months) *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="120"
+                  value={duration}
+                  onChange={(e) => setDuration(parseInt(e.target.value) || 1)}
+                  className="w-full px-4 py-2 border rounded-lg bg-background-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-border-focus"
+                  placeholder="Enter duration in months"
+                />
+                <p className="mt-1 text-xs text-text-secondary">
+                  Project duration in months
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  End Date (Calculated)
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
                   <input
                     {...register('endDate', { required: 'End date is required' })}
                     type="date"
-                    className={cn(
-                      "w-full pl-10 pr-4 py-2 border rounded-lg bg-background-primary text-text-primary",
-                      "focus:outline-none focus:ring-2",
-                      errors.endDate 
-                        ? "border-error-500 focus:ring-error-500" 
-                        : "border-border-primary focus:ring-border-focus"
-                    )}
+                    value={calculatedEndDate}
+                    readOnly
+                    className="w-full pl-10 pr-4 py-2 border rounded-lg bg-surface-secondary text-text-secondary cursor-not-allowed"
                   />
                 </div>
-                {errors.endDate && (
-                  <p className="mt-1 text-sm text-error-600">{errors.endDate.message}</p>
+                {startDate && duration && (
+                  <p className="mt-1 text-xs text-text-secondary">
+                    Auto-calculated based on start date and duration
+                  </p>
                 )}
               </div>
             </div>
