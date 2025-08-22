@@ -12,6 +12,7 @@ export const staffService = {
   getAll: staffNeonService.getAll,
   getById: staffNeonService.getById,
   create: staffNeonService.create,
+  createOrUpdate: staffNeonService.createOrUpdate,
   update: staffNeonService.update,
   delete: staffNeonService.delete,
   

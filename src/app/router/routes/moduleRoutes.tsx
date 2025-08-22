@@ -12,6 +12,9 @@ import {
   StaffImport,
   StaffSettings,
   ContractorsDashboard,
+  ContractorCreatePage,
+  ContractorEditPage,
+  ContractorDetailPage,
   CommunicationsDashboard,
   AnalyticsDashboard,
   FieldAppPortal,
@@ -104,12 +107,36 @@ export const moduleRoutes = [
       </Suspense>
     ),
   },
-  // Communications & Management
+  // Contractors
   {
     path: 'contractors',
     element: (
       <Suspense fallback={<Loading />}>
         <ContractorsDashboard />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'contractors/new',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <ContractorCreatePage />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'contractors/:id/edit',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <ContractorEditPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'contractors/:id',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <ContractorDetailPage />
       </Suspense>
     ),
   },

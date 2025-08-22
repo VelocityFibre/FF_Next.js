@@ -265,31 +265,31 @@ export interface ContractorFormData {
   // Contact Information
   contactPerson: string;
   email: string;
-  phone?: string;
-  alternatePhone?: string;
+  phone: string;
+  alternatePhone: string;
   
   // Address
-  physicalAddress?: string;
-  postalAddress?: string;
-  city?: string;
-  province?: string;
-  postalCode?: string;
+  physicalAddress: string;
+  postalAddress: string;
+  city: string;
+  province: string;
+  postalCode: string;
   
   // Financial Information
   annualTurnover?: number;
-  creditRating?: string;
-  paymentTerms?: string;
-  bankName?: string;
-  accountNumber?: string;
-  branchCode?: string;
+  creditRating: string;
+  paymentTerms: string;
+  bankName: string;
+  accountNumber: string;
+  branchCode: string;
   
   // Status
   status: ContractorStatus;
   complianceStatus: 'pending' | 'compliant' | 'non_compliant' | 'under_review';
   
   // Metadata
-  notes?: string;
-  tags?: string[];
+  notes: string;
+  tags: string[];
 }
 
 export interface TeamFormData {

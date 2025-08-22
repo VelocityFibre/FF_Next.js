@@ -119,8 +119,29 @@ export const staffNeonService = {
    */
   async getById(id: string): Promise<StaffMember | null> {
     try {
-      const result = await sql`SELECT * FROM staff WHERE id = ${id} LIMIT 1`;
-      return result[0] as StaffMember || null;
+      const result = await sql`
+        SELECT 
+          s.*,
+          m.name as manager_name,
+          m.position as manager_position
+        FROM staff s
+        LEFT JOIN staff m ON s.reports_to = m.id
+        WHERE s.id = ${id} 
+        LIMIT 1
+      `;
+      
+      if (result.length === 0) return null;
+      
+      const staff = result[0];
+      return {
+        ...staff,
+        employeeId: staff.employee_id, // Map snake_case to camelCase
+        managerName: staff.manager_name,
+        managerPosition: staff.manager_position,
+        startDate: staff.join_date, // Map join_date to startDate
+        alternativePhone: staff.alternate_phone, // Map alternate_phone to alternativePhone
+        contractType: staff.type, // Map type to contractType
+      } as StaffMember;
     } catch (error) {
       console.error('Error fetching staff member:', error);
       throw error;
@@ -149,6 +170,58 @@ export const staffNeonService = {
       return result[0] as StaffMember;
     } catch (error) {
       console.error('Error creating staff member:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create or update staff member by employee ID (upsert operation)
+   */
+  async createOrUpdate(data: StaffFormData): Promise<StaffMember> {
+    try {
+      // Handle empty string for UUID fields - convert to null
+      const reportsTo = data.reportsTo && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      
+      // Check if staff member exists by employee_id
+      const existing = await sql`
+        SELECT id FROM staff WHERE employee_id = ${data.employeeId}
+      `;
+      
+      if (existing.length > 0) {
+        // Update existing staff member
+        console.log(`Updating existing staff member with employee ID: ${data.employeeId}`);
+        const result = await sql`
+          UPDATE staff SET
+            name = ${data.name},
+            email = ${data.email},
+            phone = ${data.phone},
+            department = ${data.department},
+            position = ${data.position},
+            status = ${data.status || 'ACTIVE'},
+            reports_to = ${reportsTo},
+            updated_at = NOW()
+          WHERE employee_id = ${data.employeeId}
+          RETURNING *
+        `;
+        return result[0] as StaffMember;
+      } else {
+        // Create new staff member
+        console.log(`Creating new staff member with employee ID: ${data.employeeId}`);
+        const result = await sql`
+          INSERT INTO staff (
+            employee_id, name, email, phone, department, position, 
+            status, join_date, reports_to, created_at, updated_at
+          ) VALUES (
+            ${data.employeeId}, ${data.name}, ${data.email}, ${data.phone},
+            ${data.department}, ${data.position}, ${data.status || 'ACTIVE'},
+            ${data.startDate || new Date()}, ${reportsTo}, 
+            NOW(), NOW()
+          ) RETURNING *
+        `;
+        return result[0] as StaffMember;
+      }
+    } catch (error) {
+      console.error('Error creating or updating staff member:', error);
       throw error;
     }
   },

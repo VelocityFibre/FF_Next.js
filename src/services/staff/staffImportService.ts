@@ -20,7 +20,7 @@ export const staffImportService = {
   /**
    * Import staff from CSV file
    */
-  async importFromCSV(file: File): Promise<StaffImportResult> {
+  async importFromCSV(file: File, overwriteExisting: boolean = true): Promise<StaffImportResult> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -78,7 +78,7 @@ export const staffImportService = {
             rows.push(row as StaffImportRow);
           }
           
-          const result = await this.processImportRows(rows);
+          const result = await this.processImportRows(rows, overwriteExisting);
           resolve(result);
         } catch (error) {
           reject(error);
@@ -93,7 +93,7 @@ export const staffImportService = {
   /**
    * Import staff from Excel file
    */
-  async importFromExcel(file: File): Promise<StaffImportResult> {
+  async importFromExcel(file: File, overwriteExisting: boolean = true): Promise<StaffImportResult> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       
@@ -109,7 +109,7 @@ export const staffImportService = {
           // Convert to JSON
           const jsonData = XLSX.utils.sheet_to_json(worksheet) as StaffImportRow[];
           
-          const result = await this.processImportRows(jsonData);
+          const result = await this.processImportRows(jsonData, overwriteExisting);
           resolve(result);
         } catch (error) {
           reject(error);
@@ -124,7 +124,7 @@ export const staffImportService = {
   /**
    * Process imported rows and create staff members
    */
-  async processImportRows(rows: StaffImportRow[]): Promise<StaffImportResult> {
+  async processImportRows(rows: StaffImportRow[], overwriteExisting: boolean = true): Promise<StaffImportResult> {
     const errors: StaffImportError[] = [];
     const staffMembers: StaffMember[] = [];
     let imported = 0;
@@ -200,8 +200,10 @@ export const staffImportService = {
           notes: ''
         };
         
-        // Create staff member (Neon returns the full object)
-        const staffMember = await staffService.create(formData as unknown as StaffFormData);
+        // Create or update staff member based on overwrite setting
+        const staffMember = overwriteExisting 
+          ? await staffService.createOrUpdate(formData as unknown as StaffFormData)
+          : await staffService.create(formData as unknown as StaffFormData);
         
         if (staffMember) {
           staffMembers.push(staffMember);

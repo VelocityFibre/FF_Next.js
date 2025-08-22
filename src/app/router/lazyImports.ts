@@ -51,8 +51,11 @@ export const EnhancedKPIDashboard = lazy(() => import('@/modules/kpis/EnhancedKP
 export const KPIDashboard = lazy(() => import('@/modules/kpi-dashboard/KPIDashboard').then(m => ({ default: m.KPIDashboard })));
 export const ReportsDashboard = lazy(() => import('@/modules/reports/ReportsDashboard').then(m => ({ default: m.ReportsDashboard })));
 
-// New Modules
+// Contractors Module
 export const ContractorsDashboard = lazy(() => import('@/modules/contractors/ContractorsDashboard').then(m => ({ default: m.default })));
+export const ContractorCreatePage = lazy(() => import('@/modules/contractors/components/ContractorCreate').then(m => ({ default: m.ContractorCreate })));
+export const ContractorEditPage = lazy(() => import('@/modules/contractors/components/ContractorEdit').then(m => ({ default: m.ContractorEdit })));
+export const ContractorDetailPage = lazy(() => import('@/modules/contractors/components/ContractorView').then(m => ({ default: m.ContractorView })));
 export const AnalyticsDashboard = lazy(() => import('@/components/analytics/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard })));
 export const CommunicationsDashboard = lazy(() => import('@/modules/communications/CommunicationsDashboard').then(m => ({ default: m.default })));
 export const HomeInstallationsDashboard = lazy(() => import('@/modules/installations/HomeInstallationsDashboard').then(m => ({ default: m.default })));

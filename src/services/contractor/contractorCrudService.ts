@@ -22,14 +22,14 @@ import {
 import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { contractors } from '@/lib/neon/schema';
-import { eq, and, or, like, desc, asc, count } from 'drizzle-orm';
+import { eq, count } from 'drizzle-orm';
 import { 
   Contractor, 
   ContractorFormData,
   ContractorFilter,
-  ContractorAnalytics,
-  NewContractor
+  ContractorAnalytics
 } from '@/types/contractor.types';
+import { NewContractor } from '@/lib/neon/schema';
 
 /**
  * Core CRUD operations for contractor management

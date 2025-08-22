@@ -7,7 +7,6 @@ import {
   collection, 
   doc, 
   getDocs, 
-  getDoc, 
   addDoc, 
   updateDoc, 
   deleteDoc, 
@@ -19,7 +18,7 @@ import {
 import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { contractorTeams, teamMembers } from '@/lib/neon/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { 
   ContractorTeam, 
   TeamMember,
