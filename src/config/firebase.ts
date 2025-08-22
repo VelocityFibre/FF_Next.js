@@ -10,14 +10,15 @@ import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { getPerformance } from 'firebase/performance';
 
-// Firebase configuration from environment variables
+// Firebase configuration
+// Note: These are public keys protected by Firebase Security Rules
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDvW-ImXptnYIX7IDR78pdruw9BAp5A8Q8',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'fibreflow-292c7.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'fibreflow-292c7',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'fibreflow-292c7.appspot.com',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '178707510767',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:178707510767:web:a9455c8f053de03fbff21a',
   ...(import.meta.env.VITE_FIREBASE_MEASUREMENT_ID && { measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID })
 };
 

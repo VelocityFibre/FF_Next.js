@@ -8,7 +8,7 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { neonTables } from './schema';
 
 // Get Neon connection string from environment
-const neonUrl = import.meta.env.VITE_NEON_DATABASE_URL;
+const neonUrl = import.meta.env.VITE_NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 
 if (!neonUrl) {
   throw new Error('VITE_NEON_DATABASE_URL environment variable is required');

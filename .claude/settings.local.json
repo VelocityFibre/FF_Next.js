@@ -18,7 +18,9 @@
       "Bash(mv:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(npm run typecheck:*)"
+      "Bash(npm run typecheck:*)",
+      "Bash(git push:*)",
+      "Bash(firebase deploy:*)"
     ],
     "deny": [],
     "ask": []

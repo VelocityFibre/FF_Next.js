@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 
 // Neon connection configuration
-const connectionString = import.meta.env.VITE_NEON_DATABASE_URL;
+const connectionString = import.meta.env.VITE_NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 
 if (!connectionString) {
   console.warn('Neon database URL not configured. SOW features will not work.');
