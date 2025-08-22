@@ -1,7 +1,7 @@
 {
   "project_name": "FibreFlow_React",
   "project_path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React",
-  "activation_time": "2025-08-22T19:25:46.600239",
+  "activation_time": "2025-08-22T21:01:08.296992",
   "forgeflow_version": "1.0.0",
   "agents": {
     "planner": {
@@ -27,6 +27,10 @@
     "antihallucination": {
       "enabled": true,
       "priority": 0
+    },
+    "coordinator": {
+      "enabled": true,
+      "priority": 6
     }
   },
   "orchestration": {

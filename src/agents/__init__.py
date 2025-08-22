@@ -33,7 +33,7 @@ def _auto_discover_agents():
     try:
         registry = get_registry()
         
-        # Define all 7 agent modules for FibreFlow_React
+        # Define all 8 agent modules for FibreFlow_React
         agent_modules = [
             'planner',
             'architect', 
@@ -41,7 +41,8 @@ def _auto_discover_agents():
             'tester',
             'reviewer',
             'antihallucination',
-            'coordinator'  # The 7th agent for multi-agent coordination
+            'coordinator',  # Multi-agent coordination
+            'deployment'    # The 8th agent for CI/CD and deployment
         ]
         
         registered_count = 0
@@ -69,12 +70,12 @@ def _auto_discover_agents():
             except ImportError as e:
                 print(f"[AGENTS] Could not import {module_name}: {e}")
         
-        print(f"[AGENTS] Total registered: {registered_count}/7 agents")
+        print(f"[AGENTS] Total registered: {registered_count}/8 agents")
         
-        if registered_count == 7:
-            print("[AGENTS] SUCCESS: All 7 agents registered!")
+        if registered_count == 8:
+            print("[AGENTS] SUCCESS: All 8 agents registered!")
         else:
-            print(f"[AGENTS] WARNING: Missing {7 - registered_count} agents")
+            print(f"[AGENTS] WARNING: Missing {8 - registered_count} agents")
                 
     except Exception as e:
         print(f"[AGENTS] Auto-discovery failed: {e}")
