@@ -6,7 +6,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   // Test directory
-  testDir: './tests/e2e',
+  testDir: './dev-tools/testing/tests/e2e',
   
   // Run tests in files in parallel
   fullyParallel: true,
@@ -23,8 +23,8 @@ export default defineConfig({
   // Reporter to use
   reporter: [
     ['html'],
-    ['json', { outputFile: 'test-results/results.json' }],
-    ['junit', { outputFile: 'test-results/results.xml' }],
+    ['json', { outputFile: 'dev-tools/testing/test-results/results.json' }],
+    ['junit', { outputFile: 'dev-tools/testing/test-results/results.xml' }],
   ],
   
   // Shared settings for all the projects below
@@ -89,8 +89,8 @@ export default defineConfig({
   ],
 
   // Global setup and teardown
-  globalSetup: './tests/global-setup.ts',
-  globalTeardown: './tests/global-teardown.ts',
+  globalSetup: './dev-tools/testing/tests/global-setup.ts',
+  globalTeardown: './dev-tools/testing/tests/global-teardown.ts',
 
   // Run your local dev server before starting the tests
   webServer: {
@@ -109,5 +109,5 @@ export default defineConfig({
   },
 
   // Output directory for test results
-  outputDir: 'test-results/',
+  outputDir: 'dev-tools/testing/test-results/',
 });
