@@ -266,19 +266,19 @@ const vfTheme: ThemeConfig = {
   isDark: false, // Main content stays light, but sidebar is dark
   colors: {
     ...lightTheme.colors,
-    // VF Brand primary colors (purple/magenta palette)
+    // VF Brand primary colors (blue palette)
     primary: {
-      50: '#fdf2f8',
-      100: '#fce7f3',
-      200: '#fbcfe8',
-      300: '#f9a8d4',
-      400: '#f472b6',
-      500: '#ec4899', // Main VF brand color
-      600: '#db2777',
-      700: '#be185d',
-      800: '#9d174d',
-      900: '#831843',
-      950: '#500724',
+      50: '#eff6ff',
+      100: '#dbeafe',
+      200: '#bfdbfe',
+      300: '#93c5fd',
+      400: '#60a5fa',
+      500: '#3b82f6', // Main VF brand color
+      600: '#2563eb',
+      700: '#1d4ed8',
+      800: '#1e40af',
+      900: '#1e3a8a',
+      950: '#172554',
     },
     // VF secondary colors (blue palette for accents)
     secondary: {
@@ -315,7 +315,7 @@ const vfTheme: ThemeConfig = {
       primary: '#e5e7eb',
       secondary: '#d1d5db',
       subtle: '#f3f4f6',
-      focus: '#ec4899',
+      focus: '#3b82f6',
       error: '#ef4444',
       success: '#22c55e',
       warning: '#f59e0b',
@@ -327,7 +327,7 @@ const vfTheme: ThemeConfig = {
       tertiary: '#6b7280',
       inverse: '#ffffff',
       disabled: '#9ca3af',
-      accent: '#ec4899',
+      accent: '#3b82f6',
       success: '#166534',
       warning: '#92400e',
       error: '#991b1b',
@@ -429,7 +429,7 @@ export const themes: Record<ThemeName, ThemeConfig> = {
 };
 
 // Default theme
-export const DEFAULT_THEME: ThemeName = 'light';
+export const DEFAULT_THEME: ThemeName = 'vf';
 
 // Available themes list
 export const AVAILABLE_THEMES: ThemeName[] = ['light', 'dark', 'vf', 'fibreflow'];

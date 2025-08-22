@@ -84,7 +84,7 @@ export function ClientDetail() {
               <ClientInfoSection client={client} />
             </div>
 
-            {hasPermission(Permission.EDIT_CLIENTS) && (
+            {hasPermission(Permission.CLIENTS_UPDATE) && (
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => navigate(`/app/clients/${id}/edit`)}
@@ -94,7 +94,7 @@ export function ClientDetail() {
                   Edit
                 </button>
                 
-                {hasPermission(Permission.DELETE_CLIENTS) && (
+                {hasPermission(Permission.CLIENTS_DELETE) && (
                   <button
                     onClick={() => setShowDeleteConfirm(true)}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
@@ -168,7 +168,7 @@ export function ClientDetail() {
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Client Projects</h3>
-            {hasPermission(Permission.CREATE_PROJECTS) && (
+            {hasPermission(Permission.PROJECTS_CREATE) && (
               <button
                 onClick={() => navigate(`/app/projects/new?clientId=${id}`)}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"

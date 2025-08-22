@@ -35,7 +35,7 @@ const quickActions: QuickActionItem[] = [
     description: 'Start a new fibre installation project',
     icon: FolderPlus,
     route: '/app/projects/create',
-    requiredPermissions: [Permission.CREATE_PROJECTS],
+    requiredPermissions: [Permission.PROJECTS_CREATE],
     variant: 'primary',
   },
   {
@@ -44,7 +44,7 @@ const quickActions: QuickActionItem[] = [
     description: 'Register new team member',
     icon: UserPlus,
     route: '/app/staff/create',
-    requiredPermissions: [Permission.CREATE_STAFF],
+    requiredPermissions: [Permission.STAFF_CREATE],
     variant: 'secondary',
   },
   {
@@ -80,7 +80,7 @@ const quickActions: QuickActionItem[] = [
     description: 'View and update pole installations',
     icon: MapPin,
     route: '/app/pole-tracker',
-    requiredPermissions: [Permission.VIEW_PROJECTS],
+    requiredPermissions: [Permission.PROJECTS_READ],
     variant: 'secondary',
   },
   {
@@ -98,7 +98,7 @@ const quickActions: QuickActionItem[] = [
     description: 'View project performance metrics',
     icon: BarChart3,
     route: '/app/analytics',
-    requiredPermissions: [Permission.VIEW_ANALYTICS],
+    requiredPermissions: [Permission.ANALYTICS_READ],
     variant: 'secondary',
   },
 ];

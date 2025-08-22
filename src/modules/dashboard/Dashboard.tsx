@@ -51,7 +51,7 @@ export function Dashboard() {
         label: 'vs last month',
       },
       variant: 'primary' as const,
-      requiredPermissions: [Permission.VIEW_PROJECTS],
+      requiredPermissions: [Permission.PROJECTS_READ],
     },
     {
       title: 'Team Members',
@@ -64,7 +64,7 @@ export function Dashboard() {
         label: 'new this month',
       },
       variant: 'success' as const,
-      requiredPermissions: [Permission.VIEW_STAFF],
+      requiredPermissions: [Permission.STAFF_READ],
     },
     {
       title: 'Tasks Completed',
@@ -77,7 +77,7 @@ export function Dashboard() {
         label: 'vs last week',
       },
       variant: 'success' as const,
-      requiredPermissions: [Permission.VIEW_PROJECTS],
+      requiredPermissions: [Permission.PROJECTS_READ],
     },
     {
       title: 'Open Issues',
@@ -103,7 +103,7 @@ export function Dashboard() {
         label: 'ahead of target',
       },
       variant: 'primary' as const,
-      requiredPermissions: [Permission.VIEW_PROJECTS],
+      requiredPermissions: [Permission.PROJECTS_READ],
     },
     {
       title: 'Material Deliveries',
@@ -176,14 +176,14 @@ export function Dashboard() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Projects Overview - Takes 2 columns */}
-        {hasPermission(Permission.VIEW_PROJECTS) && (
+        {hasPermission(Permission.PROJECTS_READ) && (
           <div className="lg:col-span-2">
             <ProjectOverviewCard />
           </div>
         )}
 
         {/* Quick Actions - Takes 1 column */}
-        <div className={hasPermission(Permission.VIEW_PROJECTS) ? '' : 'lg:col-span-3'}>
+        <div className={hasPermission(Permission.PROJECTS_READ) ? '' : 'lg:col-span-3'}>
           <QuickActions />
         </div>
       </div>
@@ -196,7 +196,7 @@ export function Dashboard() {
       )}
 
       {/* Additional KPI Cards for Analytics Users */}
-      {hasPermission(Permission.VIEW_ANALYTICS) && (
+      {hasPermission(Permission.ANALYTICS_READ) && (
         <div className="bg-surface-primary rounded-lg border border-border-primary p-6">
           <div className="flex items-center space-x-2 mb-4">
             <TrendingUp className="w-5 h-5 text-primary-600" />

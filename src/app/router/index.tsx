@@ -74,6 +74,9 @@ const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ defaul
 const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
 const Settings = lazy(() => import('@/pages/Settings').then(m => ({ default: m.Settings })));
 
+// Enhanced Project Creation
+const ProjectCreationWizard = lazy(() => import('@/modules/projects/components/ProjectCreationWizard').then(m => ({ default: m.ProjectCreationWizard })));
+
 // Loading component
 function Loading() {
   return (
@@ -151,7 +154,15 @@ export const router = createBrowserRouter([
             path: 'projects/new',
             element: (
               <Suspense fallback={<Loading />}>
-                <ProjectForm />
+                <ProjectCreationWizard />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'projects/create',
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ProjectCreationWizard />
               </Suspense>
             ),
           },

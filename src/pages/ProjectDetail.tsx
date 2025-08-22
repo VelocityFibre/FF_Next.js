@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useProject, useProjectHierarchy, useDeleteProject } from '@/hooks/useProjects';
 import { ProjectStatus, PhaseStatus, TaskStatus, Priority } from '@/types/project.types';
-import { NeonSOWDisplay } from '@/components/sow/NeonSOWDisplay';
+import { EnhancedSOWDisplay } from '@/components/sow/EnhancedSOWDisplay';
 
 const statusColors = {
   [ProjectStatus.PLANNING]: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300',
@@ -436,7 +436,7 @@ export function ProjectDetail() {
       )}
 
       {activeTab === 'sow' && (
-        <NeonSOWDisplay projectId={id!} />
+        <EnhancedSOWDisplay projectId={id!} projectName={project.name} />
       )}
 
       {activeTab === 'timeline' && (
