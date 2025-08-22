@@ -1,41 +1,26 @@
 /**
  * Staff Service - Main export file
- * Aggregates all staff-related services
+ * Using Neon PostgreSQL database
  */
 
-import { staffCrudService } from './staff/staffCrudService';
-import { staffQueryService } from './staff/staffQueryService';
+import { staffNeonService } from './staff/staffNeonService';
 import { staffImportService } from './staff/staffImportService';
 import { staffExportService } from './staff/staffExportService';
-import { staffAssignmentService } from './staff/staffAssignmentService';
 
 export const staffService = {
-  // CRUD Operations
-  getAll: staffCrudService.getAll,
-  getById: staffCrudService.getById,
-  create: staffCrudService.create,
-  update: staffCrudService.update,
-  delete: staffCrudService.delete,
-  subscribeToStaff: staffCrudService.subscribeToStaff,
-  subscribeToStaffMember: staffCrudService.subscribeToStaffMember,
+  // Main CRUD operations (Neon)
+  getAll: staffNeonService.getAll,
+  getById: staffNeonService.getById,
+  create: staffNeonService.create,
+  update: staffNeonService.update,
+  delete: staffNeonService.delete,
   
-  // Query Operations
-  getActiveStaff: staffQueryService.getActiveStaff,
-  getProjectManagers: staffQueryService.getProjectManagers,
-  getStaffSummary: staffQueryService.getStaffSummary,
-  getProjectAssignments: staffQueryService.getProjectAssignments,
-  getStaffAssignments: staffQueryService.getStaffAssignments,
+  // Query operations (Neon)
+  getActiveStaff: staffNeonService.getActiveStaff,
+  getProjectManagers: staffNeonService.getProjectManagers,
+  getStaffSummary: staffNeonService.getStaffSummary,
   
-  // Import/Export Operations
-  importFromCSV: staffImportService.importFromCSV,
-  importFromExcel: staffImportService.importFromExcel,
-  processImportRows: staffImportService.processImportRows,
-  exportToExcel: staffExportService.exportToExcel,
-  getImportTemplate: staffExportService.getImportTemplate,
-  
-  // Assignment Operations
-  assignToProject: staffAssignmentService.assignToProject,
-  updateAssignment: staffAssignmentService.updateAssignment,
-  updateStaffProjectCount: staffAssignmentService.updateStaffProjectCount,
-  getAvailableStaff: staffAssignmentService.getAvailableStaff,
+  // Import/Export operations
+  import: staffImportService,
+  export: staffExportService,
 };

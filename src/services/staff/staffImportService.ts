@@ -11,7 +11,7 @@ import {
   ContractType,
   Skill
 } from '@/types/staff.types';
-import { staffCrudService } from './staffCrudService';
+import { staffService } from '../staffService';
 
 /**
  * Import/Export operations for staff
@@ -30,6 +30,33 @@ export const staffImportService = {
           const lines = text.split('\n').filter(line => line.trim());
           const headers = lines[0].split(',').map(h => h.trim());
           
+          // Create header mapping to normalize CSV headers to expected field names
+          const headerMapping: Record<string, string> = {
+            'Name': 'name',
+            'Email': 'email', 
+            'Phone': 'phone',
+            'Employee ID': 'employeeId',
+            'Position': 'position',
+            'Department': 'department',
+            'Primary Group': 'department', // Map Primary Group to department
+            'Level': 'level',
+            'Status': 'status',
+            'Skills': 'skills',
+            'Address': 'address',
+            'City': 'city',
+            'Province': 'province',
+            'Postal Code': 'postalCode',
+            'Emergency Contact Name': 'emergencyContactName',
+            'Emergency Contact Phone': 'emergencyContactPhone',
+            'Start Date': 'startDate',
+            'Contract Type': 'contractType',
+            'Working Hours': 'workingHours',
+            'Alternative Phone': 'alternativePhone'
+          };
+
+          console.log('CSV Headers found:', headers);
+          console.log('Header mapping will be:', headers.map(h => `${h} -> ${headerMapping[h] || 'unmapped'}`));
+          
           const rows: StaffImportRow[] = [];
           
           for (let i = 1; i < lines.length; i++) {
@@ -37,8 +64,16 @@ export const staffImportService = {
             const row: any = {};
             
             headers.forEach((header, index) => {
-              row[header] = values[index] || '';
+              // Use mapped header name if available, otherwise convert to lowercase
+              const fieldName = headerMapping[header] || header.toLowerCase().replace(/\s+/g, '');
+              row[fieldName] = values[index] || '';
             });
+            
+            // Debug logging for first few rows
+            if (i <= 3) {
+              console.log(`Row ${i + 1} data:`, row);
+              console.log(`Row ${i + 1} name field:`, row.name);
+            }
             
             rows.push(row as StaffImportRow);
           }
@@ -100,8 +135,14 @@ export const staffImportService = {
       const rowNumber = i + 2; // +2 because row 1 is headers, and arrays are 0-indexed
       
       try {
+        // Debug: Show what we're validating
+        if (rowNumber <= 5) { // Only log first few rows
+          console.log(`Validating row ${rowNumber}:`, { name: row.name, email: row.email, phone: row.phone });
+        }
+        
         // Validate required fields
         if (!row.name) {
+          console.log(`Row ${rowNumber} missing name. Row object:`, row);
           errors.push({
             row: rowNumber,
             field: 'name',
@@ -131,40 +172,37 @@ export const staffImportService = {
           continue;
         }
         
-        // Create staff form data
+        // Create staff form data that matches StaffFormData interface
         const formData = {
           name: row.name,
           email: row.email,
-          phone: row.phone,
-          alternativePhone: row.alternativePhone || '',
+          phone: row.phone || '',
+          alternatePhone: row.alternativePhone || '',
           employeeId: row.employeeId || `EMP${Date.now()}-${i}`,
           position: row.position || 'Staff',
-          department: this.parseEnumValue(row.department, Department, Department.OPERATIONS),
-          level: this.parseEnumValue(row.level, StaffLevel, StaffLevel.JUNIOR),
-          status: this.parseEnumValue(row.status, StaffStatus, StaffStatus.ACTIVE),
-          skills: this.parseSkills(row.skills),
-          experienceYears: 0,
+          department: row.department || 'Operations',
+          employmentType: 'full_time' as any, // Default employment type
+          status: 'active' as any, // Default status
+          salary: 0,
+          joinDate: new Date().toISOString(),
+          endDate: undefined,
           address: row.address || '',
           city: row.city || '',
           province: row.province || '',
           postalCode: row.postalCode || '',
-          emergencyContactName: row.emergencyContactName || '',
-          emergencyContactPhone: row.emergencyContactPhone || '',
-          startDate: this.parseDate(row.startDate) || new Date(),
-          endDate: undefined, // endDate field not in import data
-          contractType: this.parseEnumValue(row.contractType, ContractType, ContractType.PERMANENT),
-          workingHours: row.workingHours || '08:00 - 17:00',
-          availableWeekends: false,
-          availableNights: false,
-          timeZone: 'Africa/Johannesburg',
-          maxProjectCount: 5
+          emergencyContact: {
+            name: row.emergencyContactName || '',
+            relationship: 'Contact',
+            phone: row.emergencyContactPhone || ''
+          },
+          skills: row.skills ? row.skills.split(',').map(s => s.trim()) : [],
+          certifications: [],
+          notes: ''
         };
         
-        // Create staff member
-        const id = await staffCrudService.create(formData as unknown as StaffFormData);
+        // Create staff member (Neon returns the full object)
+        const staffMember = await staffService.create(formData as unknown as StaffFormData);
         
-        // Get the created staff member
-        const staffMember = await staffCrudService.getById(id);
         if (staffMember) {
           staffMembers.push(staffMember);
           imported++;
