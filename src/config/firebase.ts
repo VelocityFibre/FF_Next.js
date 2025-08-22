@@ -16,10 +16,10 @@ const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDvW-ImXptnYIX7IDR78pdruw9BAp5A8Q8',
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'fibreflow-292c7.firebaseapp.com',
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'fibreflow-292c7',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'fibreflow-292c7.appspot.com',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'fibreflow-292c7.firebasestorage.app',
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '178707510767',
   appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:178707510767:web:a9455c8f053de03fbff21a',
-  ...(import.meta.env.VITE_FIREBASE_MEASUREMENT_ID && { measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID })
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-3S74XHZ49B'
 };
 
 // Initialize Firebase
