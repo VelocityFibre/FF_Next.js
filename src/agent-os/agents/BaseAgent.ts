@@ -87,7 +87,7 @@ export abstract class BaseAgent extends EventEmitter {
       startTime: new Date(),
       parameters: task.parameters,
       resources: [], // TODO: Implement resource allocation
-      environment: process.env as Record<string, string>
+      environment: import.meta.env as Record<string, string>
     };
 
     this.currentTasks.set(task.id, executionContext);

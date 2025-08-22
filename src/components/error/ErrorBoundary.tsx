@@ -43,7 +43,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
 
@@ -115,7 +115,7 @@ Please describe what you were doing when this error occurred:
               </p>
 
               {/* Error Details (Development only) */}
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <details className="mt-4 p-4 bg-surface-secondary rounded-lg border border-border-secondary text-left">
                   <summary className="cursor-pointer font-medium text-text-primary mb-2">
                     Error Details (Development)

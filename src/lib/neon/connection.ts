@@ -8,7 +8,7 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import { neonTables } from './schema';
 
 // Get Neon connection string from environment
-const neonUrl = process.env.VITE_NEON_DATABASE_URL || import.meta.env?.VITE_NEON_DATABASE_URL;
+const neonUrl = import.meta.env.VITE_NEON_DATABASE_URL;
 
 if (!neonUrl) {
   throw new Error('VITE_NEON_DATABASE_URL environment variable is required');
