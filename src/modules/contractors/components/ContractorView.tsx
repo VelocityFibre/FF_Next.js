@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Edit, Trash2, Building2, Users, FileText, Briefcase, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Building2, Users, FileText, Briefcase, CheckCircle, Shield } from 'lucide-react';
 import { contractorService } from '@/services/contractorService';
 import { Contractor } from '@/types/contractor.types';
 import {
@@ -23,6 +23,7 @@ import { AssignmentManagement } from './assignments/AssignmentManagement';
 import { RAGDashboard } from './RAGDashboard';
 import { OnboardingWorkflow } from './onboarding/OnboardingWorkflow';
 import { DocumentManagement } from './documents/DocumentManagement';
+import { ComplianceDashboard } from './compliance/ComplianceDashboard';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
@@ -33,7 +34,7 @@ export function ContractorView() {
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'teams' | 'assignments' | 'documents' | 'onboarding'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'teams' | 'assignments' | 'documents' | 'onboarding' | 'compliance'>('overview');
 
   useEffect(() => {
     const loadContractor = async () => {
@@ -199,6 +200,17 @@ export function ContractorView() {
               <CheckCircle className="w-4 h-4" />
               Onboarding
             </button>
+            <button
+              onClick={() => setActiveTab('compliance')}
+              className={`px-4 py-2 font-medium text-sm flex items-center gap-2 ${
+                activeTab === 'compliance'
+                  ? 'text-blue-600 border-b-2 border-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Shield className="w-4 h-4" />
+              Compliance
+            </button>
           </div>
         </div>
       </div>
@@ -247,6 +259,13 @@ export function ContractorView() {
 
       {activeTab === 'onboarding' && (
         <OnboardingWorkflow 
+          contractorId={contractor.id} 
+          contractorName={contractor.companyName} 
+        />
+      )}
+
+      {activeTab === 'compliance' && (
+        <ComplianceDashboard 
           contractorId={contractor.id} 
           contractorName={contractor.companyName} 
         />
