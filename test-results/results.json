@@ -149,21 +149,21 @@
   },
   "suites": [
     {
-      "title": "procurement-test.spec.ts",
-      "file": "procurement-test.spec.ts",
+      "title": "projects-test.spec.ts",
+      "file": "projects-test.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Procurement Module Tests",
-          "file": "procurement-test.spec.ts",
+          "title": "Projects Page Tests",
+          "file": "projects-test.spec.ts",
           "line": 5,
           "column": 6,
           "specs": [
             {
-              "title": "Procurement routes should be accessible",
-              "ok": false,
+              "title": "Projects page should load without errors",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -176,87 +176,32 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 13377,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4\u001b[39m\nReceived: \u001b[31m0\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts:101:25",
-                        "location": {
-                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts",
-                          "column": 25,
-                          "line": 101
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  99 |\u001b[39m     \u001b[90m// Routes are valid if they either pass or require authentication (means they exist)\u001b[39m\n \u001b[90m 100 |\u001b[39m     \u001b[36mconst\u001b[39m validRoutes \u001b[33m=\u001b[39m passed \u001b[33m+\u001b[39m authRequired\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 101 |\u001b[39m     expect(validRoutes)\u001b[33m.\u001b[39mtoBe(procurementRoutes\u001b[33m.\u001b[39mlength)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 102 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 103 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts",
-                            "column": 25,
-                            "line": 101
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\n   99 |     // Routes are valid if they either pass or require authentication (means they exist)\n  100 |     const validRoutes = passed + authRequired;\n> 101 |     expect(validRoutes).toBe(procurementRoutes.length);\n      |                         ^\n  102 |   });\n  103 | });\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts:101:25"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 10360,
+                      "errors": [],
                       "stdout": [
                         {
-                          "text": "✅ Login successful\n"
+                          "text": "Current URL: http://localhost:5173/app/projects\n"
                         },
                         {
-                          "text": "❌ Procurement Overview: /app/procurement (FAIL)\n"
+                          "text": "Error boundary triggered: \u001b[33mfalse\u001b[39m\n"
                         },
                         {
-                          "text": "❌ BOQ List: /app/procurement/boq (FAIL)\n"
-                        },
-                        {
-                          "text": "❌ RFQ List: /app/procurement/rfq (FAIL)\n"
-                        },
-                        {
-                          "text": "❌ Suppliers Management: /app/procurement/suppliers (FAIL)\n"
-                        },
-                        {
-                          "text": "\nSidebar has Procurement: ✅\n"
-                        },
-                        {
-                          "text": "\n✅ Passed: 0/4\n"
-                        },
-                        {
-                          "text": "🔐 Auth Required: 0/4\n"
+                          "text": "Console errors: [\n  \u001b[32m'Failed to load resource: the server responded with a status of 404 (Not Found)'\u001b[39m\n]\n"
                         }
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-08-22T01:07:51.213Z",
+                      "startTime": "2025-08-22T01:16:35.203Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\test-results\\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\test-results\\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\test-results\\procurement-test-Procureme-3369c-routes-should-be-accessible-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\tests\\e2e\\procurement-test.spec.ts",
-                        "column": 25,
-                        "line": 101
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "7cf6257b3dbec18ddb56-70e52c5c656c6ad8b215",
-              "file": "procurement-test.spec.ts",
+              "id": "e3c48e5e8f112a43cf57-80b663440904f16d2bfb",
+              "file": "projects-test.spec.ts",
               "line": 6,
               "column": 3
             }
@@ -267,11 +212,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-22T01:07:49.180Z",
-    "duration": 16246.314,
-    "expected": 0,
+    "startTime": "2025-08-22T01:16:33.806Z",
+    "duration": 19473.149999999998,
+    "expected": 1,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

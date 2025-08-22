@@ -157,7 +157,7 @@ export function Projects() {
               >
                 {Object.values(ProjectStatus).map(status => (
                   <option key={status} value={status}>
-                    {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+                    {status ? status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ') : ''}
                   </option>
                 ))}
               </select>
@@ -195,7 +195,7 @@ export function Projects() {
               >
                 {Object.values(Priority).map(priority => (
                   <option key={priority} value={priority}>
-                    {priority.charAt(0).toUpperCase() + priority.slice(1)}
+                    {priority ? priority.charAt(0).toUpperCase() + priority.slice(1) : ''}
                   </option>
                 ))}
               </select>
@@ -262,8 +262,8 @@ export function Projects() {
                   
                   <div className="flex items-center gap-2">
                     {/* Status Badge */}
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[project.status]}`}>
-                      {project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('_', ' ')}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[project.status] || 'bg-gray-100 text-gray-800'}`}>
+                      {project.status ? project.status.charAt(0).toUpperCase() + project.status.slice(1).replace('_', ' ') : 'Unknown'}
                     </span>
                     
                     {/* Actions Menu */}
@@ -307,10 +307,10 @@ export function Projects() {
                 {/* Project Type & Priority */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                    {project.projectType.toUpperCase()}
+                    {project.projectType ? project.projectType.toUpperCase() : 'GENERAL'}
                   </span>
-                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${priorityColors[project.priority]}`}>
-                    {project.priority.charAt(0).toUpperCase() + project.priority.slice(1)}
+                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${priorityColors[project.priority] || 'bg-gray-100 text-gray-800'}`}>
+                    {project.priority ? project.priority.charAt(0).toUpperCase() + project.priority.slice(1) : 'Normal'}
                   </span>
                 </div>
 

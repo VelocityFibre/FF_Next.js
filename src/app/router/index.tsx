@@ -7,6 +7,7 @@ import { StaffDebug } from '@/components/dev/StaffDebug';
 import { StaffDataFix } from '@/pages/StaffDataFix';
 import { LoginPage } from '@/components/auth/LoginPage';
 import { useAuth } from '@/contexts/AuthContext';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 // Lazy load modules and pages
 const Dashboard = lazy(() => import('@/modules/dashboard/Dashboard').then(m => ({ default: m.Dashboard })));
@@ -122,7 +123,11 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        element: <AppLayout />,
+        element: (
+          <ErrorBoundary>
+            <AppLayout />
+          </ErrorBoundary>
+        ),
         children: [
           {
             path: 'dashboard',
@@ -135,9 +140,11 @@ export const router = createBrowserRouter([
           {
             path: 'projects',
             element: (
-              <Suspense fallback={<Loading />}>
-                <Projects />
-              </Suspense>
+              <ErrorBoundary>
+                <Suspense fallback={<Loading />}>
+                  <Projects />
+                </Suspense>
+              </ErrorBoundary>
             ),
           },
           {
