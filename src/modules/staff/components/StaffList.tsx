@@ -327,7 +327,7 @@ export function StaffList() {
                   Projects
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Start Date
+                  Reports To
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -412,7 +412,20 @@ export function StaffList() {
                     </div>
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-900">
-                    {formatDate(member.startDate)}
+                    {member.reportsTo ? (
+                      <div className="flex items-center">
+                        <div className="h-6 w-6 bg-gray-100 rounded-full flex items-center justify-center mr-2">
+                          <span className="text-xs font-medium text-gray-600">
+                            {member.managerName ? member.managerName.split(' ').map(n => n[0]).join('').toUpperCase() : '?'}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-600">
+                          {member.managerName || 'Manager'}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-gray-400 italic">No manager</span>
+                    )}
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2">

@@ -16,10 +16,22 @@ export const staffNeonService = {
    */
   async getAll(filter?: StaffFilter): Promise<StaffMember[]> {
     try {
-      // If no filters, return all staff
+      // If no filters, return all staff with manager information
       if (!filter || (!filter.status?.length && !filter.department?.length)) {
-        const result = await sql`SELECT * FROM staff ORDER BY name ASC`;
-        return result as StaffMember[];
+        const result = await sql`
+          SELECT 
+            s.*,
+            m.name as manager_name,
+            m.position as manager_position
+          FROM staff s
+          LEFT JOIN staff m ON s.reports_to = m.id
+          ORDER BY s.name ASC
+        `;
+        return result.map((staff: any) => ({
+          ...staff,
+          managerName: staff.manager_name,
+          managerPosition: staff.manager_position
+        })) as StaffMember[];
       }
       
       // Handle filtering with tagged templates only
@@ -28,34 +40,73 @@ export const staffNeonService = {
         const statusValue = filter.status[0]; // Take first status
         const deptValue = filter.department[0]; // Take first department
         const result = await sql`
-          SELECT * FROM staff 
-          WHERE status = ${statusValue} AND department = ${deptValue}
-          ORDER BY name ASC
+          SELECT 
+            s.*,
+            m.name as manager_name,
+            m.position as manager_position
+          FROM staff s
+          LEFT JOIN staff m ON s.reports_to = m.id
+          WHERE s.status = ${statusValue} AND s.department = ${deptValue}
+          ORDER BY s.name ASC
         `;
-        return result as StaffMember[];
+        return result.map((staff: any) => ({
+          ...staff,
+          managerName: staff.manager_name,
+          managerPosition: staff.manager_position
+        })) as StaffMember[];
       } else if (filter.status?.length) {
         // Status filter only
         const statusValue = filter.status[0]; // Take first status for simplicity
         const result = await sql`
-          SELECT * FROM staff 
-          WHERE status = ${statusValue}
-          ORDER BY name ASC
+          SELECT 
+            s.*,
+            m.name as manager_name,
+            m.position as manager_position
+          FROM staff s
+          LEFT JOIN staff m ON s.reports_to = m.id
+          WHERE s.status = ${statusValue}
+          ORDER BY s.name ASC
         `;
-        return result as StaffMember[];
+        return result.map((staff: any) => ({
+          ...staff,
+          managerName: staff.manager_name,
+          managerPosition: staff.manager_position
+        })) as StaffMember[];
       } else if (filter.department?.length) {
         // Department filter only
         const deptValue = filter.department[0]; // Take first department for simplicity
         const result = await sql`
-          SELECT * FROM staff 
-          WHERE department = ${deptValue}
-          ORDER BY name ASC
+          SELECT 
+            s.*,
+            m.name as manager_name,
+            m.position as manager_position
+          FROM staff s
+          LEFT JOIN staff m ON s.reports_to = m.id
+          WHERE s.department = ${deptValue}
+          ORDER BY s.name ASC
         `;
-        return result as StaffMember[];
+        return result.map((staff: any) => ({
+          ...staff,
+          managerName: staff.manager_name,
+          managerPosition: staff.manager_position
+        })) as StaffMember[];
       }
       
       // Fallback to all staff
-      const result = await sql`SELECT * FROM staff ORDER BY name ASC`;
-      return result as StaffMember[];
+      const result = await sql`
+        SELECT 
+          s.*,
+          m.name as manager_name,
+          m.position as manager_position
+        FROM staff s
+        LEFT JOIN staff m ON s.reports_to = m.id
+        ORDER BY s.name ASC
+      `;
+      return result.map((staff: any) => ({
+        ...staff,
+        managerName: staff.manager_name,
+        managerPosition: staff.manager_position
+      })) as StaffMember[];
       
     } catch (error) {
       console.error('Error fetching staff:', error);
