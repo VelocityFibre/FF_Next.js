@@ -128,14 +128,60 @@ export function Header({
               {/* Breadcrumbs */}
               {breadcrumbs && breadcrumbs.length > 1 && (
                 <nav className="flex items-center space-x-1 text-sm text-text-tertiary mb-1">
-                  {breadcrumbs.map((crumb, index) => (
-                    <div key={index} className="flex items-center">
-                      {index > 0 && <ChevronRight className="h-3 w-3 mx-1" />}
-                      <span className={index === breadcrumbs.length - 1 ? 'text-text-primary font-medium' : ''}>
-                        {crumb}
-                      </span>
-                    </div>
-                  ))}
+                  {breadcrumbs.map((crumb, index) => {
+                    const isLast = index === breadcrumbs.length - 1;
+                    const getBreadcrumbPath = (breadcrumbText: string) => {
+                      switch (breadcrumbText.toLowerCase()) {
+                        case 'home':
+                          return '/app/dashboard';
+                        case 'dashboard':
+                          return '/app/dashboard';
+                        case 'projects':
+                          return '/app/projects';
+                        case 'clients':
+                          return '/app/clients';
+                        case 'staff':
+                        case 'staff management':
+                          return '/app/staff';
+                        case 'procurement':
+                          return '/app/procurement';
+                        case 'suppliers':
+                          return '/app/suppliers';
+                        case 'contractors':
+                          return '/app/contractors';
+                        case 'communications':
+                          return '/app/communications';
+                        case 'analytics':
+                          return '/app/analytics';
+                        case 'settings':
+                          return '/app/settings';
+                        case 'field app':
+                          return '/app/field';
+                        case 'daily progress':
+                          return '/app/daily-progress';
+                        default:
+                          return '#';
+                      }
+                    };
+
+                    return (
+                      <div key={index} className="flex items-center">
+                        {index > 0 && <ChevronRight className="h-3 w-3 mx-1" />}
+                        {isLast ? (
+                          <span className="text-text-primary font-medium">
+                            {crumb}
+                          </span>
+                        ) : (
+                          <Link
+                            to={getBreadcrumbPath(crumb)}
+                            className="hover:text-text-primary transition-colors"
+                          >
+                            {crumb}
+                          </Link>
+                        )}
+                      </div>
+                    );
+                  })}
                 </nav>
               )}
               

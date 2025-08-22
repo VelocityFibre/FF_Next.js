@@ -105,6 +105,18 @@ export function AppLayout() {
           breadcrumbs: ['Home', 'Staff', 'Add'],
         };
       }
+      if (segments.includes('import')) {
+        return {
+          title: 'Import Staff',
+          breadcrumbs: ['Home', 'Staff', 'Import'],
+        };
+      }
+      if (segments.includes('settings')) {
+        return {
+          title: 'Staff Settings',
+          breadcrumbs: ['Home', 'Staff', 'Settings'],
+        };
+      }
       if (segments.length > 2) {
         return {
           title: 'Staff Details',
@@ -113,7 +125,7 @@ export function AppLayout() {
       }
       return {
         title: 'Staff Management',
-        breadcrumbs: ['Home', 'Staff Management'],
+        breadcrumbs: ['Home', 'Staff'],
       };
     }
     
