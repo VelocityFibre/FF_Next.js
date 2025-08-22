@@ -81,6 +81,9 @@ export const staffNeonService = {
    */
   async create(data: StaffFormData): Promise<StaffMember> {
     try {
+      // Handle empty string for UUID fields - convert to null
+      const reportsTo = data.reportsTo && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      
       const result = await sql`
         INSERT INTO staff (
           employee_id, name, email, phone, department, position, 
@@ -88,7 +91,7 @@ export const staffNeonService = {
         ) VALUES (
           ${data.employeeId}, ${data.name}, ${data.email}, ${data.phone},
           ${data.department}, ${data.position}, ${data.status || 'ACTIVE'},
-          ${data.joinDate || new Date()}, ${data.reportsTo}, 
+          ${data.startDate || new Date()}, ${reportsTo}, 
           NOW(), NOW()
         ) RETURNING *
       `;
@@ -104,6 +107,9 @@ export const staffNeonService = {
    */
   async update(id: string, data: Partial<StaffFormData>): Promise<StaffMember> {
     try {
+      // Handle empty string for UUID fields - convert to null
+      const reportsTo = data.reportsTo && data.reportsTo.trim() !== '' ? data.reportsTo : null;
+      
       const result = await sql`
         UPDATE staff SET
           name = ${data.name},
@@ -112,7 +118,7 @@ export const staffNeonService = {
           department = ${data.department},
           position = ${data.position},
           status = ${data.status},
-          reports_to = ${data.reportsTo},
+          reports_to = ${reportsTo},
           updated_at = NOW()
         WHERE id = ${id}
         RETURNING *
@@ -154,7 +160,7 @@ export const staffNeonService = {
         position: staff.position,
         department: staff.department,
         email: staff.email,
-        status: 'ACTIVE',
+        status: 'ACTIVE' as any, // Type will be fixed when we properly implement enums
         currentProjectCount: 0, // TODO: Calculate from projects
         maxProjectCount: 5 // TODO: Get from staff settings
       }));
@@ -183,7 +189,7 @@ export const staffNeonService = {
         position: staff.position,
         department: staff.department || 'Management',
         email: staff.email,
-        status: 'ACTIVE',
+        status: 'ACTIVE' as any, // Type will be fixed when we properly implement enums
         currentProjectCount: 0, // TODO: Calculate from projects
         maxProjectCount: 10 // Managers can handle more projects
       }));
