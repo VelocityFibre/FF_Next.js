@@ -1,7 +1,7 @@
 // Main procurement types based on the spec
 // Following FibreFlow Universal Module Structure
 
-import { ProcurementBase, ProjectScoped, Money, Priority, StatusTracked } from './base.types';
+import { ProcurementBase, ProjectScoped, Money } from './base.types';
 
 export interface Project extends ProcurementBase, ProjectScoped {
   name: string;

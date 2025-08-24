@@ -1,432 +1,188 @@
-// Supplier Management Service
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  Timestamp,
-  onSnapshot,
-  limit
-} from 'firebase/firestore';
-import { db } from '@/config/firebase';
-import { 
+/**
+ * Supplier Management Service - Legacy Compatibility Layer
+ * 
+ * @deprecated This file has been split into modular components for better maintainability.
+ * 
+ * New modular structure:
+ * - supplier.crud.ts: Core CRUD operations
+ * - supplier.status.ts: Status and preference management
+ * - supplier.rating.ts: Rating and performance management
+ * - supplier.search.ts: Search and filter operations
+ * - supplier.compliance.ts: Compliance and document management
+ * - supplier.subscriptions.ts: Real-time subscriptions
+ * - supplier.statistics.ts: Statistics and analytics
+ * 
+ * For new code, import from the specific modules:
+ * ```typescript
+ * import { SupplierCrudService, SupplierSearchService } from '@/services/suppliers';
+ * // or
+ * import SupplierServices from '@/services/suppliers';
+ * ```
+ * 
+ * This legacy layer maintains backward compatibility while the codebase transitions.
+ */
+
+import { SupplierCrudService } from './supplier.crud';
+import { SupplierStatusService } from './supplier.status';
+import { SupplierRatingService } from './supplier.rating';
+import { SupplierSearchService } from './supplier.search';
+import { SupplierComplianceService } from './supplier.compliance';
+import { SupplierSubscriptionService } from './supplier.subscriptions';
+import { SupplierStatisticsService } from './supplier.statistics';
+import type { 
   Supplier, 
   SupplierFormData, 
   SupplierStatus,
   SupplierRating,
-  SupplierPerformance,
   PerformancePeriod
 } from '@/types/supplier.types';
 
-const COLLECTION_NAME = 'suppliers';
-
+/**
+ * @deprecated Use the new modular services for better type safety and organization
+ * 
+ * Legacy supplier service object that delegates to new modular architecture
+ */
 export const supplierService = {
   // ============= CRUD Operations =============
   
+  /**
+   * @deprecated Use SupplierCrudService.getAll() instead
+   */
   async getAll(filter?: { 
     status?: SupplierStatus; 
     category?: string; 
     isPreferred?: boolean 
   }) {
-    try {
-      let q = query(collection(db, COLLECTION_NAME), orderBy('companyName', 'asc'));
-      
-      if (filter?.status) {
-        q = query(q, where('status', '==', filter.status));
-      }
-      if (filter?.isPreferred !== undefined) {
-        q = query(q, where('isPreferred', '==', filter.isPreferred));
-      }
-      if (filter?.category) {
-        q = query(q, where('categories', 'array-contains', filter.category));
-      }
-      
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Supplier));
-    } catch (error) {
-      console.error('Error fetching suppliers:', error);
-      throw error;
-    }
+    return SupplierCrudService.getAll(filter);
   },
 
+  /**
+   * @deprecated Use SupplierCrudService.getById() instead
+   */
   async getById(id: string): Promise<Supplier> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const snapshot = await getDoc(docRef);
-      
-      if (!snapshot.exists()) {
-        throw new Error('Supplier not found');
-      }
-      
-      return {
-        id: snapshot.id,
-        ...snapshot.data()
-      } as Supplier;
-    } catch (error) {
-      console.error('Error fetching supplier:', error);
-      throw error;
-    }
+    return SupplierCrudService.getById(id);
   },
 
+  /**
+   * @deprecated Use SupplierCrudService.create() instead
+   */
   async create(data: SupplierFormData): Promise<string> {
-    try {
-      // Initialize rating
-      const initialRating = {
-        overall: 0,
-        totalReviews: 0
-      };
-
-      const supplier = {
-        ...data,
-        code: `SUP-${Date.now()}`,
-        companyName: data.name,
-        businessType: data.businessType,
-        isActive: true,
-        primaryContact: {
-          name: data.name,
-          email: data.email,
-          phone: data.phone
-        },
-        contact: {
-          name: data.name,
-          email: data.email,
-          phone: data.phone
-        },
-        addresses: {
-          physical: {
-            street1: '',
-            city: '',
-            state: '',
-            postalCode: '',
-            country: 'South Africa'
-          }
-        },
-        rating: initialRating,
-        status: data.status || SupplierStatus.PENDING,
-        isPreferred: false,
-        complianceStatus: {
-          taxCompliant: false
-        },
-        documents: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        createdBy: 'current-user-id' // TODO: Get from auth context
-      } as Omit<Supplier, 'id'>;
-      
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), supplier);
-      return docRef.id;
-    } catch (error) {
-      console.error('Error creating supplier:', error);
-      throw error;
-    }
+    return SupplierCrudService.create(data);
   },
 
+  /**
+   * @deprecated Use SupplierCrudService.update() instead
+   */
   async update(id: string, data: Partial<SupplierFormData>): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      
-      const updateData = {
-        ...data,
-        updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
-      };
-      
-      await updateDoc(docRef, updateData);
-    } catch (error) {
-      console.error('Error updating supplier:', error);
-      throw error;
-    }
+    return SupplierCrudService.update(id, data);
   },
 
+  /**
+   * @deprecated Use SupplierCrudService.delete() instead
+   */
   async delete(id: string): Promise<void> {
-    try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id));
-    } catch (error) {
-      console.error('Error deleting supplier:', error);
-      throw error;
-    }
+    return SupplierCrudService.delete(id);
   },
 
   // ============= Status Management =============
   
+  /**
+   * @deprecated Use SupplierStatusService.updateStatus() instead
+   */
   async updateStatus(id: string, status: SupplierStatus, reason?: string): Promise<void> {
-    try {
-      const updateData: any = {
-        status,
-        updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
-      };
-      
-      if (status === SupplierStatus.BLACKLISTED && reason) {
-        updateData.blacklistReason = reason;
-      }
-      
-      await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
-    } catch (error) {
-      console.error('Error updating supplier status:', error);
-      throw error;
-    }
+    return SupplierStatusService.updateStatus(id, status, reason);
   },
 
+  /**
+   * @deprecated Use SupplierStatusService.setPreferred() instead
+   */
   async setPreferred(id: string, isPreferred: boolean): Promise<void> {
-    try {
-      await updateDoc(doc(db, COLLECTION_NAME, id), {
-        isPreferred,
-        updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
-      });
-    } catch (error) {
-      console.error('Error updating supplier preference:', error);
-      throw error;
-    }
+    return SupplierStatusService.setPreferred(id, isPreferred);
   },
 
   // ============= Performance & Rating =============
   
+  /**
+   * @deprecated Use SupplierRatingService.updateRating() instead
+   */
   async updateRating(id: string, rating: Partial<SupplierRating>): Promise<void> {
-    try {
-      const supplier = await this.getById(id);
-      
-      const currentRating = typeof supplier.rating === 'object' ? supplier.rating : { overall: supplier.rating, totalReviews: 0 };
-      const updatedRating = {
-        ...currentRating,
-        ...rating,
-        lastReviewDate: Timestamp.now()
-      };
-      
-      // Calculate overall rating
-      const ratingValues = [
-        (updatedRating as any).quality,
-        (updatedRating as any).delivery,
-        (updatedRating as any).pricing,
-        (updatedRating as any).communication,
-        (updatedRating as any).flexibility
-      ].filter((r: any) => r && r > 0);
-      
-      if (ratingValues.length > 0) {
-        updatedRating.overall = ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length;
-      }
-      
-      await updateDoc(doc(db, COLLECTION_NAME, id), {
-        rating: updatedRating,
-        updatedAt: Timestamp.now()
-      });
-    } catch (error) {
-      console.error('Error updating supplier rating:', error);
-      throw error;
-    }
+    return SupplierRatingService.updateRating(id, rating);
   },
 
-  async calculatePerformance(
-    supplierId: string, 
-    period: PerformancePeriod
-  ): Promise<SupplierPerformance> {
-    try {
-      // This would typically calculate from orders, deliveries, etc.
-      // For now, return mock data
-      // Timestamps removed - not used
-      
-      const performance: SupplierPerformance = {
-        overallScore: 92,
-        deliveryScore: 95,
-        qualityScore: 98,
-        priceScore: 90,
-        serviceScore: 88,
-        complianceScore: 100,
-        metrics: {
-          totalOrders: 10,
-          completedOrders: 9,
-          onTimeDeliveries: 8,
-          lateDeliveries: 1,
-          defectiveItems: 2,
-          returnedItems: 1,
-          averageLeadTime: 5,
-          averageResponseTime: 4
-        },
-        issues: [],
-        evaluationPeriod: period,
-        lastEvaluationDate: new Date(),
-        nextEvaluationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      };
-      
-      // Update supplier with latest scores
-      await updateDoc(doc(db, COLLECTION_NAME, supplierId), {
-        performance: performance,
-        updatedAt: Timestamp.now()
-      });
-      
-      return performance;
-    } catch (error) {
-      console.error('Error calculating supplier performance:', error);
-      throw error;
-    }
+  /**
+   * @deprecated Use SupplierRatingService.calculatePerformance() instead
+   */
+  async calculatePerformance(supplierId: string, period: PerformancePeriod) {
+    return SupplierRatingService.calculatePerformance(supplierId, period);
   },
 
   // ============= Search & Filter =============
   
+  /**
+   * @deprecated Use SupplierSearchService.searchByName() instead
+   */
   async searchByName(searchTerm: string): Promise<Supplier[]> {
-    try {
-      // Firestore doesn't support full-text search, so we use a workaround
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        orderBy('name'),
-        limit(50)
-      );
-      
-      const snapshot = await getDocs(q);
-      const suppliers = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Supplier));
-      
-      // Client-side filtering
-      return suppliers.filter(supplier => 
-        (supplier.companyName || supplier.name || '').toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    } catch (error) {
-      console.error('Error searching suppliers:', error);
-      throw error;
-    }
+    return SupplierSearchService.searchByName(searchTerm);
   },
 
+  /**
+   * @deprecated Use SupplierSearchService.getPreferredSuppliers() instead
+   */
   async getPreferredSuppliers(): Promise<Supplier[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('isPreferred', '==', true),
-        where('status', '==', SupplierStatus.ACTIVE),
-        orderBy('companyName')
-      );
-      
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Supplier));
-    } catch (error) {
-      console.error('Error fetching preferred suppliers:', error);
-      throw error;
-    }
+    return SupplierSearchService.getPreferredSuppliers();
   },
 
+  /**
+   * @deprecated Use SupplierSearchService.getByCategory() instead
+   */
   async getByCategory(category: string): Promise<Supplier[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('categories', 'array-contains', category),
-        where('status', '==', SupplierStatus.ACTIVE),
-        orderBy('rating.overall', 'desc')
-      );
-      
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Supplier));
-    } catch (error) {
-      console.error('Error fetching suppliers by category:', error);
-      throw error;
-    }
+    return SupplierSearchService.getByCategory(category);
   },
 
   // ============= Compliance & Documents =============
   
+  /**
+   * @deprecated Use SupplierComplianceService.updateCompliance() instead
+   */
   async updateCompliance(id: string, compliance: any): Promise<void> {
-    try {
-      await updateDoc(doc(db, COLLECTION_NAME, id), {
-        compliance,
-        updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
-      });
-    } catch (error) {
-      console.error('Error updating supplier compliance:', error);
-      throw error;
-    }
+    return SupplierComplianceService.updateCompliance(id, compliance);
   },
 
+  /**
+   * @deprecated Use SupplierComplianceService.addDocument() instead
+   */
   async addDocument(id: string, document: any): Promise<void> {
-    try {
-      const supplier = await this.getById(id);
-      const documents = [...(supplier.documents || []), document];
-      
-      await updateDoc(doc(db, COLLECTION_NAME, id), {
-        documents,
-        updatedAt: Timestamp.now()
-      });
-    } catch (error) {
-      console.error('Error adding supplier document:', error);
-      throw error;
-    }
+    await SupplierComplianceService.addDocument(id, document);
   },
 
   // ============= Real-time Subscription =============
   
+  /**
+   * @deprecated Use SupplierSubscriptionService.subscribeToSupplier() instead
+   */
   subscribeToSupplier(supplierId: string, callback: (supplier: Supplier) => void) {
-    const docRef = doc(db, COLLECTION_NAME, supplierId);
-    
-    return onSnapshot(docRef, (snapshot) => {
-      if (snapshot.exists()) {
-        callback({
-          id: snapshot.id,
-          ...snapshot.data()
-        } as Supplier);
-      }
-    });
+    return SupplierSubscriptionService.subscribeToSupplier(supplierId, callback);
   },
 
+  /**
+   * @deprecated Use SupplierSubscriptionService.subscribeToSuppliers() instead
+   */
   subscribeToSuppliers(callback: (suppliers: Supplier[]) => void) {
-    const q = query(
-      collection(db, COLLECTION_NAME),
-      orderBy('companyName')
-    );
-    
-    return onSnapshot(q, (snapshot) => {
-      const suppliers = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Supplier));
-      callback(suppliers);
-    });
+    return SupplierSubscriptionService.subscribeToSuppliers(callback);
   },
 
   // ============= Statistics =============
   
+  /**
+   * @deprecated Use SupplierStatisticsService.getStatistics() instead
+   */
   async getStatistics() {
-    try {
-      const suppliers = await this.getAll();
-      
-      return {
-        total: suppliers.length,
-        active: suppliers.filter(s => s.status === SupplierStatus.ACTIVE).length,
-        preferred: suppliers.filter(s => s.isPreferred).length,
-        blacklisted: suppliers.filter(s => s.status === SupplierStatus.BLACKLISTED).length,
-        averageRating: suppliers.reduce((sum, s) => sum + (typeof s.rating === 'number' ? s.rating : s.rating?.overall || 0), 0) / suppliers.length || 0,
-        averagePerformance: suppliers.reduce((sum, s) => sum + ((s.performance as any)?.score || 0), 0) / suppliers.length || 0,
-        categoryCounts: this.countByCategory(suppliers),
-        topRated: suppliers
-          .filter(s => typeof s.rating === 'object' && s.rating.totalReviews && s.rating.totalReviews > 0)
-          .sort((a, b) => {
-            const aRating = typeof a.rating === 'number' ? a.rating : a.rating?.overall || 0;
-            const bRating = typeof b.rating === 'number' ? b.rating : b.rating?.overall || 0;
-            return bRating - aRating;
-          })
-          .slice(0, 5)
-      };
-    } catch (error) {
-      console.error('Error getting supplier statistics:', error);
-      throw error;
-    }
+    return SupplierStatisticsService.getStatistics();
   },
 
+  /**
+   * @deprecated Use SupplierStatisticsService.countByCategory() instead
+   */
   countByCategory(suppliers: Supplier[]) {
     const counts: Record<string, number> = {};
     
@@ -439,3 +195,15 @@ export const supplierService = {
     return counts;
   }
 };
+
+// Re-export new modular services for migration convenience
+export { SupplierCrudService } from './supplier.crud';
+export { SupplierStatusService } from './supplier.status';
+export { SupplierRatingService } from './supplier.rating';
+export { SupplierSearchService } from './supplier.search';
+export { SupplierComplianceService } from './supplier.compliance';
+export { SupplierSubscriptionService } from './supplier.subscriptions';
+export { SupplierStatisticsService } from './supplier.statistics';
+
+// Default export maintains compatibility
+export default supplierService;

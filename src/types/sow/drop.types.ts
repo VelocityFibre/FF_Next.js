@@ -1,3 +1,5 @@
+import { ValidationStatus, DropStatus } from './enums.types';
+
 // Drop Data Structure
 export interface DropData {
   id?: string;
@@ -61,18 +63,7 @@ export interface DropData {
   lastModifiedBy: string;
 }
 
-export enum DropStatus {
-  PLANNED = 'planned',
-  SURVEY_REQUIRED = 'survey_required',
-  SURVEY_COMPLETED = 'survey_completed',
-  READY_FOR_INSTALLATION = 'ready_for_installation',
-  INSTALLATION_IN_PROGRESS = 'installation_in_progress',
-  INSTALLED = 'installed',
-  TESTING = 'testing',
-  ACTIVE = 'active',
-  SUSPENDED = 'suspended',
-  CANCELLED = 'cancelled',
-}
+// DropStatus is imported from enums.types - removed duplicate definition
 
 export enum ServiceType {
   FTTH_RESIDENTIAL = 'ftth_residential',
@@ -105,10 +96,58 @@ export interface SpeedTestResult {
   passed: boolean;
 }
 
-export enum ValidationStatus {
-  PENDING = 'pending',
-  VALID = 'valid',
-  INVALID = 'invalid',
-  WARNING = 'warning',
-  NEEDS_REVIEW = 'needs_review',
+// Analytics and filtering interfaces
+export interface DropAnalytics {
+  totalDrops: number;
+  completedDrops: number;
+  pendingDrops: number;
+  averageInstallTime: number;
+  totalRevenue: number;
+  serviceTypeBreakdown: Record<ServiceType, number>;
+  priorityBreakdown: Record<Priority, number>;
 }
+
+export interface DropFilterOptions {
+  status?: DropStatus[];
+  serviceType?: ServiceType[];
+  priority?: Priority[];
+  dateRange?: {
+    start: Date;
+    end: Date;
+  };
+  location?: {
+    bounds?: {
+      north: number;
+      south: number;
+      east: number;
+      west: number;
+    };
+    radius?: {
+      center: { lat: number; lng: number };
+      meters: number;
+    };
+  };
+}
+
+export interface DropSortOptions {
+  field: keyof DropData;
+  direction: 'asc' | 'desc';
+}
+
+export interface DropValidation {
+  required: (keyof DropData)[];
+  rules: {
+    [K in keyof DropData]?: (value: DropData[K]) => string | null;
+  };
+}
+
+export interface DropTestResult {
+  testType: 'signal' | 'speed' | 'connectivity' | 'quality';
+  result: 'pass' | 'fail' | 'warning';
+  value?: number;
+  expectedValue?: number;
+  testDate: Date;
+  technician: string;
+  notes?: string;
+}
+

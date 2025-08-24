@@ -1,71 +1,26 @@
-import {
-  collection,
-  doc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-  getDoc,
-  query,
-  where,
-  orderBy,
-  serverTimestamp
-} from 'firebase/firestore';
-import { db } from '@/config/firebase';
+/**
+ * Pole Tracker Service - Main Service Facade
+ * Provides high-level pole tracking operations using modular components
+ */
+
 import { poleValidationService } from './poleValidation';
 import { poleStatisticsService, PoleStatistics } from './poleStatistics';
+import {
+  Pole,
+  PoleFilters,
+  PolePhotos,
+  PoleQualityChecks,
+  PoleCrudService,
+  PoleQueryService,
+  PoleStatusService,
+  PolePhotosService,
+  PoleQualityService,
+  PoleSyncService
+} from './tracker';
 
-export interface Pole {
-  id?: string;
-  poleNumber: string;
-  projectId: string;
-  projectCode: string;
-  location: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-  phase: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'issue';
-  dropCount: number;
-  maxDrops: number;
-  installationDate?: Date | null;
-  photos: {
-    beforeInstallation: string | null;
-    duringInstallation: string | null;
-    afterInstallation: string | null;
-    poleLabel: string | null;
-    cableRouting: string | null;
-    qualityCheck: string | null;
-  };
-  qualityChecks: {
-    poleCondition: boolean | null;
-    cableRouting: boolean | null;
-    connectorQuality: boolean | null;
-    labelingCorrect: boolean | null;
-    groundingProper: boolean | null;
-    heightCompliant: boolean | null;
-    tensionCorrect: boolean | null;
-    documentationComplete: boolean | null;
-  };
-  statusHistory?: Array<{
-    status: string;
-    timestamp: Date;
-    changedBy: string;
-    notes?: string;
-  }>;
-  metadata: {
-    createdAt?: any;
-    updatedAt?: any;
-    createdBy?: string;
-    syncStatus?: 'synced' | 'pending' | 'error';
-    lastSyncAttempt?: Date;
-  };
-}
+export { Pole } from './tracker';
 
 export class PoleTrackerService {
-  private readonly collection = 'poles';
-
   // Aliases for hook compatibility
   getById = this.getPoleById;
   getByProject = this.getPolesByProject;
@@ -90,29 +45,19 @@ export class PoleTrackerService {
       throw new Error(`Drop count ${data.dropCount} exceeds maximum of ${data.maxDrops}`);
     }
 
-    const poleData = {
-      ...data,
-      metadata: {
-        ...data.metadata,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        syncStatus: 'synced'
-      }
-    };
-
-    const docRef = await addDoc(collection(db, this.collection), poleData);
-    return docRef.id;
+    return PoleCrudService.create(data);
   }
 
   /**
    * Update an existing pole
    */
   async updatePole(id: string, updates: Partial<Pole>): Promise<void> {
-    const poleRef = doc(db, this.collection, id);
-    
     // If updating pole number, check uniqueness
     if (updates.poleNumber) {
-      const isUnique = await poleValidationService.isPoleNumberUnique(updates.poleNumber, id);
+      const isUnique = await poleValidationService.isPoleNumberUnique(
+        updates.poleNumber,
+        id
+      );
       if (!isUnique) {
         throw new Error(`Pole number ${updates.poleNumber} already exists`);
       }
@@ -120,76 +65,54 @@ export class PoleTrackerService {
 
     // If updating drop count, validate
     if (updates.dropCount !== undefined) {
-      const existingDoc = await getDoc(poleRef);
-      const maxDrops = updates.maxDrops || existingDoc.data()?.maxDrops || 12;
+      const existingPole = await PoleCrudService.getById(id);
+      const maxDrops = updates.maxDrops || existingPole?.maxDrops || 12;
       
       if (!poleValidationService.validateDropCount(updates.dropCount, maxDrops)) {
         throw new Error(`Drop count ${updates.dropCount} exceeds maximum of ${maxDrops}`);
       }
     }
 
-    // Track status changes
+    // Track status changes if needed
     if (updates.status) {
-      const existingDoc = await getDoc(poleRef);
-      const currentStatus = existingDoc.data()?.status;
-      
-      if (currentStatus !== updates.status) {
-        const statusHistory = existingDoc.data()?.statusHistory || [];
-        statusHistory.push({
-          status: updates.status,
-          timestamp: new Date(),
-          changedBy: updates.metadata?.createdBy || 'system',
-          previousStatus: currentStatus
-        });
-        updates.statusHistory = statusHistory;
+      const existingPole = await PoleCrudService.getById(id);
+      if (existingPole && existingPole.status !== updates.status) {
+        await PoleStatusService.updateStatus(
+          id,
+          updates.status,
+          updates.metadata?.createdBy || 'system'
+        );
+        // Remove status from updates since it's handled by PoleStatusService
+        const { status, ...otherUpdates } = updates;
+        if (Object.keys(otherUpdates).length > 0) {
+          await PoleCrudService.update(id, otherUpdates);
+        }
+        return;
       }
     }
 
-    const updateData = {
-      ...updates,
-      metadata: {
-        ...updates.metadata,
-        updatedAt: serverTimestamp()
-      }
-    };
-
-    await updateDoc(poleRef, updateData);
+    await PoleCrudService.update(id, updates);
   }
 
   /**
    * Delete a pole
    */
   async deletePole(id: string): Promise<void> {
-    await deleteDoc(doc(db, this.collection, id));
+    await PoleCrudService.delete(id);
   }
 
   /**
    * Get all poles
    */
   async getAll(): Promise<Pole[]> {
-    const q = query(collection(db, this.collection), orderBy('poleNumber'));
-    const snapshot = await getDocs(q);
-    
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Pole));
+    return PoleCrudService.getAll();
   }
 
   /**
    * Get a single pole by ID
    */
   async getPoleById(id: string): Promise<Pole | null> {
-    const docSnap = await getDoc(doc(db, this.collection, id));
-    
-    if (!docSnap.exists()) {
-      return null;
-    }
-
-    return {
-      id: docSnap.id,
-      ...docSnap.data()
-    } as Pole;
+    return PoleCrudService.getById(id);
   }
 
   /**
@@ -197,59 +120,19 @@ export class PoleTrackerService {
    */
   async getPolesByProject(
     projectId: string,
-    filters?: {
-      status?: string;
-      phase?: string;
-      search?: string;
-    }
+    filters?: PoleFilters
   ): Promise<Pole[]> {
-    let q = query(
-      collection(db, this.collection),
-      where('projectId', '==', projectId),
-      orderBy('poleNumber')
-    );
-
-    if (filters?.status) {
-      q = query(q, where('status', '==', filters.status));
-    }
-
-    if (filters?.phase) {
-      q = query(q, where('phase', '==', filters.phase));
-    }
-
-    const snapshot = await getDocs(q);
-    let poles = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Pole));
-
-    // Apply search filter
-    if (filters?.search) {
-      const searchLower = filters.search.toLowerCase();
-      poles = poles.filter(pole =>
-        pole.poleNumber.toLowerCase().includes(searchLower) ||
-        pole.location.toLowerCase().includes(searchLower)
-      );
-    }
-
-    return poles;
+    return PoleQueryService.getByProject(projectId, filters);
   }
 
   /**
    * Update pole photos
    */
-  async updatePolePhotos(id: string, photos: Partial<Pole['photos']>): Promise<void> {
-    const poleRef = doc(db, this.collection, id);
-    const existingDoc = await getDoc(poleRef);
-    const existingPhotos = existingDoc.data()?.photos || {};
-
-    await updateDoc(poleRef, {
-      photos: {
-        ...existingPhotos,
-        ...photos
-      },
-      'metadata.updatedAt': serverTimestamp()
-    });
+  async updatePolePhotos(
+    id: string,
+    photos: Partial<PolePhotos>
+  ): Promise<void> {
+    await PolePhotosService.updatePhotos(id, photos);
   }
 
   /**
@@ -257,19 +140,9 @@ export class PoleTrackerService {
    */
   async updateQualityChecks(
     id: string,
-    checks: Partial<Pole['qualityChecks']>
+    checks: Partial<PoleQualityChecks>
   ): Promise<void> {
-    const poleRef = doc(db, this.collection, id);
-    const existingDoc = await getDoc(poleRef);
-    const existingChecks = existingDoc.data()?.qualityChecks || {};
-
-    await updateDoc(poleRef, {
-      qualityChecks: {
-        ...existingChecks,
-        ...checks
-      },
-      'metadata.updatedAt': serverTimestamp()
-    });
+    await PoleQualityService.updateQualityChecks(id, checks);
   }
 
   /**
@@ -283,32 +156,13 @@ export class PoleTrackerService {
    * Get poles with pending sync
    */
   async getPendingSyncPoles(projectId: string): Promise<Pole[]> {
-    const q = query(
-      collection(db, this.collection),
-      where('projectId', '==', projectId),
-      where('metadata.syncStatus', '==', 'pending')
-    );
-
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Pole));
+    return PoleSyncService.getPendingSync(projectId);
   }
 
   /**
    * Mark poles as synced
    */
   async markAsSynced(poleIds: string[]): Promise<void> {
-    const updates = poleIds.map(id =>
-      updateDoc(doc(db, this.collection, id), {
-        'metadata.syncStatus': 'synced',
-        'metadata.lastSyncAttempt': serverTimestamp()
-      })
-    );
-
-    await Promise.all(updates);
+    await PoleSyncService.markAsSynced(poleIds);
   }
 }
-
-export const poleTrackerService = new PoleTrackerService();

@@ -1,0 +1,33 @@
+/**
+ * Field Operations section configuration
+ */
+
+import { Smartphone, MapPin, Wrench } from 'lucide-react';
+import type { NavSection } from './types';
+
+export const fieldOperationsSection: NavSection = {
+  section: 'FIELD OPERATIONS',
+  items: [
+    {
+      to: '/app/field',
+      icon: Smartphone,
+      label: 'Field App Portal',
+      shortLabel: 'Field',
+      permissions: [],
+    },
+    {
+      to: '/app/onemap',
+      icon: MapPin,
+      label: 'OneMap Data Grid',
+      shortLabel: 'OneMap',
+      permissions: [],
+    },
+    {
+      to: '/app/nokia-equipment',
+      icon: Wrench,
+      label: 'Nokia Equipment',
+      shortLabel: 'Nokia',
+      permissions: [],
+    },
+  ]
+};

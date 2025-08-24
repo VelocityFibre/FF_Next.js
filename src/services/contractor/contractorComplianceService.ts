@@ -12,15 +12,14 @@ import {
   ExpiringItem,
   ProjectComplianceRequirement,
   ContractorComplianceRecord,
-  ComplianceAudit,
   ComplianceDashboardData
 } from './compliance/complianceTypes';
 
 export * from './compliance/complianceTypes';
 
 export const contractorComplianceService = {
-  async getComplianceStatus(contractorId: string, projectId?: string): Promise<ComplianceStatus> {
-    const [insurancePolicies, safetyCerts, bbbeeStatus] = await Promise.all([
+  async getComplianceStatus(contractorId: string, _projectId?: string): Promise<ComplianceStatus> {
+    const [, , bbbeeStatus] = await Promise.all([
       insuranceService.getInsurancePolicies(contractorId),
       safetyService.getSafetyCertifications(contractorId),
       bbbeeService.getCurrentBBBEELevel(contractorId)
@@ -36,14 +35,14 @@ export const contractorComplianceService = {
       
       expiringItems.push({
         id: policy.id,
-        type: 'insurance_policy',
+        type: 'insurance_policy' as const,
         name: `${policy.policyType} - ${policy.policyNumber}`,
         expiryDate: policy.expiryDate,
         daysUntilExpiry,
         isExpired: daysUntilExpiry < 0,
         isExpiringSoon: daysUntilExpiry <= 30 && daysUntilExpiry >= 0,
         renewalRequired: true,
-        documentUrl: policy.documentUrl
+        documentUrl: policy.documentUrl || ''
       });
 
       if (daysUntilExpiry <= 7) {
@@ -68,14 +67,14 @@ export const contractorComplianceService = {
       
       expiringItems.push({
         id: cert.id,
-        type: 'safety_certificate',
+        type: 'safety_certificate' as const,
         name: `${cert.certificationType} - ${cert.certificateNumber}`,
         expiryDate: cert.expiryDate,
         daysUntilExpiry,
         isExpired: daysUntilExpiry < 0,
         isExpiringSoon: daysUntilExpiry <= 30 && daysUntilExpiry >= 0,
         renewalRequired: true,
-        documentUrl: cert.documentUrl
+        documentUrl: cert.documentUrl || ''
       });
     });
 
@@ -160,24 +159,27 @@ export const contractorComplianceService = {
   async getContractorComplianceRecords(projectId: string, contractorId: string): Promise<ContractorComplianceRecord[]> {
     const requirements = await this.getProjectRequirements(projectId);
     
-    return requirements.map(req => ({
-      id: `record_${req.id}`,
-      contractorId,
-      projectId,
-      requirementId: req.id,
-      complianceStatus: Math.random() > 0.3 ? 'compliant' : 'pending',
-      verificationDate: Math.random() > 0.5 ? new Date() : undefined,
-      verifiedBy: Math.random() > 0.5 ? 'admin@fibreflow.com' : undefined,
-      nextReviewDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      evidence: req.requirementType === 'insurance' ? [{
-        id: 'evidence_001',
-        documentType: 'Insurance Certificate',
-        documentUrl: '/documents/insurance_cert.pdf',
-        uploadedDate: new Date(),
-        verificationStatus: 'verified'
-      }] : [],
-      riskLevel: req.isMandatory ? 'high' : 'medium'
-    }));
+    return requirements.map(req => {
+      const hasVerification = Math.random() > 0.5;
+      return {
+        id: `record_${req.id}`,
+        contractorId,
+        projectId: projectId || '',
+        requirementId: req.id,
+        complianceStatus: Math.random() > 0.3 ? 'compliant' as const : 'pending' as const,
+        verificationDate: hasVerification ? new Date() : new Date(),
+        verifiedBy: hasVerification ? 'admin@fibreflow.com' : '',
+        nextReviewDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        evidence: req.requirementType === 'insurance' ? [{
+          id: 'evidence_001',
+          documentType: 'Insurance Certificate',
+          documentUrl: '/documents/insurance_cert.pdf',
+          uploadedDate: new Date(),
+          verificationStatus: 'verified' as const
+        }] : [],
+        riskLevel: req.isMandatory ? 'high' as const : 'medium' as const
+      };
+    });
   },
 
   async getDashboardData(contractorId: string, projectId?: string): Promise<ComplianceDashboardData> {
@@ -190,7 +192,7 @@ export const contractorComplianceService = {
 
     return {
       contractorId,
-      projectId,
+      projectId: projectId || '',
       complianceStatus,
       upcomingRenewals,
       criticalIssues,
@@ -205,7 +207,7 @@ export const contractorComplianceService = {
   },
 
   async getUpcomingRenewals(contractorId: string, daysAhead: number): Promise<ExpiringItem[]> {
-    const [expiringInsurance, expiringSafety, expiringBBBEE] = await Promise.all([
+    const [expiringInsurance, expiringSafety] = await Promise.all([
       insuranceService.getExpiringPolicies(contractorId, daysAhead),
       safetyService.getExpiringSafetyCerts(contractorId, daysAhead),
       bbbeeService.getExpiringBBBEECerts(contractorId, daysAhead)
@@ -218,14 +220,14 @@ export const contractorComplianceService = {
       const daysUntilExpiry = Math.floor((policy.expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
       renewals.push({
         id: policy.id,
-        type: 'insurance_policy',
+        type: 'insurance_policy' as const,
         name: `${policy.policyType} - ${policy.insurer}`,
         expiryDate: policy.expiryDate,
         daysUntilExpiry,
         isExpired: daysUntilExpiry < 0,
         isExpiringSoon: daysUntilExpiry <= 30,
         renewalRequired: true,
-        documentUrl: policy.documentUrl
+        documentUrl: policy.documentUrl || ''
       });
     });
 
@@ -234,14 +236,14 @@ export const contractorComplianceService = {
       const daysUntilExpiry = Math.floor((cert.expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
       renewals.push({
         id: cert.id,
-        type: 'safety_certificate',
+        type: 'safety_certificate' as const,
         name: `${cert.certificationType} - ${cert.issuingBody}`,
         expiryDate: cert.expiryDate,
         daysUntilExpiry,
         isExpired: daysUntilExpiry < 0,
         isExpiringSoon: daysUntilExpiry <= 30,
         renewalRequired: true,
-        documentUrl: cert.documentUrl
+        documentUrl: cert.documentUrl || ''
       });
     });
 

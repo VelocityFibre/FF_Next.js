@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react'; // Not used in this component
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import type { ProcurementBreadcrumb } from '../../types';

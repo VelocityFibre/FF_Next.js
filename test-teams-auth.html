@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Contractor Teams (Authenticated)</title>
+</head>
+<body>
+    <h1>Testing Contractor Teams with Authentication</h1>
+    <div id="status">Initializing...</div>
+    <button id="loginBtn" style="display: none;">Login First</button>
+    <button id="testBtn" style="display: none;">Run Tests</button>
+    <div id="results"></div>
+    
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            getDocs, 
+            query, 
+            where 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDvW-ImXptnYIX7IDR78pdruw9BAp5A8Q8",
+            authDomain: "fibreflow-292c7.firebaseapp.com",
+            projectId: "fibreflow-292c7",
+            storageBucket: "fibreflow-292c7.firebasestorage.app",
+            messagingSenderId: "178707510767",
+            appId: "1:178707510767:web:a9455c8f053de03fbff21a"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        const statusDiv = document.getElementById('status');
+        const resultsDiv = document.getElementById('results');
+        const loginBtn = document.getElementById('loginBtn');
+        const testBtn = document.getElementById('testBtn');
+        
+        // Check auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                statusDiv.textContent = `Logged in as: ${user.email}`;
+                loginBtn.style.display = 'none';
+                testBtn.style.display = 'block';
+            } else {
+                statusDiv.textContent = 'Not authenticated. Please login first.';
+                loginBtn.style.display = 'block';
+                testBtn.style.display = 'none';
+            }
+        });
+        
+        // Login function
+        loginBtn.addEventListener('click', async () => {
+            try {
+                statusDiv.textContent = 'Logging in...';
+                // Use test credentials or prompt for credentials
+                const email = prompt('Enter email:') || 'test@fibreflow.com';
+                const password = prompt('Enter password:') || 'Test123!@#';
+                
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                statusDiv.textContent = `Logged in as: ${userCredential.user.email}`;
+            } catch (error) {
+                statusDiv.textContent = `Login failed: ${error.message}`;
+                console.error('Login error:', error);
+            }
+        });
+        
+        // Test function
+        testBtn.addEventListener('click', async () => {
+            resultsDiv.innerHTML = '<h2>Test Results:</h2>';
+            
+            const testContractorId = "test_contractor_" + Date.now();
+            
+            try {
+                // 1. Test creating a team
+                resultsDiv.innerHTML += '<p>1️⃣ Creating a test team...</p>';
+                const teamData = {
+                    contractorId: testContractorId,
+                    teamName: `Test Team ${Date.now()}`,
+                    teamType: 'installation',
+                    specialization: 'Fiber Installation',
+                    maxCapacity: 10,
+                    currentCapacity: 0,
+                    availableCapacity: 10,
+                    isActive: true,
+                    availability: 'available',
+                    baseLocation: 'Cape Town',
+                    operatingRadius: 50,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                
+                const docRef = await addDoc(collection(db, 'contractor_teams'), teamData);
+                resultsDiv.innerHTML += `<p style="color: green;">✅ Team created with ID: ${docRef.id}</p>`;
+                
+                // 2. Test fetching teams
+                resultsDiv.innerHTML += '<p>2️⃣ Fetching teams for contractor...</p>';
+                const q = query(
+                    collection(db, 'contractor_teams'),
+                    where('contractorId', '==', testContractorId)
+                );
+                
+                const snapshot = await getDocs(q);
+                resultsDiv.innerHTML += `<p style="color: green;">✅ Found ${snapshot.size} teams</p>`;
+                
+                snapshot.forEach(doc => {
+                    resultsDiv.innerHTML += `<p>  - Team: ${doc.data().teamName} (ID: ${doc.id})</p>`;
+                });
+                
+                // 3. Test reading all teams (no filter)
+                resultsDiv.innerHTML += '<p>3️⃣ Reading all teams in collection...</p>';
+                const allTeamsSnapshot = await getDocs(collection(db, 'contractor_teams'));
+                resultsDiv.innerHTML += `<p style="color: green;">✅ Total teams in database: ${allTeamsSnapshot.size}</p>`;
+                
+                resultsDiv.innerHTML += '<h3 style="color: green;">✨ All tests passed successfully!</h3>';
+                
+            } catch (error) {
+                resultsDiv.innerHTML += `<p style="color: red;">❌ Test failed: ${error.message}</p>`;
+                console.error('Test error:', error);
+            }
+        });
+        
+        // Auto-login for testing (comment out in production)
+        window.addEventListener('load', async () => {
+            // Try auto-login with test credentials
+            try {
+                await signInWithEmailAndPassword(auth, 'test@fibreflow.com', 'Test123!@#');
+            } catch (error) {
+                console.log('Auto-login failed, manual login required');
+            }
+        });
+    </script>
+</body>
+</html>

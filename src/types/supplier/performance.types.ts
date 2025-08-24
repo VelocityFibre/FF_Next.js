@@ -56,6 +56,16 @@ export interface SupplierRating {
   date: Date | string;
   orderId?: string;
   comment?: string;
+  
+  // Component ratings
+  overall?: number;
+  quality?: number;
+  delivery?: number;
+  pricing?: number;
+  communication?: number;
+  
+  // Summary data
+  totalReviews?: number;
 }
 
 export interface SupplierReview {

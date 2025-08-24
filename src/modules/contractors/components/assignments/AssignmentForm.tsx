@@ -6,7 +6,6 @@
 import { useState } from 'react';
 import { X, Briefcase } from 'lucide-react';
 import { ContractorTeam } from '@/types/contractor.types';
-import { UniversalField } from '@/components/forms/UniversalField';
 
 interface AssignmentFormData {
   projectId: string;
@@ -21,13 +20,12 @@ interface AssignmentFormData {
 }
 
 interface AssignmentFormProps {
-  contractorId: string;
   teams: ContractorTeam[];
   onSubmit: (data: AssignmentFormData) => Promise<void>;
   onCancel: () => void;
 }
 
-export function AssignmentForm({ contractorId, teams, onSubmit, onCancel }: AssignmentFormProps) {
+export function AssignmentForm({ teams, onSubmit, onCancel }: AssignmentFormProps) {
   const [formData, setFormData] = useState<AssignmentFormData>({
     projectId: '',
     teamId: '',
@@ -88,43 +86,55 @@ export function AssignmentForm({ contractorId, teams, onSubmit, onCancel }: Assi
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">Project Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <UniversalField
-                label="Project ID"
-                type="text"
-                value={formData.projectId}
-                onChange={(value: string) => handleInputChange('projectId', value)}
-                required
-                placeholder="Enter project identifier"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Project ID <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.projectId}
+                  onChange={(e) => handleInputChange('projectId', e.target.value)}
+                  required
+                  placeholder="Enter project identifier"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               
-              <UniversalField
-                label="Assignment Type"
-                type="select"
-                value={formData.assignmentType}
-                onChange={(value: string) => handleInputChange('assignmentType', value)}
-                required
-                options={[
-                  { value: 'primary', label: 'Primary Contractor' },
-                  { value: 'subcontractor', label: 'Subcontractor' },
-                  { value: 'consultant', label: 'Consultant' },
-                  { value: 'specialist', label: 'Specialist' }
-                ]}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Assignment Type <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={formData.assignmentType}
+                  onChange={(e) => handleInputChange('assignmentType', e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="primary">Primary Contractor</option>
+                  <option value="subcontractor">Subcontractor</option>
+                  <option value="consultant">Consultant</option>
+                  <option value="specialist">Specialist</option>
+                </select>
+              </div>
               
               {teams.length > 0 && (
-                <UniversalField
-                  label="Assigned Team (Optional)"
-                  type="select"
-                  value={formData.teamId}
-                  onChange={(value: string) => handleInputChange('teamId', value)}
-                  options={[
-                    { value: '', label: 'No specific team' },
-                    ...teams.map(team => ({
-                      value: team.id,
-                      label: `${team.teamName} (${team.teamType})`
-                    }))
-                  ]}
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Assigned Team (Optional)
+                  </label>
+                  <select
+                    value={formData.teamId}
+                    onChange={(e) => handleInputChange('teamId', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">No specific team</option>
+                    {teams.map(team => (
+                      <option key={team.id} value={team.id}>
+                        {team.teamName} ({team.teamType})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             </div>
           </div>
@@ -133,15 +143,19 @@ export function AssignmentForm({ contractorId, teams, onSubmit, onCancel }: Assi
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">Work Details</h3>
             <div className="space-y-4">
-              <UniversalField
-                label="Scope of Work"
-                type="textarea"
-                value={formData.scope}
-                onChange={(value: string) => handleInputChange('scope', value)}
-                required
-                rows={3}
-                placeholder="Describe the scope of work for this assignment"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Scope of Work <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={formData.scope}
+                  onChange={(e) => handleInputChange('scope', e.target.value)}
+                  required
+                  rows={3}
+                  placeholder="Describe the scope of work for this assignment"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -162,45 +176,64 @@ export function AssignmentForm({ contractorId, teams, onSubmit, onCancel }: Assi
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">Timeline & Contract</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <UniversalField
-                label="Start Date"
-                type="date"
-                value={formData.startDate}
-                onChange={(value: string) => handleInputChange('startDate', value)}
-                required
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Start Date <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={formData.startDate}
+                  onChange={(e) => handleInputChange('startDate', e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               
-              <UniversalField
-                label="End Date"
-                type="date"
-                value={formData.endDate}
-                onChange={(value: string) => handleInputChange('endDate', value)}
-                required
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  End Date <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={formData.endDate}
+                  onChange={(e) => handleInputChange('endDate', e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               
-              <UniversalField
-                label="Contract Value (ZAR)"
-                type="number"
-                value={formData.contractValue}
-                onChange={(value: number) => handleInputChange('contractValue', value)}
-                required
-                min={0}
-                step="0.01"
-                placeholder="0.00"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Contract Value (ZAR) <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  value={formData.contractValue}
+                  onChange={(e) => handleInputChange('contractValue', parseFloat(e.target.value))}
+                  required
+                  min={0}
+                  step="0.01"
+                  placeholder="0.00"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <UniversalField
-              label="Assignment Notes"
-              type="textarea"
-              value={formData.assignmentNotes}
-              onChange={(value: string) => handleInputChange('assignmentNotes', value)}
-              rows={3}
-              placeholder="Additional notes or special instructions"
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Assignment Notes
+              </label>
+              <textarea
+                value={formData.assignmentNotes}
+                onChange={(e) => handleInputChange('assignmentNotes', e.target.value)}
+                rows={3}
+                placeholder="Additional notes or special instructions"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">

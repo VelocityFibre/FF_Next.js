@@ -127,13 +127,13 @@ export function StaffDetail() {
                 </div>
               </div>
 
-              {(staff.alternativePhone || staff.alternate_phone) && (
+              {staff.alternativePhone && (
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">Alternative Phone</p>
-                    <a href={`tel:${staff.alternativePhone || staff.alternate_phone}`} className="text-blue-600 hover:text-blue-800">
-                      {staff.alternativePhone || staff.alternate_phone}
+                    <a href={`tel:${staff.alternativePhone}`} className="text-blue-600 hover:text-blue-800">
+                      {staff.alternativePhone}
                     </a>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export function StaffDetail() {
               <div>
                 <p className="text-sm text-gray-500">Contract Type</p>
                 <p className="font-medium">
-                  {(staff.contractType || staff.type)?.replace('_', ' ').charAt(0).toUpperCase() + ((staff.contractType || staff.type)?.slice(1) || '') || 'Not specified'}
+                  {staff.contractType?.replace('_', ' ').charAt(0).toUpperCase() + (staff.contractType?.slice(1) || '') || 'Not specified'}
                 </p>
               </div>
 
@@ -180,13 +180,10 @@ export function StaffDetail() {
                   <p className="text-sm text-gray-500">Start Date</p>
                   <p className="font-medium">
                     {(() => {
-                      const startDate = staff.startDate || staff.join_date;
+                      const startDate = staff.startDate;
                       if (startDate) {
-                        if (startDate.toDate) {
-                          return format(startDate.toDate(), 'dd MMM yyyy');
-                        } else {
-                          return format(new Date(startDate), 'dd MMM yyyy');
-                        }
+                        const date = startDate instanceof Date ? startDate : startDate.toDate();
+                        return format(date, 'dd MMM yyyy');
                       }
                       return 'N/A';
                     })()}
@@ -194,20 +191,17 @@ export function StaffDetail() {
                 </div>
               </div>
 
-              {(staff.endDate || staff.end_date) && (
+              {staff.endDate && (
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-500">End Date</p>
                     <p className="font-medium">
                       {(() => {
-                        const endDate = staff.endDate || staff.end_date;
+                        const endDate = staff.endDate;
                         if (endDate) {
-                          if (endDate.toDate) {
-                            return format(endDate.toDate(), 'dd MMM yyyy');
-                          } else {
-                            return format(new Date(endDate), 'dd MMM yyyy');
-                          }
+                          const date = endDate instanceof Date ? endDate : endDate.toDate();
+                          return format(date, 'dd MMM yyyy');
                         }
                         return 'N/A';
                       })()}
@@ -270,12 +264,16 @@ export function StaffDetail() {
           </div>
 
           {/* Emergency Contact */}
-          {staff.emergency_contact && (
+          {(staff.emergencyContactName || staff.emergencyContactPhone) && (
             <div>
               <h2 className="text-lg font-medium text-gray-900 mb-4">Emergency Contact</h2>
               <div className="bg-red-50 rounded-lg p-4">
-                <p className="font-medium text-gray-900">Contact information available</p>
-                <p className="text-sm text-gray-600">Please check staff records for details</p>
+                {staff.emergencyContactName && (
+                  <p className="font-medium text-gray-900">{staff.emergencyContactName}</p>
+                )}
+                {staff.emergencyContactPhone && (
+                  <p className="text-sm text-gray-600">{staff.emergencyContactPhone}</p>
+                )}
               </div>
             </div>
           )}
@@ -286,7 +284,7 @@ export function StaffDetail() {
               <h2 className="text-lg font-medium text-gray-900 mb-4">Address</h2>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p>{staff.address}</p>
-                <p>{staff.city}, {staff.state || staff.province} {staff.postal_code || staff.postalCode}</p>
+                <p>{staff.city}, {staff.province} {staff.postalCode}</p>
               </div>
             </div>
           )}

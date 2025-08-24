@@ -1,6 +1,9 @@
 import React from 'react';
-import { UseFormRegister, FieldErrors } from 'react-hook-form';
-import { Calendar, MapPin, DollarSign, User, AlertCircle } from 'lucide-react';
+import { UseFormRegister, FieldErrors, FieldError } from 'react-hook-form';
+import { AlertCircle } from 'lucide-react';
+
+// Re-export FieldIcons from separate file for backward compatibility
+export { FieldIcons } from './FieldIcons';
 
 export type FieldMode = 'create' | 'edit' | 'view';
 export type FieldType = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'email' | 'tel' | 'currency';
@@ -8,13 +11,13 @@ export type FieldType = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'em
 interface UniversalFieldProps {
   name: string;
   label: string;
-  value?: any;
+  value?: string | number | boolean | null;
   mode?: FieldMode;
   type?: FieldType;
   required?: boolean;
   placeholder?: string;
   options?: Array<{ value: string; label: string }>;
-  register?: UseFormRegister<any>;
+  register?: UseFormRegister<Record<string, unknown>>;
   errors?: FieldErrors;
   icon?: React.ReactNode;
   hint?: string;
@@ -80,8 +83,8 @@ export function UniversalField({
         
         {type === 'textarea' ? (
           <textarea
-            {...(register ? register(name, { required: required ? `${label} is required` : false }) : {})}
-            defaultValue={mode === 'edit' ? value : undefined}
+            {...(register ? register(name, required ? { required: `${label} is required` } : {}) : {})}
+            defaultValue={mode === 'edit' ? String(value ?? '') : undefined}
             rows={rows}
             placeholder={placeholder}
             readOnly={readOnly}
@@ -94,8 +97,8 @@ export function UniversalField({
           />
         ) : type === 'select' ? (
           <select
-            {...(register ? register(name, { required: required ? `${label} is required` : false }) : {})}
-            defaultValue={mode === 'edit' ? value : ''}
+            {...(register ? register(name, required ? { required: `${label} is required` } : {}) : {})}
+            defaultValue={mode === 'edit' ? String(value ?? '') : ''}
             disabled={readOnly}
             className={`
               w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500
@@ -118,7 +121,7 @@ export function UniversalField({
               valueAsNumber: type === 'number' || type === 'currency'
             }) : {})}
             type={mapInputType(type)}
-            defaultValue={mode === 'edit' ? value : undefined}
+            defaultValue={mode === 'edit' ? String(value ?? '') : undefined}
             placeholder={placeholder}
             readOnly={readOnly}
             step={type === 'currency' ? '0.01' : type === 'number' ? 'any' : undefined}
@@ -139,7 +142,7 @@ export function UniversalField({
       {fieldError && (
         <p className="text-sm text-red-600 flex items-center">
           <AlertCircle className="w-4 h-4 mr-1" />
-          {fieldError.message}
+{fieldError?.message || 'Field error'}
         </p>
       )}
     </div>
@@ -147,7 +150,11 @@ export function UniversalField({
 }
 
 // Helper function to format display values
-function formatDisplayValue(value: any, type: FieldType, options?: Array<{ value: string; label: string }>) {
+function formatDisplayValue(
+  value: string | number | boolean | null | undefined,
+  type: FieldType,
+  options?: Array<{ value: string; label: string }>
+): React.ReactNode {
   if (value === null || value === undefined || value === '') {
     return <span className="text-gray-400">Not set</span>;
   }
@@ -157,18 +164,19 @@ function formatDisplayValue(value: any, type: FieldType, options?: Array<{ value
       return new Intl.NumberFormat('en-ZA', {
         style: 'currency',
         currency: 'ZAR'
-      }).format(value);
+      }).format(typeof value === 'number' ? value : parseFloat(String(value)) || 0);
     
     case 'date':
-      return new Date(value).toLocaleDateString('en-ZA', {
+      return new Date(String(value)).toLocaleDateString('en-ZA', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       });
     
-    case 'select':
+    case 'select': {
       const option = options?.find(opt => opt.value === value);
       return option?.label || value;
+    }
     
     default:
       return value;
@@ -193,25 +201,17 @@ function mapInputType(type: FieldType): string {
 }
 
 // Helper function to get nested errors (for location.city, etc.)
-function getNestedError(errors: any, name: string): any {
+function getNestedError(errors: FieldErrors | undefined, name: string): FieldError | null {
   if (!errors) return null;
   
   const keys = name.split('.');
-  let current = errors;
+  let current: any = errors;
   
   for (const key of keys) {
     if (current[key] === undefined) return null;
     current = current[key];
   }
   
-  return current;
+  return current as FieldError;
 }
 
-// Export commonly used icons for consistency
-export const FieldIcons = {
-  Calendar,
-  MapPin,
-  DollarSign,
-  User,
-  AlertCircle
-};

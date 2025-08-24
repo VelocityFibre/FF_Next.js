@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react'; // Not used in this component
 import { ProcurementErrorBoundary } from '../../components/error/ProcurementErrorBoundary';
 
 /**

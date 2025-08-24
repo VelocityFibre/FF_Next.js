@@ -8,6 +8,12 @@ import { ProjectFormData, ProjectStatus, ProjectType, Priority } from '@/types/p
 import { SOWUploadWizard } from '@/components/sow/SOWUploadWizard';
 import { safeToISOString } from '@/utils/dateHelpers';
 
+// Import form sections
+import { ProjectBasicInfo } from './forms/ProjectBasicInfo';
+import { ProjectClientInfo } from './forms/ProjectClientInfo';
+import { ProjectDetailsSection } from './forms/ProjectDetailsSection';
+import { ProjectScheduleBudget } from './forms/ProjectScheduleBudget';
+
 export function ProjectForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -23,7 +29,7 @@ export function ProjectForm() {
     description: '',
     clientId: '',
     location: '',
-    projectType: ProjectType.FIBER,
+    projectType: ProjectType.FIBRE,
     priority: Priority.MEDIUM,
     status: ProjectStatus.PLANNING,
     startDate: new Date().toISOString(),
@@ -148,260 +154,33 @@ export function ProjectForm() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Project Information Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Project Information</h2>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Project Code *
-                </label>
-                <input
-                  type="text"
-                  value={formData.code}
-                  onChange={(e) => handleInputChange('code', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., LAW-001"
-                  required
-                />
-              </div>
+        {/* Project Information */}
+        <ProjectBasicInfo 
+          formData={formData}
+          onInputChange={handleInputChange}
+        />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Project Name *
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., Lawley Fiber Installation"
-                  required
-                />
-              </div>
+        {/* Client Information */}
+        <ProjectClientInfo
+          formData={formData}
+          onInputChange={handleInputChange}
+          clients={clients}
+          isClientsLoading={isClientsLoading}
+        />
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Brief description of the project scope and objectives..."
-                />
-              </div>
+        {/* Project Details */}
+        <ProjectDetailsSection
+          formData={formData}
+          onInputChange={handleInputChange}
+        />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location *
-                </label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => handleInputChange('location', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., Lawley, Johannesburg"
-                  required
-                />
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        {/* Client Information Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Client Information</h2>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Client Organization *
-                </label>
-                <select
-                  value={formData.clientId}
-                  onChange={(e) => handleInputChange('clientId', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                  disabled={isClientsLoading}
-                >
-                  <option value="">
-                    {isClientsLoading ? 'Loading clients...' : 'Select a client'}
-                  </option>
-                  {clients.map((client) => (
-                    <option key={client.id} value={client.id}>
-                      {client.name} ({client.contactPerson})
-                    </option>
-                  ))}
-                </select>
-                <p className="mt-1 text-xs text-gray-500">
-                  Choose the client organization for this project
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Project Details Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Project Details</h2>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Project Type *
-                </label>
-                <select
-                  value={formData.projectType}
-                  onChange={(e) => handleInputChange('projectType', e.target.value as ProjectType)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                >
-                  {Object.values(ProjectType).map(type => (
-                    <option key={type} value={type}>
-                      {type.toUpperCase()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Priority Level *
-                </label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => handleInputChange('priority', e.target.value as Priority)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                >
-                  {Object.values(Priority).map(priority => (
-                    <option key={priority} value={priority}>
-                      {priority.charAt(0).toUpperCase() + priority.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status *
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => handleInputChange('status', e.target.value as ProjectStatus)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                >
-                  {Object.values(ProjectStatus).map(status => (
-                    <option key={status} value={status}>
-                      {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Schedule & Budget Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Schedule & Budget</h2>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Start Date *
-                </label>
-                <input
-                  type="date"
-                  value={formData.startDate.split('T')[0]}
-                  onChange={(e) => handleInputChange('startDate', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Expected End Date *
-                </label>
-                <input
-                  type="date"
-                  value={formData.endDate.split('T')[0]}
-                  onChange={(e) => handleInputChange('endDate', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Budget (ZAR) *
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={formData.budget}
-                  onChange={(e) => handleInputChange('budget', parseFloat(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="0.00"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Project Manager Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Project Assignment</h2>
-          </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Project Manager *
-                </label>
-                <select
-                  value={formData.projectManagerId}
-                  onChange={(e) => handleInputChange('projectManagerId', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                  disabled={isManagersLoading}
-                >
-                  <option value="">
-                    {isManagersLoading ? 'Loading project managers...' : 'Select a project manager'}
-                  </option>
-                  {getAvailableProjectManagers().map((manager) => (
-                    <option key={manager.id} value={manager.id}>
-                      {manager.name} - {manager.position} ({manager.currentProjectCount}/{manager.maxProjectCount} projects)
-                    </option>
-                  ))}
-                </select>
-                <p className="mt-1 text-xs text-gray-500">
-                  Choose an available project manager to lead this project
-                </p>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        {/* Schedule & Budget */}
+        <ProjectScheduleBudget
+          formData={formData}
+          onInputChange={handleInputChange}
+          managers={getAvailableProjectManagers()}
+          isManagersLoading={isManagersLoading}
+        />
 
         {/* Form Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">

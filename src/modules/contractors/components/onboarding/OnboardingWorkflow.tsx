@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { CheckCircle, Clock, AlertCircle, FileText, Upload, User, Shield, Award } from 'lucide-react';
-import { contractorOnboardingService, OnboardingProgress, OnboardingStage } from '@/services/contractor/contractorOnboardingService';
+import { contractorOnboardingService, OnboardingProgress } from '@/services/contractor/contractorOnboardingService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
@@ -189,7 +189,7 @@ export function OnboardingWorkflow({ contractorId, contractorName }: OnboardingW
 
       {/* Onboarding Stages */}
       <div className="space-y-4">
-        {progress.stages.map((stage, index) => (
+        {progress.stages.map((stage) => (
           <div key={stage.id} className="bg-white rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">

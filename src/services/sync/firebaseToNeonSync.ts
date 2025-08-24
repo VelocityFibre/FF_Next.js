@@ -1,483 +1,108 @@
 /**
- * Firebase to Neon ETL Pipeline
- * Syncs operational data from Firebase to analytical database
+ * Firebase to Neon ETL Pipeline - Legacy Compatibility Layer
+ * 
+ * @deprecated This file has been split into modular components for better maintainability.
+ * 
+ * New modular structure:
+ * - SyncCore: Main orchestrator with sync control logic
+ * - ProjectSync: Project data synchronization 
+ * - ClientSync: Client analytics synchronization
+ * - StaffSync: Staff performance synchronization
+ * - SyncUtils: Utility functions for data transformation
+ * - types.ts: Type definitions and interfaces
+ * 
+ * For new code, import from the specific modules or use:
+ * ```typescript
+ * import { SyncCore } from '@/services/sync';
+ * // or
+ * import SyncCore from '@/services/sync';
+ * ```
+ * 
+ * This legacy layer maintains backward compatibility while the codebase transitions.
  */
 
-import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
-import { db } from '@/config/firebase';
-import { neonDb } from '@/lib/neon/connection';
-import { 
-  projectAnalytics, 
-  clientAnalytics,
-  staffPerformance
-} from '@/lib/neon/schema';
-import type { 
-  NewProjectAnalytics, 
-  NewClientAnalytics,
-  NewStaffPerformance
-} from '@/lib/neon/schema';
-import { eq } from 'drizzle-orm';
+import { SyncCore } from './syncCore';
+import type { SyncConfig } from './types';
 
+/**
+ * @deprecated Use SyncCore directly for better type safety and modularity
+ * 
+ * Legacy wrapper class to maintain backward compatibility
+ * This class delegates to the new modular architecture
+ */
 export class FirebaseToNeonSync {
-  private isRunning = false;
-  private syncInterval: NodeJS.Timeout | null = null;
-  private unsubscribeFunctions: Array<() => void> = [];
+  private syncCore: SyncCore;
 
-  // ============================================
-  // SYNC CONTROL
-  // ============================================
+  constructor(config?: Partial<SyncConfig>) {
+    this.syncCore = new SyncCore(config);
+  }
 
   /**
-   * Start continuous sync
+   * @deprecated Use syncCore.startSync() instead
    */
   async startSync(intervalMinutes: number = 15): Promise<void> {
-    if (this.isRunning) {
-      return;
+    const config = this.syncCore.getSyncConfig();
+    if (config.intervalMinutes !== intervalMinutes) {
+      this.syncCore.updateConfig({ intervalMinutes });
     }
-
-    this.isRunning = true;
-
-    // Initial full sync
-    await this.performFullSync();
-
-    // Set up real-time listeners
-    this.setupRealtimeSync();
-
-    // Set up periodic full sync
-    this.syncInterval = setInterval(async () => {
-      try {
-        await this.performFullSync();
-      } catch (error) {
-        console.error('Scheduled sync failed:', error);
-      }
-    }, intervalMinutes * 60 * 1000);
-
-    // Sync started with periodic intervals
+    return this.syncCore.startSync();
   }
 
   /**
-   * Stop sync
+   * @deprecated Use syncCore.stopSync() instead
    */
-  stopSync(): void {
-    if (!this.isRunning) return;
-
-    // Stopping sync...
-    
-    // Clear interval
-    if (this.syncInterval) {
-      clearInterval(this.syncInterval);
-      this.syncInterval = null;
-    }
-
-    // Unsubscribe from real-time listeners
-    this.unsubscribeFunctions.forEach(unsubscribe => unsubscribe());
-    this.unsubscribeFunctions = [];
-
-    this.isRunning = false;
-    // Sync stopped
+  async stopSync(): Promise<void> {
+    return this.syncCore.stopSync();
   }
 
   /**
-   * Perform one-time full sync
+   * @deprecated Use syncCore.performFullSync() instead
    */
   async performFullSync(): Promise<void> {
-    try {
-      // const startTime = Date.now();
-
-      // Run all syncs in parallel
-      const results = await Promise.allSettled([
-        this.syncProjects(),
-        this.syncClients(),
-        this.syncStaffPerformance(),
-        // this.syncMaterials(), // Uncomment when materials collection exists
-      ]);
-
-      // Log results
-      results.forEach((result, index) => {
-        const syncType = ['Projects', 'Clients', 'Staff', 'Materials'][index];
-        if (result.status === 'fulfilled') {
-          // Sync completed successfully
-        } else {
-          console.error(`❌ ${syncType} sync failed:`, result.reason);
-        }
-      });
-
-      // const _duration = Date.now() - startTime;
-      // Full sync completed
-
-    } catch (error) {
-      console.error('Full sync failed:', error);
+    const result = await this.syncCore.performFullSync();
+    if (!result.success) {
+      throw new Error(`Full sync failed with ${result.errors.length} errors`);
     }
   }
 
-  // ============================================
-  // REAL-TIME SYNC SETUP
-  // ============================================
-
-  private setupRealtimeSync(): void {
-    // Projects real-time sync
-    const projectsUnsubscribe = onSnapshot(
-      collection(db, 'projects'),
-      (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added' || change.type === 'modified') {
-            this.syncSingleProject(change.doc.id, change.doc.data()).catch(console.error);
-          }
-        });
-      },
-      (error) => console.error('Projects real-time sync error:', error)
-    );
-
-    // Clients real-time sync
-    const clientsUnsubscribe = onSnapshot(
-      collection(db, 'clients'),
-      (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added' || change.type === 'modified') {
-            this.syncSingleClient(change.doc.id, change.doc.data()).catch(console.error);
-          }
-        });
-      },
-      (error) => console.error('Clients real-time sync error:', error)
-    );
-
-    this.unsubscribeFunctions.push(projectsUnsubscribe, clientsUnsubscribe);
+  /**
+   * Get sync status
+   * @deprecated Use syncCore.getSyncStatus() instead
+   */
+  getSyncStatus() {
+    return this.syncCore.getSyncStatus();
   }
 
-  // ============================================
-  // PROJECT SYNC
-  // ============================================
-
-  private async syncProjects(): Promise<void> {
-    try {
-      const snapshot = await getDocs(collection(db, 'projects'));
-      const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      // Syncing projects...
-
-      for (const project of projects) {
-        await this.syncSingleProject(project.id, project);
-      }
-    } catch (error) {
-      console.error('Failed to sync projects:', error);
-      throw error;
-    }
-  }
-
-  private async syncSingleProject(projectId: string, projectData: any): Promise<void> {
-    try {
-      const analyticsData: NewProjectAnalytics = {
-        projectId,
-        projectName: projectData.name || projectData.title || 'Untitled Project',
-        clientId: projectData.clientId,
-        clientName: projectData.clientName,
-        
-        // Metrics (calculate from project data)
-        totalPoles: projectData.totalPoles || 0,
-        completedPoles: projectData.completedPoles || 0,
-        totalDrops: projectData.totalDrops || 0,
-        completedDrops: projectData.completedDrops || 0,
-        
-        // Financial
-        totalBudget: projectData.budget?.toString(),
-        spentBudget: projectData.spentAmount?.toString() || '0',
-        
-        // Timeline
-        startDate: this.parseFirebaseDate(projectData.startDate),
-        endDate: this.parseFirebaseDate(projectData.endDate),
-        actualEndDate: this.parseFirebaseDate(projectData.actualEndDate),
-        
-        // Performance
-        completionPercentage: (projectData.progress || projectData.completion || 0).toString(),
-        onTimeDelivery: this.calculateOnTimeDelivery(projectData),
-        qualityScore: (projectData.qualityScore || 85).toString(), // Default quality score
-        
-        lastSyncedAt: new Date(),
-      };
-
-      // Check if record exists
-      const existingRecord = await neonDb
-        .select()
-        .from(projectAnalytics)
-        .where(eq(projectAnalytics.projectId, projectId))
-        .limit(1);
-
-      if (existingRecord.length > 0) {
-        // Update existing record
-        await neonDb
-          .update(projectAnalytics)
-          .set({ ...analyticsData, updatedAt: new Date() })
-          .where(eq(projectAnalytics.projectId, projectId));
-      } else {
-        // Insert new record
-        await neonDb.insert(projectAnalytics).values(analyticsData);
-      }
-
-    } catch (error) {
-      console.error(`Failed to sync project ${projectId}:`, error);
-    }
-  }
-
-  // ============================================
-  // CLIENT SYNC
-  // ============================================
-
-  private async syncClients(): Promise<void> {
-    try {
-      const snapshot = await getDocs(collection(db, 'clients'));
-      const clients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      // Syncing clients...
-
-      for (const client of clients) {
-        await this.syncSingleClient(client.id, client);
-      }
-    } catch (error) {
-      console.error('Failed to sync clients:', error);
-      throw error;
-    }
-  }
-
-  private async syncSingleClient(clientId: string, clientData: any): Promise<void> {
-    try {
-      // Calculate client metrics from projects
-      const clientProjects = await this.getClientProjects(clientId);
-      const clientMetrics = this.calculateClientMetrics(clientProjects);
-
-      const analyticsData: NewClientAnalytics = {
-        clientId,
-        clientName: clientData.name || 'Unknown Client',
-        
-        // Project metrics
-        totalProjects: clientMetrics.totalProjects,
-        activeProjects: clientMetrics.activeProjects,
-        completedProjects: clientMetrics.completedProjects,
-        
-        // Financial metrics
-        totalRevenue: clientMetrics.totalRevenue.toString(),
-        outstandingBalance: (clientData.currentBalance || 0).toString(),
-        averageProjectValue: clientMetrics.averageProjectValue.toString(),
-        paymentScore: this.calculatePaymentScore(clientData),
-        
-        // Performance metrics
-        averageProjectDuration: clientMetrics.averageProjectDuration,
-        onTimeCompletionRate: clientMetrics.onTimeCompletionRate.toString(),
-        satisfactionScore: (clientData.satisfactionScore || 85).toString(),
-        
-        // Engagement
-        lastProjectDate: clientMetrics.lastProjectDate,
-        nextFollowUpDate: this.parseFirebaseDate(clientData.nextFollowUpDate),
-        totalInteractions: clientData.totalInteractions || 0,
-        
-        // Classification
-        clientCategory: this.classifyClient(clientMetrics),
-        lifetimeValue: clientMetrics.lifetimeValue.toString(),
-        
-        lastCalculatedAt: new Date(),
-      };
-
-      // Upsert client analytics
-      const existingRecord = await neonDb
-        .select()
-        .from(clientAnalytics)
-        .where(eq(clientAnalytics.clientId, clientId))
-        .limit(1);
-
-      if (existingRecord.length > 0) {
-        await neonDb
-          .update(clientAnalytics)
-          .set({ ...analyticsData, updatedAt: new Date() })
-          .where(eq(clientAnalytics.clientId, clientId));
-      } else {
-        await neonDb.insert(clientAnalytics).values(analyticsData);
-      }
-
-    } catch (error) {
-      console.error(`Failed to sync client ${clientId}:`, error);
-    }
-  }
-
-  // ============================================
-  // STAFF PERFORMANCE SYNC
-  // ============================================
-
-  private async syncStaffPerformance(): Promise<void> {
-    try {
-      // This would sync from staff collection and calculate performance metrics
-      // Syncing staff performance...
-      
-      // Get staff data from Firebase
-      const snapshot = await getDocs(collection(db, 'staff'));
-      const staff = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      for (const member of staff) {
-        await this.syncSingleStaffMember(member.id, member);
-      }
-    } catch (error) {
-      console.error('Failed to sync staff performance:', error);
-      throw error;
-    }
-  }
-
-  private async syncSingleStaffMember(staffId: string, staffData: any): Promise<void> {
-    try {
-      // Calculate monthly performance metrics
-      const now = new Date();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-      const performanceData: NewStaffPerformance = {
-        staffId,
-        staffName: staffData.name || 'Unknown Staff',
-        role: staffData.role || 'Worker',
-        
-        // Performance metrics (would be calculated from actual data)
-        tasksCompleted: staffData.monthlyTasksCompleted || 0,
-        hoursWorked: (staffData.monthlyHoursWorked || 0).toString(),
-        productivityScore: (staffData.productivityScore || 75).toString(),
-        qualityScore: (staffData.qualityScore || 80).toString(),
-        attendanceRate: (staffData.attendanceRate || 95).toString(),
-        
-        // Period
-        periodStart: monthStart,
-        periodEnd: monthEnd,
-        periodType: 'monthly',
-        
-        // Additional metrics
-        overtimeHours: (staffData.monthlyOvertimeHours || 0).toString(),
-        incidentCount: staffData.monthlyIncidents || 0,
-      };
-
-      // Check if record exists for this period
-      const existingRecord = await neonDb
-        .select()
-        .from(staffPerformance)
-        .where(eq(staffPerformance.staffId, staffId))
-        .limit(1);
-
-      if (existingRecord.length > 0) {
-        await neonDb
-          .update(staffPerformance)
-          .set(performanceData)
-          .where(eq(staffPerformance.staffId, staffId));
-      } else {
-        await neonDb.insert(staffPerformance).values(performanceData);
-      }
-
-    } catch (error) {
-      console.error(`Failed to sync staff member ${staffId}:`, error);
-    }
-  }
-
-  // ============================================
-  // UTILITY FUNCTIONS
-  // ============================================
-
-  private parseFirebaseDate(firebaseDate: any): Date | null {
-    if (!firebaseDate) return null;
-    
-    if (firebaseDate.toDate) {
-      return firebaseDate.toDate();
-    }
-    
-    if (firebaseDate.seconds) {
-      return new Date(firebaseDate.seconds * 1000);
-    }
-    
-    if (typeof firebaseDate === 'string' || typeof firebaseDate === 'number') {
-      return new Date(firebaseDate);
-    }
-    
-    return null;
-  }
-
-  private calculateOnTimeDelivery(projectData: any): boolean {
-    const endDate = this.parseFirebaseDate(projectData.endDate);
-    const actualEndDate = this.parseFirebaseDate(projectData.actualEndDate);
-    
-    if (!endDate || !actualEndDate) return false;
-    
-    return actualEndDate <= endDate;
-  }
-
-  private async getClientProjects(clientId: string): Promise<any[]> {
-    try {
-      const q = query(collection(db, 'projects'), where('clientId', '==', clientId));
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (error) {
-      console.error('Failed to get client projects:', error);
-      return [];
-    }
-  }
-
-  private calculateClientMetrics(projects: any[]) {
-    const totalProjects = projects.length;
-    const activeProjects = projects.filter(p => p.status === 'active').length;
-    const completedProjects = projects.filter(p => p.status === 'completed').length;
-    
-    const totalRevenue = projects.reduce((sum, p) => sum + (p.budget || 0), 0);
-    const averageProjectValue = totalProjects > 0 ? totalRevenue / totalProjects : 0;
-    
-    const completedWithDates = projects.filter(p => p.status === 'completed' && p.startDate && p.endDate);
-    const averageProjectDuration = completedWithDates.length > 0 
-      ? completedWithDates.reduce((sum, p) => {
-          const start = this.parseFirebaseDate(p.startDate);
-          const end = this.parseFirebaseDate(p.endDate);
-          if (start && end) {
-            return sum + Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-          }
-          return sum;
-        }, 0) / completedWithDates.length
-      : 0;
-
-    const onTimeProjects = projects.filter(p => this.calculateOnTimeDelivery(p)).length;
-    const onTimeCompletionRate = totalProjects > 0 ? (onTimeProjects / totalProjects) * 100 : 0;
-
-    const lastProjectDate = projects
-      .map(p => this.parseFirebaseDate(p.createdAt))
-      .filter(d => d)
-      .sort((a, b) => b!.getTime() - a!.getTime())[0] || null;
-
-    return {
-      totalProjects,
-      activeProjects,
-      completedProjects,
-      totalRevenue,
-      averageProjectValue,
-      averageProjectDuration: Math.round(averageProjectDuration),
-      onTimeCompletionRate: Math.round(onTimeCompletionRate * 100) / 100,
-      lastProjectDate,
-      lifetimeValue: totalRevenue * 1.2, // Estimate based on revenue + potential
-    };
-  }
-
-  private calculatePaymentScore(clientData: any): string {
-    // Simple payment score calculation
-    const balance = clientData.currentBalance || 0;
-    const creditLimit = clientData.creditLimit || 1000;
-    
-    if (balance <= 0) return '100'; // No outstanding balance
-    if (balance < creditLimit * 0.3) return '90'; // Low utilization
-    if (balance < creditLimit * 0.7) return '70'; // Medium utilization
-    return '40'; // High utilization
-  }
-
-  private classifyClient(metrics: any): string {
-    const { totalRevenue, totalProjects, onTimeCompletionRate } = metrics;
-    
-    if (totalRevenue > 1000000 && totalProjects > 10 && onTimeCompletionRate > 90) {
-      return 'VIP';
-    }
-    if (totalRevenue > 500000 || totalProjects > 5) {
-      return 'Premium';
-    }
-    if (onTimeCompletionRate < 70 || totalRevenue < 50000) {
-      return 'At-Risk';
-    }
-    return 'Regular';
+  /**
+   * Get sync statistics
+   * @deprecated Use syncCore.getSyncStatistics() instead
+   */
+  async getSyncStatistics() {
+    return this.syncCore.getSyncStatistics();
   }
 }
 
-// Export singleton instance
+/**
+ * @deprecated Use new modular approach:
+ * 
+ * ```typescript
+ * import { SyncCore } from '@/services/sync';
+ * 
+ * const syncCore = new SyncCore({
+ *   intervalMinutes: 15,
+ *   enableRealtimeSync: true,
+ *   enabledSyncTypes: ['projects', 'clients', 'staff']
+ * });
+ * 
+ * await syncCore.startSync();
+ * ```
+ */
 export const firebaseToNeonSync = new FirebaseToNeonSync();
+
+// Re-export new modular components for migration convenience
+export { SyncCore } from './syncCore';
+export { ProjectSync } from './projectSync';
+export { ClientSync } from './clientSync';
+export { StaffSync } from './staffSync';
+export { SyncUtils } from './syncUtils';
+export type * from './types';

@@ -1,3 +1,5 @@
+import { ValidationStatus, FibreStatus } from './enums.types';
+
 // Fibre Infrastructure Data
 export interface FibreData {
   id?: string;
@@ -106,19 +108,7 @@ export enum ConduitType {
   FLEXIBLE = 'flexible',
 }
 
-export enum FibreStatus {
-  PLANNED = 'planned',
-  DESIGN_APPROVED = 'design_approved',
-  PERMITS_PENDING = 'permits_pending',
-  PERMITS_APPROVED = 'permits_approved',
-  READY_FOR_INSTALLATION = 'ready_for_installation',
-  INSTALLATION_IN_PROGRESS = 'installation_in_progress',
-  INSTALLED = 'installed',
-  TESTING = 'testing',
-  ACTIVE = 'active',
-  MAINTENANCE = 'maintenance',
-  DECOMMISSIONED = 'decommissioned',
-}
+// FibreStatus is imported from enums.types - removed duplicate definition
 
 export interface FibreTestResult {
   test_type: 'insertion_loss' | 'return_loss' | 'length' | 'continuity' | 'otdr';
@@ -154,10 +144,39 @@ export interface MaintenanceRecord {
   next_action_required?: string;
 }
 
-export enum ValidationStatus {
-  PENDING = 'pending',
-  VALID = 'valid',
-  INVALID = 'invalid',
-  WARNING = 'warning',
-  NEEDS_REVIEW = 'needs_review',
+// Missing analytics and other interfaces
+export interface FibreAnalytics {
+  totalLength: number;
+  completedSections: number;
+  plannedSections: number;
+  averageInstallationTime: number;
+  totalCost: number;
+  cableTypeBreakdown: Record<FibreCableType, number>;
+  installationMethodBreakdown: Record<InstallationMethod, number>;
+  qualityScore: number;
+}
+
+export interface FibreSegment {
+  id: string;
+  fibreId: string;
+  segmentNumber: number;
+  startPoint: RoutePoint;
+  endPoint: RoutePoint;
+  length: number;
+  spliceCount: number;
+  status: FibreStatus;
+  testResults?: FibreTestResult[];
+}
+
+// Re-export CableType as alias for FibreCableType for backward compatibility
+export { FibreCableType as CableType };
+
+// Re-export with TestResultStatus name
+export enum TestResultStatus {
+  NOT_TESTED = 'not_tested',
+  TESTING_IN_PROGRESS = 'testing_in_progress',
+  PASSED = 'passed',
+  FAILED = 'failed',
+  RETEST_REQUIRED = 'retest_required',
+  CERTIFIED = 'certified',
 }

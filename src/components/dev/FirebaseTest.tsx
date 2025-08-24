@@ -22,8 +22,9 @@ export function FirebaseTest() {
         await signInWithEmailAndPassword(auth, email, password);
         setResult('✅ Signed in successfully!');
       }
-    } catch (error: any) {
-      setResult(`❌ Auth Error: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setResult(`❌ Auth Error: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -33,8 +34,9 @@ export function FirebaseTest() {
     try {
       await signOut(auth);
       setResult('✅ Signed out successfully!');
-    } catch (error: any) {
-      setResult(`❌ Sign out error: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setResult(`❌ Sign out error: ${errorMessage}`);
     }
   };
 
@@ -48,8 +50,9 @@ export function FirebaseTest() {
       const projectCount = querySnapshot.size;
       
       setResult(`✅ Firestore connection successful! Found ${projectCount} projects in database.`);
-    } catch (error: any) {
-      setResult(`❌ Connection Error: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setResult(`❌ Connection Error: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }

@@ -4,8 +4,7 @@ import { clientService } from '@/services/clientService';
 import { 
   ClientFormData, 
   ClientFilter,
-  ClientDropdownOption,
-  ContactHistory
+  ClientDropdownOption
 } from '@/types/client.types';
 
 // Query Keys
@@ -72,7 +71,7 @@ export function useClientSummary() {
 export function useContactHistory(clientId: string) {
   return useQuery({
     queryKey: clientKeys.contactHistory(clientId),
-    queryFn: () => clientService.getContactHistory(clientId),
+    queryFn: () => clientService.getContactHistory(),
     enabled: !!clientId,
   });
 }
@@ -150,12 +149,11 @@ export function useUpdateClientMetrics() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (clientId: string) => clientService.updateClientMetrics(clientId),
-    onSuccess: (_, clientId) => {
-      // Invalidate client queries to show updated metrics
-      queryClient.invalidateQueries({ queryKey: clientKeys.detail(clientId) });
-      queryClient.invalidateQueries({ queryKey: clientKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: clientKeys.summary() });
+    mutationFn: () => 
+      clientService.updateClientMetrics(),
+    onSuccess: () => {
+      // Invalidate all client queries
+      queryClient.invalidateQueries({ queryKey: clientKeys.all });
     },
     onError: (error: Error) => {
       console.error('Failed to update client metrics:', error);
@@ -171,16 +169,11 @@ export function useAddContactHistory() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (contactHistory: Omit<ContactHistory, 'id' | 'createdAt'>) => 
-      clientService.addContactHistory(contactHistory),
-    onSuccess: (_, contactHistory) => {
-      // Invalidate contact history and client queries
-      queryClient.invalidateQueries({ 
-        queryKey: clientKeys.contactHistory(contactHistory.clientId) 
-      });
-      queryClient.invalidateQueries({ 
-        queryKey: clientKeys.detail(contactHistory.clientId) 
-      });
+    mutationFn: () => 
+      clientService.addContactHistory(),
+    onSuccess: () => {
+      // Invalidate all client queries
+      queryClient.invalidateQueries({ queryKey: clientKeys.all });
     },
     onError: (error: Error) => {
       console.error('Failed to add contact history:', error);
@@ -222,15 +215,28 @@ export function useClientFilters() {
 export function useClientSelection() {
   const { data: activeClients = [], isLoading } = useActiveClients();
   
+  // Convert Client[] to ClientDropdownOption[] by filtering out clients without ids
+  const dropdownOptions: ClientDropdownOption[] = activeClients
+    .filter((client): client is typeof client & { id: string } => !!client.id)
+    .map(client => ({
+      id: client.id,
+      name: client.name,
+      contactPerson: client.contactPerson,
+      email: client.email,
+      phone: client.phone,
+      status: client.status,
+      category: client.category
+    }));
+  
   const getClientById = (id: string): ClientDropdownOption | undefined => {
-    return activeClients.find(client => client.id === id);
+    return dropdownOptions.find(client => client.id === id);
   };
   
   const searchClients = (searchTerm: string): ClientDropdownOption[] => {
-    if (!searchTerm) return activeClients;
+    if (!searchTerm) return dropdownOptions;
     
     const term = searchTerm.toLowerCase();
-    return activeClients.filter(client =>
+    return dropdownOptions.filter(client =>
       client.name.toLowerCase().includes(term) ||
       client.contactPerson.toLowerCase().includes(term) ||
       client.email.toLowerCase().includes(term)
@@ -238,7 +244,7 @@ export function useClientSelection() {
   };
   
   return {
-    clients: activeClients,
+    clients: dropdownOptions,
     isLoading,
     getClientById,
     searchClients,

@@ -42,7 +42,7 @@ export const contractorDocumentService = {
   /**
    * Get documents for a contractor
    */
-  async getDocumentsByContractor(contractorId: string): Promise<ContractorDocument[]> {
+  async getByContractor(contractorId: string): Promise<ContractorDocument[]> {
     try {
       const q = query(
         collection(db, 'contractor_documents'),

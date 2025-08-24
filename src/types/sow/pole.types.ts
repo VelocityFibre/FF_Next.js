@@ -1,3 +1,10 @@
+/**
+ * SOW Pole Types - Pole-related data structures
+ */
+
+import { Timestamp } from 'firebase/firestore';
+import { PoleStatus, PoleType, ValidationStatus } from './enums.types';
+
 // Pole Data Structure
 export interface PoleData {
   id?: string;
@@ -30,77 +37,16 @@ export interface PoleData {
   // Capacity and Connections
   max_drops: number;      // Maximum drops per pole (default 12)
   current_drops: number;  // Current number of connected drops
-  available_capacity: number; // Calculated: max_drops - current_drops
-  
-  // Cost and Billing
-  installation_cost?: number;
-  material_cost?: number;
-  labour_hours?: number;
-  
-  // Quality and Compliance
-  inspection_passed?: boolean;
-  inspection_date?: Date;
-  inspector?: string;
-  compliance_notes?: string;
-  
-  // Operational Data
-  maintenance_schedule?: MaintenanceSchedule[];
-  last_maintenance?: Date;
-  next_maintenance_due?: Date;
+  available_capacity: number; // Calculated available capacity
   
   // Import Metadata
-  source?: 'manual' | 'excel_import' | 'gis_import';
-  imported_at?: Date;
-  validation_status?: ValidationStatus;
-  validation_notes?: string[];
+  source_file?: string;
+  source_row?: number;
+  import_date?: Timestamp;
+  validation_status: ValidationStatus;
+  validation_errors: string[];
   
-  // Additional Properties
-  notes?: string;
-  photos?: string[];
-  documents?: string[];
-  
-  // Audit
-  createdAt: Date;
-  updatedAt: Date;
-  createdBy: string;
-  lastModifiedBy: string;
-}
-
-export enum PoleStatus {
-  PENDING_PERMISSION = 'pending_permission',
-  PERMISSION_GRANTED = 'permission_granted',
-  PERMISSION_DENIED = 'permission_denied',
-  READY_FOR_INSTALLATION = 'ready_for_installation',
-  INSTALLATION_IN_PROGRESS = 'installation_in_progress',
-  INSTALLED = 'installed',
-  ACTIVE = 'active',
-  MAINTENANCE_REQUIRED = 'maintenance_required',
-  DECOMMISSIONED = 'decommissioned',
-}
-
-export enum PoleType {
-  WOODEN = 'wooden',
-  CONCRETE = 'concrete',
-  STEEL = 'steel',
-  EXISTING = 'existing',
-  NEW = 'new',
-}
-
-export interface MaintenanceSchedule {
-  id: string;
-  type: 'inspection' | 'repair' | 'upgrade' | 'cleaning';
-  scheduled_date: Date;
-  completed_date?: Date;
-  assigned_technician?: string;
-  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
-  notes?: string;
-  cost?: number;
-}
-
-export enum ValidationStatus {
-  PENDING = 'pending',
-  VALID = 'valid',
-  INVALID = 'invalid',
-  WARNING = 'warning',
-  NEEDS_REVIEW = 'needs_review',
+  // Audit Fields
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }

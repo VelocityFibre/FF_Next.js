@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ProjectProvider } from '@/contexts/ProjectContext';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import { AppRouter } from './app/router';
 import './styles/App.css';
@@ -26,7 +27,9 @@ function App(): JSX.Element {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme="light" enableSystemTheme={true}>
           <AuthProvider>
-            <AppRouter />
+            <ProjectProvider>
+              <AppRouter />
+            </ProjectProvider>
             <Toaster
               position="top-right"
               toastOptions={{

@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="12.137004999999998">
+<testsuite name="velocity-components.spec.ts" timestamp="2025-08-23T22:53:36.225Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.068" errors="0">
+<testcase name="VELOCITY Theme Components › VELOCITY Buttons @visual › should render different button variants" classname="velocity-components.spec.ts" time="4.068">
+</testcase>
+</testsuite>
+</testsuites>

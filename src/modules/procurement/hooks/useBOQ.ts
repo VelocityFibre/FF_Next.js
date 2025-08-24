@@ -103,8 +103,8 @@ export function useCloneBOQ() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ boqId, newTitle }: { boqId: string; newTitle: string }) =>
-      boqService.clone(boqId, newTitle),
+    mutationFn: ({ boqId, newTitle, projectId }: { boqId: string; newTitle: string; projectId: string }) =>
+      boqService.clone(boqId, newTitle, projectId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['boqs'] });
       toast.success('BOQ cloned successfully');
@@ -137,7 +137,7 @@ export function useCreateBOQTemplate() {
 export function useExportBOQ() {
   return useMutation({
     mutationFn: async (boq: any) => {
-      const blob = await boqService.exportToExcel(boq);
+      const blob = await boqService.exportToCsv(boq);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

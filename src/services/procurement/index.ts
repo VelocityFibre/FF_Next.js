@@ -40,6 +40,13 @@ export { ProcurementSchemas, validateSchema } from '@/lib/validation/procurement
 // Type exports for external use
 export type { ServiceResponse } from '@/services/core/BaseService';
 
+// Import services for use in functions
+import { procurementApiService } from './procurementApiService';
+import { boqApiService } from './boqApiService';
+import { projectAccessMiddleware } from './middleware/projectAccessMiddleware';
+import { rbacMiddleware, ProcurementPermission } from './middleware/rbacMiddleware';
+import { handleProcurementError } from './procurementErrors';
+
 // API Context interface for external integrations
 export interface ProcurementApiContext {
   userId: string;
@@ -134,17 +141,22 @@ export const ProcurementUtils = {
       sessionId?: string;
       source?: 'web' | 'mobile' | 'api';
     } = {}
-  ): ProcurementApiContext => ({
-    userId,
-    projectId,
-    userName: options.userName,
-    userRole: options.userRole,
-    permissions: options.permissions || [],
-    ipAddress: options.ipAddress,
-    userAgent: options.userAgent,
-    sessionId: options.sessionId,
-    source: options.source || 'web'
-  }),
+  ): ProcurementApiContext => {
+    const context: ProcurementApiContext = {
+      userId,
+      projectId,
+      permissions: options.permissions || [],
+      source: options.source || 'web'
+    };
+    
+    if (options.userName) context.userName = options.userName;
+    if (options.userRole) context.userRole = options.userRole;
+    if (options.ipAddress) context.ipAddress = options.ipAddress;
+    if (options.userAgent) context.userAgent = options.userAgent;
+    if (options.sessionId) context.sessionId = options.sessionId;
+    
+    return context;
+  },
 
   /**
    * Check if user has procurement module access

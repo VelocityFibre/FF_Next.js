@@ -1,4 +1,4 @@
-export type ThemeName = 'light' | 'dark' | 'vf' | 'fibreflow';
+export type ThemeName = 'light' | 'dark' | 'vf' | 'fibreflow' | 'velocity';
 
 export interface ThemeColors {
   // Primary colors
@@ -118,6 +118,19 @@ export interface ThemeColors {
     950: string;
   };
   
+  // Neon colors for special effects (optional - only in VELOCITY theme)
+  neon?: {
+    cyan: string;
+    blue: string;
+    purple: string;
+    pink: string;
+    green: string;
+    yellow: string;
+    electric?: string;
+    plasma?: string;
+    laser?: string;
+  };
+  
   // Background colors
   background: {
     primary: string;
@@ -228,11 +241,120 @@ export interface ThemeConfig {
       medium: string;
       semibold: string;
       bold: string;
+      extrabold?: string;
+      black?: string;
     };
     lineHeight: {
       tight: string;
       normal: string;
       relaxed: string;
+    };
+    letterSpacing?: {
+      tight: string;
+      normal: string;
+      wide: string;
+      wider: string;
+      widest: string;
+    };
+  };
+  // VELOCITY Theme Enhancements
+  elevation?: {
+    0: string;
+    1: string;
+    2: string;
+    3: string;
+    4: string;
+    5: string;
+    6: string;
+    7: string;
+    8: string;
+  };
+  glassmorphism?: {
+    backdrop: {
+      light: string;
+      medium: string;
+      heavy: string;
+      ultra?: string;
+    };
+    transparency: {
+      subtle: string;
+      medium: string;
+      strong: string;
+      intense?: string;
+    };
+    border: {
+      light: string;
+      medium: string;
+      strong: string;
+      neon?: string;
+    };
+    highlight?: {
+      subtle: string;
+      medium: string;
+      strong: string;
+    };
+  };
+  gradients?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    surface?: string;
+    card?: string;
+    button?: string;
+    ambient: string;
+    glow: string;
+    neon: string;
+    holographic: string;
+    plasma?: string;
+    aurora?: string;
+  };
+  animations?: {
+    duration: {
+      instant?: string;
+      fast: string;
+      normal: string;
+      slow: string;
+      extended?: string;
+      epic?: string;
+    };
+    easing: {
+      smooth: string;
+      bounce: string;
+      sharp: string;
+      elastic?: string;
+      anticipate?: string;
+      decelerate?: string;
+      accelerate?: string;
+    };
+    transform?: {
+      hover: string;
+      press: string;
+      float: string;
+    };
+  };
+  effects?: {
+    glow: {
+      subtle: string;
+      medium: string;
+      strong: string;
+      intense?: string;
+    };
+    neon: {
+      cyan: string;
+      blue: string;
+      purple: string;
+      plasma?: string;
+      laser?: string;
+      electric?: string;
+    };
+    ambient?: {
+      soft: string;
+      medium: string;
+      strong: string;
+    };
+    particle?: {
+      sparkle: string;
+      shimmer: string;
     };
   };
 }

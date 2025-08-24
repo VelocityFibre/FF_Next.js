@@ -1,0 +1,29 @@
+employee id,name,email,phone,position,department,reports to,address,city,province,postalCode,start date
+VF001,Kylin Musgrave,kylin@velocityfibre.co.za ,+27 00 000 0000,Admin,Service Delivery,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF002,Janice George,janice@velocityfibre.co.za,+27 00 000 0000,Admin,Service Delivery,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF003,Lenardt Meyer,lenardt@velocityfibre.co.za,+27 00 000 0000,ProjectManager,Operations,Wian Musgrave,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF004,Adrian Paulse,adrian@velocityfibre.co.za,+27 00 000 0000,Senior Technician,Operations,Lenardt Meyer,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF005,Marchael Meyer,marchael@velocityfibre.co.za,+27 00 000 0000,Technician,Operations,Lenardt Meyer,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF006,Byron Viviers,byron@velocityfibre.co.za,+27 00 000 0000,Senior Technician,Operations,Lenardt Meyer,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF007,Leonel Felix,leonel@velocityfibre.co.za,+27 00 000 0000,CLO,Business Development,Marco Devenier,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF008,Wiekus Moolman,wiekus@velocityfibre.co.za,+27 00 000 0000,SHEQ Manager,SHEQ,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF009,Cecelia Serekoeng,cecelia@velocityfibre.co.za,+27 00 000 0000,CLO,Business Development,Marco Devenier,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF010,Jacques Langenhoven,charles@velocityfibre.co.za,+27 00 000 0000,Head of Procurement,Procurement ,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF011,Francois Labuschagne,francois@velocityfibre.co.za,+27 00 000 0000,Site Manager,Operations,Hanro Oosthuizen,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF012,Adriaan Vorster,adriaan@velocityfibre.co.za,+27 00 000 0000,Senior Technician,Operations,Lenardt Meyer,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF013,Shalom Naidoo,shalom@velocityfibre.co.za,+27 00 000 0000,Planner,Planning,Jaun De Wit,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF014,Rohan Oiivier,rohan@velocityfibre.co.za,+27 00 000 0000,Planner,Planning,Jaun De Wit,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF015,Ian Murugan,ian@velocityfibre.co.za,+27 00 000 0000,Planner,Planning,Jaun De Wit,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF016,Jaun De Wit,jaun@velocityfibre.co.za,+27 00 000 0000,Head of Planning,Planning,Jaun De Wit,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF017,Reynard Wessels,reynard@velocityfibre.co.za,+27 00 000 0000,Head of Acquisitions,Business Development,Marco Devenier,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF018,Wian Musgrave,wian@velocityfibre.co.za,+27 00 000 0000,Head of Operations,Operations,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF019,Melanie Odendaal,melanie@velocityfibre.co.za,+27 00 000 0000,Admin,Admin,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF021,Lester Vergie,lester@velocityfibre.co.za,+27 00 000 0000,Wayelave Officer,Business Development,Marco Devenier,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF022,Louis du Plessis,louis@velocityfibre.co.za,+27 00 000 0000,Data Manager,IT & Data,Hein van Vuuren,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF023,Jody Cordier,jody@velocityfibre.co.za,+27 00 000 0000,Optical Project Manager,Operations,JP Terblanche,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF024,Hanro Oosthuizen,hanro@velocityfibre.co.za,+27 00 000 0000,Regional ProjectManager,Operations,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF025,Ettiene van Rensburg,ettiene@velocityfibre.co.za,+27 00 000 0000,Regional ProjectManager,Operations,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF026,Hein van Vuuren,hein@velocityfibre.co.za,+27 00 000 0000,CCSO ,Commercial & Strategy,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF027,Marco Devenier,marco@velocityfibre.co.za,+27 00 000 0000,BDO,Business Development,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF028,Lew Hofmeyr ,lew@velocityfibre.co.za,+27 00 000 0000,MD,Operations,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01
+VF029,JP Terblanche,jp@velocityfibre.co.za,+27 00 000 0000,Head of Optical,Operations,Lew Hofmeyr ,123 Main Street,Johannesburg,Gauteng,2000,2025/04/01

@@ -279,9 +279,8 @@ export function AssignmentManagement({ contractorId, contractorName }: Assignmen
       {/* Assignment Form Modal */}
       {showAssignmentForm && (
         <AssignmentForm
-          contractorId={contractorId}
           teams={teams}
-          onSubmit={(data) => {
+          onSubmit={async (data) => {
             // Handle assignment creation
             console.log('Creating assignment:', data);
             setShowAssignmentForm(false);

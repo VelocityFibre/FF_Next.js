@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+dist
+build
+
+# Firebase
+.firebase
+functions/lib
+
+# Test coverage
+coverage
+playwright-report
+test-results
+
+# Environment
+.env
+.env.*
+
+# Generated files
+*.min.js
+*.min.css
+drizzle/*.sql

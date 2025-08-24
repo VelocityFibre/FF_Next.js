@@ -102,7 +102,7 @@ export const bbbeeService = {
       currentLevel: currentBBBEE.level,
       requiredLevel,
       meetsRequirement,
-      pointsShortfall: meetsRequirement ? undefined : this.calculatePointsNeeded(currentBBBEE.level, requiredLevel)
+      pointsShortfall: meetsRequirement ? 0 : this.calculatePointsNeeded(currentBBBEE.level, requiredLevel)
     };
   },
 

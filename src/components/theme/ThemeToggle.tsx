@@ -5,7 +5,8 @@ import {
   Monitor, 
   Palette, 
   ChevronDown,
-  Check
+  Check,
+  Zap
 } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { ThemeName } from '@/types/theme.types';
@@ -22,6 +23,7 @@ const themeIcons: Record<ThemeName, typeof Sun> = {
   dark: Moon,
   vf: Palette,
   fibreflow: Palette,
+  velocity: Zap,
 };
 
 export function ThemeToggle({ 

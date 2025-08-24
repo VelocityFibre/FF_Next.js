@@ -1,7 +1,7 @@
-import React from 'react';
+// import React from 'react'; // Not used in this component
 import { Outlet, useLocation } from 'react-router-dom';
 import { ProcurementErrorBoundary } from '../error/ProcurementErrorBoundary';
-import { ProcurementBreadcrumbs } from '../common/ProcurementBreadcrumbs';
+// import { ProcurementBreadcrumbs } from '../common/ProcurementBreadcrumbs'; // Not used in this component
 import { ProcurementPageHeader } from './ProcurementPageHeader';
 import { useProcurementPermissions } from '../../hooks/useProcurementPermissions';
 import { useProjectContext } from '@/contexts/ProjectContext'; // Assuming this exists
@@ -209,7 +209,7 @@ export function ProcurementLayout() {
         <ProcurementPageHeader
           title={pageMeta.title}
           breadcrumbs={pageMeta.breadcrumbs}
-          helpText={pageMeta.helpText}
+          {...(pageMeta.helpText && { helpText: pageMeta.helpText })}
           permissions={permissions}
         />
 

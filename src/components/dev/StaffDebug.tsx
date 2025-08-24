@@ -3,10 +3,18 @@ import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { StaffStatus, StaffLevel } from '@/types/staff.types';
 
+interface StaffMember {
+  id: string;
+  name?: string;
+  status?: StaffStatus;
+  level?: StaffLevel;
+  [key: string]: unknown;
+}
+
 export function StaffDebug() {
-  const [staffData, setStaffData] = useState<any[]>([]);
-  const [activeStaff, setActiveStaff] = useState<any[]>([]);
-  const [managers, setManagers] = useState<any[]>([]);
+  const [staffData, setStaffData] = useState<StaffMember[]>([]);
+  const [activeStaff, setActiveStaff] = useState<StaffMember[]>([]);
+  const [managers, setManagers] = useState<StaffMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +39,7 @@ export function StaffDebug() {
         const active = activeSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
-        }) as any);
+        }) as StaffMember);
         setActiveStaff(active);
 
         // Filter for managers
@@ -42,12 +50,11 @@ export function StaffDebug() {
           StaffLevel.EXECUTIVE
         ];
         const managersFiltered = active.filter(staff => 
-          managerLevels.includes(staff.level)
+          staff.level && managerLevels.includes(staff.level)
         );
         setManagers(managersFiltered);
 
       } catch (err) {
-        console.error('Error fetching staff:', err);
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setLoading(false);
@@ -90,7 +97,7 @@ export function StaffDebug() {
           <h3 className="font-semibold">Eligible Project Managers: {managers.length}</h3>
           {managers.map(manager => (
             <div key={manager.id} className="text-sm">
-              - {manager.name} (Level: {manager.level}, Projects: {manager.currentProjectCount}/{manager.maxProjectCount})
+              - {manager.name} (Level: {manager.level}, Projects: {manager.currentProjectCount as number || 0}/{manager.maxProjectCount as number || 0})
             </div>
           ))}
         </div>

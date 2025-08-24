@@ -13,18 +13,18 @@ export function ProcurementAnalytics() {
       total: boqs?.length || 0,
       draft: boqs?.filter(b => b.status === BOQStatus.DRAFT).length || 0,
       approved: boqs?.filter(b => b.status === BOQStatus.APPROVED).length || 0,
-      totalValue: boqs?.reduce((sum, b) => sum + (b.totalAmount || 0), 0) || 0,
+      totalValue: boqs?.reduce((sum, b) => sum + (b.totalEstimatedValue || 0), 0) || 0,
       averageValue: boqs && boqs.length > 0 
-        ? boqs.reduce((sum, b) => sum + (b.totalAmount || 0), 0) / boqs.length 
+        ? boqs.reduce((sum, b) => sum + (b.totalEstimatedValue || 0), 0) / boqs.length 
         : 0,
     },
     rfq: {
       total: rfqs?.length || 0,
-      sent: rfqs?.filter(r => r.status === RFQStatus.SENT).length || 0,
+      sent: rfqs?.filter(r => r.status === RFQStatus.ISSUED).length || 0,
       responsesReceived: rfqs?.filter(r => r.status === RFQStatus.RESPONSES_RECEIVED).length || 0,
       awarded: rfqs?.filter(r => r.status === RFQStatus.AWARDED).length || 0,
       responseRate: rfqs && rfqs.length > 0 
-        ? (rfqs.filter(r => r.responses && r.responses.length > 0).length / rfqs.length) * 100 
+        ? (rfqs.filter(r => r.respondedSuppliers && r.respondedSuppliers.length > 0).length / rfqs.length) * 100 
         : 0,
     },
     efficiency: {

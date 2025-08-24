@@ -50,7 +50,7 @@ export const clientQueryService = {
           category: client.category,
         }));
     } catch (error) {
-      console.error('Error getting active clients:', error);
+      // Error: 'Error getting active clients:', error);
       throw new Error('Failed to fetch active clients');
     }
   },
@@ -107,7 +107,7 @@ export const clientQueryService = {
       
       return summary;
     } catch (error) {
-      console.error('Error getting client summary:', error);
+      // Error: 'Error getting client summary:', error);
       throw new Error('Failed to fetch client summary');
     }
   },
@@ -143,7 +143,7 @@ export const clientQueryService = {
         updatedAt: Timestamp.now(),
       });
     } catch (error) {
-      console.error('Error updating client metrics:', error);
+      // Error: 'Error updating client metrics:', error);
       throw new Error('Failed to update client metrics');
     }
   },
@@ -169,7 +169,7 @@ export const clientQueryService = {
       
       return docRef.id;
     } catch (error) {
-      console.error('Error adding contact history:', error);
+      // Error: 'Error adding contact history:', error);
       throw new Error('Failed to add contact history');
     }
   },
@@ -191,7 +191,7 @@ export const clientQueryService = {
         ...doc.data()
       } as ContactHistory));
     } catch (error) {
-      console.error('Error getting contact history:', error);
+      // Error: 'Error getting contact history:', error);
       throw new Error('Failed to fetch contact history');
     }
   },

@@ -78,7 +78,7 @@ export const clientCrudService = {
       
       return clients;
     } catch (error) {
-      console.error('Error getting clients:', error);
+      // Error getting clients
       throw new Error('Failed to fetch clients');
     }
   },
@@ -100,7 +100,7 @@ export const clientCrudService = {
         ...snapshot.data() 
       } as Client;
     } catch (error) {
-      console.error('Error getting client:', error);
+      // Error getting client
       throw new Error('Failed to fetch client');
     }
   },
@@ -112,7 +112,7 @@ export const clientCrudService = {
     try {
       const now = Timestamp.now();
       
-      const clientData: any = {
+      const clientData: Record<string, unknown> = {
         ...data,
         
         // Set default values for optional fields
@@ -159,7 +159,7 @@ export const clientCrudService = {
       const docRef = await addDoc(collection(db, 'clients'), clientData);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating client:', error);
+      // Error creating client
       throw new Error('Failed to create client');
     }
   },
@@ -170,7 +170,7 @@ export const clientCrudService = {
   async update(id: string, data: Partial<ClientFormData>): Promise<void> {
     try {
       const docRef = doc(db, 'clients', id);
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         ...data,
         updatedAt: Timestamp.now(),
         lastModifiedBy: 'current-user', // TODO: Get from auth context
@@ -178,7 +178,7 @@ export const clientCrudService = {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating client:', error);
+      // Error updating client
       throw new Error('Failed to update client');
     }
   },
@@ -202,7 +202,7 @@ export const clientCrudService = {
       
       await deleteDoc(doc(db, 'clients', id));
     } catch (error) {
-      console.error('Error deleting client:', error);
+      // Error deleting client
       throw new Error('Failed to delete client');
     }
   },

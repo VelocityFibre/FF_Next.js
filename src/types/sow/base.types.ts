@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { SOWStatus } from './enums.types';
 
 // Core SOW Entity
 export interface SOWData {
@@ -26,15 +27,6 @@ export interface SOWData {
   updatedAt: Timestamp;
   createdBy: string;
   lastModifiedBy: string;
-}
-
-export enum SOWStatus {
-  DRAFT = 'draft',
-  VALIDATED = 'validated',
-  APPROVED = 'approved',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
 }
 
 // Re-export from sub-modules for convenience

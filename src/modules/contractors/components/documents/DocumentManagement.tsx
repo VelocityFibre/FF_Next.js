@@ -18,7 +18,6 @@ interface DocumentManagementProps {
 export function DocumentManagement({ contractorId, contractorName }: DocumentManagementProps) {
   const [documents, setDocuments] = useState<ContractorDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   useEffect(() => {
@@ -67,13 +66,16 @@ export function DocumentManagement({ contractorId, contractorName }: DocumentMan
   const getDocumentTypeLabel = (type: DocumentType) => {
     const labels = {
       company_registration: 'Company Registration',
-      tax_certificate: 'Tax Certificate',
+      tax_clearance: 'Tax Clearance Certificate',
       bank_statement: 'Bank Statement',
-      insurance_certificate: 'Insurance Certificate',
+      insurance: 'Insurance Certificate',
       safety_certificate: 'Safety Certificate',
-      technical_certificates: 'Technical Certificates',
-      financial_statements: 'Financial Statements',
-      team_qualifications: 'Team Qualifications',
+      technical_certification: 'Technical Certification',
+      financial_statement: 'Financial Statement',
+      vat_certificate: 'VAT Certificate',
+      bee_certificate: 'BEE Certificate',
+      reference_letter: 'Reference Letter',
+      id_document: 'ID Document',
       other: 'Other Document'
     };
     return labels[type] || type.replace('_', ' ');
@@ -105,15 +107,15 @@ export function DocumentManagement({ contractorId, contractorName }: DocumentMan
 
   const requiredDocuments: DocumentType[] = [
     'company_registration',
-    'tax_certificate',
+    'tax_clearance',
     'bank_statement',
-    'insurance_certificate',
+    'insurance',
     'safety_certificate'
   ];
 
   const getMissingDocuments = () => {
     return requiredDocuments.filter(reqDoc => 
-      !documents.some(doc => doc.type === reqDoc && doc.status !== 'rejected')
+      !documents.some(doc => doc.documentType === reqDoc && doc.verificationStatus !== 'rejected')
     );
   };
 
@@ -170,7 +172,7 @@ export function DocumentManagement({ contractorId, contractorName }: DocumentMan
               </div>
               <ul className="text-yellow-700 text-sm space-y-1">
                 {expiringDocuments.map(doc => (
-                  <li key={doc.id}>• {getDocumentTypeLabel(doc.type)} - {getExpiryStatus(doc)?.text}</li>
+                  <li key={doc.id}>• {getDocumentTypeLabel(doc.documentType)} - {getExpiryStatus(doc)?.text}</li>
                 ))}
               </ul>
             </div>
@@ -208,10 +210,10 @@ export function DocumentManagement({ contractorId, contractorName }: DocumentMan
                       <File className="w-8 h-8 text-gray-600" />
                       <div>
                         <h4 className="font-medium text-gray-900">
-                          {getDocumentTypeLabel(document.type)}
+                          {getDocumentTypeLabel(document.documentType)}
                         </h4>
                         <div className="flex items-center gap-4 text-sm text-gray-600">
-                          <span>Uploaded: {new Date(document.uploadedAt).toLocaleDateString()}</span>
+                          <span>Uploaded: {new Date(document.createdAt).toLocaleDateString()}</span>
                           {expiryStatus && (
                             <span className={expiryStatus.color}>
                               Expires: {expiryStatus.text}
@@ -222,9 +224,9 @@ export function DocumentManagement({ contractorId, contractorName }: DocumentMan
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(document.status)}`}>
-                        {getStatusIcon(document.status)}
-                        <span className="ml-1">{document.status.toUpperCase()}</span>
+                      <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(document.verificationStatus)}`}>
+                        {getStatusIcon(document.verificationStatus)}
+                        <span className="ml-1">{document.verificationStatus.toUpperCase()}</span>
                       </span>
 
                       <div className="flex items-center gap-1">

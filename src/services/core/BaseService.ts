@@ -37,7 +37,7 @@ export abstract class BaseService {
   /**
    * Standardized error handling for all services
    */
-  protected handleError(error: unknown, operation: string): ServiceResponse<never> {
+  public handleError(error: unknown, operation: string): ServiceResponse<never> {
     console.error(`[${this.serviceName}] Error in ${operation}:`, error);
 
     if (error instanceof FirebaseError) {
@@ -86,7 +86,7 @@ export abstract class BaseService {
   /**
    * Standardized success response wrapper
    */
-  protected success<T>(data: T): ServiceResponse<T> {
+  public success<T>(data: T): ServiceResponse<T> {
     return {
       success: true,
       data,

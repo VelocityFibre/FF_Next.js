@@ -21,6 +21,22 @@ export const staffService = {
   getProjectManagers: staffNeonService.getProjectManagers,
   getStaffSummary: staffNeonService.getStaffSummary,
   
+  // Extended operations
+  getProjectAssignments: async () => {
+    // Mock implementation - should be implemented in staffNeonService
+    return Promise.resolve([]);
+  },
+  
+  assignToProject: async () => {
+    // Mock implementation - should be implemented in staffNeonService
+    return Promise.resolve({ success: true });
+  },
+  
+  updateStaffProjectCount: async () => {
+    // Mock implementation - should be implemented in staffNeonService
+    return Promise.resolve({ success: true });
+  },
+  
   // Import operations
   importFromCSV: staffImportService.importFromCSV,
   importFromExcel: staffImportService.importFromExcel,

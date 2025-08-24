@@ -27,8 +27,6 @@ export function ContractorCreate() {
     registrationNumber: '',
     businessType: 'pty_ltd',
     industryCategory: 'Telecommunications',
-    yearsInBusiness: undefined,
-    employeeCount: undefined,
     
     contactPerson: '',
     email: '',
@@ -41,7 +39,6 @@ export function ContractorCreate() {
     province: 'Gauteng',
     postalCode: '',
     
-    annualTurnover: undefined,
     creditRating: 'unrated',
     paymentTerms: 'net_30',
     bankName: '',

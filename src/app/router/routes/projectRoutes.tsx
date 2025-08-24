@@ -2,10 +2,10 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Loading } from '../components';
 import {
-  // Projects,
+  Projects,
   ProjectCreationWizard,
-  // ProjectForm,
-  // ProjectDetail,
+  ProjectForm,
+  ProjectDetail,
   PoleTrackerDashboard,
   PoleTrackerList,
   UnifiedTrackerGrid,
@@ -23,7 +23,7 @@ export const projectRoutes = [
     element: (
       <ErrorBoundary>
         <Suspense fallback={<Loading />}>
-          <div>Projects Page - Temporarily Disabled</div>
+          <Projects />
         </Suspense>
       </ErrorBoundary>
     ),
@@ -48,7 +48,7 @@ export const projectRoutes = [
     path: 'projects/:id/edit',
     element: (
       <Suspense fallback={<Loading />}>
-        <div>Project Edit - Temporarily Disabled</div>
+        <ProjectForm />
       </Suspense>
     ),
   },
@@ -56,7 +56,7 @@ export const projectRoutes = [
     path: 'projects/:id',
     element: (
       <Suspense fallback={<Loading />}>
-        <div>Project Detail - Temporarily Disabled</div>
+        <ProjectDetail />
       </Suspense>
     ),
   },

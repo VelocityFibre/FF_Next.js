@@ -1,0 +1,89 @@
+/**
+ * Audit Service
+ * Handles audit logging and compliance tracking
+ */
+
+import { neonDb } from '@/lib/neon/connection';
+import { auditLog } from '@/lib/neon/schema';
+import { eq, and, desc } from 'drizzle-orm';
+import type { AuditEntry, AuditChanges, AuditMetadata } from './types';
+
+export class AuditService {
+  /**
+   * Log user action for audit trail
+   */
+  async logAction(
+    action: string,
+    entityType: string,
+    entityId: string,
+    userId: string,
+    userName: string,
+    changes?: AuditChanges,
+    metadata?: AuditMetadata
+  ): Promise<void> {
+    try {
+      await neonDb.insert(auditLog).values({
+        action,
+        entityType,
+        entityId,
+        userId,
+        userName,
+        oldValue: changes?.old,
+        newValue: changes?.new,
+        ipAddress: metadata?.ip,
+        userAgent: metadata?.userAgent,
+        sessionId: metadata?.sessionId,
+        source: 'web',
+      });
+    } catch (error) {
+      console.error('Failed to log audit action:', error);
+      // Don't throw - audit logging shouldn't break main functionality
+    }
+  }
+
+  /**
+   * Get audit trail for entity
+   */
+  async getAuditTrail(
+    entityType: string, 
+    entityId: string, 
+    limit: number = 50
+  ): Promise<AuditEntry[]> {
+    try {
+      const results = await neonDb
+        .select()
+        .from(auditLog)
+        .where(
+          and(
+            eq(auditLog.entityType, entityType),
+            eq(auditLog.entityId, entityId)
+          )
+        )
+        .orderBy(desc(auditLog.timestamp))
+        .limit(limit);
+      
+      // Map database results to AuditEntry type
+      return results.map(row => ({
+        id: row.id,
+        action: row.action,
+        entityType: row.entityType,
+        entityId: row.entityId,
+        userId: row.userId,
+        userName: row.userName || '',
+        oldValue: row.oldValue,
+        newValue: row.newValue,
+        ipAddress: row.ipAddress || undefined,
+        userAgent: row.userAgent || undefined,
+        sessionId: row.sessionId || undefined,
+        source: row.source || '',
+        timestamp: row.timestamp
+      }));
+    } catch (error) {
+      console.error('Failed to get audit trail:', error);
+      throw error;
+    }
+  }
+}
+
+// Export singleton instance
+export const auditService = new AuditService();

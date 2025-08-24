@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, AlertTriangle, CheckCircle, BarChart3, Shield, DollarSign, Clock, Users } from 'lucide-react';
 import { contractorService } from '@/services/contractorService';
-import { RAGScore, ContractorRAGRanking } from '@/types/contractor.types';
+import { RAGScoreDetails, ContractorRAGRanking } from '@/types/contractor.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface RAGDashboardProps {
@@ -15,7 +15,7 @@ interface RAGDashboardProps {
 }
 
 export function RAGDashboard({ contractorId, showRankings = false }: RAGDashboardProps) {
-  const [ragScore, setRAGScore] = useState<RAGScore | null>(null);
+  const [ragScore, setRAGScore] = useState<RAGScoreDetails | null>(null);
   const [rankings, setRankings] = useState<ContractorRAGRanking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -140,7 +140,7 @@ export function RAGDashboard({ contractorId, showRankings = false }: RAGDashboar
             <div>
               <h4 className="font-medium text-gray-900 mb-3">Recommendations</h4>
               <ul className="space-y-2">
-                {ragScore.recommendations.map((recommendation, index) => (
+                {ragScore.recommendations.map((recommendation: string, index: number) => (
                   <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
                     <span className="text-blue-600 mt-1">•</span>
                     {recommendation}

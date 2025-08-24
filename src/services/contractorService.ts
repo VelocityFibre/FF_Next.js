@@ -12,7 +12,13 @@ import { contractorComplianceService } from './contractor/contractorComplianceSe
 
 export const contractorService = {
   // Core CRUD operations
-  ...contractorCrudService,
+  getAll: contractorCrudService.getAll.bind(contractorCrudService),
+  getById: contractorCrudService.getById.bind(contractorCrudService),
+  create: contractorCrudService.create.bind(contractorCrudService),
+  update: contractorCrudService.update.bind(contractorCrudService),
+  delete: contractorCrudService.delete.bind(contractorCrudService),
+  getAnalytics: contractorCrudService.getAnalytics.bind(contractorCrudService),
+  search: contractorCrudService.search.bind(contractorCrudService),
   
   // Team management
   teams: contractorTeamService,

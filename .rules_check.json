@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-08-24T01:07:49.901059",
+  "project_path": ".",
+  "rules_loaded": {
+    "C:\\Jarvis\\CLAUDE.md": {
+      "type": "GLOBAL",
+      "description": "Global Claude configuration",
+      "size": 14908,
+      "hash": "e1dd52c4",
+      "loaded": true
+    },
+    "C:\\Jarvis\\RULES.md": {
+      "type": "GLOBAL",
+      "description": "Global rules baseline",
+      "size": 9951,
+      "hash": "554e4961",
+      "loaded": true
+    },
+    "C:\\Jarvis\\PLAYWRIGHT_TESTING_PROTOCOL.md": {
+      "type": "GLOBAL",
+      "description": "Global testing protocol",
+      "size": 12453,
+      "hash": "642c1603",
+      "loaded": true
+    },
+    "C:\\Jarvis\\NLNH_GLOBAL_PROTOCOL.md": {
+      "type": "GLOBAL",
+      "description": "Truth protocol",
+      "size": 4459,
+      "hash": "0ff79716",
+      "loaded": true
+    },
+    "RULES.md": {
+      "type": "PROJECT",
+      "description": "GOLDEN GUARDRAILS - HIGHEST PRIORITY",
+      "size": 3598,
+      "hash": "316d85bb",
+      "loaded": true
+    }
+  },
+  "violations": [],
+  "warnings": [
+    "Design principles not documented",
+    "No accessibility tests found"
+  ],
+  "design_issues": [
+    "Design principles defined",
+    "Responsive breakpoints",
+    "Accessibility standards",
+    "Design tokens"
+  ],
+  "status": "PASS",
+  "stats": {
+    "total_rules_loaded": 5,
+    "global_rules": 4,
+    "project_rules": 1,
+    "violations": 0,
+    "warnings": 2,
+    "design_issues": 4
+  }
+}

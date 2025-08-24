@@ -57,7 +57,7 @@
         "**/*.config.ts",
         "**/*.config.js",
         "**/examples/**/*",
-        "**/demo/**/*",
+        "**/demo/**/*"
       ],
       "rules": {
         "max-lines": "off",
@@ -85,6 +85,6 @@
     "**/__tests__/**",
     "**/setup.ts",
     "**/setupTests.ts",
-    "src/test/**",
+    "src/test/**"
   ]
 }

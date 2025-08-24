@@ -3,6 +3,8 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout';
 import { FirebaseTest } from '@/components/dev/FirebaseTest';
 import { StaffDebug } from '@/components/dev/StaffDebug';
+import { ProjectsDebug } from '@/components/dev/ProjectsDebug';
+import { ClientsDebug } from '@/components/dev/ClientsDebug';
 // import { StaffDataFix } from '@/pages/StaffDataFix';
 import { LoginPage } from '@/components/auth/LoginPage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -12,7 +14,7 @@ import { projectRoutes } from './routes/projectRoutes';
 import { moduleRoutes } from './routes/moduleRoutes';
 import { procurementRoutes } from './routes/procurementRoutes';
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/app/dashboard" replace />,
@@ -62,6 +64,14 @@ export const router = createBrowserRouter([
           {
             path: 'staff-debug',
             element: <StaffDebug />,
+          },
+          {
+            path: 'projects-debug',
+            element: <ProjectsDebug />,
+          },
+          {
+            path: 'clients-debug',
+            element: <ClientsDebug />,
           },
           {
             path: 'staff-fix',

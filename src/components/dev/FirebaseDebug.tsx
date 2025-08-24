@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
 import { db } from '@/config/firebase';
 
+interface FirebaseDebugInfo {
+  projectId?: string;
+  authDomain?: string;
+  appName: string;
+  environment: {
+    VITE_FIREBASE_PROJECT_ID?: string;
+    VITE_FIREBASE_AUTH_DOMAIN?: string;
+  };
+  error?: string;
+}
+
 export function FirebaseDebug() {
-  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [debugInfo, setDebugInfo] = useState<FirebaseDebugInfo | null>(null);
 
   useEffect(() => {
     try {
-      const info = {
-        projectId: db.app.options.projectId,
-        authDomain: db.app.options.authDomain,
+      const info: FirebaseDebugInfo = {
+        projectId: db.app.options.projectId || 'undefined',
+        authDomain: db.app.options.authDomain || 'undefined', 
         appName: db.app.name,
         environment: {
           VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -16,10 +27,17 @@ export function FirebaseDebug() {
         }
       };
       setDebugInfo(info);
-      console.log('🔍 Firebase Debug Info:', info);
+      // DEBUG: Firebase connection info available in debugInfo state
     } catch (error) {
-      console.error('Debug error:', error);
-      setDebugInfo({ error: error?.toString() });
+      // Error caught and displayed in UI
+      setDebugInfo({ 
+        error: error?.toString() || 'Unknown error',
+        appName: 'unknown',
+        environment: {
+          VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+          VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        }
+      });
     }
   }, []);
 

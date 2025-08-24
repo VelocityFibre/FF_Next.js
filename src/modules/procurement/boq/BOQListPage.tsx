@@ -1,16 +1,23 @@
 import { useState } from 'react';
-import { Plus, Download, Upload, Search } from 'lucide-react';
+import { Plus, FileText, Clock, CheckCircle, Package } from 'lucide-react';
 import { useBOQs } from '../hooks/useBOQ';
 import { BOQStatus } from '@/types/procurement.types';
 import { BOQCard } from '../components/BOQCard';
-import { Button } from '@/shared/components/ui/Button';
-import { Input } from '@/shared/components/ui/Input';
 import { useNavigate } from 'react-router-dom';
+import {
+  StandardModuleHeader,
+  StandardSummaryCards,
+  StandardSearchFilter,
+  StandardDataTable,
+  StatusBadge
+} from '@/components/ui';
 
 export function BOQListPage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<BOQStatus | 'all'>('all');
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
+  const [showFilters] = useState(false);
   
   const { data: boqs, isLoading, error } = useBOQs(
     statusFilter === 'all' 
@@ -22,10 +29,9 @@ export function BOQListPage() {
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       return (
-        boq.number.toLowerCase().includes(search) ||
-        boq.title.toLowerCase().includes(search) ||
-        boq.projectName?.toLowerCase().includes(search) ||
-        boq.clientName?.toLowerCase().includes(search)
+        boq.version.toLowerCase().includes(search) ||
+        boq.title?.toLowerCase().includes(search) ||
+        boq.projectId?.toLowerCase().includes(search)
       );
     }
     return true;
@@ -45,6 +51,69 @@ export function BOQListPage() {
     console.log('Export all BOQs');
   };
 
+  // Calculate summary statistics
+  const summaryCards = boqs ? [
+    {
+      label: 'Total BOQs',
+      value: boqs.length,
+      icon: FileText,
+      iconColor: 'text-blue-600',
+      iconBgColor: 'bg-blue-100',
+      trend: { value: 8, isPositive: true }
+    },
+    {
+      label: 'Approved BOQs',
+      value: boqs.filter(b => b.status === BOQStatus.APPROVED).length,
+      icon: CheckCircle,
+      iconColor: 'text-green-600',
+      iconBgColor: 'bg-green-100',
+      trend: { value: 5, isPositive: true }
+    },
+    {
+      label: 'Draft BOQs',
+      value: boqs.filter(b => b.status === BOQStatus.DRAFT).length,
+      icon: Clock,
+      iconColor: 'text-yellow-600',
+      iconBgColor: 'bg-yellow-100',
+      trend: { value: 2, isPositive: true }
+    },
+    {
+      label: 'Total Value',
+      value: `R ${boqs.reduce((sum, b) => sum + (b.totalEstimatedValue || 0), 0).toLocaleString()}`,
+      icon: Package,
+      iconColor: 'text-purple-600',
+      iconBgColor: 'bg-purple-100',
+      trend: { value: 12, isPositive: true }
+    }
+  ] : [];
+
+  // Table columns configuration
+  const tableColumns = [
+    { key: 'version', header: 'Version' },
+    { key: 'title', header: 'Title' },
+    { key: 'projectId', header: 'Project' },
+    { 
+      key: 'status', 
+      header: 'Status',
+      render: (boq: any) => <StatusBadge status={boq.status} />
+    },
+    { 
+      key: 'itemCount', 
+      header: 'Items',
+      render: (boq: any) => `${boq.itemCount || 0} items`
+    },
+    { 
+      key: 'totalEstimatedValue', 
+      header: 'Total Value',
+      render: (boq: any) => boq.totalEstimatedValue ? `R ${boq.totalEstimatedValue.toLocaleString()}` : 'TBC'
+    },
+    { 
+      key: 'createdAt', 
+      header: 'Created',
+      render: (boq: any) => new Date(boq.createdAt).toLocaleDateString()
+    }
+  ];
+
   if (error) {
     return (
       <div className="p-6">
@@ -56,128 +125,106 @@ export function BOQListPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Bill of Quantities</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Manage project BOQs, templates, and pricing
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={handleImport}
-            variant="outline"
-            className="flex items-center gap-2"
+      <StandardModuleHeader
+        title="Bill of Quantities"
+        description="Manage project BOQs, templates, and pricing"
+        itemCount={boqs?.length || 0}
+        onAdd={handleCreate}
+        onImport={handleImport}
+        onExport={handleExportAll}
+        addButtonText="Create BOQ"
+        exportDisabled={!boqs || boqs.length === 0}
+      />
+      
+      {/* Additional Actions */}
+      <div className="flex gap-3 justify-end">
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setViewMode('card')}
+            className={`px-3 py-1 text-sm rounded ${viewMode === 'card' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
           >
-            <Upload className="h-4 w-4" />
-            Import
-          </Button>
-          <Button
-            onClick={handleExportAll}
-            variant="outline"
-            className="flex items-center gap-2"
+            Cards
+          </button>
+          <button
+            onClick={() => setViewMode('table')}
+            className={`px-3 py-1 text-sm rounded ${viewMode === 'table' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`}
           >
-            <Download className="h-4 w-4" />
-            Export All
-          </Button>
-          <Button
-            onClick={handleCreate}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            New BOQ
-          </Button>
+            Table
+          </button>
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search BOQs..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+      {/* Summary Cards */}
+      <StandardSummaryCards cards={summaryCards} />
+
+      {/* Search and Filters */}
+      <StandardSearchFilter
+        searchValue={searchTerm}
+        onSearch={setSearchTerm}
+        placeholder="Search BOQs by version, title, or project..."
+        showFilters={true}
+      />
+
+      {/* Custom Filters */}
+      {showFilters && (
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as BOQStatus | 'all')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                <option value="all">All Statuses</option>
+                <option value={BOQStatus.DRAFT}>Draft</option>
+                <option value={BOQStatus.MAPPING_REVIEW}>Mapping Review</option>
+                <option value={BOQStatus.APPROVED}>Approved</option>
+                <option value={BOQStatus.ARCHIVED}>Archived</option>
+              </select>
+            </div>
           </div>
         </div>
-        <div className="flex gap-2">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as BOQStatus | 'all')}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-          >
-            <option value="all">All Status</option>
-            <option value={BOQStatus.DRAFT}>Draft</option>
-            <option value={BOQStatus.PENDING_REVIEW}>Pending Review</option>
-            <option value={BOQStatus.APPROVED}>Approved</option>
-            <option value={BOQStatus.REVISED}>Revised</option>
-            <option value={BOQStatus.REJECTED}>Rejected</option>
-            <option value={BOQStatus.EXPIRED}>Expired</option>
-          </select>
-        </div>
-      </div>
+      )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-500">Total BOQs</p>
-          <p className="text-2xl font-bold text-gray-900">{boqs?.length || 0}</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-500">Draft</p>
-          <p className="text-2xl font-bold text-yellow-600">
-            {boqs?.filter(b => b.status === BOQStatus.DRAFT).length || 0}
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-500">Approved</p>
-          <p className="text-2xl font-bold text-green-600">
-            {boqs?.filter(b => b.status === BOQStatus.APPROVED).length || 0}
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <p className="text-sm text-gray-500">Total Value</p>
-          <p className="text-2xl font-bold text-gray-900">
-            R {boqs?.reduce((sum, b) => sum + (b.totalAmount || 0), 0).toLocaleString() || 0}
-          </p>
-        </div>
-      </div>
-
-      {/* BOQ List */}
-      {isLoading ? (
+      {/* BOQ Display */}
+      {viewMode === 'table' ? (
+        <StandardDataTable
+          data={filteredBOQs || []}
+          columns={tableColumns}
+          isLoading={isLoading}
+          onRowClick={(boq: any) => navigate(`/procurement/boq/${boq.id}`)}
+          getRowKey={(boq: any) => boq.id}
+          emptyMessage="No BOQs found. Create your first BOQ to get started."
+        />
+      ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white p-6 rounded-lg border border-gray-200 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
-              <div className="space-y-2">
-                <div className="h-3 bg-gray-200 rounded"></div>
-                <div className="h-3 bg-gray-200 rounded"></div>
-              </div>
+          {isLoading && (
+            <div className="col-span-full text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
             </div>
-          ))}
-        </div>
-      ) : filteredBOQs && filteredBOQs.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredBOQs.map((boq) => (
+          )}
+          
+          {filteredBOQs?.length === 0 && (
+            <div className="col-span-full bg-white p-12 rounded-lg border border-gray-200 text-center">
+              <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No BOQs found</h3>
+              <p className="text-gray-600 mb-4">Get started by creating your first BOQ</p>
+              <button
+                onClick={handleCreate}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create First BOQ
+              </button>
+            </div>
+          )}
+          
+          {filteredBOQs?.map((boq) => (
             <BOQCard key={boq.id} boq={boq} />
           ))}
-        </div>
-      ) : (
-        <div className="bg-white p-12 rounded-lg border border-gray-200 text-center">
-          <p className="text-gray-500">No BOQs found</p>
-          <Button
-            onClick={handleCreate}
-            className="mt-4"
-          >
-            Create First BOQ
-          </Button>
         </div>
       )}
     </div>

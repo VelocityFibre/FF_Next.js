@@ -1,4 +1,8 @@
-// BOQ (Bill of Quantities) Service
+/**
+ * BOQ Service
+ * Unified interface for BOQ operations using modular components
+ */
+
 import { 
   collection, 
   doc, 
@@ -13,273 +17,266 @@ import {
   Timestamp,
   onSnapshot
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
-import { BOQ, BOQFormData, BOQStatus } from '@/types/procurement.types';
+import { db } from '../../config/firebase';
+import { BOQ, BOQFormData, BOQStatusType } from '../../types/procurement/boq.types';
+import { BOQCrud } from './boq/boqCrud';
 
 const COLLECTION_NAME = 'boqs';
 
+/**
+ * Main BOQ Service - provides backward compatibility
+ * Uses the new modular components internally where possible
+ */
 export const boqService = {
-  // CRUD Operations
-  async getAll(filter?: { projectId?: string; clientId?: string; status?: BOQStatus }) {
-    try {
-      let q = query(collection(db, COLLECTION_NAME), orderBy('createdAt', 'desc'));
-      
-      if (filter?.projectId) {
-        q = query(q, where('projectId', '==', filter.projectId));
-      }
-      if (filter?.clientId) {
-        q = query(q, where('clientId', '==', filter.clientId));
-      }
-      if (filter?.status) {
-        q = query(q, where('status', '==', filter.status));
-      }
-      
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as BOQ));
-    } catch (error) {
-      console.error('Error fetching BOQs:', error);
-      throw error;
-    }
+  // CRUD Operations - delegated to BOQCrud
+  async getAll(filter?: { projectId?: string; status?: BOQStatusType }): Promise<BOQ[]> {
+    return BOQCrud.getAll(filter);
   },
 
   async getById(id: string): Promise<BOQ> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const snapshot = await getDoc(docRef);
-      
-      if (!snapshot.exists()) {
-        throw new Error('BOQ not found');
-      }
-      
-      return {
-        id: snapshot.id,
-        ...snapshot.data()
-      } as BOQ;
-    } catch (error) {
-      console.error('Error fetching BOQ:', error);
-      throw error;
-    }
+    return BOQCrud.getById(id);
   },
 
   async create(data: BOQFormData): Promise<string> {
-    try {
-      // Generate unique BOQ number
-      const boqNumber = `BOQ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-      
-      // Calculate totals
-      const subtotal = data.items.reduce((sum, item) => sum + (item.amount || 0), 0);
-      const taxAmount = subtotal * ((data.taxRate || 0) / 100);
-      const discountAmount = data.discountRate ? subtotal * (data.discountRate / 100) : 0;
-      const totalAmount = subtotal + taxAmount - discountAmount;
-      
-      const boq = {
-        ...data,
-        number: boqNumber,
-        subtotal,
-        vat: taxAmount,
-        vatRate: data.taxRate || 15,
-        total: totalAmount,
-        totalItems: data.items.length,
-        currency: 'ZAR',
-        status: BOQStatus.DRAFT,
-        version: 1,
-        isTemplate: false,
-        validFrom: Timestamp.fromDate(new Date()),
-        validTo: data.validUntil ? (data.validUntil instanceof Date ? Timestamp.fromDate(data.validUntil) : data.validUntil as Timestamp) : Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
-        createdAt: Timestamp.now(),
-        createdBy: 'current-user-id', // TODO: Get from auth context
-        createdByName: 'Current User', // TODO: Get from auth context
-        isLatestVersion: true,
-        sections: data.sections || [],
-        tags: []
-      };
-      
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), boq as Omit<BOQ, 'id'>);
-      return docRef.id;
-    } catch (error) {
-      console.error('Error creating BOQ:', error);
-      throw error;
-    }
+    return BOQCrud.create(data);
   },
 
   async update(id: string, data: Partial<BOQFormData>): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      
-      // Recalculate totals if items changed
-      let updateData: any = { ...data };
-      
-      if (data.items) {
-        const subtotal = data.items.reduce((sum, item) => sum + (item.amount || 0), 0);
-        const taxAmount = subtotal * ((data.taxRate || 15) / 100);
-        const discountAmount = data.discountRate ? subtotal * (data.discountRate / 100) : 0;
-        const totalAmount = subtotal + taxAmount - discountAmount;
-        
-        updateData = {
-          ...updateData,
-          subtotal,
-          vat: taxAmount,
-          vatRate: data.taxRate || 15,
-          total: totalAmount,
-          totalItems: data.items.length
-        };
-      }
-      
-      if (data.validUntil) {
-        updateData.validTo = data.validUntil instanceof Date 
-          ? Timestamp.fromDate(data.validUntil)
-          : data.validUntil;
-      }
-      
-      // No updatedAt or lastModifiedBy fields in BOQ type
-      
-      await updateDoc(docRef, updateData);
-    } catch (error) {
-      console.error('Error updating BOQ:', error);
-      throw error;
-    }
+    return BOQCrud.update(id, data);
   },
 
   async delete(id: string): Promise<void> {
-    try {
-      await deleteDoc(doc(db, COLLECTION_NAME, id));
-    } catch (error) {
-      console.error('Error deleting BOQ:', error);
-      throw error;
-    }
+    return BOQCrud.delete(id);
   },
 
   // Status Management
-  async updateStatus(id: string, status: BOQStatus, approvedBy?: string): Promise<void> {
+  async updateStatus(id: string, status: BOQStatusType, approvedBy?: string): Promise<void> {
+    // Update the status
+    await BOQCrud.updateStatus(id, status);
+    
+    // If approvedBy is provided, also update that field
+    if (approvedBy) {
+      await this.update(id, { approvedBy, updatedAt: Timestamp.now() } as any);
+    }
+  },
+
+  async approve(id: string, approvedBy?: string): Promise<void> {
     try {
-      const updateData: any = {
-        status,
+      const docRef = doc(db, COLLECTION_NAME, id);
+      await updateDoc(docRef, {
+        status: 'approved' as BOQStatusType,
+        approvedAt: Timestamp.now(),
+        approvedBy: approvedBy || 'current-user-id', // TODO: Get from auth context
+        updatedAt: Timestamp.now()
+      });
+    } catch (error) {
+      console.error('Error approving BOQ:', error);
+      throw error;
+    }
+  },
+
+  async reject(id: string, rejectedBy?: string, reason?: string): Promise<void> {
+    try {
+      const docRef = doc(db, COLLECTION_NAME, id);
+      await updateDoc(docRef, {
+        status: 'rejected' as BOQStatusType,
+        rejectedAt: Timestamp.now(),
+        rejectedBy: rejectedBy || 'current-user-id', // TODO: Get from auth context
+        rejectionReason: reason,
+        updatedAt: Timestamp.now()
+      });
+    } catch (error) {
+      console.error('Error rejecting BOQ:', error);
+      throw error;
+    }
+  },
+
+  // Import/Upload Operations
+  async uploadBOQ(projectId: string, fileData: any, fileName: string): Promise<string> {
+    try {
+      const boq = {
+        projectId,
+        fileName,
+        fileData,
+        status: 'draft' as BOQStatusType,
+        createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
-        lastModifiedBy: 'current-user-id' // TODO: Get from auth context
+        uploadedAt: Timestamp.now()
       };
       
-      if (status === BOQStatus.APPROVED && approvedBy) {
-        updateData.approvedBy = approvedBy;
-        updateData.approvedByName = 'Approver Name'; // TODO: Get from user service
-        updateData.approvalDate = Timestamp.now();
-      }
-      
-      await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
-    } catch (error) {
-      console.error('Error updating BOQ status:', error);
-      throw error;
-    }
-  },
-
-  // Template Operations
-  async createTemplate(boqId: string, templateName: string): Promise<string> {
-    try {
-      const boq = await this.getById(boqId);
-      
-      const template: Omit<BOQ, 'id'> = {
-        ...boq,
-        number: `TPL-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-        title: templateName,
-        isTemplate: true,
-        projectId: '',
-        status: BOQStatus.DRAFT,
-        version: 1,
-        createdAt: Timestamp.now(),
-        createdBy: 'current-user-id', // TODO: Get from auth context
-        createdByName: 'Current User' // TODO: Get from auth context
-      };
-      
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), template);
+      const docRef = await addDoc(collection(db, COLLECTION_NAME), boq);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating BOQ template:', error);
+      console.error('Error uploading BOQ:', error);
       throw error;
     }
   },
 
-  async getTemplates(): Promise<BOQ[]> {
+  // Analytics and Reporting
+  async getBOQSummary(projectId: string): Promise<any> {
     try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('isTemplate', '==', true),
-        orderBy('createdAt', 'desc')
-      );
+      const boqs = await this.getAll({ projectId });
       
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as BOQ));
-    } catch (error) {
-      console.error('Error fetching BOQ templates:', error);
-      throw error;
-    }
-  },
-
-  // Clone BOQ
-  async clone(boqId: string, newTitle: string): Promise<string> {
-    try {
-      const boq = await this.getById(boqId);
-      
-      const cloned = {
-        ...boq,
-        number: `BOQ-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-        title: newTitle,
-        status: BOQStatus.DRAFT,
-        version: 1,
-        isTemplate: false,
-        approvedBy: undefined,
-        approvedByName: undefined,
-        approvedAt: undefined,
-        createdAt: Timestamp.now(),
-        createdBy: 'current-user-id', // TODO: Get from auth context
-        createdByName: 'Current User' // TODO: Get from auth context
+      const summary = {
+        totalBOQs: boqs.length,
+        statusBreakdown: {
+          draft: boqs.filter(b => b.status === 'draft').length,
+          pending_review: boqs.filter(b => b.status === 'pending_review').length,
+          approved: boqs.filter(b => b.status === 'approved').length,
+          rejected: boqs.filter(b => b.status === 'rejected').length
+        },
+        totalValue: boqs.reduce((sum, boq) => sum + (boq.totalEstimatedValue || 0), 0),
+        averageItemCount: boqs.length > 0 ? 
+          boqs.reduce((sum, boq) => sum + (boq.itemCount || 0), 0) / boqs.length : 0
       };
       
-      const docRef = await addDoc(collection(db, COLLECTION_NAME), cloned as unknown as Omit<BOQ, 'id'>);
-      return docRef.id;
+      return summary;
     } catch (error) {
-      console.error('Error cloning BOQ:', error);
+      console.error('Error getting BOQ summary:', error);
       throw error;
     }
   },
 
-  // Real-time subscription
-  subscribeToBOQ(boqId: string, callback: (boq: BOQ) => void) {
-    const docRef = doc(db, COLLECTION_NAME, boqId);
+  // Real-time Subscriptions
+  subscribeToProjectBOQs(projectId: string, callback: (boqs: BOQ[]) => void) {
+    const q = query(
+      collection(db, COLLECTION_NAME),
+      where('projectId', '==', projectId),
+      orderBy('createdAt', 'desc')
+    );
+    
+    return onSnapshot(q, (snapshot) => {
+      const boqs = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate?.() || new Date(),
+          updatedAt: data.updatedAt?.toDate?.() || new Date(),
+          uploadedAt: data.uploadedAt?.toDate?.() || new Date(),
+          approvedAt: data.approvedAt?.toDate?.() || undefined,
+          rejectedAt: data.rejectedAt?.toDate?.() || undefined
+        } as BOQ;
+      });
+      callback(boqs);
+    });
+  },
+
+  subscribeToBoq(id: string, callback: (boq: BOQ) => void) {
+    const docRef = doc(db, COLLECTION_NAME, id);
     
     return onSnapshot(docRef, (snapshot) => {
       if (snapshot.exists()) {
+        const data = snapshot.data();
         callback({
           id: snapshot.id,
-          ...snapshot.data()
+          ...data,
+          createdAt: data.createdAt?.toDate?.() || new Date(),
+          updatedAt: data.updatedAt?.toDate?.() || new Date(),
+          uploadedAt: data.uploadedAt?.toDate?.() || new Date(),
+          approvedAt: data.approvedAt?.toDate?.() || undefined,
+          rejectedAt: data.rejectedAt?.toDate?.() || undefined
         } as BOQ);
       }
     });
   },
 
-  // Export to Excel
-  async exportToExcel(boq: BOQ): Promise<Blob> {
-    // This would typically use a library like xlsx or exceljs
-    // For now, return a CSV blob as placeholder
-    const headers = ['Item Code', 'Description', 'Unit', 'Quantity', 'Unit Price', 'Total Price'];
-    const rows = boq.items.map(item => [
-      item.itemCode,
-      item.description,
-      item.unit,
-      item.quantity.toString(),
-      (item.unitRate || 0).toString(),
-      (item.amount || 0).toString()
-    ]);
+  // Utility methods
+  async getByProject(projectId: string): Promise<BOQ[]> {
+    return BOQCrud.getByProject(projectId);
+  },
+
+  async getByStatus(status: BOQStatusType): Promise<BOQ[]> {
+    return BOQCrud.getByStatus(status);
+  },
+
+  async exists(id: string): Promise<boolean> {
+    return BOQCrud.exists(id);
+  },
+
+  // Template Operations
+  async getTemplates(): Promise<BOQ[]> {
+    // Get BOQs marked as templates
+    const templatesRef = collection(db, COLLECTION_NAME);
+    const templatesQuery = query(templatesRef, where('isTemplate', '==', true));
+    const snapshot = await getDocs(templatesQuery);
     
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.join(','))
-    ].join('\n');
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate(),
+      updatedAt: doc.data().updatedAt?.toDate(),
+    })) as BOQ[];
+  },
+
+  async createTemplate(id: string, templateName: string): Promise<string> {
+    // Get the source BOQ
+    const source = await this.getById(id);
     
-    return new Blob([csvContent], { type: 'text/csv' });
+    // Create template version
+    const templateData = {
+      ...source,
+      title: templateName,
+      isTemplate: true,
+      templateSourceId: id,
+      status: 'draft' as BOQStatusType,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    };
+    
+    // Remove ID and create new document
+    delete (templateData as any).id;
+    const templateRef = await addDoc(collection(db, COLLECTION_NAME), templateData);
+    return templateRef.id;
+  },
+
+  async clone(id: string, newTitle: string, projectId?: string): Promise<string> {
+    // Get the source BOQ
+    const source = await this.getById(id);
+    
+    // Create cloned version
+    const clonedData = {
+      ...source,
+      title: newTitle,
+      projectId: projectId || source.projectId,
+      status: 'draft' as BOQStatusType,
+      isTemplate: false,
+      clonedFromId: id,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    };
+    
+    // Remove ID and create new document
+    delete (clonedData as any).id;
+    const clonedRef = await addDoc(collection(db, COLLECTION_NAME), clonedData);
+    return clonedRef.id;
+  },
+
+  // Export Operations
+  async exportToCsv(id: string): Promise<string> {
+    const boq = await this.getById(id);
+    
+    // Create CSV content
+    let csvContent = 'Item Code,Description,Quantity,Unit,Rate,Amount\n';
+    
+    if (boq.items && boq.items.length > 0) {
+      boq.items.forEach(item => {
+        const row = [
+          item.itemCode || '',
+          item.description || '',
+          item.quantity || 0,
+          item.unit || '',
+          item.rate || 0,
+          (item.quantity || 0) * (item.rate || 0)
+        ].map(field => `"${field}"`).join(',');
+        
+        csvContent += row + '\n';
+      });
+    }
+    
+    return csvContent;
   }
 };
+
+// Re-export the modular components
+export { BOQCrud } from './boq/boqCrud';

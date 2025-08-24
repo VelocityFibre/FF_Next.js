@@ -29,11 +29,11 @@ export function ReviewStep({
     {
       title: 'Project Details',
       items: [
-        { label: 'Location', value: formData.location ? `${formData.location.address}, ${formData.location.city}, ${formData.location.province}` : 'Not specified' },
-        { label: 'Budget', value: formData.budget ? `R ${Number(formData.budget).toLocaleString()}` : 'Not set' },
+        { label: 'Location', value: formData.location?.city ? `${formData.location.city}, ${formData.location.province}` : 'Not specified' },
+        { label: 'Budget', value: formData.budget?.totalBudget ? `R ${Number(formData.budget.totalBudget).toLocaleString()}` : 'Not set' },
         { label: 'Priority', value: formData.priority || 'Medium' },
         { label: 'Project Manager', value: projectManagerName },
-        { label: 'Notes', value: formData.notes || 'No additional notes' }
+        { label: 'Notes', value: formData.description || 'No additional notes' }
       ]
     }
   ];

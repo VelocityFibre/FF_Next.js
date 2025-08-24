@@ -1,0 +1,293 @@
+/**
+ * VELOCITY Theme CSS Utilities
+ * Premium glassmorphism and neon effects for enhanced UI
+ */
+
+/* Glassmorphism Base Classes */
+.velocity-glass-light {
+  background: var(--velocity-glass-transparency-subtle);
+  backdrop-filter: var(--velocity-glass-backdrop-light);
+  border: var(--velocity-glass-border-light);
+  border-radius: var(--border-radius-lg);
+}
+
+.velocity-glass-medium {
+  background: var(--velocity-glass-transparency-medium);
+  backdrop-filter: var(--velocity-glass-backdrop-medium);
+  border: var(--velocity-glass-border-medium);
+  border-radius: var(--border-radius-lg);
+}
+
+.velocity-glass-heavy {
+  background: var(--velocity-glass-transparency-strong);
+  backdrop-filter: var(--velocity-glass-backdrop-heavy);
+  border: var(--velocity-glass-border-strong);
+  border-radius: var(--border-radius-lg);
+}
+
+.velocity-glass-ultra {
+  background: var(--velocity-glass-transparency-intense);
+  backdrop-filter: var(--velocity-glass-backdrop-ultra);
+  border: var(--velocity-glass-border-neon);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--velocity-elevation-4);
+}
+
+/* Neon Effect Classes */
+.velocity-neon-cyan {
+  box-shadow: var(--velocity-neon-cyan);
+  border: 1px solid #00f5ff;
+}
+
+.velocity-neon-blue {
+  box-shadow: var(--velocity-neon-blue);
+  border: 1px solid #0066ff;
+}
+
+.velocity-neon-purple {
+  box-shadow: var(--velocity-neon-purple);
+  border: 1px solid #6366f1;
+}
+
+.velocity-neon-plasma {
+  box-shadow: var(--velocity-neon-plasma);
+  border: 1px solid #8a2be2;
+}
+
+.velocity-neon-laser {
+  box-shadow: var(--velocity-neon-laser);
+  border: 1px solid #ff1493;
+}
+
+.velocity-neon-electric {
+  box-shadow: var(--velocity-neon-electric);
+  border: 1px solid #00ffff;
+}
+
+/* Gradient Background Classes */
+.velocity-gradient-primary {
+  background: var(--velocity-gradient-primary);
+}
+
+.velocity-gradient-surface {
+  background: var(--velocity-gradient-surface);
+}
+
+.velocity-gradient-card {
+  background: var(--velocity-gradient-card);
+}
+
+.velocity-gradient-button {
+  background: var(--velocity-gradient-button);
+  transition: all var(--velocity-duration-normal) var(--velocity-easing-smooth);
+}
+
+.velocity-gradient-button:hover {
+  transform: var(--velocity-transform-hover);
+  box-shadow: var(--velocity-elevation-3);
+}
+
+.velocity-gradient-ambient {
+  background: var(--velocity-gradient-ambient);
+}
+
+.velocity-gradient-neon {
+  background: var(--velocity-gradient-neon);
+}
+
+.velocity-gradient-holographic {
+  background: var(--velocity-gradient-holographic);
+}
+
+.velocity-gradient-plasma {
+  background: var(--velocity-gradient-plasma);
+}
+
+.velocity-gradient-aurora {
+  background: var(--velocity-gradient-aurora);
+}
+
+/* Elevation Shadow Classes */
+.velocity-elevation-1 { box-shadow: var(--velocity-elevation-1); }
+.velocity-elevation-2 { box-shadow: var(--velocity-elevation-2); }
+.velocity-elevation-3 { box-shadow: var(--velocity-elevation-3); }
+.velocity-elevation-4 { box-shadow: var(--velocity-elevation-4); }
+.velocity-elevation-5 { box-shadow: var(--velocity-elevation-5); }
+.velocity-elevation-6 { box-shadow: var(--velocity-elevation-6); }
+.velocity-elevation-7 { box-shadow: var(--velocity-elevation-7); }
+.velocity-elevation-8 { box-shadow: var(--velocity-elevation-8); }
+
+/* Glow Effect Classes */
+.velocity-glow-subtle { box-shadow: var(--velocity-glow-subtle); }
+.velocity-glow-medium { box-shadow: var(--velocity-glow-medium); }
+.velocity-glow-strong { box-shadow: var(--velocity-glow-strong); }
+.velocity-glow-intense { box-shadow: var(--velocity-glow-intense); }
+
+/* Ambient Filter Classes */
+.velocity-ambient-soft { filter: var(--velocity-ambient-soft); }
+.velocity-ambient-medium { filter: var(--velocity-ambient-medium); }
+.velocity-ambient-strong { filter: var(--velocity-ambient-strong); }
+
+/* Particle Effect Classes */
+.velocity-sparkle { filter: var(--velocity-particle-sparkle); }
+.velocity-shimmer { filter: var(--velocity-particle-shimmer); }
+
+/* Animation Classes */
+.velocity-transition-smooth {
+  transition: all var(--velocity-duration-normal) var(--velocity-easing-smooth);
+}
+
+.velocity-transition-bounce {
+  transition: all var(--velocity-duration-normal) var(--velocity-easing-bounce);
+}
+
+.velocity-transition-elastic {
+  transition: all var(--velocity-duration-slow) var(--velocity-easing-elastic);
+}
+
+.velocity-hover-lift:hover {
+  transform: var(--velocity-transform-hover);
+  transition: transform var(--velocity-duration-fast) var(--velocity-easing-smooth);
+}
+
+.velocity-hover-float:hover {
+  transform: var(--velocity-transform-float);
+  transition: transform var(--velocity-duration-normal) var(--velocity-easing-bounce);
+}
+
+.velocity-press-active:active {
+  transform: var(--velocity-transform-press);
+  transition: transform var(--velocity-duration-instant) var(--velocity-easing-sharp);
+}
+
+/* Component-Specific Enhancements */
+.velocity-card {
+  background: var(--velocity-gradient-card);
+  backdrop-filter: var(--velocity-glass-backdrop-medium);
+  border: var(--velocity-glass-border-light);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--velocity-elevation-2);
+  transition: all var(--velocity-duration-normal) var(--velocity-easing-smooth);
+}
+
+.velocity-card:hover {
+  transform: var(--velocity-transform-hover);
+  box-shadow: var(--velocity-elevation-4);
+  border: var(--velocity-glass-border-medium);
+}
+
+.velocity-button-primary {
+  background: var(--velocity-gradient-button);
+  backdrop-filter: var(--velocity-glass-backdrop-light);
+  border: var(--velocity-glass-border-medium);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  transition: all var(--velocity-duration-normal) var(--velocity-easing-smooth);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.velocity-button-primary:hover {
+  transform: var(--velocity-transform-hover);
+  box-shadow: var(--velocity-elevation-3), var(--velocity-glow-medium);
+  border: var(--velocity-glass-border-strong);
+}
+
+.velocity-button-primary:active {
+  transform: var(--velocity-transform-press);
+  transition: transform var(--velocity-duration-instant) var(--velocity-easing-sharp);
+}
+
+.velocity-button-neon {
+  background: transparent;
+  border: 2px solid #00f5ff;
+  color: #00f5ff;
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  transition: all var(--velocity-duration-normal) var(--velocity-easing-smooth);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.velocity-button-neon:hover {
+  background: rgba(0, 245, 255, 0.1);
+  box-shadow: var(--velocity-neon-cyan);
+  transform: var(--velocity-transform-hover);
+}
+
+.velocity-sidebar {
+  background: var(--velocity-gradient-surface);
+  backdrop-filter: var(--velocity-glass-backdrop-heavy);
+  border-right: var(--velocity-glass-border-light);
+}
+
+.velocity-header {
+  background: var(--velocity-glass-transparency-medium);
+  backdrop-filter: var(--velocity-glass-backdrop-medium);
+  border-bottom: var(--velocity-glass-border-light);
+  box-shadow: var(--velocity-elevation-2);
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .velocity-glass-heavy,
+  .velocity-glass-ultra {
+    backdrop-filter: var(--velocity-glass-backdrop-medium);
+  }
+  
+  .velocity-elevation-6,
+  .velocity-elevation-7,
+  .velocity-elevation-8 {
+    box-shadow: var(--velocity-elevation-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .velocity-transition-smooth,
+  .velocity-transition-bounce,
+  .velocity-transition-elastic,
+  .velocity-hover-lift,
+  .velocity-hover-float,
+  .velocity-card,
+  .velocity-button-primary,
+  .velocity-button-neon {
+    transition: none;
+  }
+  
+  .velocity-hover-lift:hover,
+  .velocity-hover-float:hover,
+  .velocity-card:hover,
+  .velocity-button-primary:hover {
+    transform: none;
+  }
+}
+
+/* High Performance Mode - Disable expensive effects on older devices */
+@media (max-width: 480px) and (max-resolution: 150dpi) {
+  .velocity-glass-light,
+  .velocity-glass-medium,
+  .velocity-glass-heavy,
+  .velocity-glass-ultra {
+    backdrop-filter: none;
+  }
+  
+  .velocity-gradient-holographic,
+  .velocity-gradient-plasma,
+  .velocity-gradient-aurora {
+    background: var(--velocity-gradient-primary);
+  }
+  
+  .velocity-neon-cyan,
+  .velocity-neon-blue,
+  .velocity-neon-purple,
+  .velocity-neon-plasma,
+  .velocity-neon-laser,
+  .velocity-neon-electric {
+    box-shadow: var(--velocity-elevation-2);
+  }
+}

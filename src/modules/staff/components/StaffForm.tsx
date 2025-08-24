@@ -4,17 +4,13 @@ import { ArrowLeft, Save, User } from 'lucide-react';
 import { useStaffMember, useCreateStaff, useUpdateStaff } from '@/hooks/useStaff';
 import { 
   StaffFormData, 
-  Department,
   StaffStatus,
-  StaffLevel,
   ContractType,
-  Skill,
-  Position 
+  Skill 
 } from '@/types/staff.types';
 import {
   PersonalInfoSection,
   EmploymentSection,
-  AddressSection,
   EmergencyContactSection,
   AvailabilitySection,
   SkillsSection
@@ -32,36 +28,26 @@ export function StaffForm() {
   const updateMutation = useUpdateStaff();
 
   const [formData, setFormData] = useState<StaffFormData>({
-    id: id || undefined,
     name: '',
     email: '',
     phone: '',
-    alternativePhone: '',
     employeeId: '',
     position: '',
-    department: '',
-    level: StaffLevel.JUNIOR,
+    department: 'field_operations',
     status: StaffStatus.ACTIVE,
-    reportsTo: '',
     skills: [],
     experienceYears: 0,
-    specializations: [],
     address: '',
     city: 'Johannesburg',
     province: 'Gauteng',
     postalCode: '',
-    emergencyContactName: '',
-    emergencyContactPhone: '',
     startDate: new Date(),
     contractType: ContractType.PERMANENT,
-    hourlyRate: 0,
     workingHours: '08:00 - 17:00',
     availableWeekends: false,
     availableNights: false,
     timeZone: 'Africa/Johannesburg',
-    maxProjectCount: 5,
-    notes: '',
-    bio: ''
+    maxProjectCount: 5
   });
 
   useEffect(() => {
@@ -70,38 +56,44 @@ export function StaffForm() {
         ? new Date(staff.startDate.seconds * 1000)
         : new Date(staff.startDate);
 
-      setFormData({
-        id: staff.id,
+      const formUpdate: Partial<StaffFormData> = {
         name: staff.name,
         email: staff.email,
         phone: staff.phone,
-        alternativePhone: staff.alternativePhone || '',
         employeeId: staff.employeeId,
-        position: staff.position,
-        department: staff.department,
-        level: staff.level || StaffLevel.JUNIOR,
+        position: typeof staff.position === 'string' ? staff.position : String(staff.position),
+        department: typeof staff.department === 'string' ? staff.department : String(staff.department),
         status: staff.status,
-        reportsTo: staff.reportsTo || '',
         skills: staff.skills || [],
         experienceYears: staff.experienceYears || 0,
-        specializations: staff.specializations || [],
         address: staff.address,
         city: staff.city,
         province: staff.province,
         postalCode: staff.postalCode,
-        emergencyContactName: staff.emergencyContactName || '',
-        emergencyContactPhone: staff.emergencyContactPhone || '',
         startDate: startDate,
         contractType: staff.contractType,
-        hourlyRate: staff.hourlyRate || 0,
         workingHours: staff.workingHours || '08:00 - 17:00',
         availableWeekends: staff.availableWeekends || false,
         availableNights: staff.availableNights || false,
         timeZone: staff.timeZone || 'Africa/Johannesburg',
-        maxProjectCount: staff.maxProjectCount || 5,
-        notes: staff.notes || '',
-        bio: staff.bio || ''
-      });
+        maxProjectCount: staff.maxProjectCount || 5
+      };
+      
+      // Add optional fields only if they exist
+      if (staff.id) formUpdate.id = staff.id;
+      if (staff.alternativePhone) formUpdate.alternativePhone = staff.alternativePhone;
+      if (staff.level) formUpdate.level = staff.level;
+      if (staff.reportsTo) formUpdate.reportsTo = staff.reportsTo;
+      if (staff.specializations) formUpdate.specializations = staff.specializations;
+      if (staff.emergencyContactName) formUpdate.emergencyContactName = staff.emergencyContactName;
+      if (staff.emergencyContactPhone) formUpdate.emergencyContactPhone = staff.emergencyContactPhone;
+      if (staff.endDate) formUpdate.endDate = staff.endDate instanceof Date ? staff.endDate : staff.endDate.toDate();
+      if (staff.salaryGrade) formUpdate.salaryGrade = staff.salaryGrade;
+      if (staff.hourlyRate !== undefined) formUpdate.hourlyRate = staff.hourlyRate;
+      if (staff.notes) formUpdate.notes = staff.notes;
+      if (staff.bio) formUpdate.bio = staff.bio;
+      
+      setFormData(prevData => ({ ...prevData, ...formUpdate }));
     }
   }, [staff, isEditing]);
 
@@ -174,10 +166,7 @@ export function StaffForm() {
             handleInputChange={handleInputChange}
           />
           
-          <AddressSection 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
-          />
+          {/* Address section removed - handled in PersonalInfoSection */}
           
           <EmergencyContactSection 
             formData={formData} 

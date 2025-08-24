@@ -22,9 +22,9 @@ export function RFQListPage() {
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
       return (
-        (rfq.number || '').toLowerCase().includes(search) ||
+        (rfq.rfqNumber || '').toLowerCase().includes(search) ||
         rfq.title.toLowerCase().includes(search) ||
-        rfq.projectName?.toLowerCase().includes(search)
+        rfq.title.toLowerCase().includes(search) // Note: projectName not available in RFQ type
       );
     }
     return true;
@@ -51,7 +51,7 @@ export function RFQListPage() {
   // Calculate stats
   const stats = {
     total: rfqs?.length || 0,
-    sent: rfqs?.filter(r => r.status === RFQStatus.SENT).length || 0,
+    sent: rfqs?.filter(r => r.status === RFQStatus.ISSUED).length || 0,
     responsesReceived: rfqs?.filter(r => r.status === RFQStatus.RESPONSES_RECEIVED).length || 0,
     awarded: rfqs?.filter(r => r.status === RFQStatus.AWARDED).length || 0,
   };
@@ -107,13 +107,11 @@ export function RFQListPage() {
           >
             <option value="all">All Status</option>
             <option value={RFQStatus.DRAFT}>Draft</option>
-            <option value={RFQStatus.SENT}>Sent</option>
-            <option value={RFQStatus.RESPONSES_PENDING}>Responses Pending</option>
+            <option value={RFQStatus.ISSUED}>Issued</option>
             <option value={RFQStatus.RESPONSES_RECEIVED}>Responses Received</option>
-            <option value={RFQStatus.EVALUATION}>Evaluation</option>
+            <option value={RFQStatus.EVALUATED}>Evaluated</option>
             <option value={RFQStatus.AWARDED}>Awarded</option>
             <option value={RFQStatus.CANCELLED}>Cancelled</option>
-            <option value={RFQStatus.EXPIRED}>Expired</option>
           </select>
         </div>
       </div>

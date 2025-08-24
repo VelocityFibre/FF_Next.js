@@ -1,13 +1,14 @@
 // RFQ Components - Index Export
+import React from 'react';
 
 // Placeholder exports - to be implemented in next phase
-export const RFQDashboard = () => <div>RFQDashboard - Coming Soon</div>;
-export const RFQCreate = () => <div>RFQCreate - Coming Soon</div>;
-export const RFQEdit = () => <div>RFQEdit - Coming Soon</div>;
-export const RFQView = () => <div>RFQView - Coming Soon</div>;
-export const RFQList = () => <div>RFQList - Coming Soon</div>;
-export const RFQDetail = () => <div>RFQDetail - Coming Soon</div>;
-export const RFQBuilder = () => <div>RFQBuilder - Coming Soon</div>;
-export const RFQDistribution = () => <div>RFQDistribution - Coming Soon</div>;
-export const RFQTracking = () => <div>RFQTracking - Coming Soon</div>;
-export const RFQArchive = () => <div>RFQArchive - Coming Soon</div>;
+export const RFQDashboard: React.FC = () => React.createElement('div', null, 'RFQDashboard - Coming Soon');
+export const RFQCreate: React.FC = () => React.createElement('div', null, 'RFQCreate - Coming Soon');
+export const RFQEdit: React.FC = () => React.createElement('div', null, 'RFQEdit - Coming Soon');
+export const RFQView: React.FC = () => React.createElement('div', null, 'RFQView - Coming Soon');
+export const RFQList: React.FC = () => React.createElement('div', null, 'RFQList - Coming Soon');
+export const RFQDetail: React.FC = () => React.createElement('div', null, 'RFQDetail - Coming Soon');
+export const RFQBuilder: React.FC = () => React.createElement('div', null, 'RFQBuilder - Coming Soon');
+export const RFQDistribution: React.FC = () => React.createElement('div', null, 'RFQDistribution - Coming Soon');
+export const RFQTracking: React.FC = () => React.createElement('div', null, 'RFQTracking - Coming Soon');
+export const RFQArchive: React.FC = () => React.createElement('div', null, 'RFQArchive - Coming Soon');

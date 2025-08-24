@@ -4,13 +4,13 @@ import { neon } from '@neondatabase/serverless';
 const connectionString = import.meta.env.VITE_NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 
 if (!connectionString) {
-  console.warn('Neon database URL not configured. SOW features will not work.');
+  // Neon database URL not configured. SOW features will not work.
 }
 
 // Create SQL query function
 const sql = connectionString ? neon(connectionString) : null;
 
-export interface NeonQueryResult<T = any> {
+export interface NeonQueryResult<T = unknown> {
   success: boolean;
   data: T[];
   error?: string;
@@ -26,7 +26,7 @@ export class NeonService {
   /**
    * Execute a SQL query (for queries without parameters, use template literals)
    */
-  async query<T = any>(queryText: string, params: any[] = []): Promise<NeonQueryResult<T>> {
+  async query<T = unknown>(queryText: string, params: unknown[] = []): Promise<NeonQueryResult<T>> {
     if (!sql) {
       return {
         success: false,
@@ -76,7 +76,7 @@ export class NeonService {
         rowCount: result.length
       };
     } catch (error) {
-      console.error('Neon query error:', error);
+      // Query error occurred
       return {
         success: false,
         data: [],
@@ -88,7 +88,7 @@ export class NeonService {
   /**
    * Execute a non-SELECT query (INSERT, UPDATE, DELETE)
    */
-  async execute(queryText: string, params: any[] = []): Promise<NeonQueryResult> {
+  async execute(queryText: string, params: unknown[] = []): Promise<NeonQueryResult> {
     // For execute operations, we can reuse the query method
     return this.query(queryText, params);
   }
@@ -103,7 +103,7 @@ export class NeonService {
       const result = await this.query('SELECT 1 as health');
       return result.success;
     } catch (error) {
-      console.error('Neon health check failed:', error);
+      // Health check failed
       return false;
     }
   }

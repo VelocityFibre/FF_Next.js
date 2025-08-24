@@ -48,6 +48,7 @@ export interface BOQ {
   projectId: string; // Firebase project ID
   
   // BOQ Details
+  name: string; // Required name field
   version: string;
   title?: string;
   description?: string;
@@ -79,6 +80,7 @@ export interface BOQ {
   
   // Totals
   totalEstimatedValue?: number;
+  totalValue?: number; // Add this for compatibility
   currency: string; // Default 'ZAR'
   
   // Timestamps

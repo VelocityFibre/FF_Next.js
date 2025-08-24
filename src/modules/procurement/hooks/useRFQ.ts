@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { rfqService } from '@/services/procurement/rfqService';
-import { RFQFormData, RFQStatus, RFQResponse } from '@/types/procurement.types';
+import { RFQFormData, RFQStatus, Quote } from '@/types/procurement.types';
 import { toast } from 'react-hot-toast';
 
 // Get all RFQs
@@ -129,7 +129,7 @@ export function useSubmitRFQResponse() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ rfqId, response }: { rfqId: string; response: Omit<RFQResponse, 'id'> }) =>
+    mutationFn: ({ rfqId, response }: { rfqId: string; response: Omit<Quote, 'id'> }) =>
       rfqService.submitResponse(rfqId, response),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['rfqs'] });

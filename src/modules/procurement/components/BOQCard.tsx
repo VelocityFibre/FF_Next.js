@@ -18,10 +18,10 @@ export function BOQCard({ boq }: BOQCardProps) {
     switch (boq.status) {
       case BOQStatus.APPROVED:
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case BOQStatus.REJECTED:
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case BOQStatus.PENDING_REVIEW:
+      case BOQStatus.MAPPING_REVIEW:
         return <Clock className="h-4 w-4 text-yellow-500" />;
+      case BOQStatus.ARCHIVED:
+        return <AlertCircle className="h-4 w-4 text-gray-500" />;
       default:
         return <FileText className="h-4 w-4 text-gray-400" />;
     }
@@ -31,16 +31,12 @@ export function BOQCard({ boq }: BOQCardProps) {
     switch (boq.status) {
       case BOQStatus.APPROVED:
         return 'bg-green-100 text-green-800';
-      case BOQStatus.REJECTED:
-        return 'bg-red-100 text-red-800';
-      case BOQStatus.PENDING_REVIEW:
+      case BOQStatus.MAPPING_REVIEW:
         return 'bg-yellow-100 text-yellow-800';
       case BOQStatus.DRAFT:
         return 'bg-gray-100 text-gray-800';
-      case BOQStatus.REVISED:
-        return 'bg-blue-100 text-blue-800';
-      case BOQStatus.EXPIRED:
-        return 'bg-red-100 text-red-800';
+      case BOQStatus.ARCHIVED:
+        return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -58,14 +54,9 @@ export function BOQCard({ boq }: BOQCardProps) {
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor()}`}>
               {boq.status}
             </span>
-            {boq.isTemplate && (
-              <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                Template
-              </span>
-            )}
           </div>
           <h3 className="text-lg font-semibold text-gray-900">{boq.title}</h3>
-          <p className="text-sm text-gray-500">{boq.number}</p>
+          <p className="text-sm text-gray-500">v{boq.version}</p>
         </div>
         <button
           onClick={(e) => {
@@ -79,21 +70,13 @@ export function BOQCard({ boq }: BOQCardProps) {
       </div>
 
       <div className="space-y-2 mb-4">
-        {boq.projectName && (
-          <div className="flex items-center text-sm text-gray-600">
-            <FileText className="h-4 w-4 mr-2 text-gray-400" />
-            <span>{boq.projectName}</span>
-          </div>
-        )}
-        {boq.clientName && (
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="font-medium mr-2">Client:</span>
-            <span>{boq.clientName}</span>
-          </div>
-        )}
+        <div className="flex items-center text-sm text-gray-600">
+          <FileText className="h-4 w-4 mr-2 text-gray-400" />
+          <span>Project ID: {boq.projectId}</span>
+        </div>
         <div className="flex items-center text-sm text-gray-600">
           <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-          <span>Valid until {boq.validUntil ? format(boq.validUntil.toDate(), 'MMM dd, yyyy') : 'N/A'}</span>
+          <span>Created {format(boq.createdAt, 'MMM dd, yyyy')}</span>
         </div>
       </div>
 
@@ -103,12 +86,12 @@ export function BOQCard({ boq }: BOQCardProps) {
             <p className="text-xs text-gray-500">Total Amount</p>
             <p className="text-lg font-bold text-gray-900 flex items-center">
               <DollarSign className="h-4 w-4 mr-1" />
-              {boq.currency} {boq.totalAmount?.toLocaleString() || '0'}
+              {boq.currency} {boq.totalEstimatedValue?.toLocaleString() || '0'}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500">{boq.items.length} items</p>
-            <p className="text-xs text-gray-500">v{boq.version}</p>
+            <p className="text-xs text-gray-500">{boq.itemCount} items</p>
+            <p className="text-xs text-gray-500">Status: {boq.status}</p>
           </div>
         </div>
       </div>
@@ -116,8 +99,8 @@ export function BOQCard({ boq }: BOQCardProps) {
       {boq.approvedBy && (
         <div className="mt-3 pt-3 border-t border-gray-200">
           <p className="text-xs text-gray-500">
-            Approved by {boq.approvedByName} on{' '}
-            {boq.approvedAt && format(boq.approvedAt.toDate(), 'MMM dd, yyyy')}
+            Approved by {boq.approvedBy} on{' '}
+            {boq.approvedAt && format(boq.approvedAt, 'MMM dd, yyyy')}
           </p>
         </div>
       )}

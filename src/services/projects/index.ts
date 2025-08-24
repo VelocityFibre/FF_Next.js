@@ -2,6 +2,17 @@
  * Project Service - Main export file
  */
 
+// CRUD operations
+export {
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+  getByClientId,
+  getActiveProjects
+} from './projectCrud';
+
 // Phases and hierarchy management
 export {
   generateProjectPhases,
@@ -38,11 +49,22 @@ export {
 } from './projectRealtime';
 
 // Create the projectService object for backward compatibility
+import * as crud from './projectCrud';
 import * as phases from './projectPhases';
 import * as stats from './projectStats';
 import * as realtime from './projectRealtime';
 
 export const projectService = {
+  // CRUD operations
+  getAll: crud.getAll,
+  getById: crud.getById,
+  create: crud.create,
+  update: crud.update,
+  delete: crud.remove,
+  remove: crud.remove,
+  getByClientId: crud.getByClientId,
+  getActiveProjects: crud.getActiveProjects,
+  
   // Phases
   generatePhases: phases.generateProjectPhases,
   getPhases: phases.getProjectPhases,

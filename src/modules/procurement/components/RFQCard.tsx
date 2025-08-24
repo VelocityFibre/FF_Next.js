@@ -16,7 +16,7 @@ export function RFQCard({ rfq }: RFQCardProps) {
 
   const getStatusIcon = () => {
     switch (rfq.status) {
-      case RFQStatus.SENT:
+      case RFQStatus.ISSUED:
         return <Send className="h-4 w-4 text-blue-500" />;
       case RFQStatus.RESPONSES_RECEIVED:
         return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -24,7 +24,7 @@ export function RFQCard({ rfq }: RFQCardProps) {
         return <Award className="h-4 w-4 text-purple-500" />;
       case RFQStatus.CANCELLED:
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case RFQStatus.EXPIRED:
+      case RFQStatus.CANCELLED:
         return <Clock className="h-4 w-4 text-gray-500" />;
       default:
         return <Clock className="h-4 w-4 text-yellow-500" />;
@@ -35,26 +35,26 @@ export function RFQCard({ rfq }: RFQCardProps) {
     switch (rfq.status) {
       case RFQStatus.DRAFT:
         return 'bg-gray-100 text-gray-800';
-      case RFQStatus.SENT:
+      case RFQStatus.ISSUED:
         return 'bg-blue-100 text-blue-800';
-      case RFQStatus.RESPONSES_PENDING:
+      case RFQStatus.RESPONSES_RECEIVED:
         return 'bg-yellow-100 text-yellow-800';
       case RFQStatus.RESPONSES_RECEIVED:
         return 'bg-green-100 text-green-800';
-      case RFQStatus.EVALUATION:
+      case RFQStatus.EVALUATED:
         return 'bg-indigo-100 text-indigo-800';
       case RFQStatus.AWARDED:
         return 'bg-purple-100 text-purple-800';
       case RFQStatus.CANCELLED:
         return 'bg-red-100 text-red-800';
-      case RFQStatus.EXPIRED:
+      case RFQStatus.CANCELLED:
         return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const respondedCount = rfq.invitedSuppliers?.filter((s: any) => s.status === 'responded').length || 0;
+  const respondedCount = rfq.respondedSuppliers?.length || 0;
   const totalInvited = rfq.invitedSuppliers?.length || 0;
 
   return (
@@ -85,15 +85,15 @@ export function RFQCard({ rfq }: RFQCardProps) {
       </div>
 
       <div className="space-y-2 mb-4">
-        {rfq.projectName && (
+        {rfq.projectId && (
           <div className="flex items-center text-sm text-gray-600">
-            <span className="font-medium mr-2">Project:</span>
-            <span>{rfq.projectName}</span>
+            <span className="font-medium mr-2">Project ID:</span>
+            <span>{rfq.projectId}</span>
           </div>
         )}
         <div className="flex items-center text-sm text-gray-600">
           <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-          <span>Deadline: {rfq.deadline ? format(rfq.deadline.toDate(), 'MMM dd, yyyy') : 'N/A'}</span>
+          <span>Deadline: {rfq.responseDeadline ? format(rfq.responseDeadline, 'MMM dd, yyyy') : 'N/A'}</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <Users className="h-4 w-4 mr-2 text-gray-400" />
@@ -110,17 +110,17 @@ export function RFQCard({ rfq }: RFQCardProps) {
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500">{rfq.items.length} items</p>
-            {rfq.deliveryDate && (
+            <p className="text-xs text-gray-500">{rfq.itemCount} items</p>
+            {rfq.responseDeadline && (
               <p className="text-xs text-gray-500">
-                Delivery: {format(rfq.deliveryDate.toDate(), 'MMM dd')}
+                Response Due: {format(rfq.responseDeadline, 'MMM dd')}
               </p>
             )}
           </div>
         </div>
       </div>
 
-      {rfq.selectedResponseId && (
+      {rfq.awardedTo && (
         <div className="mt-3 pt-3 border-t border-gray-200">
           <p className="text-xs text-green-600 font-medium">
             ✓ Supplier selected

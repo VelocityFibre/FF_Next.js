@@ -44,7 +44,7 @@ export function ClientList() {
 
   const handleExport = async () => {
     try {
-      const blob = await clientService.exportToExcel(clients);
+      const blob = await clientService.export.exportToExcel(clients);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

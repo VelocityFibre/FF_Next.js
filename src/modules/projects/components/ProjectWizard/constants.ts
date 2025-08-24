@@ -1,7 +1,6 @@
 import { 
   FolderOpen,
   MapPin,
-  FileSpreadsheet,
   CheckCircle
 } from 'lucide-react';
 import type { WizardStep } from './types';

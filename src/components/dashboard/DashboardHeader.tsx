@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 interface ActionButton {
   label: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   onClick: () => void;
   variant: 'primary' | 'secondary' | 'success' | 'danger';
   disabled?: boolean;

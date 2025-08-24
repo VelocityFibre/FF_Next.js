@@ -20,7 +20,7 @@ export const StaffSettings = lazy(() => import('@/modules/settings/StaffSettings
 
 // Procurement Module - Main Layout
 export const ProcurementLayout = lazy(() => import('@/modules/procurement/components/layout/ProcurementLayout').then(m => ({ default: m.ProcurementLayout })));
-export const ProcurementDashboard = lazy(() => import('@/modules/procurement/components/ProcurementDashboard').then(m => ({ default: m.ProcurementDashboard })));
+export const ProcurementDashboard = lazy(() => import('@/modules/procurement/components/ProcurementDashboard/ProcurementDashboard').then(m => ({ default: m.ProcurementDashboard })));
 
 // BOQ Management
 export const BOQDashboard = lazy(() => import('@/modules/procurement/boq/components').then(m => ({ default: m.BOQDashboard })));
@@ -116,9 +116,9 @@ export const DropsManagement = lazy(() => import('@/modules/projects/drops/Drops
 export const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-tracker/mobile/PoleCaptureMobile').then(m => ({ default: m.PoleCaptureMobile })));
 export const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.SOWManagement })));
 
-// Legacy pages
-// export const Projects = lazy(() => import('@/modules/projects/ProjectsPage').then(m => ({ default: m.ProjectsPage })));
-// export const ProjectForm = lazy(() => import('@/modules/projects/components/ProjectForm').then(m => ({ default: m.ProjectForm })));
-// export const ProjectDetail = lazy(() => import('@/modules/projects/components/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
+// Project pages
+export const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
+export const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));
+export const ProjectDetail = lazy(() => import('@/pages/ProjectDetail').then(m => ({ default: m.ProjectDetail })));
 export const Settings = lazy(() => import('@/pages/Settings').then(m => ({ default: m.Settings })));
 export const ProjectCreationWizard = lazy(() => import('@/modules/projects/components/ProjectCreationWizard').then(m => ({ default: m.ProjectCreationWizard })));
