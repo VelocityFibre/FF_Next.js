@@ -14,34 +14,12 @@ export class FinancialCalculator {
    * Calculate financial score based on financial health indicators
    */
   static calculateScore(contractor: ContractorData): RAGScoreResult<RAGFinancialBreakdown> {
-    const financialData = contractor.financialData;
-    
-    if (!financialData) {
-      // No financial data available - neutral score
-      const breakdown: RAGFinancialBreakdown = {
-        creditScore: 70,
-        cashFlow: 70,
-        debtRatio: 70,
-        profitability: 70,
-        liquidityRatio: 70
-      };
-      
-      return { score: 70, breakdown };
-    }
-
-    // Calculate individual financial metrics
-    const creditScore = this.calculateCreditScore(financialData);
-    const cashFlow = this.calculateCashFlowScore(financialData);
-    const debtRatio = this.calculateDebtRatioScore(financialData);
-    const profitability = this.calculateProfitabilityScore(financialData);
-    const liquidityRatio = this.calculateLiquidityScore(financialData);
-
     const breakdown: RAGFinancialBreakdown = {
-      creditScore,
-      cashFlow,
-      debtRatio,
-      profitability,
-      liquidityRatio
+      paymentHistory: this.calculatePaymentHistoryScore(contractor),
+      financialStability: this.calculateFinancialStabilityScore(contractor),
+      creditRating: this.calculateCreditRatingScore(contractor),
+      insuranceCoverage: this.calculateInsuranceCoverageScore(contractor),
+      bondingCapacity: this.calculateBondingCapacityScore(contractor)
     };
 
     // Calculate weighted average
@@ -51,33 +29,65 @@ export class FinancialCalculator {
   }
 
   /**
-   * Calculate credit score component
+   * Calculate payment history score
    */
-  private static calculateCreditScore(financialData: any): number {
-    const creditScore = financialData.creditScore || financialData.creditRating;
+  private static calculatePaymentHistoryScore(contractor: ContractorData): number {
+    const paymentHistory = contractor.paymentHistory;
     
-    if (!creditScore) return 70;
+    if (paymentHistory === undefined || paymentHistory === null) return 70;
 
-    // Convert various credit score formats to 100-point scale
-    if (typeof creditScore === 'string') {
-      switch (creditScore.toLowerCase()) {
-        case 'aaa': case 'excellent': return 95;
-        case 'aa': case 'very good': return 85;
-        case 'a': case 'good': return 75;
-        case 'bbb': case 'fair': return 65;
-        case 'bb': case 'poor': return 45;
-        case 'b': case 'very poor': return 25;
-        default: return 70;
-      }
-    }
+    // Assume paymentHistory is a percentage (0-100) or ratio (0-1)
+    const score = paymentHistory > 1 ? paymentHistory : paymentHistory * 100;
 
-    // Numeric credit score (assume 0-850 scale like FICO)
-    if (typeof creditScore === 'number') {
-      if (creditScore >= 750) return 95;
-      if (creditScore >= 700) return 85;
-      if (creditScore >= 650) return 75;
-      if (creditScore >= 600) return 65;
-      if (creditScore >= 550) return 45;
+    if (score >= 95) return 95;
+    if (score >= 85) return 85;
+    if (score >= 75) return 75;
+    if (score >= 65) return 65;
+    if (score >= 50) return 45;
+    return 25;
+  }
+
+  /**
+   * Calculate financial stability score based on years in business and project count
+   */
+  private static calculateFinancialStabilityScore(contractor: ContractorData): number {
+    const yearsInBusiness = contractor.yearsInBusiness || 0;
+    const totalProjects = contractor.totalProjects || 0;
+    
+    let stabilityScore = 50; // Base score
+    
+    // Years in business component (0-25 points)
+    if (yearsInBusiness >= 15) stabilityScore += 25;
+    else if (yearsInBusiness >= 10) stabilityScore += 20;
+    else if (yearsInBusiness >= 5) stabilityScore += 15;
+    else if (yearsInBusiness >= 2) stabilityScore += 10;
+    else if (yearsInBusiness >= 1) stabilityScore += 5;
+    
+    // Project experience component (0-25 points)
+    if (totalProjects >= 100) stabilityScore += 25;
+    else if (totalProjects >= 50) stabilityScore += 20;
+    else if (totalProjects >= 25) stabilityScore += 15;
+    else if (totalProjects >= 10) stabilityScore += 10;
+    else if (totalProjects >= 5) stabilityScore += 5;
+    
+    return Math.min(stabilityScore, 100);
+  }
+
+  /**
+   * Calculate credit rating score
+   */
+  private static calculateCreditRatingScore(contractor: ContractorData): number {
+    const creditRating = contractor.creditRating;
+    
+    if (creditRating === undefined || creditRating === null) return 70;
+
+    // Assume creditRating is already normalized to 0-100 scale
+    if (typeof creditRating === 'number') {
+      if (creditRating >= 90) return 95;
+      if (creditRating >= 80) return 85;
+      if (creditRating >= 70) return 75;
+      if (creditRating >= 60) return 65;
+      if (creditRating >= 50) return 45;
       return 25;
     }
 
@@ -85,93 +95,40 @@ export class FinancialCalculator {
   }
 
   /**
-   * Calculate cash flow score
+   * Calculate insurance coverage score
    */
-  private static calculateCashFlowScore(financialData: any): number {
-    const operatingCashFlow = financialData.operatingCashFlow || financialData.cashFlow;
-    const revenue = financialData.annualRevenue || financialData.revenue;
+  private static calculateInsuranceCoverageScore(contractor: ContractorData): number {
+    const insuranceVerified = contractor.insuranceVerified;
     
-    if (!operatingCashFlow || !revenue) return 70;
-
-    const cashFlowRatio = (operatingCashFlow / revenue) * 100;
-
-    if (cashFlowRatio >= 15) return 95;
-    if (cashFlowRatio >= 10) return 85;
-    if (cashFlowRatio >= 5) return 75;
-    if (cashFlowRatio >= 0) return 65;
-    if (cashFlowRatio >= -5) return 45;
-    return 25;
+    if (insuranceVerified === undefined || insuranceVerified === null) return 70;
+    
+    // Simple boolean check - could be enhanced with coverage amounts
+    return insuranceVerified ? 95 : 25;
   }
 
   /**
-   * Calculate debt-to-equity ratio score
+   * Calculate bonding capacity score
    */
-  private static calculateDebtRatioScore(financialData: any): number {
-    const totalDebt = financialData.totalDebt || financialData.liabilities;
-    const totalEquity = financialData.totalEquity || financialData.equity;
+  private static calculateBondingCapacityScore(contractor: ContractorData): number {
+    const bondingCapacity = contractor.bondingCapacity;
     
-    if (!totalDebt || !totalEquity || totalEquity <= 0) return 70;
-
-    const debtToEquityRatio = totalDebt / totalEquity;
-
-    // Lower debt-to-equity is better
-    if (debtToEquityRatio <= 0.3) return 95;
-    if (debtToEquityRatio <= 0.5) return 85;
-    if (debtToEquityRatio <= 1.0) return 75;
-    if (debtToEquityRatio <= 1.5) return 65;
-    if (debtToEquityRatio <= 2.0) return 45;
-    return 25;
-  }
-
-  /**
-   * Calculate profitability score
-   */
-  private static calculateProfitabilityScore(financialData: any): number {
-    const netIncome = financialData.netIncome || financialData.profit;
-    const revenue = financialData.annualRevenue || financialData.revenue;
+    if (bondingCapacity === undefined || bondingCapacity === null) return 70;
     
-    if (!netIncome || !revenue || revenue <= 0) return 70;
-
-    const profitMargin = (netIncome / revenue) * 100;
-
-    if (profitMargin >= 15) return 95;
-    if (profitMargin >= 10) return 85;
-    if (profitMargin >= 5) return 75;
-    if (profitMargin >= 2) return 65;
-    if (profitMargin >= 0) return 45;
-    return 25;
-  }
-
-  /**
-   * Calculate liquidity ratio score
-   */
-  private static calculateLiquidityScore(financialData: any): number {
-    const currentAssets = financialData.currentAssets;
-    const currentLiabilities = financialData.currentLiabilities;
-    
-    if (!currentAssets || !currentLiabilities || currentLiabilities <= 0) return 70;
-
-    const currentRatio = currentAssets / currentLiabilities;
-
-    // Current ratio between 1.5-3.0 is generally considered healthy
-    if (currentRatio >= 2.0 && currentRatio <= 3.0) return 95;
-    if (currentRatio >= 1.5 && currentRatio < 2.0) return 85;
-    if (currentRatio >= 1.2 && currentRatio < 1.5) return 75;
-    if (currentRatio >= 1.0 && currentRatio < 1.2) return 65;
-    if (currentRatio >= 0.8 && currentRatio < 1.0) return 45;
-    return 25;
+    // Simple boolean check - could be enhanced with bonding amounts
+    return bondingCapacity ? 95 : 45;
   }
 
   /**
    * Calculate weighted financial score
    */
   private static calculateWeightedScore(breakdown: RAGFinancialBreakdown): number {
+    // Using weights from DEFAULT_RAG_WEIGHTS
     return (
-      breakdown.creditScore * 0.25 +
-      breakdown.cashFlow * 0.25 +
-      breakdown.debtRatio * 0.20 +
-      breakdown.profitability * 0.20 +
-      breakdown.liquidityRatio * 0.10
+      breakdown.paymentHistory * 0.30 +
+      breakdown.financialStability * 0.25 +
+      breakdown.creditRating * 0.20 +
+      breakdown.insuranceCoverage * 0.15 +
+      breakdown.bondingCapacity * 0.10
     );
   }
 
@@ -192,28 +149,28 @@ export class FinancialCalculator {
   static getFinancialRecommendations(breakdown: RAGFinancialBreakdown): string[] {
     const recommendations: string[] = [];
 
-    if (breakdown.creditScore < 70) {
-      recommendations.push('Improve credit score through timely payments and debt reduction');
+    if (breakdown.paymentHistory < 70) {
+      recommendations.push('Improve payment history by ensuring timely payments to suppliers and creditors');
     }
 
-    if (breakdown.cashFlow < 70) {
-      recommendations.push('Focus on improving cash flow management and collection processes');
+    if (breakdown.financialStability < 70) {
+      recommendations.push('Build financial stability through consistent project delivery and business growth');
     }
 
-    if (breakdown.debtRatio < 70) {
-      recommendations.push('Reduce debt-to-equity ratio through debt repayment or equity increase');
+    if (breakdown.creditRating < 70) {
+      recommendations.push('Work on improving credit rating through better financial management');
     }
 
-    if (breakdown.profitability < 70) {
-      recommendations.push('Improve profit margins through cost optimization or pricing adjustments');
+    if (breakdown.insuranceCoverage < 70) {
+      recommendations.push('Ensure comprehensive insurance coverage is maintained and verified');
     }
 
-    if (breakdown.liquidityRatio < 70) {
-      recommendations.push('Increase current ratio by building cash reserves or reducing short-term liabilities');
+    if (breakdown.bondingCapacity < 70) {
+      recommendations.push('Establish or improve bonding capacity to qualify for larger projects');
     }
 
     if (recommendations.length === 0) {
-      recommendations.push('Maintain current financial performance levels');
+      recommendations.push('Maintain current excellent financial performance levels');
     }
 
     return recommendations;

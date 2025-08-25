@@ -245,9 +245,9 @@ export class TrackingHandlers {
    */
   static async executeRetry(retryStrategy: RetryStrategy): Promise<{
     success: boolean;
-    result?: any;
-    error?: string;
-    shouldRetry?: boolean;
+    result: any | undefined;
+    error: string | undefined;
+    shouldRetry: boolean | undefined;
   }> {
     try {
       console.log(`Executing tracking retry: ${retryStrategy.type}`, retryStrategy.data);
@@ -261,7 +261,9 @@ export class TrackingHandlers {
               discrepanciesFound: Math.floor(Math.random() * 5),
               syncDuration: `${Math.floor(Math.random() * 3) + 1} minutes`,
               integrityVerified: true
-            }
+            },
+            error: undefined,
+            shouldRetry: undefined
           };
 
         case 'rebuild_tracking_indexes':
@@ -272,10 +274,12 @@ export class TrackingHandlers {
               recordsProcessed: Math.floor(Math.random() * 10000) + 5000,
               integrityScore: 99.8,
               backupCreated: true
-            }
+            },
+            error: undefined,
+            shouldRetry: undefined
           };
 
-        case 'initiate_physical_recount':
+        case 'initiate_physical_recount': {
           // Simulate recount process
           const actualCount = retryStrategy.data.currentSystemQuantity + Math.floor(Math.random() * 10 - 5);
           return {
@@ -288,8 +292,11 @@ export class TrackingHandlers {
               countMethod: retryStrategy.data.countMethod,
               countedBy: 'warehouse-staff',
               countTimestamp: new Date().toISOString()
-            }
+            },
+            error: undefined,
+            shouldRetry: undefined
           };
+        }
 
         case 'request_supervisor_approval':
           return {
@@ -300,7 +307,9 @@ export class TrackingHandlers {
               estimatedApprovalTime: retryStrategy.estimatedTime,
               autoNotificationSent: true,
               status: 'pending_approval'
-            }
+            },
+            error: undefined,
+            shouldRetry: undefined
           };
 
         case 'split_adjustment_increments':
@@ -314,7 +323,9 @@ export class TrackingHandlers {
               },
               scheduledExecution: new Date(Date.now() + 60000).toISOString(), // 1 minute from now
               verificationEnabled: retryStrategy.data.verifyBetweenIncrements
-            }
+            },
+            error: undefined,
+            shouldRetry: undefined
           };
 
         case 'create_adjustment_audit_trail':
@@ -326,10 +337,12 @@ export class TrackingHandlers {
               photographicEvidence: retryStrategy.data.requiresPhotographic,
               witnessRequired: retryStrategy.data.requiresWitnessSignature,
               complianceScore: 95
-            }
+            },
+            error: undefined,
+            shouldRetry: undefined
           };
 
-        case 'retry_with_validation':
+        case 'retry_with_validation': {
           // Simulate validation retry with 80% success rate
           const success = Math.random() > 0.2;
           return {
@@ -342,16 +355,20 @@ export class TrackingHandlers {
             error: success ? undefined : 'Validation failed - data integrity issues detected',
             shouldRetry: !success && (retryStrategy.maxAttempts || 1) > 1
           };
+        }
 
         default:
           return {
             success: true,
-            result: { action: retryStrategy.action, executed: true }
+            result: { action: retryStrategy.action, executed: true },
+            error: undefined,
+            shouldRetry: undefined
           };
       }
     } catch (error) {
       return {
         success: false,
+        result: undefined,
         error: error instanceof Error ? error.message : 'Unknown error during tracking retry',
         shouldRetry: true
       };

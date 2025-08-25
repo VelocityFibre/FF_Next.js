@@ -3,11 +3,9 @@
  * Core recommendation generation logic
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import type { 
-  ComplianceInfo, 
-  RecommendationItem, 
-  RECOMMENDATION_THRESHOLDS 
+  ComplianceInfo
 } from './recommendation-types';
 
 export class CoreRecommendationEngine {
@@ -85,30 +83,30 @@ export class CoreRecommendationEngine {
     const recommendations: string[] = [];
 
     if (performance.onTimeDelivery < 90) { // RECOMMENDATION_THRESHOLDS.MIN_DELIVERY
-      recommendations.push('Improve delivery time consistency');
+      recommendations.push(`${supplier.name}: Improve delivery time consistency`);
       if (performance.onTimeDelivery < 75) {
-        recommendations.push('Implement delivery tracking and logistics optimization');
+        recommendations.push(`${supplier.name}: Implement delivery tracking and logistics optimization`);
       }
     }
 
     if (performance.qualityScore < 85) { // RECOMMENDATION_THRESHOLDS.MIN_QUALITY
-      recommendations.push('Enhance quality control processes');
+      recommendations.push(`${supplier.name}: Enhance quality control processes`);
       if (performance.qualityScore < 70) {
-        recommendations.push('Consider quality management system certification (ISO 9001)');
+        recommendations.push(`${supplier.name}: Consider quality management system certification (ISO 9001)`);
       }
     }
 
     if (performance.responseTime > 24) { // Assuming hours
-      recommendations.push('Improve response time to communications and requests');
+      recommendations.push(`${supplier.name}: Improve response time to communications and requests`);
       if (performance.responseTime > 48) {
-        recommendations.push('Establish dedicated communication protocols for urgent matters');
+        recommendations.push(`${supplier.name}: Establish dedicated communication protocols for urgent matters`);
       }
     }
 
     if (performance.issueResolution < 80) {
-      recommendations.push('Develop better issue resolution procedures');
+      recommendations.push(`${supplier.name}: Develop better issue resolution procedures`);
       if (performance.issueResolution < 60) {
-        recommendations.push('Implement escalation procedures for critical issues');
+        recommendations.push(`${supplier.name}: Implement escalation procedures for critical issues`);
       }
     }
 

@@ -133,13 +133,21 @@ export class BenchmarkReports {
       const recommendations = options.includeRecommendations ? 
         this.generateRecommendations(comparison) : [];
 
-      return {
+      const result: any = {
         summary,
         detailedComparison,
-        historicalTrends,
-        categoryRankings,
         recommendations
       };
+      
+      if (historicalTrends) {
+        result.historicalTrends = historicalTrends;
+      }
+      
+      if (categoryRankings) {
+        result.categoryRankings = categoryRankings;
+      }
+      
+      return result;
     } catch (error) {
       console.error('Error generating comparison report:', error);
       throw error;
@@ -335,7 +343,7 @@ export class BenchmarkReports {
     return recommendations;
   }
 
-  private static generateIndustryInsights(benchmarks: any, trends: BenchmarkTrendPoint[], categoryAnalysis: any): string[] {
+  private static generateIndustryInsights(_benchmarks: any, trends: BenchmarkTrendPoint[], categoryAnalysis: any): string[] {
     const insights: string[] = [];
     
     // Trend insights

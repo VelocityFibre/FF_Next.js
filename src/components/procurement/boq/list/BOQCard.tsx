@@ -134,19 +134,19 @@ export default function BOQCard({
                 </span>
               </div>
               
-              {(boq as any).mappingProgress !== undefined && (
+              {boq.itemCount > 0 && (
                 <div className="text-sm text-gray-500">
-                  {Math.round((boq as any).mappingProgress)}% mapped
+                  {Math.round((boq.mappedItems / boq.itemCount) * 100)}% mapped
                 </div>
               )}
             </div>
 
             {/* Progress Bar */}
-            {(boq as any).mappingProgress !== undefined && (
+            {boq.itemCount > 0 && (
               <div className="w-24 bg-gray-200 rounded-full h-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full"
-                  style={{ width: `${(boq as any).mappingProgress}%` }}
+                  style={{ width: `${Math.round((boq.mappedItems / boq.itemCount) * 100)}%` }}
                 />
               </div>
             )}

@@ -115,7 +115,7 @@ export function validateField(
       column: context.field,
       message: `${context.field} is required`
     });
-    return { success: false, errors, warnings, originalValue: value };
+    return { success: false, value: undefined, errors, warnings, originalValue: value };
   }
 
   // Handle empty values for non-required fields
@@ -141,7 +141,7 @@ export function validateField(
         column: context.field,
         message: `Transformation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       });
-      return { success: false, errors, warnings, originalValue: value };
+      return { success: false, value: undefined, errors, warnings, originalValue: value };
     }
   }
 
@@ -170,7 +170,7 @@ function validateConstraints(
   field: SchemaField,
   context: ValidationContext,
   errors: ImportError[],
-  warnings: ImportWarning[]
+  _warnings: ImportWarning[]
 ): void {
   const { constraints } = field.format;
   
@@ -312,10 +312,13 @@ export function generateSchemaFromData(
     const typeResult = detectDataType(samples);
     const requiredPercent = nonEmptySamples.length / sampleData.length;
     
+    // Map 'unknown' type to 'string' as fallback
+    const fieldType = typeResult.type === 'unknown' ? 'string' : typeResult.type;
+    
     const field: SchemaField = {
       name: header,
       format: {
-        type: typeResult.type,
+        type: fieldType as Exclude<typeof typeResult.type, 'unknown'>,
         required: inferRequired && requiredPercent > 0.8
       }
     };

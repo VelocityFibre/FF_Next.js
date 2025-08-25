@@ -5,9 +5,7 @@
 
 import {
   RAGScore,
-  RankedContractor,
-  ContractorAssignment,
-  ContractorTeam
+  RankedContractor
 } from '../types';
 import { DataRetrieval } from './dataRetrieval';
 import { ScoreCalculation } from './scoreCalculation';
@@ -51,7 +49,7 @@ export class RAGCore {
     // Calculate scores for valid data
     const validData = contractorData
       .filter(({ data }) => data !== null)
-      .map(({ contractorId, data }) => ({
+      .map(({ contractorId: _contractorId, data }) => ({
         contractor: data!.contractor,
         assignments: data!.assignments,
         teams: data!.teams

@@ -4,8 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { analyticsService } from '@/services/analytics/analyticsService';
-import { firebaseToNeonSync } from '@/services/sync/firebaseToNeonSync';
+import { analyticsService } from '@/services/analytics';
+import { FirebaseToNeonSync } from '@/services/sync';
 import { transformKPIDashboardItemsToMetrics } from '@/types/analytics';
 import {
   DashboardData,
@@ -24,6 +24,9 @@ export function AnalyticsDashboard() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
+  
+  // Create sync service instance
+  const firebaseToNeonSync = new FirebaseToNeonSync();
 
   // Load dashboard data
   const loadDashboardData = async () => {

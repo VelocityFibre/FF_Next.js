@@ -4,6 +4,7 @@
  */
 
 import { ImportError, ImportWarning, ParseResult, ValidationContext } from './parser-types';
+import { parseDate } from '../modules/validation-helpers';
 
 /**
  * Parse and validate a numeric value
@@ -98,11 +99,10 @@ export function parseNumber(
  */
 export function readString(
   value: any,
-  context: ValidationContext,
-  errors: ImportError[],
-  warnings: ImportWarning[]
+  _context: ValidationContext,
+  _errors: ImportError[],
+  _warnings: ImportWarning[]
 ): string | undefined {
-  const { row, field } = context;
 
   if (value === null || value === undefined) {
     return undefined;
@@ -112,113 +112,6 @@ export function readString(
   return stringValue || undefined;
 }
 
-/**
- * Parse and validate date values with multiple format support
- */
-export function parseDate(
-  value: any,
-  row: number,
-  field: string,
-  errors: ImportError[],
-  warnings: ImportWarning[],
-  required: boolean = false
-): Date | undefined {
-  if (value === null || value === undefined || value === '') {
-    if (required) {
-      errors.push({
-        type: 'validation',
-        row,
-        column: field,
-        message: `${field} is required`
-      });
-    }
-    return undefined;
-  }
-
-  // Handle Date objects
-  if (value instanceof Date) {
-    if (isNaN(value.getTime())) {
-      errors.push({
-        type: 'validation',
-        row,
-        column: field,
-        message: `Invalid date: ${value}`
-      });
-      return undefined;
-    }
-    return value;
-  }
-
-  // Handle string dates
-  if (typeof value === 'string') {
-    // Try parsing ISO format first
-    const isoDate = new Date(value);
-    if (!isNaN(isoDate.getTime())) {
-      return isoDate;
-    }
-
-    // Try common formats
-    const dateFormats = [
-      /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, // MM/DD/YYYY
-      /^(\d{1,2})-(\d{1,2})-(\d{4})$/, // MM-DD-YYYY
-      /^(\d{4})-(\d{1,2})-(\d{1,2})$/, // YYYY-MM-DD
-      /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/ // DD.MM.YYYY
-    ];
-
-    for (const format of dateFormats) {
-      const match = value.match(format);
-      if (match) {
-        let year, month, day;
-        
-        if (format.source.startsWith('^(\\d{4})')) {
-          // YYYY-MM-DD format
-          [, year, month, day] = match;
-        } else {
-          // MM/DD/YYYY or similar
-          [, month, day, year] = match;
-        }
-
-        const parsedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-        
-        if (!isNaN(parsedDate.getTime())) {
-          return parsedDate;
-        }
-      }
-    }
-
-    errors.push({
-      type: 'validation',
-      row,
-      column: field,
-      message: `Invalid date format: "${value}"`
-    });
-    return undefined;
-  }
-
-  // Handle numeric timestamps
-  if (typeof value === 'number') {
-    const date = new Date(value);
-    if (!isNaN(date.getTime())) {
-      return date;
-    }
-    
-    errors.push({
-      type: 'validation',
-      row,
-      column: field,
-      message: `Invalid timestamp: ${value}`
-    });
-    return undefined;
-  }
-
-  errors.push({
-    type: 'validation',
-    row,
-    column: field,
-    message: `Cannot parse ${typeof value} as date: "${value}"`
-  });
-  return undefined;
-}
 
 /**
  * Parse and validate boolean values

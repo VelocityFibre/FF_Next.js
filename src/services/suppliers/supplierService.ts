@@ -35,7 +35,7 @@ import type {
   SupplierStatus,
   SupplierRating,
   PerformancePeriod
-} from '@/types/supplier.types';
+} from '@/types/supplier/base.types';
 
 /**
  * @deprecated Use the new modular services for better type safety and organization

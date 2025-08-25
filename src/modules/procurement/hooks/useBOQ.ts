@@ -137,7 +137,8 @@ export function useCreateBOQTemplate() {
 export function useExportBOQ() {
   return useMutation({
     mutationFn: async (boq: any) => {
-      const blob = await boqService.exportToCsv(boq);
+      const csvData = await boqService.exportToCsv(boq);
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

@@ -36,8 +36,8 @@ export type { BOQ, BOQItem, BOQException } from '../neon/schema';
  * Legacy function to get all seed data (simplified version)
  * For full functionality, use the modular exports directly
  */
-export function getAllSeedData() {
-  const { SEED_BOQS, SEED_BOQ_ITEMS, SEED_BOQ_EXCEPTIONS } = require('./procurement');
+export async function getAllSeedData() {
+  const { SEED_BOQS, SEED_BOQ_ITEMS, SEED_BOQ_EXCEPTIONS } = await import('./procurement');
   
   return {
     boqs: SEED_BOQS,

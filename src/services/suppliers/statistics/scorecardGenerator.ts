@@ -3,7 +3,7 @@
  * Generate comprehensive supplier performance scorecards using modular approach
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   SupplierScorecard, 
   ScorecardGenerationOptions, 

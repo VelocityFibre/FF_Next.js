@@ -3,7 +3,7 @@
  * Handles competitive position analysis and market insights
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { ScorecardCalculator } from '../scorecardCalculator';
 import { BenchmarkCalculator } from './benchmarkCalculator';
 
@@ -13,7 +13,7 @@ export class CompetitiveAnalyzer {
    */
   static calculateCompetitivePosition(
     supplier: Supplier,
-    allSuppliers: Supplier[]
+    _allSuppliers: Supplier[]
   ): {
     rank: number;
     totalSuppliers: number;
@@ -24,15 +24,15 @@ export class CompetitiveAnalyzer {
     percentileRange: string;
   } {
     const supplierScore = ScorecardCalculator.calculateOverallScore(supplier);
-    const allScores = allSuppliers
-      .map(s => ({ 
+    const allScores = _allSuppliers
+      .map((s: Supplier) => ({ 
         id: s.id, 
         score: ScorecardCalculator.calculateOverallScore(s) 
       }))
-      .filter(s => s.score > 0)
+      .filter((s: { id: string; score: number }) => s.score > 0)
       .sort((a, b) => b.score - a.score); // Descending order
     
-    const rank = allScores.findIndex(s => s.id === supplier.id) + 1;
+    const rank = allScores.findIndex((s: { id: string; score: number }) => s.id === supplier.id) + 1;
     const totalSuppliers = allScores.length;
     
     // Calculate score gaps
@@ -61,7 +61,7 @@ export class CompetitiveAnalyzer {
    */
   static calculateMarketPositionInsights(
     supplier: Supplier,
-    allSuppliers: Supplier[]
+    _allSuppliers: Supplier[]
   ): {
     marketPosition: string;
     strengthAreas: string[];

@@ -36,7 +36,7 @@ export class SupplierStatisticsService {
             if (!categoryTotals[category]) {
               categoryTotals[category] = { total: 0, count: 0 };
             }
-            categoryTotals[category].total += rating.overall;
+            categoryTotals[category].total += rating.overall ?? 0;
             categoryTotals[category].count += 1;
           });
         }

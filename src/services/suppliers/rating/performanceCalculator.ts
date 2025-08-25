@@ -5,12 +5,12 @@
 
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { SupplierPerformance, PerformancePeriod } from '@/types/supplier.types';
-import { PerformanceTrendPoint, IPerformanceService } from './types';
+import { SupplierPerformance, PerformancePeriod } from '@/types/supplier/base.types';
+import { PerformanceTrendPoint } from './types';
 
 const COLLECTION_NAME = 'suppliers';
 
-export class SupplierPerformanceCalculator implements IPerformanceService {
+export class SupplierPerformanceCalculator {
   /**
    * Calculate comprehensive supplier performance metrics
    */
@@ -80,7 +80,7 @@ export class SupplierPerformanceCalculator implements IPerformanceService {
    * Generate mock performance metrics
    */
   static async generatePerformanceMetrics(
-    supplierId: string,
+    _supplierId: string,
     period: PerformancePeriod
   ): Promise<SupplierPerformance> {
     // This would typically aggregate real data from multiple sources

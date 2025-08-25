@@ -105,6 +105,8 @@ export interface FileInfo {
   type: string;
   estimatedRows: number;
   worksheets?: string[];
+  hasHeaders?: boolean;
+  columnCount?: number;
 }
 
 // Default column mapping configuration

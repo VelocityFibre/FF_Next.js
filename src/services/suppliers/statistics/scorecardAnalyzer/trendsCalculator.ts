@@ -3,10 +3,9 @@
  * Handles trends calculation and historical data analysis
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   SupplierTrends,
-  PEER_COMPARISON_THRESHOLDS
 } from '../scorecardTypes';
 import { ScorecardCalculator } from '../scorecardCalculator';
 

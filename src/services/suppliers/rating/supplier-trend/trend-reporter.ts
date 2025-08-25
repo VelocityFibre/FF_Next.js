@@ -138,8 +138,8 @@ export class SupplierTrendReporter {
     recommendations: string[];
   }> {
     try {
-      const ratingTrends = await SupplierRatingAnalyzer.analyzeRatingTrends(options.months);
-      const performanceTrends = await SupplierPerformanceTracker.getPerformanceTrends(options.months);
+      const ratingTrends = await SupplierRatingAnalyzer.analyzeRatingTrends(options.months || 12);
+      const performanceTrends = await SupplierPerformanceTracker.getPerformanceTrends(options.months || 12);
 
       // Calculate advanced metrics
       const trendMetrics = SupplierRatingAnalyzer.calculateTrendMetrics(ratingTrends);
@@ -213,12 +213,12 @@ export class SupplierTrendReporter {
    * Generate comprehensive key insights
    */
   private static generateKeyInsights(
-    ratingTrends: RatingTrend[],
-    performanceTrends: PerformanceTrend[],
+    _ratingTrends: RatingTrend[],
+    _performanceTrends: PerformanceTrend[],
     growthTrends: GrowthTrend[],
     metrics: any,
     correlations: any,
-    months: number
+    _months: number
   ): string[] {
     const insights: string[] = [];
 
@@ -269,7 +269,7 @@ export class SupplierTrendReporter {
     metrics: any,
     correlations: any,
     growthTrends: GrowthTrend[],
-    months: number
+    _months: number
   ): string[] {
     const recommendations: string[] = [];
 
@@ -346,10 +346,10 @@ export class SupplierTrendReporter {
    */
   private static generatePredictions(
     ratingTrends: RatingTrend[],
-    performanceTrends: PerformanceTrend[],
+    _performanceTrends: PerformanceTrend[],
     forecastMonths: number
   ): any[] {
-    const predictions = [];
+    const predictions: any[] = [];
     
     if (ratingTrends.length < 3) return predictions;
 

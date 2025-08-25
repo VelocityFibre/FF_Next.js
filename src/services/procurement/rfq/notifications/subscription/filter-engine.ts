@@ -102,7 +102,7 @@ export class RFQFilterEngine {
         const metrics = {
           totalRFQs: rfqs.length,
           activeRFQs: rfqs.filter(rfq => 
-            [RFQStatus.DRAFT, RFQStatus.ISSUED, RFQStatus.RESPONSES_RECEIVED].includes(rfq.status)
+            [RFQStatus.DRAFT, RFQStatus.ISSUED, RFQStatus.RESPONSES_RECEIVED].includes(rfq.status as RFQStatus)
           ).length,
           overdueRFQs: rfqs.filter(rfq => 
             rfq.responseDeadline && new Date(rfq.responseDeadline) < now
@@ -125,7 +125,7 @@ export class RFQFilterEngine {
       const metrics = {
         totalRFQs: rfqs.length,
         activeRFQs: rfqs.filter(rfq => 
-          [RFQStatus.DRAFT, RFQStatus.ISSUED, RFQStatus.RESPONSES_RECEIVED].includes(rfq.status)
+          [RFQStatus.DRAFT, RFQStatus.ISSUED, RFQStatus.RESPONSES_RECEIVED].includes(rfq.status as RFQStatus)
         ).length,
         overdueRFQs: rfqs.filter(rfq => 
           rfq.responseDeadline && new Date(rfq.responseDeadline) < now

@@ -25,6 +25,7 @@ export interface Supplier {
   taxNumber?: string;
   status: SupplierStatus;
   businessType: BusinessType;
+  category?: ProductCategory; // Single primary category
   categories: ProductCategory[];
   rating: number | {
     overall: number;
@@ -60,7 +61,12 @@ export interface Supplier {
   minimumOrderValue?: number;
   blacklisted?: boolean;
   blacklistReason?: string;
+  blacklistedAt?: Date | string;
+  blacklistedBy?: string;
+  inactiveReason?: string;
+  inactivatedAt?: Date | string;
   performance?: SupplierPerformance;
+  performanceMetrics?: SupplierPerformanceMetrics;
   contracts?: SupplierContract[];
   priceListIds?: string[];
   sla?: ServiceLevelAgreement;
@@ -89,6 +95,12 @@ export interface Supplier {
     vatRegistered?: boolean;
   };
   insuranceValid?: boolean; // Insurance status
+  
+  // Additional properties used by statistics and scorecard services
+  overallScore?: number; // Calculated overall performance score
+  yearsInBusiness?: number; // Years in business since establishment
+  lastContact?: Date | string; // Last contact date with supplier
+  isBlacklisted?: boolean; // Alias for blacklisted property
 }
 
 export interface ContactInfo {
@@ -113,6 +125,10 @@ export interface Address {
   state: string;
   postalCode: string;
   country: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export interface BankingInfo {
@@ -130,6 +146,8 @@ export interface ComplianceStatus {
   beeLevel?: number;
   isoCompliant?: boolean;
   isoCertifications?: string[];
+  documentsVerified?: boolean;
+  insuranceValid?: boolean;
   lastAuditDate?: Date | string;
   nextAuditDate?: Date | string;
 }
@@ -142,10 +160,14 @@ export interface SupplierDocument {
   expiryDate?: Date | string;
   uploadedDate: Date | string;
   uploadedBy: string;
+  status?: 'pending' | 'approved' | 'rejected' | 'expired';
+  verificationStatus?: 'verified' | 'pending' | 'rejected';
 }
 
 export interface Certification {
   name: string;
+  type?: string;
+  status?: string;
   issuingBody: string;
   certificateNumber: string;
   issueDate: Date | string;
@@ -225,5 +247,45 @@ export enum RevenueRange {
   OVER_100M = 'over_100m'
 }
 
-// Re-export from common for backwards compatibility
-export { PaymentTerms, Currency } from './common.types';
+// Additional performance metrics interface
+export interface SupplierPerformanceMetrics {
+  deliveryScore: number;
+  qualityScore: number;
+  priceScore: number;
+  serviceScore: number;
+  overallScore: number;
+}
+
+// Re-export from performance and common types for backwards compatibility
+export type { PaymentTerms, Currency } from './common.types';
+export type { 
+  SupplierPerformance, 
+  SupplierRating, 
+  SupplierReview,
+  PerformancePeriod,
+  ContractType,
+  ContractStatus,
+  IssueType
+} from './performance.types';
+
+// Additional types that might be needed
+export interface SupplierFormData {
+  id?: string;
+  name: string;
+  code?: string;
+  companyName?: string;
+  email: string;
+  phone: string;
+  status: SupplierStatus;
+  businessType: BusinessType;
+  categories: ProductCategory[];
+  addresses: {
+    physical: Address;
+    postal?: Address;
+    billing?: Address;
+  };
+  primaryContact: ContactInfo;
+  registrationNumber?: string;
+  taxNumber?: string;
+  notes?: string;
+}

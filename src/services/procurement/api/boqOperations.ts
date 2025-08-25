@@ -5,7 +5,7 @@
 
 import { BaseService, type ServiceResponse } from '../../core/BaseService';
 import { ProcurementError, RFQValidationError } from '../procurementErrors';
-import { validateSchema, ProcurementSchemas } from '@/lib/validation/procurement.schemas';
+import { validateSchema, ProcurementSchemas } from '@/lib/validation';
 import { auditLogger } from '../auditLogger';
 import { db } from '@/lib/neon/connection';
 import { boqs, boqItems, boqExceptions } from '@/lib/neon/schema';

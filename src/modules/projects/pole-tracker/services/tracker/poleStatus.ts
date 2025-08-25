@@ -5,7 +5,7 @@
 
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { Pole, PoleStatusHistory, POLE_COLLECTION } from './types';
+import { PoleStatusHistory, POLE_COLLECTION } from './types';
 
 export class PoleStatusService {
   /**

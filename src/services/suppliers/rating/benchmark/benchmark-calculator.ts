@@ -8,8 +8,7 @@ import {
   PerformanceMetrics, 
   BenchmarkData, 
   CategoryStats, 
-  BenchmarkCalculationParams,
-  PerformanceContext 
+  BenchmarkCalculationParams
 } from './benchmark-types';
 
 /**
@@ -171,7 +170,7 @@ export class BenchmarkCalculator {
       const allSuppliers = await SupplierCrudService.getAll();
       const categorySuppliers = allSuppliers.filter(supplier => 
         supplier.status === 'active' && 
-        supplier.categories?.includes(category) &&
+        supplier.categories?.some(cat => cat.toString() === category.toString()) &&
         supplier.performance
       );
 

@@ -3,11 +3,17 @@
 
 const https = require('https');
 
-const API_KEY = 'AIzaSyDvW-ImXptnYIX7IDR78pdruw9BAp5A8Q8';
-const PROJECT_ID = 'fibreflow-292c7';
+const API_KEY = process.env.VITE_FIREBASE_API_KEY || (() => {
+  console.error('ERROR: VITE_FIREBASE_API_KEY environment variable not set');
+  process.exit(1);
+})();
+const PROJECT_ID = process.env.VITE_FIREBASE_PROJECT_ID || (() => {
+  console.error('ERROR: VITE_FIREBASE_PROJECT_ID environment variable not set');
+  process.exit(1);
+})();
 
 console.log('Testing Firebase APIs for project:', PROJECT_ID);
-console.log('Using API Key:', API_KEY);
+console.log('Using API Key:', API_KEY.substring(0, 10) + '...' + API_KEY.slice(-4));
 console.log('-----------------------------------\n');
 
 // Test 1: Identity Toolkit API (Authentication)

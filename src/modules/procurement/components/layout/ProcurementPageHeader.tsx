@@ -1,7 +1,8 @@
 // import React from 'react'; // Not used in this component
 import { Link } from 'react-router-dom';
 import { ChevronRight, HelpCircle, Settings, Plus } from 'lucide-react';
-import type { ProcurementBreadcrumb, ProcurementPermissions } from '../../types';
+import type { ProcurementPermissions } from '@/types/procurement/portal.types';
+import type { ProcurementBreadcrumb } from '../../types';
 
 interface ProcurementPageHeaderProps {
   title: string;

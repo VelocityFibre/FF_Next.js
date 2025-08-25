@@ -14,6 +14,7 @@ export enum ProcurementPermission {
   BOQ_IMPORT = 'boq:import',
   BOQ_EXPORT = 'boq:export',
   BOQ_MAPPING = 'boq:mapping',
+  BOQ_BULK_UPDATE = 'boq:bulk_update',
 
   // RFQ Permissions
   RFQ_READ = 'rfq:read',

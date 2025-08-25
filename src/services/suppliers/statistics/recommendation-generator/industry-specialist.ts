@@ -3,7 +3,7 @@
  * Industry-specific recommendation generation
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import type { 
   RecommendationItem, 
   INDUSTRY_CATEGORIES 
@@ -56,7 +56,7 @@ export class RecommendationIndustrySpecialist {
   /**
    * Get technology sector recommendations
    */
-  private static getTechnologyRecommendations(supplier: Supplier, benchmarks?: any): string[] {
+  private static getTechnologyRecommendations(supplier: Supplier, _benchmarks?: any): string[] {
     const recommendations: string[] = [];
 
     recommendations.push('Consider obtaining cybersecurity certifications (ISO 27001, SOC 2)');
@@ -79,7 +79,7 @@ export class RecommendationIndustrySpecialist {
   /**
    * Get construction sector recommendations
    */
-  private static getConstructionRecommendations(supplier: Supplier, benchmarks?: any): string[] {
+  private static getConstructionRecommendations(supplier: Supplier, _benchmarks?: any): string[] {
     const recommendations: string[] = [];
 
     recommendations.push('Ensure safety certifications are up to date (OSHA, local safety standards)');
@@ -99,7 +99,7 @@ export class RecommendationIndustrySpecialist {
   /**
    * Get manufacturing sector recommendations
    */
-  private static getManufacturingRecommendations(supplier: Supplier, benchmarks?: any): string[] {
+  private static getManufacturingRecommendations(supplier: Supplier, _benchmarks?: any): string[] {
     const recommendations: string[] = [];
 
     recommendations.push('Consider lean manufacturing principles implementation');
@@ -119,7 +119,7 @@ export class RecommendationIndustrySpecialist {
   /**
    * Get professional services recommendations
    */
-  private static getProfessionalServicesRecommendations(supplier: Supplier, benchmarks?: any): string[] {
+  private static getProfessionalServicesRecommendations(supplier: Supplier, _benchmarks?: any): string[] {
     const recommendations: string[] = [];
 
     recommendations.push('Develop specialized expertise in niche areas');
@@ -139,7 +139,7 @@ export class RecommendationIndustrySpecialist {
   /**
    * Get logistics sector recommendations
    */
-  private static getLogisticsRecommendations(supplier: Supplier, benchmarks?: any): string[] {
+  private static getLogisticsRecommendations(supplier: Supplier, _benchmarks?: any): string[] {
     const recommendations: string[] = [];
 
     recommendations.push('Implement real-time tracking and visibility systems');
@@ -159,7 +159,7 @@ export class RecommendationIndustrySpecialist {
   /**
    * Get healthcare sector recommendations
    */
-  private static getHealthcareRecommendations(supplier: Supplier, benchmarks?: any): string[] {
+  private static getHealthcareRecommendations(supplier: Supplier, _benchmarks?: any): string[] {
     const recommendations: string[] = [];
 
     recommendations.push('Ensure HIPAA compliance and data security measures');
@@ -200,7 +200,7 @@ export class RecommendationIndustrySpecialist {
    */
   static generateIndustryPriorityRecommendations(
     supplier: Supplier,
-    overallScore: number
+    _overallScore: number
   ): RecommendationItem[] {
     const recommendations: RecommendationItem[] = [];
     const categories = supplier.categories || [];
@@ -262,7 +262,7 @@ export class RecommendationIndustrySpecialist {
     Object.entries(industryAverages).forEach(([metric, average]) => {
       if (supplierScore < average - 5) {
         recommendations.push(
-          `Improve ${metric} performance - currently below industry average (${average}%)`
+          `${supplier.name}: Improve ${metric} performance - currently below industry average (${average}%)`
         );
       }
     });

@@ -6,26 +6,19 @@
 import { 
   collection, 
   doc, 
-  getDocs, 
   getDoc, 
   addDoc, 
   updateDoc, 
   deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit, 
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '../../../../../config/firebase';
 import { 
   Project, 
   CreateProjectRequest, 
   UpdateProjectRequest,
-  ProjectListQuery,
   ProjectStatus
 } from '../../../types/project.types';
-import { ProjectQueryResult } from '../types/service.types';
 
 const COLLECTION_NAME = 'projects';
 

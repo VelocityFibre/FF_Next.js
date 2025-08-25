@@ -12,9 +12,9 @@ import { PermissionErrorOptions } from './types';
 export class ProcurementPermissionError extends ProcurementError {
   public readonly requiredPermission: string;
   public readonly userPermissions: string[];
-  public readonly resourceType?: string;
-  public readonly resourceId?: string;
-  public readonly operation?: string;
+  public readonly resourceType?: string | undefined;
+  public readonly resourceId?: string | undefined;
+  public readonly operation?: string | undefined;
 
   constructor(
     requiredPermission: string,
@@ -35,9 +35,9 @@ export class ProcurementPermissionError extends ProcurementError {
     this.name = 'ProcurementPermissionError';
     this.requiredPermission = requiredPermission;
     this.userPermissions = userPermissions;
-    this.resourceType = options?.resourceType;
-    this.resourceId = options?.resourceId;
-    this.operation = options?.operation;
+    this.resourceType = options?.resourceType || undefined;
+    this.resourceId = options?.resourceId || undefined;
+    this.operation = options?.operation || undefined;
     Object.setPrototypeOf(this, ProcurementPermissionError.prototype);
   }
 

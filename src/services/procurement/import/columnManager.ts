@@ -5,9 +5,9 @@
 
 import type { 
   ColumnMapping, 
-  DEFAULT_COLUMN_MAPPING, 
   ImportWarning 
 } from './importTypes';
+import { DEFAULT_COLUMN_MAPPING } from './importTypes';
 import { detectColumnMapping } from './columnMapping';
 
 export class ColumnManager {

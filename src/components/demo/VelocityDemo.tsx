@@ -136,7 +136,7 @@ export const VelocityDemo: React.FC = () => {
                   variant="glass"
                   placeholder="Enter your text"
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
                 />
 
                 <VelocityInput

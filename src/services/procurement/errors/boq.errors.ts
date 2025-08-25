@@ -125,7 +125,7 @@ export class BOQImportError extends BOQError {
     fileSize: number;
     totalRows: number;
     processedRows: number;
-  };
+  } | undefined;
 
   constructor(
     message: string,
@@ -146,7 +146,7 @@ export class BOQImportError extends BOQError {
     super(message, 'BOQ_IMPORT_FAILED', 400, context);
     this.name = 'BOQImportError';
     this.importErrors = importErrors;
-    this.fileInfo = fileInfo;
+    this.fileInfo = fileInfo || undefined;
     Object.setPrototypeOf(this, BOQImportError.prototype);
   }
 
@@ -154,7 +154,7 @@ export class BOQImportError extends BOQError {
     return {
       ...super.toJSON(),
       importErrors: this.importErrors,
-      fileInfo: this.fileInfo,
+      fileInfo: this.fileInfo || undefined,
       errorCount: this.importErrors.filter(e => e.severity === 'error').length,
       warningCount: this.importErrors.filter(e => e.severity === 'warning').length
     };

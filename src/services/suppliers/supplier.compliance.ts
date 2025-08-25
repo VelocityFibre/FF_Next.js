@@ -11,7 +11,7 @@ export * from './compliance';
 // Import services for legacy class compatibility
 import { 
   ComplianceCore,
-  DocumentManager,
+  // DocumentManager, // Removed unused import
   ComplianceAuditService,
   ComplianceReportGenerator,
   RequirementsManager,
@@ -19,7 +19,7 @@ import {
   ComplianceStatus,
   DocumentVerificationResult,
   ComplianceAuditResult,
-  ComplianceReport
+  ComplianceReport as NewComplianceReport
 } from './compliance';
 
 /**
@@ -90,7 +90,7 @@ export class SupplierComplianceService {
    * Generate compliance report
    * @deprecated Use ComplianceReportGenerator.generateComplianceReport() instead
    */
-  static async generateComplianceReport(supplierId: string): Promise<ComplianceReport> {
+  static async generateComplianceReport(supplierId: string): Promise<NewComplianceReport> {
     return ComplianceReportGenerator.generateComplianceReport(supplierId);
   }
 }

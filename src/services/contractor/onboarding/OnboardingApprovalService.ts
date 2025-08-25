@@ -140,7 +140,7 @@ export class OnboardingApprovalService {
   /**
    * Get approval history for a contractor
    */
-  async getApprovalHistory(contractorId: string): Promise<Array<{
+  async getApprovalHistory(_contractorId: string): Promise<Array<{
     action: 'approved' | 'rejected' | 'submitted';
     timestamp: Date;
     by?: string;

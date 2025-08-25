@@ -79,7 +79,7 @@ export class OnboardingValidationService {
   /**
    * Validate specific onboarding stage
    */
-  async validateStage(contractorId: string, stageId: string): Promise<OnboardingValidationResult> {
+  async validateStage(_contractorId: string, _stageId: string): Promise<OnboardingValidationResult> {
     const validationErrors: string[] = [];
     const validationWarnings: string[] = [];
 

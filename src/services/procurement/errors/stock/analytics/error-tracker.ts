@@ -60,18 +60,19 @@ export class ErrorTracker {
     itemCodeCounts: Map<string, ItemErrorData>,
     itemErrorPairs: Map<string, Set<string>>
   ): void {
-    if ('itemCode' in error && error.itemCode) {
-      const current = itemCodeCounts.get(error.itemCode) || { count: 0, errorTypes: new Set() };
+    if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
+      const itemCode = error.itemCode as string;
+      const current = itemCodeCounts.get(itemCode) || { count: 0, errorTypes: new Set() };
       current.count++;
       current.errorTypes.add(error.constructor.name);
-      itemCodeCounts.set(error.itemCode, current);
+      itemCodeCounts.set(itemCode, current);
 
       // Track item-error type pairs for correlation analysis
       const errorType = error.constructor.name;
-      if (!itemErrorPairs.has(error.itemCode)) {
-        itemErrorPairs.set(error.itemCode, new Set());
+      if (!itemErrorPairs.has(itemCode)) {
+        itemErrorPairs.set(itemCode, new Set());
       }
-      itemErrorPairs.get(error.itemCode)!.add(errorType);
+      itemErrorPairs.get(itemCode)!.add(errorType);
     }
   }
 
@@ -91,11 +92,11 @@ export class ErrorTracker {
     error: StockError, 
     locationCounts: Map<string, LocationErrorData>
   ): void {
-    let location = null;
-    if ('location' in error && error.location) {
-      location = error.location;
-    } else if ('fromLocation' in error && error.fromLocation) {
-      location = error.fromLocation;
+    let location: string | null = null;
+    if ('location' in error && error.location && typeof error.location === 'string') {
+      location = error.location as string;
+    } else if ('fromLocation' in error && error.fromLocation && typeof error.fromLocation === 'string') {
+      location = error.fromLocation as string;
     }
 
     if (location) {
@@ -109,7 +110,7 @@ export class ErrorTracker {
   /**
    * Track time distribution (basic hourly tracking)
    */
-  private static trackTimeDistribution(error: StockError, hourCounts: Map<number, number>): void {
+  private static trackTimeDistribution(_error: StockError, hourCounts: Map<number, number>): void {
     // Would need actual timestamp data from error
     const hour = new Date().getHours();
     const currentHour = hourCounts.get(hour) || 0;
@@ -240,12 +241,12 @@ export class ErrorTracker {
    * Extract location from error
    */
   static extractErrorLocation(error: StockError): string | null {
-    if ('location' in error && error.location) {
-      return error.location;
-    } else if ('fromLocation' in error && error.fromLocation) {
-      return error.fromLocation;
-    } else if ('toLocation' in error && error.toLocation) {
-      return error.toLocation;
+    if ('location' in error && error.location && typeof error.location === 'string') {
+      return error.location as string;
+    } else if ('fromLocation' in error && error.fromLocation && typeof error.fromLocation === 'string') {
+      return error.fromLocation as string;
+    } else if ('toLocation' in error && error.toLocation && typeof error.toLocation === 'string') {
+      return error.toLocation as string;
     }
     return null;
   }
@@ -254,8 +255,8 @@ export class ErrorTracker {
    * Extract item code from error
    */
   static extractItemCode(error: StockError): string | null {
-    if ('itemCode' in error && error.itemCode) {
-      return error.itemCode;
+    if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
+      return error.itemCode as string;
     }
     return null;
   }

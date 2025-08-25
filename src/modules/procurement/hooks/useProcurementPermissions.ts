@@ -1,22 +1,31 @@
 import { useMemo } from 'react';
+import type { ProcurementPermissions } from '@/types/procurement/portal.types';
 // import { useAuth } from '@/contexts/AuthContext'; // Will be implemented
 
 /**
  * Hook for procurement-specific permissions
  * Following the spec's RBAC requirements
  */
-export function useProcurementPermissions(projectId?: string) {
+export function useProcurementPermissions(projectId?: string): ProcurementPermissions {
   // Mock permissions - will be replaced with real auth integration
   const mockPermissions = {
     canViewBOQ: true,
     canEditBOQ: true,
+    canViewRFQ: true,
     canCreateRFQ: true,
+    canViewQuotes: true,
     canEvaluateQuotes: true,
+    canViewPurchaseOrders: true,
+    canCreatePurchaseOrders: true,
     canAccessStock: true,
     canApproveOrders: true,
-    canManageSuppliers: true,
     canAccessReports: true,
-    approvalLimit: { amount: 100000, currency: 'ZAR' }
+    canViewSuppliers: true,
+    canEditSuppliers: true,
+    canManageStock: true,
+    canManageSuppliers: true,
+    role: 'admin' as const,
+    approvalLimit: 1000000
   };
 
   return useMemo(() => {
@@ -24,13 +33,21 @@ export function useProcurementPermissions(projectId?: string) {
       return {
         canViewBOQ: false,
         canEditBOQ: false,
+        canViewRFQ: false,
         canCreateRFQ: false,
+        canViewQuotes: false,
         canEvaluateQuotes: false,
+        canViewPurchaseOrders: false,
+        canCreatePurchaseOrders: false,
         canAccessStock: false,
         canApproveOrders: false,
-        canManageSuppliers: false,
         canAccessReports: false,
-        approvalLimit: { amount: 0, currency: 'ZAR' }
+        canViewSuppliers: false,
+        canEditSuppliers: false,
+        canManageStock: false,
+        canManageSuppliers: false,
+        role: 'viewer' as const,
+        approvalLimit: 0
       };
     }
 

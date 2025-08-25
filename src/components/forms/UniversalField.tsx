@@ -205,11 +205,11 @@ function getNestedError(errors: FieldErrors | undefined, name: string): FieldErr
   if (!errors) return null;
   
   const keys = name.split('.');
-  let current: any = errors;
+  let current: Record<string, unknown> = errors;
   
   for (const key of keys) {
     if (current[key] === undefined) return null;
-    current = current[key];
+    current = current[key] as Record<string, unknown>;
   }
   
   return current as FieldError;

@@ -23,7 +23,7 @@ export class DataProcessor {
     rowIndex: number,
     columnMapping: ColumnMapping
   ): {
-    validItem?: ParsedBOQItem;
+    validItem: ParsedBOQItem | undefined;
     errors: ImportError[];
     warnings: ImportWarning[];
     success: boolean;

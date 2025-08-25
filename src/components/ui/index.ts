@@ -22,7 +22,7 @@ export {
 export { 
   VelocityInput, 
   velocityInputVariants 
-} from './VelocityInput';
+} from './VelocityInput/index';
 
 export { 
   VelocitySpinner, 
@@ -43,7 +43,7 @@ export type { TableColumn } from './StandardDataTable';
 // VELOCITY Premium UI Component Types
 export type { GlassCardProps } from './GlassCard';
 export type { VelocityButtonProps } from './VelocityButton';
-export type { VelocityInputProps } from './VelocityInput';
+export type { VelocityInputProps } from './VelocityInput/index';
 export type { VelocitySpinnerProps } from './VelocitySpinner';
 export type { 
   PageTransitionProps, 

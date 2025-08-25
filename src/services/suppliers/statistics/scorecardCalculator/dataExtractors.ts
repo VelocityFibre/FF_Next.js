@@ -3,7 +3,7 @@
  * Handles extraction and validation of supplier data components
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   SupplierRatings, 
   SupplierPerformance, 
@@ -80,12 +80,23 @@ export class DataExtractors {
       };
     }
     
-    const score = ValidationUtils.validatePercentageValue(compliance.complianceScore);
+    // Calculate compliance score based on available properties
+    const complianceFlags = [
+      compliance?.taxCompliant,
+      compliance?.beeCompliant,
+      compliance?.isoCompliant,
+      compliance?.documentsVerified,
+      compliance?.insuranceValid
+    ].filter(flag => flag !== undefined);
+    
+    const trueFlags = complianceFlags.filter(flag => flag === true).length;
+    const calculatedScore = complianceFlags.length > 0 ? (trueFlags / complianceFlags.length) * 100 : 0;
+    const score = ValidationUtils.validatePercentageValue(calculatedScore);
     
     return {
       score,
       status: this.determineComplianceStatus(score),
-      lastCheck: compliance.lastComplianceCheck || new Date()
+      lastCheck: compliance?.lastAuditDate ? new Date(compliance.lastAuditDate) : new Date()
     };
   }
 
@@ -129,7 +140,18 @@ export class DataExtractors {
       return 0;
     }
     
-    return ValidationUtils.validatePercentageValue(compliance.complianceScore);
+    // Calculate compliance score based on available properties
+    const complianceFlags = [
+      compliance?.taxCompliant,
+      compliance?.beeCompliant,
+      compliance?.isoCompliant,
+      compliance?.documentsVerified,
+      compliance?.insuranceValid
+    ].filter(flag => flag !== undefined);
+    
+    const trueFlags = complianceFlags.filter(flag => flag === true).length;
+    const calculatedScore = complianceFlags.length > 0 ? (trueFlags / complianceFlags.length) * 100 : 0;
+    return ValidationUtils.validatePercentageValue(calculatedScore);
   }
 
   /**

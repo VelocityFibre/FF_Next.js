@@ -5,7 +5,7 @@
  * New code should import from '../scorecard-service' directly
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierScorecard } from '../types';
 import {
   ScorecardBatchProcessor,
@@ -19,7 +19,6 @@ import {
 import { ScoreCalculator } from './scoreCalculator';
 import { BenchmarkCalculator } from './benchmarkCalculator';
 import { RecommendationGenerator } from './recommendationGenerator';
-import { SupplierUtils } from './utils';
 
 export class ScorecardService {
   /**

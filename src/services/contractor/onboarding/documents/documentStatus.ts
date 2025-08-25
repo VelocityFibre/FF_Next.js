@@ -3,7 +3,7 @@
  * Handles document status tracking and reporting
  */
 
-import { ContractorDocument, DocumentType } from '@/types/contractor.types';
+// import { ContractorDocument } from '@/types/contractor.types'; // Unused
 import { getRequiredDocumentTypes } from '../stageDefinitions';
 import { DocumentQuery } from './documentQuery';
 
@@ -24,7 +24,7 @@ export class DocumentStatus {
     completionPercentage: number;
   }> {
     const documents = await DocumentQuery.getContractorDocuments(contractorId);
-    const requiredDocs = getRequiredDocumentTypes();
+    const requiredDocs = getRequiredDocumentTypes('');
     
     const uploaded = documents.length;
     const verified = documents.filter(d => d.verificationStatus === 'verified').length;
@@ -52,7 +52,7 @@ export class DocumentStatus {
   /**
    * Generate document checklist for contractor
    */
-  static generateDocumentChecklist(contractorId: string): Promise<{
+  static generateDocumentChecklist(_contractorId: string): Promise<{
     stageId: string;
     stageName: string;
     documents: {

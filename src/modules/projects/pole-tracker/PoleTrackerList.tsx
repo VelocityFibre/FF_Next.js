@@ -66,13 +66,13 @@ export function PoleTrackerList() {
         actions={[
           {
             label: 'Add Pole',
-            icon: Plus,
+            icon: ({ className }: { className?: string }) => <Plus className={className} />,
             onClick: () => navigate('/app/pole-tracker/new'),
             variant: 'primary'
           },
           {
             label: 'Import',
-            icon: Download,
+            icon: ({ className }: { className?: string }) => <Download className={className} />,
             onClick: () => navigate('/app/pole-tracker/import'),
             variant: 'secondary'
           }

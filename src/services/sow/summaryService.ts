@@ -6,7 +6,7 @@
 import { createNeonClient } from '@/lib/neon-sql';
 import { getTableName } from './schema';
 
-const { sql, query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
+const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
 /**
  * SOW project summary service

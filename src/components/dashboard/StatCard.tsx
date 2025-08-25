@@ -4,6 +4,7 @@
 
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { memo, useCallback } from 'react';
 import { cn } from '@/utils/cn';
 
 interface StatCardProps {
@@ -19,7 +20,7 @@ interface StatCardProps {
   onClick?: (() => void) | undefined;
 }
 
-export function StatCard({
+const StatCardComponent = ({
   title,
   subtitle,
   value,
@@ -30,16 +31,16 @@ export function StatCard({
   className,
   style,
   onClick
-}: StatCardProps) {
+}: StatCardProps) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (onClick) {
       onClick();
     } else if (route) {
       navigate(route);
     }
-  };
+  }, [onClick, route, navigate]);
 
   return (
     <div
@@ -101,4 +102,7 @@ export function StatCard({
       <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent group-hover:from-white/5 group-hover:to-transparent transition-all duration-200 pointer-events-none" />
     </div>
   );
-}
+};
+
+// Export memoized version for performance
+export const StatCard = memo(StatCardComponent);

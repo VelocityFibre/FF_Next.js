@@ -14,7 +14,7 @@ interface BOQViewerTableRowProps {
   visibleColumns: VisibleColumns;
   onStartEdit: (item: BOQItem) => void;
   onCancelEdit: (itemId: string) => void;
-  onUpdateEdit: (itemId: string, field: keyof BOQItem, value: any) => void;
+  onUpdateEdit: (itemId: string, field: keyof BOQItem, value: unknown) => void;
   onSaveEdit: (itemId: string) => void;
   isSaving: boolean;
 }

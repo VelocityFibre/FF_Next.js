@@ -2,40 +2,34 @@
  * Supplier Compliance Types and Interfaces
  */
 
+import { 
+  SupplierDocument as BaseSupplierDocument, 
+  ComplianceStatus as BaseComplianceStatus
+} from '../../../types/supplier/base.types';
+
 /**
- * Document types for supplier compliance
+ * Extended document types for supplier compliance - extends base type
  */
-export interface SupplierDocument {
-  id: string;
-  name: string;
-  type: 'tax_clearance' | 'bee_certificate' | 'insurance' | 'registration' | 'contract' | 'other';
-  url: string;
-  uploadedAt: Date;
-  uploadedBy: string;
-  expiryDate?: Date;
-  verified: boolean;
-  verifiedAt?: Date;
+export interface SupplierDocument extends BaseSupplierDocument {
+  verified?: boolean;
+  verifiedAt?: Date | string;
   verifiedBy?: string;
   fileSize?: number;
   mimeType?: string;
 }
 
 /**
- * Compliance status interface
+ * Extended compliance status interface - extends base type
  */
-export interface ComplianceStatus {
-  taxCompliant: boolean;
-  taxClearanceExpiry?: Date;
-  beeCompliant: boolean;
-  beeLevel?: number;
-  beeCertificateExpiry?: Date;
-  insuranceValid: boolean;
-  insuranceExpiry?: Date;
-  registrationValid: boolean;
-  registrationExpiry?: Date;
-  documentsComplete: boolean;
-  lastComplianceCheck?: Date;
-  complianceScore: number; // 0-100
+export interface ComplianceStatus extends BaseComplianceStatus {
+  taxClearanceExpiry?: Date | string;
+  beeCertificateExpiry?: Date | string;
+  insuranceExpiry?: Date | string;
+  registrationValid?: boolean;
+  registrationExpiry?: Date | string;
+  documentsComplete?: boolean;
+  lastComplianceCheck?: Date | string;
+  complianceScore?: number; // 0-100
 }
 
 /**
@@ -87,7 +81,7 @@ export interface ComplianceReport {
   }>;
   recommendations: string[];
   lastUpdated: Date;
-  overallStatus: 'compliant' | 'non_compliant' | 'pending' | 'expired';
+  overallStatus: 'compliant' | 'partial' | 'non-compliant';
 }
 
 /**

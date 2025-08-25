@@ -3,7 +3,7 @@
  * Main access control logic and validation
  */
 
-import { ProjectAccessLevel, UserProjectAccess, ProjectInfo, ProjectWithAccess, AccessOperation, ProjectScopeConditions } from './types';
+import { ProjectAccessLevel, UserProjectAccess, ProjectWithAccess, AccessOperation, ProjectScopeConditions } from './types';
 import { ProjectAccessCache } from './cache';
 import { ProjectAccessValidator } from './validator';
 import { ProjectAccessDataService } from './dataService';
@@ -30,7 +30,7 @@ export class ProjectAccessController {
       if (!validation.isValid) {
         return {
           success: false,
-          error: validation.error,
+          error: validation.error || 'Invalid parameters',
           code: 'INVALID_PARAMETERS'
         };
       }
@@ -40,8 +40,8 @@ export class ProjectAccessController {
       if (!userAccess.success) {
         return {
           success: false,
-          error: userAccess.error,
-          code: userAccess.code
+          error: userAccess.error || 'Access denied',
+          code: userAccess.code || 'ACCESS_DENIED'
         };
       }
 
@@ -138,10 +138,10 @@ export class ProjectAccessController {
           `project:${operation}`,
           [],
           {
-            projectId,
-            userId,
-            operation,
-            requiredAccessLevel: requiredLevel
+            resourceType: 'project',
+            resourceId: projectId,
+            operation: operation,
+            customMessage: `User ${userId} lacks required access level ${requiredLevel}`
           }
         );
       }

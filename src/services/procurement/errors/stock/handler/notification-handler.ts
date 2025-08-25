@@ -3,7 +3,7 @@
  * Handles error notifications and escalation
  */
 
-import { RecoveryOption, ErrorHandlerConfig } from './handler-types';
+import { RecoveryOption } from './handler-types';
 
 interface NotificationConfig {
   email: {
@@ -145,7 +145,7 @@ export class NotificationHandler {
    * Determine if error should trigger escalation
    */
   static shouldEscalate({
-    error,
+    error: _error,
     severity,
     attemptCount,
     timeElapsed
@@ -194,7 +194,7 @@ export class NotificationHandler {
     console.log('Sending email notification:', emailContent);
   }
 
-  private static async sendSMSNotification(error: any, severity: string): Promise<void> {
+  private static async sendSMSNotification(error: any, _severity: string): Promise<void> {
     const message = `CRITICAL STOCK ERROR: ${error.constructor.name} - Item: ${error.itemCode || 'N/A'} - Immediate attention required`;
     
     // Mock SMS sending - would integrate with SMS service

@@ -146,7 +146,7 @@ export class HybridCoordinator {
 
       // Sync clients
       const clientSyncPromises = clients.map(client =>
-        this.neonAnalytics.syncClientToAnalytics(client.id, client)
+        client.id ? this.neonAnalytics.syncClientToAnalytics(client.id, client) : Promise.resolve()
       );
 
       // Wait for all syncs to complete (with error tolerance)

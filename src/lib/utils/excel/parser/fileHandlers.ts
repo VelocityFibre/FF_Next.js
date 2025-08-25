@@ -4,7 +4,7 @@
  */
 
 import * as XLSX from 'xlsx';
-import Papa from 'papaparse';
+import * as Papa from 'papaparse';
 import { ProgressCallback } from './types';
 
 export class ExcelFileHandler {

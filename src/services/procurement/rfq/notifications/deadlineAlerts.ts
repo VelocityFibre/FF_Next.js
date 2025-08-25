@@ -8,10 +8,38 @@ import {
   query,
   where,
   orderBy,
-  onSnapshot
+  onSnapshot,
+  Timestamp
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
+
+/**
+ * Utility to convert Timestamp or Date to Date object
+ */
+function toDate(timestampOrDate: Date | Timestamp | any): Date {
+  if (!timestampOrDate) {
+    return new Date();
+  }
+  
+  // If it's already a Date, return it
+  if (timestampOrDate instanceof Date) {
+    return timestampOrDate;
+  }
+  
+  // If it's a Firestore Timestamp, convert it
+  if (timestampOrDate && typeof timestampOrDate.toDate === 'function') {
+    return timestampOrDate.toDate();
+  }
+  
+  // If it's a timestamp number, convert it
+  if (typeof timestampOrDate === 'number') {
+    return new Date(timestampOrDate);
+  }
+  
+  // Fallback: try to parse as date
+  return new Date(timestampOrDate);
+}
 
 const COLLECTION_NAME = 'rfqs';
 
@@ -65,12 +93,12 @@ export class RFQDeadlineAlerts {
       const oneDayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
 
       const expiringSoon = rfqs.filter(rfq => {
-        const deadline = rfq.responseDeadline?.toDate();
+        const deadline = toDate(rfq.responseDeadline);
         return deadline && deadline > now && deadline <= oneDayFromNow;
       });
 
       const overdue = rfqs.filter(rfq => {
-        const deadline = rfq.responseDeadline?.toDate();
+        const deadline = toDate(rfq.responseDeadline);
         return deadline && deadline <= now;
       });
 
@@ -91,7 +119,7 @@ export class RFQDeadlineAlerts {
     const alerts: DeadlineAlert[] = [];
 
     rfqs.forEach(rfq => {
-      const deadline = rfq.responseDeadline?.toDate();
+      const deadline = toDate(rfq.responseDeadline);
       if (!deadline) return;
 
       const hoursRemaining = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
@@ -218,7 +246,7 @@ export class RFQDeadlineAlerts {
     let dueThisWeek = 0;
 
     rfqs.forEach(rfq => {
-      const deadline = rfq.responseDeadline?.toDate();
+      const deadline = toDate(rfq.responseDeadline);
       if (!deadline) return;
 
       if (deadline < today) {
@@ -302,7 +330,7 @@ export class RFQDeadlineAlerts {
     reason: string;
   } {
     const now = new Date();
-    const deadline = rfq.responseDeadline?.toDate();
+    const deadline = toDate(rfq.responseDeadline);
     
     if (!deadline) {
       return {
@@ -313,7 +341,7 @@ export class RFQDeadlineAlerts {
     }
 
     const hoursRemaining = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
-    const responseCount = rfq.responses?.length || 0;
+    const responseCount = rfq.respondedSuppliers?.length || 0;
     const invitedCount = rfq.invitedSuppliers?.length || 0;
 
     // Suggest extension if deadline is approaching and response rate is low

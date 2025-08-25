@@ -1,7 +1,10 @@
 // BOQ Calculations module exports
-export { BOQTotalsCalculator } from './totals-calculator';
-export { BOQComparisonAnalyzer } from './comparison-analyzer';
-export { BOQBudgetCalculator } from './budget-calculator';
+import { BOQTotalsCalculator } from './totals-calculator';
+import { BOQComparisonAnalyzer } from './comparison-analyzer';
+import { BOQBudgetCalculator } from './budget-calculator';
+
+// Re-export classes
+export { BOQTotalsCalculator, BOQComparisonAnalyzer, BOQBudgetCalculator };
 
 // Backward compatibility - Re-export as BOQCalculations class
 export class BOQCalculations {

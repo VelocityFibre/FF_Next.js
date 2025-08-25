@@ -21,7 +21,7 @@ import {
   Supplier, 
   SupplierFormData, 
   SupplierStatus
-} from '@/types/supplier.types';
+} from '@/types/supplier/base.types';
 import { SupplierFilter } from './types';
 
 const COLLECTION_NAME = 'suppliers';
@@ -204,7 +204,7 @@ export class SupplierBaseCrud {
       // Address information
       addresses: {
         physical: {
-          street1: data.address || '',
+          street1: data.addresses?.physical?.street1 || '',
           city: '',
           state: '',
           postalCode: '',
@@ -223,7 +223,7 @@ export class SupplierBaseCrud {
         taxCompliant: false,
         beeCompliant: false,
         insuranceValid: false,
-        documentsComplete: false
+        documentsVerified: false
       },
       
       // Metadata
@@ -231,7 +231,7 @@ export class SupplierBaseCrud {
       createdAt: now,
       updatedAt: now,
       createdBy: 'current-user-id', // TODO: Get from auth context
-      lastModifiedBy: 'current-user-id'
+      updatedBy: 'current-user-id'
     };
   }
 }

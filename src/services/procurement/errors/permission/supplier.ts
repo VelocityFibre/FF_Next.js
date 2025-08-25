@@ -4,16 +4,16 @@
  */
 
 import { ProcurementPermissionError } from './base';
-import { SupplierAccessOptions, InvitationStatus } from './types';
+import { SupplierAccessOptions, InvitationStatus, PermissionErrorOptions } from './types';
 
 /**
  * Supplier portal access error
  */
 export class SupplierAccessError extends ProcurementPermissionError {
   public readonly supplierId: string;
-  public readonly supplierName?: string;
-  public readonly invitationStatus?: InvitationStatus;
-  public readonly expirationDate?: Date;
+  public readonly supplierName?: string | undefined;
+  public readonly invitationStatus?: InvitationStatus | undefined;
+  public readonly expirationDate?: Date | undefined;
 
   constructor(
     supplierId: string,
@@ -32,18 +32,22 @@ export class SupplierAccessError extends ProcurementPermissionError {
       message += '. No invitation found for this supplier';
     }
 
-    super(requiredPermission, userPermissions, {
+    const permissionOptions: PermissionErrorOptions = {
       resourceType: 'supplier',
       resourceId: supplierId,
-      operation: options?.operation,
       customMessage: message
-    }, context);
+    };
+    if (options?.operation) {
+      permissionOptions.operation = options.operation;
+    }
+    
+    super(requiredPermission, userPermissions, permissionOptions, context);
 
     this.name = 'SupplierAccessError';
     this.supplierId = supplierId;
-    this.supplierName = options?.supplierName;
-    this.invitationStatus = options?.invitationStatus;
-    this.expirationDate = options?.expirationDate;
+    this.supplierName = options?.supplierName || undefined;
+    this.invitationStatus = options?.invitationStatus || undefined;
+    this.expirationDate = options?.expirationDate || undefined;
     Object.setPrototypeOf(this, SupplierAccessError.prototype);
   }
 

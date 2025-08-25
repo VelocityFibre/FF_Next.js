@@ -3,18 +3,21 @@
  * Main container using split components
  */
 
-import React, { useState } from 'react';
+import React, { useState, lazy, useCallback } from 'react';
 import { Calendar, Filter, Download, RefreshCw } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
 import { useAnalyticsData } from './hooks/useAnalyticsData';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { getAnalyticsDashboardCards } from '@/config/dashboards/dashboardConfigs';
 import { TimeRange } from './types/analytics.types';
-import {
-  AnalyticsStatsCards,
-  DailyProgressChart,
-  ProjectStatusView,
-  TeamPerformanceTable,
-  KeyInsights
-} from './components';
+
+// Lazy load heavy components
+const AnalyticsStatsCards = lazy(() => import('./components').then(m => ({ default: m.AnalyticsStatsCards })));
+const DailyProgressChart = lazy(() => import('./components').then(m => ({ default: m.DailyProgressChart })));
+const ProjectStatusView = lazy(() => import('./components').then(m => ({ default: m.ProjectStatusView })));
+const TeamPerformanceTable = lazy(() => import('./components').then(m => ({ default: m.TeamPerformanceTable })));
+const KeyInsights = lazy(() => import('./components').then(m => ({ default: m.KeyInsights })));
 
 const AnalyticsDashboard: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('7d');
@@ -31,10 +34,41 @@ const AnalyticsDashboard: React.FC = () => {
     loadAnalyticsData
   } = useAnalyticsData(timeRange);
 
-  const handleExport = () => {
-    // Export functionality - placeholder
-    console.log('Exporting analytics data...');
-  };
+  // 🟢 WORKING: Enhanced dashboard data for comprehensive metrics
+  const { 
+    stats: enhancedStats, 
+    trends, 
+    formatNumber: formatNum, 
+    formatCurrency, 
+    formatPercentage,
+    loadDashboardData
+  } = useDashboardData();
+
+  // 🟢 WORKING: Get analytics dashboard cards
+  const analyticsCards = getAnalyticsDashboardCards(
+    {
+      ...stats,
+      polesInstalled: enhancedStats.polesInstalled,
+      dropsCompleted: enhancedStats.dropsCompleted,
+      fiberInstalled: enhancedStats.fiberInstalled,
+      totalRevenue: enhancedStats.totalRevenue,
+      teamMembers: enhancedStats.teamMembers,
+    },
+    trends,
+    { formatNumber: formatNum, formatCurrency, formatPercentage }
+  );
+
+  // Memoize expensive operations
+  const handleExport = useCallback(() => {
+    // TODO: Implement analytics data export functionality
+  }, []);
+
+  const handleRefreshData = useCallback(() => {
+    loadAnalyticsData();
+    loadDashboardData();
+  }, [loadAnalyticsData, loadDashboardData]);
+
+
 
   return (
     <div className="ff-page-container">
@@ -44,14 +78,14 @@ const AnalyticsDashboard: React.FC = () => {
         actions={[
           {
             label: 'Export Report',
-            icon: Download,
+            icon: Download as React.ComponentType<{ className?: string; }>,
             onClick: handleExport,
             variant: 'secondary'
           },
           {
             label: 'Refresh Data',
-            icon: RefreshCw,
-            onClick: loadAnalyticsData,
+            icon: RefreshCw as React.ComponentType<{ className?: string; }>,
+            onClick: handleRefreshData,
             variant: 'primary'
           }
         ]}
@@ -94,8 +128,17 @@ const AnalyticsDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <AnalyticsStatsCards stats={stats} formatNumber={formatNumber} />
+      {/* Enhanced Stats Cards */}
+      <StatsGrid 
+        cards={analyticsCards}
+        columns={5}
+        className="mb-6"
+      />
+
+      {/* Original Stats Cards for comparison */}
+      <div className="mb-6">
+        <AnalyticsStatsCards stats={stats} formatNumber={formatNumber} />
+      </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">

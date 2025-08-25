@@ -18,7 +18,7 @@ export class CorePermissionChecker {
     userPermissions: UserPermissionCache,
     permission: ProcurementPermission | string
   ): boolean {
-    return userPermissions.permissions.has(permission);
+    return userPermissions.permissions.has(permission as ProcurementPermission);
   }
 
   /**
@@ -29,7 +29,7 @@ export class CorePermissionChecker {
     permissions: (ProcurementPermission | string)[]
   ): boolean {
     return permissions.every(permission => 
-      userPermissions.permissions.has(permission)
+      userPermissions.permissions.has(permission as ProcurementPermission)
     );
   }
 
@@ -41,7 +41,7 @@ export class CorePermissionChecker {
     permissions: (ProcurementPermission | string)[]
   ): boolean {
     return permissions.some(permission => 
-      userPermissions.permissions.has(permission)
+      userPermissions.permissions.has(permission as ProcurementPermission)
     );
   }
 
@@ -85,7 +85,7 @@ export class CorePermissionChecker {
     ];
     
     return requiredPermissions.some(permission => 
-      userPermissions.permissions.has(permission)
+      userPermissions.permissions.has(permission as ProcurementPermission)
     );
   }
 }

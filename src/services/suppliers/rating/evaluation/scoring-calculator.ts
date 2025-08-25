@@ -3,7 +3,7 @@
  * Handles score calculations and performance metrics
  */
 
-import { PerformancePeriod } from '@/types/supplier.types';
+import { PerformancePeriod } from '@/types/supplier/base.types';
 import { 
   EvaluationActionItem, 
   SupplierPerformanceMetrics,
@@ -58,7 +58,8 @@ export class ScoringCalculator {
     }
 
     // Compliance recommendations
-    if (performance.complianceScore && performance.complianceScore < 95) {
+    const performanceAny = performance as any;
+    if (performanceAny.complianceScore && performanceAny.complianceScore < 95) {
       recommendations.push('Strengthen compliance processes and documentation');
       recommendations.push('Conduct regular compliance audits and corrective action follow-ups');
     }
@@ -89,9 +90,10 @@ export class ScoringCalculator {
    */
   static generateActionItems(
     performance: SupplierPerformanceMetrics,
-    supplierId: string
+    _supplierId: string
   ): EvaluationActionItem[] {
     const actionItems: EvaluationActionItem[] = [];
+    const performanceAny = performance as any;
 
     // Delivery action items
     if (performance.deliveryScore < 80) {
@@ -183,9 +185,9 @@ export class ScoringCalculator {
     }
 
     // Compliance action items
-    if (performance.complianceScore && performance.complianceScore < 95) {
+    if (performanceAny.complianceScore && performanceAny.complianceScore < 95) {
       actionItems.push({
-        priority: performance.complianceScore < 85 ? 'critical' : 'high',
+        priority: performanceAny.complianceScore < 85 ? 'critical' : 'high',
         description: 'Schedule compliance audit and documentation review',
         dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2 weeks
         category: 'compliance',
@@ -221,6 +223,7 @@ export class ScoringCalculator {
   ): number {
     let weightedScore = 0;
     let totalWeight = 0;
+    const performanceAny = performance as any;
 
     // Standard criteria
     weightedScore += performance.deliveryScore * criteria.deliveryWeight;
@@ -232,8 +235,8 @@ export class ScoringCalculator {
                    criteria.priceWeight + criteria.serviceWeight;
 
     // Optional criteria
-    if (criteria.complianceWeight && performance.complianceScore) {
-      weightedScore += performance.complianceScore * criteria.complianceWeight;
+    if (criteria.complianceWeight && performanceAny.complianceScore) {
+      weightedScore += performanceAny.complianceScore * criteria.complianceWeight;
       totalWeight += criteria.complianceWeight;
     }
 
@@ -283,7 +286,14 @@ export class ScoringCalculator {
     priority: 'high' | 'medium' | 'low';
     estimatedTimeframe: string;
   }> {
-    const improvements = [];
+    const improvements: Array<{
+      metric: string;
+      currentScore: number;
+      targetScore: number;
+      improvementNeeded: number;
+      priority: 'high' | 'medium' | 'low';
+      estimatedTimeframe: string;
+    }> = [];
 
     const metrics = [
       { name: 'delivery', score: currentPerformance.deliveryScore, timeframe: '3-6 months' },

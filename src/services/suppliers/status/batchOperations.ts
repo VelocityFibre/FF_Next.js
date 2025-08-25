@@ -24,10 +24,9 @@ export class BatchOperations {
 
     for (const id of supplierIds) {
       try {
-        await StatusCore.updateStatus(id, { 
-          status: SupplierStatus.ACTIVE, 
-          userId 
-        });
+        const updateData: any = { status: SupplierStatus.ACTIVE };
+        if (userId) updateData.userId = userId;
+        await StatusCore.updateStatus(id, updateData);
         success.push(id);
       } catch (error) {
         failed.push({
@@ -53,11 +52,10 @@ export class BatchOperations {
 
     for (const id of supplierIds) {
       try {
-        await StatusCore.updateStatus(id, { 
-          status: SupplierStatus.INACTIVE, 
-          reason, 
-          userId 
-        });
+        const updateData: any = { status: SupplierStatus.INACTIVE };
+        if (reason) updateData.reason = reason;
+        if (userId) updateData.userId = userId;
+        await StatusCore.updateStatus(id, updateData);
         success.push(id);
       } catch (error) {
         failed.push({
@@ -107,11 +105,10 @@ export class BatchOperations {
 
     for (const id of supplierIds) {
       try {
-        await StatusCore.updateStatus(id, { 
-          status: SupplierStatus.BLACKLISTED, 
-          reason, 
-          userId 
-        });
+        const updateData: any = { status: SupplierStatus.BLACKLISTED };
+        if (reason) updateData.reason = reason;
+        if (userId) updateData.userId = userId;
+        await StatusCore.updateStatus(id, updateData);
         success.push(id);
       } catch (error) {
         failed.push({
@@ -138,11 +135,10 @@ export class BatchOperations {
 
     for (const id of supplierIds) {
       try {
-        await StatusCore.updateStatus(id, { 
-          status, 
-          reason, 
-          userId 
-        });
+        const updateData: any = { status };
+        if (reason) updateData.reason = reason;
+        if (userId) updateData.userId = userId;
+        await StatusCore.updateStatus(id, updateData);
         success.push(id);
       } catch (error) {
         failed.push({

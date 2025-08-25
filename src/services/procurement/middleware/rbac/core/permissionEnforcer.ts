@@ -52,7 +52,7 @@ export class PermissionEnforcer {
         {
           userId,
           projectId,
-          requiredPermissions: permissions
+          requiredPermission: permissions.join(', ')
         }
       );
     }

@@ -3,10 +3,21 @@
  * Calculate match scores and rankings for suppliers
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierWithMatchScore, RFQSearchCriteria } from './types';
 
 export class SupplierScoringService {
+  /**
+   * Get supplier rating value (handles both number and object types)
+   */
+  private static getSupplierRating(supplier: Supplier): number {
+    if (typeof supplier.rating === 'number') {
+      return supplier.rating;
+    } else if (supplier.rating && typeof supplier.rating === 'object') {
+      return supplier.rating.overall || 0;
+    }
+    return 0;
+  }
   /**
    * Score suppliers for RFQ matching
    */
@@ -31,7 +42,7 @@ export class SupplierScoringService {
     score += categoryScore;
     
     // Rating score (30% weight)
-    const ratingScore = ((supplier.rating?.overall || 0) / 5) * 0.3;
+    const ratingScore = (this.getSupplierRating(supplier) / 5) * 0.3;
     score += ratingScore;
     
     // Performance score (20% weight)
@@ -101,18 +112,12 @@ export class SupplierScoringService {
     return ranges.map(range => ({
       range: range.range,
       count: suppliers.filter(supplier => {
-        const rating = supplier.rating?.overall || 0;
+        const rating = this.getSupplierRating(supplier) || 0;
         return rating >= range.min && rating <= range.max;
       }).length
     })).filter(range => range.count > 0);
   }
 
-  /**
-   * Get supplier overall rating
-   */
-  static getSupplierRating(supplier: Supplier): number {
-    return supplier.rating?.overall || 0;
-  }
 
   /**
    * Check if supplier matches location

@@ -4,5 +4,5 @@
  * This file maintained for backward compatibility.
  */
 
-// Re-export BOQCrud from modular structure
-export { BOQCrud } from './crud';
+// Re-export from modular structure to avoid circular imports
+export * from './crud/index';

@@ -22,7 +22,7 @@ export class RowProcessor {
     index: number, 
     columnMapping: ColumnMapping
   ): {
-    item?: ParsedBOQItem;
+    item: ParsedBOQItem | undefined;
     errors: ImportError[];
     warnings: ImportWarning[];
     isValid: boolean;

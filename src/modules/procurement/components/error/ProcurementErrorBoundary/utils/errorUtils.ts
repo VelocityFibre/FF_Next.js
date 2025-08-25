@@ -82,7 +82,7 @@ export const getProcurementContext = (): ProcurementContext | null => {
   try {
     // Extract procurement context from URL or state
     const path = window.location.pathname;
-    const projectMatch = path.match(/\/projects\/([^\/]+)/);
+    const projectMatch = path.match(/\/projects\/([^/]+)/);
     const projectId = projectMatch ? projectMatch[1] : null;
     
     return {
@@ -105,9 +105,9 @@ export const createErrorLogData = (
     error: {
       name: error.name,
       message: error.message,
-      stack: error.stack,
+      ...(error.stack && { stack: error.stack }),
     },
-    componentStack: errorInfo.componentStack,
+    componentStack: errorInfo.componentStack || 'No component stack available',
     timestamp: new Date().toISOString(),
     url: window.location.href,
     userAgent: navigator.userAgent,

@@ -9,7 +9,7 @@ export class SOWDataExtractor {
   /**
    * Extract data from Excel/CSV file
    */
-  static async extractFromFile(file: File): Promise<SOWDataExtractionResult> {
+  static async extractFromFile(_file: File): Promise<SOWDataExtractionResult> {
     try {
       // This would typically use a library like XLSX to parse the file
       // For now, returning mock data structure
@@ -43,7 +43,7 @@ export class SOWDataExtractor {
   /**
    * Extract drop data from raw data
    */
-  static extractDropData(rawData: any[]): {
+  static extractDropData(_rawData: any[]): {
     dropCount: number;
     dropLocations: any[];
   } {
@@ -57,7 +57,7 @@ export class SOWDataExtractor {
   /**
    * Extract cable data from raw data
    */
-  static extractCableData(rawData: any[]): {
+  static extractCableData(_rawData: any[]): {
     cableLength: number;
     cableTypes: string[];
   } {

@@ -3,7 +3,7 @@
  * Common utility functions for scorecard generation
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 
 export class SupplierUtils {
   /**
@@ -62,7 +62,7 @@ export class SupplierUtils {
     const fields = [
       supplier.companyName || supplier.name,
       supplier.primaryContact?.email,
-      supplier.address,
+      supplier.addresses?.physical,
       supplier.businessType,
       supplier.categories?.length,
       supplier.rating,
@@ -88,7 +88,7 @@ export class SupplierUtils {
    * Get supplier status display string
    */
   static getStatusDisplay(supplier: Supplier): string {
-    if (supplier.isBlacklisted) return 'Blacklisted';
+    if (supplier.blacklisted || supplier.isBlacklisted) return 'Blacklisted';
     if (supplier.isPreferred) return 'Preferred';
     if (supplier.status === 'active') return 'Active';
     if (supplier.status === 'inactive') return 'Inactive';
@@ -168,7 +168,7 @@ export class SupplierUtils {
 
     const cloned = {} as T;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         cloned[key] = this.deepClone(obj[key]);
       }
     }

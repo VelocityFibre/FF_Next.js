@@ -4,7 +4,7 @@
  */
 
 import { NeonPoleData, NeonDropData, NeonFibreData } from '../../neonSOWService';
-import { ValidationResult, ValidationError, ValidationSummary, CrossValidationResult } from './validator-types';
+import { ValidationResult, ValidationError, CrossValidationResult } from './validator-types';
 import { SOWValidationRules } from './validation-rules';
 
 /**
@@ -66,7 +66,8 @@ export class SOWValidator {
       }
       
       // Validate height
-      const heightError = SOWValidationRules.validateHeight(pole.height);
+      const heightValue = pole.height ? parseFloat(pole.height) : undefined;
+      const heightError = SOWValidationRules.validateHeight(isNaN(heightValue as number) ? undefined : heightValue);
       if (heightError) {
         poleErrors.push(heightError);
       }

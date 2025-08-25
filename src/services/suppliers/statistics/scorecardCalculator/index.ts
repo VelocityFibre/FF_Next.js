@@ -3,7 +3,7 @@
  * Re-exports all calculator components for backward compatibility
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   ScoreCalculationWeights,
   ScoreCalculationResult,
@@ -13,7 +13,6 @@ import {
 } from '../scorecardTypes';
 import { CoreCalculations } from './coreCalculations';
 import { DataExtractors } from './dataExtractors';
-import { ValidationUtils } from './validationUtils';
 
 /**
  * Main ScorecardCalculator class - maintains backward compatibility
@@ -124,4 +123,3 @@ export class ScorecardCalculator {
 // Export individual components for direct access
 export { CoreCalculations } from './coreCalculations';
 export { DataExtractors } from './dataExtractors';
-export { ValidationUtils } from './validationUtils';

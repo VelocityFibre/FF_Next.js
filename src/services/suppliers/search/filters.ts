@@ -3,7 +3,7 @@
  * Advanced filtering logic for supplier search results
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierSearchFilters } from './types';
 
 export class SupplierFilterProcessor {
@@ -20,7 +20,7 @@ export class SupplierFilterProcessor {
       // Category filter (if not already applied in query)
       if (filters.categories && filters.categories.length > 0) {
         const hasMatchingCategory = filters.categories.some(cat => 
-          supplier.categories?.includes(cat)
+          supplier.categories?.includes(cat as any)
         );
         if (!hasMatchingCategory) {
           return false;
@@ -110,7 +110,7 @@ export class SupplierFilterProcessor {
       
       // Check category match
       const hasMatchingCategory = criteria.categories.some(cat => 
-        supplier.categories?.includes(cat)
+        supplier.categories?.some(supplierCat => supplierCat.toString() === cat.toString())
       );
       if (!hasMatchingCategory) {
         return false;
@@ -187,7 +187,7 @@ export class SupplierFilterProcessor {
    */
   private static isSupplierCompliant(supplier: Supplier): boolean {
     const hasValidCertifications = supplier.certifications?.some(cert => 
-      cert.status === 'active' && new Date(cert.expiryDate) > new Date()
+      cert.status === 'active' && cert.expiryDate && new Date(cert.expiryDate) > new Date()
     );
     
     const hasApprovedDocuments = this.hasRequiredDocuments(supplier);
@@ -199,6 +199,11 @@ export class SupplierFilterProcessor {
    * Get supplier overall rating
    */
   private static getSupplierRating(supplier: Supplier): number {
-    return supplier.rating?.overall || 0;
+    if (typeof supplier.rating === 'number') {
+      return supplier.rating;
+    } else if (supplier.rating && typeof supplier.rating === 'object') {
+      return supplier.rating.overall || 0;
+    }
+    return 0;
   }
 }

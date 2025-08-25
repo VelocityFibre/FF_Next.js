@@ -19,9 +19,7 @@ export * from './import';
 
 // Maintain legacy exports for backward compatibility
 export { 
-  ExcelImportEngine,
-  createImportEngine,
-  quickImport
+  ExcelImportEngine
 } from './import';
 
 // Legacy type aliases (if any were used differently)

@@ -3,7 +3,6 @@
  * Handles analytics and statistics for onboarding
  */
 
-import { OnboardingProgress } from './types';
 import { ProgressTracker } from './progressTracker';
 import { OnboardingProgressManager } from './OnboardingProgressManager';
 import { OnboardingDatabaseService } from './OnboardingDatabaseService';

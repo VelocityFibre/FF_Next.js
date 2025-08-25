@@ -121,7 +121,7 @@ export class NeonService {
       if (result.success && result.data.length > 0) {
         return {
           connected: true,
-          version: result.data[0]?.version || 'Unknown'
+          version: (result.data[0] as any)?.version || 'Unknown'
         };
       } else {
         return {

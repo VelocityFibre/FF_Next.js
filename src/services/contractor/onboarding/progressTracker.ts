@@ -10,7 +10,7 @@ import {
   StageCompletionSummary,
   OnboardingStatistics
 } from './types';
-import { getOnboardingStages } from './stageDefinitions';
+// import { getOnboardingStages } from './stageDefinitions'; // Unused
 
 /**
  * Progress calculation utilities
@@ -40,7 +40,7 @@ export class ProgressTracker {
    */
   static determineOverallStatus(
     completionPercentage: number,
-    stages: OnboardingStage[],
+    _stages: OnboardingStage[],
     isApproved?: boolean,
     isRejected?: boolean
   ): OnboardingStatus {
@@ -191,7 +191,7 @@ export class ProgressTracker {
           urgent: false
         };
 
-      case 'in_progress':
+      case 'in_progress': {
         const currentStage = progress.stages[progress.currentStage];
         if (currentStage) {
           const incompleteTasks = currentStage.checklist
@@ -211,6 +211,7 @@ export class ProgressTracker {
           description: 'Move to the next onboarding stage',
           urgent: false
         };
+      }
 
       case 'completed':
         return {

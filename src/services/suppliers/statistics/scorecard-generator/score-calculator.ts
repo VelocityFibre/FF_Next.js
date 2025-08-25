@@ -3,7 +3,7 @@
  * Core scoring and rating calculation logic
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import type { ScorecardMetrics } from './scorecard-types';
 
 export class ScorecardScoreCalculator {
@@ -29,7 +29,33 @@ export class ScorecardScoreCalculator {
     }
 
     // Compliance score (25% weight)
-    const complianceScore = supplier.complianceStatus?.complianceScore || 0;
+    const compliance = supplier.complianceStatus;
+    let complianceScore = 0;
+    if (compliance) {
+      // Calculate compliance score from available compliance data
+      let factors = 0;
+      let tempScore = 0;
+      
+      if (compliance.taxCompliant) {
+        tempScore += 30;
+        factors++;
+      }
+      if (compliance.beeCompliant) {
+        tempScore += 25;
+        factors++;
+      }
+      if (compliance.isoCompliant) {
+        tempScore += 25;
+        factors++;
+      }
+      if (compliance.documentsVerified) {
+        tempScore += 20;
+        factors++;
+      }
+      
+      complianceScore = factors > 0 ? tempScore : 0;
+    }
+    
     if (complianceScore > 0) {
       totalScore += (complianceScore / 100) * 25;
       weightedSum += 25;

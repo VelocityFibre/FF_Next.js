@@ -5,13 +5,13 @@
 
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { SupplierRating } from '@/types/supplier.types';
-import { RatingUpdateData, IRatingService } from './types';
+import { SupplierRating } from '@/types/supplier/base.types';
+import { RatingUpdateData } from './types';
 import { SupplierCrudService } from '../supplier.crud';
 
 const COLLECTION_NAME = 'suppliers';
 
-export class SupplierRatingManager implements IRatingService {
+export class SupplierRatingManager {
   /**
    * Update supplier rating with automatic overall calculation
    */
@@ -55,13 +55,23 @@ export class SupplierRatingManager implements IRatingService {
   static normalizeRating(rating: any): SupplierRating {
     if (typeof rating === 'number') {
       return {
+        supplierId: '',
+        userId: '',
+        userName: '',
+        rating: rating,
+        date: new Date(),
         overall: rating,
         totalReviews: 0
       };
     }
 
     return {
-      overall: 0,
+      supplierId: rating.supplierId || '',
+      userId: rating.userId || '',
+      userName: rating.userName || '',
+      rating: rating.rating || 0,
+      date: rating.date || new Date(),
+      overall: rating.overall || 0,
       totalReviews: 0,
       quality: 0,
       delivery: 0,
@@ -88,7 +98,7 @@ export class SupplierRatingManager implements IRatingService {
       return rating.overall || 0;
     }
 
-    return Math.round(ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length);
+    return Math.round(ratingValues.filter(v => v != null).reduce((a, b) => a + b, 0) / ratingValues.length);
   }
 
   /**

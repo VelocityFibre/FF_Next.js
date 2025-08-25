@@ -23,10 +23,14 @@ export interface StaffMember {
   department: Department;
   level?: StaffLevel; // Optional for backward compatibility
   status: StaffStatus;
+  isActive?: boolean;
+  lastActiveDate?: Timestamp;
   
   // Manager/Reporting
   managerId?: string;
   managerName?: string;
+  managerPosition?: string;
+  managerEmployeeId?: string;
   reportsTo?: string;
   
   // Skills and Certifications
@@ -49,9 +53,16 @@ export interface StaffMember {
   contractType: ContractType;
   salaryGrade?: string;
   hourlyRate?: number;
+  taxNumber?: string;
+  bankAccountNumber?: string;
+  bankName?: string;
+  salaryAmount?: number;
+  benefitsPackage?: string;
   
   // Availability and Scheduling
   workingHours: string;
+  workLocation?: string;
+  workSchedule?: string;
   availableWeekends: boolean;
   availableNights: boolean;
   timeZone: string;
@@ -65,6 +76,7 @@ export interface StaffMember {
   totalProjectsCompleted: number;
   averageProjectRating: number;
   onTimeCompletionRate: number;
+  performanceRating?: number;
   
   // Equipment and Tools
   assignedEquipment: Equipment[];

@@ -42,6 +42,7 @@ export class DataTransformUtils {
     
     return String(value)
       .trim()
+      // eslint-disable-next-line no-control-regex
       .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
       .substring(0, 255); // Limit length
   }

@@ -106,11 +106,12 @@ export function useBOQMapping(boqId: string, onMappingComplete?: (count: number)
           aVal = a.boqItem.lineNumber;
           bVal = b.boqItem.lineNumber;
           break;
-        case 'severity':
+        case 'severity': {
           const severityOrder = { high: 3, medium: 2, low: 1 };
           aVal = severityOrder[a.severity as keyof typeof severityOrder];
           bVal = severityOrder[b.severity as keyof typeof severityOrder];
           break;
+        }
         case 'confidence':
           aVal = a.suggestions[0]?.confidence || 0;
           bVal = b.suggestions[0]?.confidence || 0;

@@ -20,6 +20,7 @@ export interface NeonPoleData {
   created_date?: string | undefined;
   created_by?: string | undefined;
   comments?: string | undefined;
+  installation_date?: string | undefined;
   raw_data?: any;
 }
 
@@ -40,6 +41,7 @@ export interface NeonDropData {
   municipality?: string | undefined;
   created_date?: string | undefined;
   created_by?: string | undefined;
+  service_type?: string | undefined;
   raw_data?: any;
 }
 
@@ -54,6 +56,7 @@ export interface NeonFibreData {
   date_completed?: string | undefined;
   contractor?: string | undefined;
   is_complete?: boolean | undefined;
+  fibre_type?: string | undefined;
   raw_data?: any;
 }
 

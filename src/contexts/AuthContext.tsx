@@ -113,64 +113,64 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   // Legacy methods for backward compatibility
   const signInWithEmail = async (_email: string, _password: string) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock signInWithEmail called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement real authentication
   };
 
   const signInWithGoogle = async () => {
-    // Mock implementation - do nothing in development
-    console.log('Mock signInWithGoogle called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement Google authentication
   };
 
   const signUp = async (_email: string, _password: string, _displayName?: string) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock signUp called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement user registration
   };
 
   const resetPassword = async (_email: string) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock resetPassword called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement password reset
   };
 
   // Enhanced methods with RBAC
   const signInWithEmailEnhanced = async (_credentials: LoginCredentials) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock signInWithEmailEnhanced called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement enhanced email authentication
   };
 
   const signInWithGoogleEnhanced = async (_rememberMe = false) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock signInWithGoogleEnhanced called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement enhanced Google authentication
   };
 
   const registerWithEmail = async (_credentials: RegisterCredentials) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock registerWithEmail called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement enhanced email registration
   };
 
   const signOut = async () => {
-    // Mock implementation - do nothing in development
-    console.log('Mock signOut called - logout disabled in development mode');
+    // Mock implementation - silent in development mode
+    // TODO: Implement sign out functionality
   };
 
   const resetPasswordEnhanced = async (_request: PasswordResetRequest) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock resetPasswordEnhanced called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement enhanced password reset
   };
 
   const changePassword = async (_request: ChangePasswordRequest) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock changePassword called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement password change functionality
   };
 
   const sendEmailVerification = async () => {
-    // Mock implementation - do nothing in development
-    console.log('Mock sendEmailVerification called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement email verification
   };
 
   const updateProfile = async (_updates: Partial<User>) => {
-    // Mock implementation - do nothing in development
-    console.log('Mock updateProfile called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement profile update functionality
   };
 
   // Permission checking methods
@@ -236,8 +236,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshUser = async () => {
-    // Mock implementation - do nothing in development
-    console.log('Mock refreshUser called');
+    // Mock implementation - silent in development mode
+    // TODO: Implement user refresh functionality
   };
 
   const value: AuthContextType = {

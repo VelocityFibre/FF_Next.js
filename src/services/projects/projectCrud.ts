@@ -6,6 +6,7 @@
 
 import { projectNeonService } from './projectNeonService';
 import type { Project, ProjectFormData, ProjectFilter } from '@/types/project.types';
+import { ProjectStatus } from '@/types/project.types';
 
 /**
  * Get all projects with optional filtering
@@ -46,12 +47,12 @@ export async function remove(id: string): Promise<void> {
  * Get projects by client ID
  */
 export async function getByClientId(clientId: string): Promise<Project[]> {
-  return projectNeonService.getAll({ clientId });
+  return projectNeonService.getAll({ clientId: [clientId] });
 }
 
 /**
  * Get active projects
  */
 export async function getActiveProjects(): Promise<Project[]> {
-  return projectNeonService.getAll({ status: 'ACTIVE' });
+  return projectNeonService.getAll({ status: [ProjectStatus.ACTIVE] });
 }

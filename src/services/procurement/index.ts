@@ -35,7 +35,7 @@ export { rbacMiddleware, ProcurementPermission, ProcurementRoles } from './middl
 export { auditLogger, AuditAction, AuditEntityType } from './auditLogger';
 
 // Re-export validation schemas for convenience
-export { ProcurementSchemas, validateSchema } from '@/lib/validation/procurement.schemas';
+export { ProcurementSchemas, validateSchema } from '@/lib/validation';
 
 // Type exports for external use
 export type { ServiceResponse } from '@/services/core/BaseService';

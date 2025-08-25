@@ -156,7 +156,7 @@ export class ProjectQueryService {
   static async getProjectsPaginated(
     limit: number = 10,
     offset: number = 0,
-    filter?: ProjectFilter
+    _filter?: ProjectFilter
   ): Promise<{ projects: Project[]; total: number }> {
     try {
       // Get total count

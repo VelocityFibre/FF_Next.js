@@ -3,7 +3,7 @@
  * Core calculations for supplier performance metrics
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { QuartileStats, PerformanceMetric } from './analyzer-types';
 
 export class PerformanceMetricsCalculator {
@@ -47,11 +47,11 @@ export class PerformanceMetricsCalculator {
    * Calculate average performance for suppliers
    */
   static calculateAveragePerformance(suppliers: Supplier[]): number {
-    const validSuppliers = suppliers.filter(s => s.performanceMetrics?.overall !== undefined);
+    const validSuppliers = suppliers.filter(s => s.performanceMetrics?.overallScore !== undefined);
     if (validSuppliers.length === 0) return 0;
 
     const totalPerformance = validSuppliers.reduce((sum, supplier) => {
-      return sum + (supplier.performanceMetrics?.overall || 0);
+      return sum + (supplier.performanceMetrics?.overallScore || 0);
     }, 0);
 
     return Math.round((totalPerformance / validSuppliers.length) * 100) / 100;
@@ -93,8 +93,8 @@ export class PerformanceMetricsCalculator {
       .map(supplier => ({
         supplierId: supplier.id,
         rating: this.getSupplierRating(supplier),
-        performance: supplier.performanceMetrics?.overall || 0,
-        category: supplier.category,
+        performance: supplier.performanceMetrics?.overallScore || 0,
+        ...(supplier.category && { category: supplier.category }),
         businessType: supplier.businessType,
         calculatedAt: new Date()
       }));

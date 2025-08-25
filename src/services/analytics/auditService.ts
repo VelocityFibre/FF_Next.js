@@ -72,9 +72,9 @@ export class AuditService {
         userName: row.userName || '',
         oldValue: row.oldValue,
         newValue: row.newValue,
-        ipAddress: row.ipAddress || undefined,
-        userAgent: row.userAgent || undefined,
-        sessionId: row.sessionId || undefined,
+        ipAddress: row.ipAddress || '',
+        userAgent: row.userAgent || '',
+        sessionId: row.sessionId || '',
         source: row.source || '',
         timestamp: row.timestamp
       }));

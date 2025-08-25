@@ -3,7 +3,7 @@
  * Handles saving BOQ data to Neon database
  */
 
-import { ProcurementContext } from '@/types/procurement/base.types';
+import { ProcurementContext } from '../../../../types/procurement/base.types';
 import { ImportConfig, MappingResults, SaveResult } from './types';
 
 export class BOQImportDatabaseSaver {
@@ -107,7 +107,7 @@ export class BOQImportDatabaseSaver {
   /**
    * Check if BOQ item already exists
    */
-  private async checkItemExists(boqId: string, item: any): Promise<boolean> {
+  private async checkItemExists(_boqId: string, _item: any): Promise<boolean> {
     // TODO: Implement actual database check
     // Mock implementation
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -177,7 +177,7 @@ export class BOQImportDatabaseSaver {
   /**
    * Get BOQ save statistics
    */
-  async getSaveStatistics(boqId: string): Promise<{
+  async getSaveStatistics(_boqId: string): Promise<{
     totalItems: number;
     savedItems: number;
     failedItems: number;

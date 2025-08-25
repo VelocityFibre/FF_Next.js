@@ -8,7 +8,7 @@ import {
   SupplierRating, 
   SupplierPerformance, 
   PerformancePeriod 
-} from '@/types/supplier.types';
+} from '@/types/supplier/base.types';
 
 /**
  * Rating update data

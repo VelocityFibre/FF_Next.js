@@ -5,7 +5,6 @@
  * New code should import from './scorecard-generator' directly
  */
 
-import { Supplier } from '@/types/supplier.types';
 import {
   ScorecardScoreCalculator,
   ScorecardBenchmarkAnalyzer,

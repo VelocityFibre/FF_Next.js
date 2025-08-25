@@ -53,6 +53,7 @@ export class UserPermissionManager {
 
       // Create user permission cache object
       const userPermissionCache: UserPermissionCache = {
+        userId,
         permissions,
         roles: projectAccess.data.roles,
         projectAccessLevel: projectAccess.data.accessLevel,

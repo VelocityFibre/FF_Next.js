@@ -233,11 +233,12 @@ export class RiskForecaster {
     const itemScores = new Map<string, { count: number; types: Set<string> }>();
     
     errors.forEach(error => {
-      if ('itemCode' in error && error.itemCode) {
-        const current = itemScores.get(error.itemCode) || { count: 0, types: new Set() };
+      if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
+        const itemCode = error.itemCode as string;
+        const current = itemScores.get(itemCode) || { count: 0, types: new Set() };
         current.count++;
         current.types.add(error.constructor.name);
-        itemScores.set(error.itemCode, current);
+        itemScores.set(itemCode, current);
       }
     });
 
@@ -348,12 +349,12 @@ export class RiskForecaster {
    * Extract location from error
    */
   private static extractErrorLocation(error: StockError): string | null {
-    if ('location' in error && error.location) {
-      return error.location;
-    } else if ('fromLocation' in error && error.fromLocation) {
-      return error.fromLocation;
-    } else if ('toLocation' in error && error.toLocation) {
-      return error.toLocation;
+    if ('location' in error && error.location && typeof error.location === 'string') {
+      return error.location as string;
+    } else if ('fromLocation' in error && error.fromLocation && typeof error.fromLocation === 'string') {
+      return error.fromLocation as string;
+    } else if ('toLocation' in error && error.toLocation && typeof error.toLocation === 'string') {
+      return error.toLocation as string;
     }
     return null;
   }

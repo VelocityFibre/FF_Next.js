@@ -166,11 +166,11 @@ export default function BOQVersionComparison({
                             {change.field}:
                           </span>
                           <span className="text-red-700 line-through mr-2">
-                            {change.oldValue}
+                            {String(change.oldValue ?? '')}
                           </span>
                           <span className="text-gray-500">→</span>
                           <span className="text-green-700 ml-2">
-                            {change.newValue}
+                            {String(change.newValue ?? '')}
                           </span>
                         </div>
                       ))}

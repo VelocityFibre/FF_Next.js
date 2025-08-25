@@ -9,7 +9,7 @@
 export * from './rating';
 
 // Import services for legacy class compatibility
-import { PerformancePeriod } from '@/types/supplier.types';
+import { PerformancePeriod } from '@/types/supplier/base.types';
 import { 
   SupplierRatingManager,
   SupplierPerformanceCalculator,
@@ -99,32 +99,10 @@ export class SupplierRatingService {
     return SupplierRatingAnalyticsService.generateEvaluationReport(supplierId, period);
   }
 
-  /**
-   * Normalize rating data to handle legacy formats
-   * @deprecated Use SupplierRatingManager.normalizeRating() instead
-   */
-  private static normalizeRating(rating: any) {
-    return SupplierRatingManager.normalizeRating(rating);
-  }
-
-  /**
-   * Calculate overall rating from individual components
-   * @deprecated Use SupplierRatingManager.calculateOverallRating() instead
-   */
-  private static calculateOverallRating(rating: any): number {
-    return SupplierRatingManager.calculateOverallRating(rating);
-  }
-
-  /**
-   * Generate mock performance metrics
-   * @deprecated Use SupplierPerformanceCalculator.generatePerformanceMetrics() instead
-   */
-  private static async generatePerformanceMetrics(
-    supplierId: string,
-    period: PerformancePeriod
-  ) {
-    return SupplierPerformanceCalculator.generatePerformanceMetrics(supplierId, period);
-  }
+  // Removed deprecated unused methods:
+  // - normalizeRating (use SupplierRatingManager.normalizeRating instead)
+  // - calculateOverallRating (use SupplierRatingManager.calculateOverallRating instead) 
+  // - generatePerformanceMetrics (use SupplierPerformanceCalculator.generatePerformanceMetrics instead)
 }
 
 // Default export for backward compatibility

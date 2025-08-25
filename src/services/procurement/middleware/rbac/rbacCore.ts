@@ -30,7 +30,16 @@ export class RBACCore {
     projectId: string
   ): Promise<ServiceResponse<boolean>> {
     const userPermissions = await this.getUserPermissions(userId, projectId);
-    if (!userPermissions.success) return userPermissions as ServiceResponse<boolean>;
+    if (!userPermissions.success) {
+      const response: ServiceResponse<boolean> = { success: false };
+      if (userPermissions.error !== undefined) {
+        response.error = userPermissions.error;
+      }
+      if (userPermissions.code !== undefined) {
+        response.code = userPermissions.code;
+      }
+      return response;
+    }
 
     return {
       success: true,
@@ -44,7 +53,16 @@ export class RBACCore {
     projectId: string
   ): Promise<ServiceResponse<boolean>> {
     const userPermissions = await this.getUserPermissions(userId, projectId);
-    if (!userPermissions.success) return userPermissions as ServiceResponse<boolean>;
+    if (!userPermissions.success) {
+      const response: ServiceResponse<boolean> = { success: false };
+      if (userPermissions.error !== undefined) {
+        response.error = userPermissions.error;
+      }
+      if (userPermissions.code !== undefined) {
+        response.code = userPermissions.code;
+      }
+      return response;
+    }
 
     return {
       success: true,
@@ -58,7 +76,16 @@ export class RBACCore {
     projectId: string
   ): Promise<ServiceResponse<boolean>> {
     const userPermissions = await this.getUserPermissions(userId, projectId);
-    if (!userPermissions.success) return userPermissions as ServiceResponse<boolean>;
+    if (!userPermissions.success) {
+      const response: ServiceResponse<boolean> = { success: false };
+      if (userPermissions.error !== undefined) {
+        response.error = userPermissions.error;
+      }
+      if (userPermissions.code !== undefined) {
+        response.code = userPermissions.code;
+      }
+      return response;
+    }
 
     return {
       success: true,

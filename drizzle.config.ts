@@ -5,11 +5,14 @@
 
 import type { Config } from 'drizzle-kit';
 
-// Hardcoded connection string for now (will be replaced with env var in production)
-const connectionString = 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+// Get connection string from environment variable
+const connectionString = process.env.DATABASE_URL || (() => {
+  console.error('WARNING: DATABASE_URL environment variable not set');
+  throw new Error('DATABASE_URL environment variable is required');
+})();
 
 export default {
-  schema: './src/lib/neon/schema.ts',
+  schema: ['./src/lib/neon/schema/*.schema.ts'],
   out: './drizzle/migrations',
   dialect: 'postgresql',
   dbCredentials: {

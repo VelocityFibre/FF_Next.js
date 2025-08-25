@@ -296,6 +296,7 @@ export const velocityUtils = {
     
     if (!supportsBackdropFilter && style.backdropFilter) {
       const { backdropFilter, ...optimizedStyle } = style;
+      void backdropFilter; // Acknowledge unused destructured variable
       return optimizedStyle;
     }
     

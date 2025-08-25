@@ -3,8 +3,36 @@
  * Email validation and utility functions
  */
 
+import { Timestamp } from 'firebase/firestore';
 import { RFQ } from '@/types/procurement.types';
 import type { EmailValidationResult } from './email-types';
+
+/**
+ * Utility to convert Timestamp or Date to Date object
+ */
+function toDate(timestampOrDate: Date | Timestamp | any): Date {
+  if (!timestampOrDate) {
+    return new Date();
+  }
+  
+  // If it's already a Date, return it
+  if (timestampOrDate instanceof Date) {
+    return timestampOrDate;
+  }
+  
+  // If it's a Firestore Timestamp, convert it
+  if (timestampOrDate && typeof timestampOrDate.toDate === 'function') {
+    return timestampOrDate.toDate();
+  }
+  
+  // If it's a timestamp number, convert it
+  if (typeof timestampOrDate === 'number') {
+    return new Date(timestampOrDate);
+  }
+  
+  // Fallback: try to parse as date
+  return new Date(timestampOrDate);
+}
 
 export class RFQEmailValidator {
   /**
@@ -91,10 +119,10 @@ export class RFQEmailValidator {
       rfqNumber: rfq.rfqNumber,
       title: rfq.title,
       description: rfq.description,
-      responseDeadline: rfq.responseDeadline?.toDate().toISOString(),
-      items: rfq.items || [],
-      terms: rfq.terms,
-      contact: rfq.contactInfo
+      responseDeadline: toDate(rfq.responseDeadline).toISOString(),
+      items: [], // Items are stored separately in RFQItem table
+      terms: rfq.paymentTerms || rfq.deliveryTerms,
+      contact: rfq.createdBy // Contact info not directly on RFQ
     };
 
     return {

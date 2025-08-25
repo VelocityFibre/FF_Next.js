@@ -5,6 +5,7 @@
 
 import { ValidationResult, ValidationError, ValidationSummary, BatchValidationResult } from './validator-types';
 import { SOWValidationRules } from './validation-rules';
+import { SOWValidator } from './sow-validator';
 
 /**
  * Error processing and formatting utilities
@@ -70,9 +71,6 @@ export class SOWErrorHandler {
    * Batch validate multiple datasets
    */
   static batchValidate(datasets: { data: any[]; type: 'poles' | 'drops' | 'fibre' }[]): BatchValidationResult {
-    // Import SOWValidator here to avoid circular dependency
-    const { SOWValidator } = require('./sow-validator');
-    
     const results = datasets.map(dataset => SOWValidator.validateData(dataset.data, dataset.type));
     
     const totalDatasets = datasets.length;
@@ -221,7 +219,7 @@ export class SOWErrorHandler {
           errors: result.errors
         }, null, 2);
         
-      case 'csv':
+      case 'csv': {
         const csvLines = ['Type,Field,Value,Message,Severity,Code'];
         result.invalid.forEach(record => {
           if (record.errors && Array.isArray(record.errors)) {
@@ -236,8 +234,9 @@ export class SOWErrorHandler {
           }
         });
         return csvLines.join('\n');
+      }
         
-      case 'text':
+      case 'text': {
         const lines = [
           '=== VALIDATION SUMMARY ===',
           `Total Records: ${summary.totalRecords}`,
@@ -256,6 +255,7 @@ export class SOWErrorHandler {
           ...result.errors.map(error => `• ${error}`)
         ];
         return lines.join('\n');
+      }
         
       default:
         throw new Error(`Unsupported export format: ${format}`);

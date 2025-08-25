@@ -3,9 +3,20 @@
  * Sort and rank suppliers based on various criteria
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 
 export class SupplierSortingService {
+  /**
+   * Get supplier rating value (handles both number and object types)
+   */
+  private static getSupplierRating(supplier: Supplier): number {
+    if (typeof supplier.rating === 'number') {
+      return supplier.rating;
+    } else if (supplier.rating && typeof supplier.rating === 'object') {
+      return supplier.rating.overall || 0;
+    }
+    return 0;
+  }
   /**
    * Apply sorting to supplier results
    */
@@ -26,7 +37,7 @@ export class SupplierSortingService {
           comparison = (a.companyName || '').localeCompare(b.companyName || '');
           break;
         case 'rating':
-          comparison = (a.rating?.overall || 0) - (b.rating?.overall || 0);
+          comparison = (this.getSupplierRating(a) || 0) - (this.getSupplierRating(b) || 0);
           break;
         case 'createdAt':
           comparison = new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();

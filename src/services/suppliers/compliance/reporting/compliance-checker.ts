@@ -22,7 +22,7 @@ export class ComplianceChecker {
       return 'non-compliant';
     }
 
-    if (hasCriticalMissingDocs || hasExpiringDocuments || complianceStatus.score < 80) {
+    if (hasCriticalMissingDocs || hasExpiringDocuments || (complianceStatus.score ?? 0) < 80) {
       return 'partial';
     }
 
@@ -73,7 +73,8 @@ export class ComplianceChecker {
 
     documents.forEach(doc => {
       if (doc.expiryDate) {
-        const daysUntilExpiry = Math.ceil((doc.expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        const expiryDate = typeof doc.expiryDate === 'string' ? new Date(doc.expiryDate) : doc.expiryDate;
+        const daysUntilExpiry = Math.ceil((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
         
         let status: 'expired' | 'expiring' | 'valid' = 'valid';
         if (daysUntilExpiry < 0) {
@@ -83,8 +84,8 @@ export class ComplianceChecker {
         }
 
         expirationInfo.push({
-          type: doc.type,
-          expiryDate: doc.expiryDate,
+          type: doc.type.toString(),
+          expiryDate: typeof doc.expiryDate === 'string' ? new Date(doc.expiryDate) : doc.expiryDate,
           daysUntilExpiry,
           status
         });
@@ -113,8 +114,9 @@ export class ComplianceChecker {
     const requiredDocs = this.getRequiredDocuments(businessType);
     const optionalDocs = this.getOptionalDocuments(businessType);
     
-    const missingRequired = requiredDocs.filter(req => !providedTypes.includes(req));
-    const optionalMissing = optionalDocs.filter(opt => !providedTypes.includes(opt));
+    const providedTypeStrings = providedTypes.map(type => type.toString());
+    const missingRequired = requiredDocs.filter(req => !providedTypeStrings.includes(req));
+    const optionalMissing = optionalDocs.filter(opt => !providedTypeStrings.includes(opt));
 
     // Check for duplicate document types
     const typeCounts = new Map<string, number>();
@@ -149,7 +151,7 @@ export class ComplianceChecker {
    */
   static checkViolations(
     documents: SupplierDocument[],
-    complianceStatus: ComplianceStatus
+    _complianceStatus: ComplianceStatus
   ): Array<{
     type: 'expired' | 'missing' | 'invalid' | 'duplicate';
     severity: 'high' | 'medium' | 'low';
@@ -247,7 +249,7 @@ export class ComplianceChecker {
     const compliantCount = supplierStatuses.filter(s => s.overall === 'compliant').length;
     const complianceRate = (compliantCount / totalSuppliers) * 100;
 
-    const totalScore = supplierStatuses.reduce((sum, status) => sum + status.score, 0);
+    const totalScore = supplierStatuses.reduce((sum, status) => sum + ((status as any).score || 0), 0);
     const averageScore = totalScore / totalSuppliers;
 
     // Calculate document completion rate
@@ -255,16 +257,20 @@ export class ComplianceChecker {
     let totalProvided = 0;
 
     supplierStatuses.forEach(status => {
-      Object.values(status.categories).forEach(category => {
-        category.requirements.forEach(req => {
-          if (req.required) {
-            totalRequired++;
-            if (req.provided) {
-              totalProvided++;
-            }
+      if (status.categories) {
+        Object.values(status.categories).forEach((category: any) => {
+          if (category.requirements) {
+            category.requirements.forEach((req: any) => {
+              if (req.required) {
+                totalRequired++;
+                if (req.provided) {
+                  totalProvided++;
+                }
+              }
+            });
           }
         });
-      });
+      }
     });
 
     const documentCompletionRate = totalRequired > 0 ? (totalProvided / totalRequired) * 100 : 100;
@@ -272,16 +278,20 @@ export class ComplianceChecker {
     // Calculate expiration risk
     let expiringCount = 0;
     supplierStatuses.forEach(status => {
-      Object.values(status.categories).forEach(category => {
-        category.requirements.forEach(req => {
-          if (req.expiryDate) {
-            const daysUntilExpiry = Math.ceil((req.expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-            if (daysUntilExpiry <= 90) {
-              expiringCount++;
-            }
+      if (status.categories) {
+        Object.values(status.categories).forEach((category: any) => {
+          if (category.requirements) {
+            category.requirements.forEach((req: any) => {
+              if (req.expiryDate) {
+                const daysUntilExpiry = Math.ceil((req.expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                if (daysUntilExpiry <= 90) {
+                  expiringCount++;
+                }
+              }
+            });
           }
         });
-      });
+      }
     });
 
     const expirationRisk = totalRequired > 0 ? (expiringCount / totalRequired) * 100 : 0;
@@ -345,7 +355,7 @@ export class ComplianceChecker {
   /**
    * Get optional documents for business type
    */
-  private static getOptionalDocuments(businessType: string): string[] {
+  private static getOptionalDocuments(_businessType: string): string[] {
     return [
       'bank_statement',
       'audited_financials',

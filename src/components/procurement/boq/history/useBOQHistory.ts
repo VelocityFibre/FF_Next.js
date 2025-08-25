@@ -2,7 +2,7 @@
  * Custom hook for BOQ History logic
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import toast from 'react-hot-toast';
 import {
@@ -27,12 +27,7 @@ export const useBOQHistory = (
   const [isComparing, setIsComparing] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
 
-  // Load version history
-  useEffect(() => {
-    loadVersionHistory();
-  }, [boqId, context]);
-
-  const loadVersionHistory = async () => {
+  const loadVersionHistory = useCallback(async () => {
     if (!context) return;
 
     try {
@@ -83,7 +78,12 @@ export const useBOQHistory = (
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [context, boqId]);
+
+  // Load version history
+  useEffect(() => {
+    loadVersionHistory();
+  }, [loadVersionHistory]);
 
   // Filter versions
   const filteredVersions = useMemo(() => {

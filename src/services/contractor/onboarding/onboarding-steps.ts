@@ -6,7 +6,7 @@
 import {
   OnboardingProgress,
   StageUpdateRequest,
-  OnboardingWorkflowData,
+  // OnboardingWorkflowData, // Unused
   OnboardingStepConfig
 } from './onboarding-types';
 import { OnboardingProgressManager } from './OnboardingProgressManager';

@@ -15,6 +15,7 @@ export interface RFQ {
   // Status and Timeline
   status: RFQStatusType;
   issueDate?: Date;
+  sentAt?: Date;
   responseDeadline: Date;
   extendedDeadline?: Date;
   closedAt?: Date;

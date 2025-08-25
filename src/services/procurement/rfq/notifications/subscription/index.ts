@@ -14,5 +14,8 @@ export type {
   SubscriptionManager 
 } from './subscription-types';
 
+// Import for re-export alias
+import { RFQSubscriptionManager } from './subscription-manager';
+
 // Re-export main classes for backward compatibility
 export const RFQSubscriptions = RFQSubscriptionManager;

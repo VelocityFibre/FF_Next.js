@@ -21,10 +21,14 @@ export class ExcelImportEngine {
     progressCallback?: ProgressCallback,
     customColumnMapping?: Partial<ColumnMapping>
   ) {
-    this.engine = new ModularEngine({
-      progressCallback,
-      customColumnMapping
-    });
+    const config: import('./engine/types').EngineConfig = {};
+    if (progressCallback !== undefined) {
+      config.progressCallback = progressCallback;
+    }
+    if (customColumnMapping !== undefined) {
+      config.customColumnMapping = customColumnMapping;
+    }
+    this.engine = new ModularEngine(config);
   }
 
   /**

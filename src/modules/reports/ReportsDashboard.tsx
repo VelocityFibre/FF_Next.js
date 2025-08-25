@@ -1,10 +1,36 @@
-import { FileText, Download, Filter, PieChart, BarChart3, TrendingUp, Clock } from 'lucide-react';
+import { FileText, Download, Filter, PieChart, BarChart3, TrendingUp, Clock, Plus, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { useReportsDashboardData } from '@/hooks/useDashboardData';
+import { getReportsDashboardCards } from '@/config/dashboards/dashboardConfigs';
 
 export function ReportsDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
+
+  const { 
+    stats, 
+    trends, 
+    isLoading: _isLoading, 
+    error: _error, 
+    formatNumber, 
+    formatCurrency, 
+    formatPercentage,
+    loadDashboardData 
+  } = useReportsDashboardData();
+
+  // Acknowledge unused variables
+  void _isLoading;
+  void _error;
+
+  // 🟢 WORKING: Get reports dashboard cards
+  const reportsCards = getReportsDashboardCards(
+    stats, 
+    trends, 
+    { formatNumber, formatCurrency, formatPercentage }
+  );
 
   const tabs = [
     { id: 'all', label: 'All Reports' },
@@ -70,28 +96,38 @@ export function ReportsDashboard() {
   ];
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-          <p className="text-gray-600 mt-1">Generate and manage business reports</p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => navigate('/app/reports/create')}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Create Report
-          </button>
-          <button
-            onClick={() => navigate('/app/reports/export')}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
-            <Download className="w-4 h-4" />
-            Export
-          </button>
-        </div>
-      </div>
+    <div className="ff-page-container">
+      <DashboardHeader 
+        title="Reports Dashboard"
+        subtitle="Generate, manage and analyze business reports"
+        actions={[
+          {
+            label: 'Create Report',
+            icon: Plus as React.ComponentType<{ className?: string; }>,
+            onClick: () => navigate('/app/reports/create'),
+            variant: 'primary'
+          },
+          {
+            label: 'Export All',
+            icon: Download as React.ComponentType<{ className?: string; }>,
+            onClick: () => navigate('/app/reports/export'),
+            variant: 'secondary'
+          },
+          {
+            label: 'Refresh Data',
+            icon: RefreshCw as React.ComponentType<{ className?: string; }>,
+            onClick: loadDashboardData,
+            variant: 'secondary'
+          }
+        ]}
+      />
+
+      {/* Enhanced Reports Stats Cards */}
+      <StatsGrid 
+        cards={reportsCards}
+        columns={3}
+        className="mb-8"
+      />
 
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-6">

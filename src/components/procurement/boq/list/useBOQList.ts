@@ -147,9 +147,9 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
     setActionMenuOpen(null);
   };
 
-  const handleEditBOQ = (boq: BOQ) => {
+  const handleEditBOQ = (_boq: BOQ) => {
     // Navigate to edit page
-    console.log('Edit BOQ:', boq.id);
+    // TODO: Implement navigation to BOQ edit page
     setActionMenuOpen(null);
   };
 

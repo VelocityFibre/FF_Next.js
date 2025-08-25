@@ -166,7 +166,7 @@ export class ProcurementErrorFactory {
         break;
       
       case 'exceeds_limit':
-        code = 'EXCEEDS_LIMIT';
+        code = 'PO_EXCEEDS_BUDGET';
         message = amount && limit
           ? `Amount ${amount} exceeds limit ${limit}`
           : 'Operation exceeds allowed limits';
@@ -194,7 +194,7 @@ export class ProcurementErrorFactory {
     context?: Record<string, any>
   ): ProcurementError {
     return this.createProcurementError(
-      'BUSINESS_RULE_VIOLATION',
+      'VALIDATION_ERROR',
       description || `Business rule violation: ${rule}`,
       { rule, ...context }
     );

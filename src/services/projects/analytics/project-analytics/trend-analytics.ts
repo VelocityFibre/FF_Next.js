@@ -20,7 +20,7 @@ export class ProjectTrendAnalytics {
       const result = await sql`
         WITH months AS (
           SELECT 
-            DATE_TRUNC('month', CURRENT_DATE - INTERVAL '${months} months' + INTERVAL '${i} months') as month
+            DATE_TRUNC('month', CURRENT_DATE - INTERVAL '${months} months' + INTERVAL (i || ' months')) as month
           FROM generate_series(0, ${months - 1}) as i
         )
         SELECT 
@@ -70,7 +70,7 @@ export class ProjectTrendAnalytics {
           COALESCE(SUM(budget), 0) as total_budget,
           COALESCE(AVG(budget), 0) as average_budget
         FROM projects
-        WHERE ${sql.raw(whereClause)} AND budget IS NOT NULL
+        WHERE (${whereClause}) AND budget IS NOT NULL
       `;
       
       const statusResult = await sql`
@@ -78,7 +78,7 @@ export class ProjectTrendAnalytics {
           status,
           COALESCE(SUM(budget), 0) as total_budget
         FROM projects
-        WHERE ${sql.raw(whereClause)} AND budget IS NOT NULL
+        WHERE (${whereClause}) AND budget IS NOT NULL
         GROUP BY status
         ORDER BY total_budget DESC
       `;
@@ -169,8 +169,8 @@ export class ProjectTrendAnalytics {
       const result = await sql`
         WITH quarters AS (
           SELECT 
-            DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '${quarters * 3} months' + INTERVAL '${i * 3} months') as quarter_start,
-            DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '${quarters * 3} months' + INTERVAL '${i * 3 + 3} months') - INTERVAL '1 day' as quarter_end
+            DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '${quarters * 3} months' + INTERVAL (i * 3 || ' months')) as quarter_start,
+            DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '${quarters * 3} months' + INTERVAL ((i * 3 + 3) || ' months')) - INTERVAL '1 day' as quarter_end
           FROM generate_series(0, ${quarters - 1}) as i
         )
         SELECT 

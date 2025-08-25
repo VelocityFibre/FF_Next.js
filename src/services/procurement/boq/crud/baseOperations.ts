@@ -16,7 +16,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '../../../../config/firebase';
-import { BOQ, BOQFormData, BOQStatusType } from '../../../../types/procurement/boq.types';
+import { BOQ, BOQFormData } from '../../../../types/procurement/boq.types';
 import { BOQDataTransformers } from './dataTransformers';
 
 const COLLECTION_NAME = 'boqs';
@@ -70,9 +70,9 @@ export class BOQBaseOperations {
       
       const docRef = await addDoc(collection(db, COLLECTION_NAME), {
         ...boq,
-        createdAt: Timestamp.fromDate(boq.createdAt),
-        updatedAt: Timestamp.fromDate(boq.updatedAt),
-        uploadedAt: Timestamp.fromDate(boq.uploadedAt)
+        createdAt: Timestamp.fromDate(boq.createdAt || new Date()),
+        updatedAt: Timestamp.fromDate(boq.updatedAt || new Date()),
+        uploadedAt: Timestamp.fromDate(boq.uploadedAt || new Date())
       });
       
       return docRef.id;

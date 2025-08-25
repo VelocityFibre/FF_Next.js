@@ -89,43 +89,7 @@ export function batchValidate(datasets: { data: any[]; type: 'poles' | 'drops' |
   };
 }
 
-// Legacy helper functions - maintained for backward compatibility
-// @deprecated Use SOWValidationRules class instead
-
-function isValidPoleType(type: string): boolean {
-  const validTypes = ['concrete', 'steel', 'wood', 'composite', 'hybrid', 'other'];
-  return validTypes.includes(type.toLowerCase());
-}
-
-function isValidPoleStatus(status: string): boolean {
-  const validStatuses = ['planned', 'installed', 'complete', 'pending', 'in-progress', 'cancelled'];
-  return validStatuses.includes(status.toLowerCase());
-}
-
-function isValidDateFormat(dateString: string): boolean {
-  const date = new Date(dateString);
-  return !isNaN(date.getTime()) && dateString !== 'Invalid Date';
-}
-
-function categorizeError(error: string): string {
-  const lowerError = error.toLowerCase();
-  
-  if (lowerError.includes('missing') || lowerError.includes('required')) {
-    return 'Missing Data';
-  } else if (lowerError.includes('duplicate')) {
-    return 'Duplicate Records';
-  } else if (lowerError.includes('invalid') && (lowerError.includes('latitude') || lowerError.includes('longitude'))) {
-    return 'Invalid Coordinates';
-  } else if (lowerError.includes('invalid') && lowerError.includes('date')) {
-    return 'Invalid Dates';
-  } else if (lowerError.includes('invalid') && (lowerError.includes('length') || lowerError.includes('number'))) {
-    return 'Invalid Numbers';
-  } else if (lowerError.includes('exceeds')) {
-    return 'Data Inconsistency';
-  } else {
-    return 'Other Errors';
-  }
-}
+// Legacy helper functions removed - Use SOWValidationRules class instead
 
 /**
  * Cross-validate data relationships

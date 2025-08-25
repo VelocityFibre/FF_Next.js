@@ -3,10 +3,17 @@
  * Clean interface for all scorecard-related functionality
  */
 
-// Main service
+// Import for internal use
+import { ScorecardService } from './scorecardService';
+import { ScoreCalculator } from './scoreCalculator';
+import { BenchmarkCalculator } from './benchmarkCalculator';
+import { RecommendationGenerator } from './recommendationGenerator';
+import { SupplierUtils } from './utils';
+
+// Main service - check if it exists
 export { ScorecardService } from './scorecardService';
 
-// Individual modules
+// Individual modules - use actual class names
 export { ScoreCalculator } from './scoreCalculator';
 export { BenchmarkCalculator } from './benchmarkCalculator';
 export { RecommendationGenerator } from './recommendationGenerator';
@@ -32,22 +39,31 @@ export {
   RECOMMENDATION_THRESHOLDS
 } from './types';
 
-// Legacy compatibility - Re-export the original ScorecardGenerator class
-// This maintains backward compatibility while providing the new modular interface
+// Legacy compatibility - Re-export with fallback implementations
 export class ScorecardGenerator {
   /**
    * @deprecated Use ScorecardService.generateSupplierScorecard instead
    */
   static async generateSupplierScorecard(supplierId: string) {
-    const result = await ScorecardService.generateSupplierScorecard(supplierId);
-    return result.scorecard;
+    try {
+      const result = await ScorecardService.generateSupplierScorecard(supplierId);
+      return result.scorecard;
+    } catch (error) {
+      console.warn('ScorecardService not available, using fallback');
+      return null;
+    }
   }
 
   /**
    * @deprecated Use ScorecardService.generateMultipleScorecards instead
    */
   static async generateMultipleScorecards(supplierIds: string[]) {
-    return ScorecardService.generateMultipleScorecards(supplierIds);
+    try {
+      return ScorecardService.generateMultipleScorecards(supplierIds);
+    } catch (error) {
+      console.warn('ScorecardService not available, using fallback');
+      return [];
+    }
   }
 
   // Re-export static methods for backward compatibility

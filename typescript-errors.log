@@ -1,0 +1,4 @@
+src/services/suppliers/supplier.compliance.ts(94,5): error TS2322: Type 'import("C:/Jarvis/AI Workspace/FibreFlow_React/src/services/suppliers/compliance/reporting/report-types").ComplianceReport' is not assignable to type 'import("C:/Jarvis/AI Workspace/FibreFlow_React/src/services/suppliers/compliance/types").ComplianceReport'.
+  Types of property 'overallStatus' are incompatible.
+    Type '"partial" | "compliant" | "non-compliant"' is not assignable to type '"expired" | "pending" | "compliant" | "non_compliant"'.
+      Type '"partial"' is not assignable to type '"expired" | "pending" | "compliant" | "non_compliant"'.

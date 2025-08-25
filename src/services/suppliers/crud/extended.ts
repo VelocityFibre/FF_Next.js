@@ -5,14 +5,13 @@
 
 import { 
   collection, 
-  doc, 
   getDocs, 
   query,
   where,
   Timestamp
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { SupplierStatus } from '@/types/supplier.types';
+import { SupplierStatus } from '@/types/supplier/base.types';
 import { SupplierBaseCrud } from './base';
 import { SupplierSoftDeleteData } from './types';
 
@@ -39,7 +38,7 @@ export class SupplierExtendedOperations {
         updateData.inactivatedAt = Timestamp.now();
       }
 
-      await SupplierBaseCrud.update(id, updateData);
+      await SupplierBaseCrud.update(id, updateData as any);
     } catch (error) {
       console.error(`Error soft deleting supplier ${id}:`, error);
       throw error;

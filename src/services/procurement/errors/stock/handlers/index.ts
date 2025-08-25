@@ -3,6 +3,16 @@
  * Central export point for all specialized handler components
  */
 
+// Re-export foundation types
+export type { 
+  RecoveryOption, 
+  RetryStrategy, 
+  HandlerResult, 
+  ErrorSeverity,
+  UserErrorDisplay,
+  SystemErrorLog
+} from '../types';
+
 // Handler utilities
 export * from './handler-utils';
 export { HandlerUtils } from './handler-utils';
@@ -17,36 +27,9 @@ export { TrackingHandlers } from './tracking-handlers';
 export * from './movement-handlers';
 export { MovementHandlers } from './movement-handlers';
 
-// Common interfaces used across handlers
-export interface RecoveryOption {
-  type: string;
-  description: string;
-  action: string;
-  data: any;
-  priority?: number;
-  estimatedTime?: string;
-  cost?: number;
-}
-
-export interface RetryStrategy {
-  type: string;
-  description: string;
-  action: string;
-  data: any;
-  maxAttempts?: number;
-  backoffMs?: number;
-  estimatedTime?: string;
-}
-
-// Unified handler result types
-export interface HandlerResult<T = any> {
-  error: T;
-  recoveryOptions?: RecoveryOption[];
-  retryStrategies?: RetryStrategy[];
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  autoRecoverable: boolean;
-  requiresManualIntervention?: boolean;
-}
+// New modular movement handlers
+export * from './movement';
+export { MovementCore, TransferHandler, MovementUtils, MovementExecutor } from './movement';
 
 // Legacy compatibility exports
 export { InventoryHandlers as StockInventoryHandler } from './inventory-handlers';

@@ -24,8 +24,8 @@ export {
 /**
  * Utility function to get all seed data for a specific project
  */
-export function getSeedDataForProject(projectId: string) {
-  const { SEED_BOQS, SEED_BOQ_ITEMS, SEED_BOQ_EXCEPTIONS } = require('./boqSeed');
+export async function getSeedDataForProject(projectId: string) {
+  const { SEED_BOQS, SEED_BOQ_ITEMS, SEED_BOQ_EXCEPTIONS } = await import('./boqSeed');
   
   return {
     boqs: SEED_BOQS.filter((boq: any) => boq.projectId === projectId),
@@ -37,8 +37,8 @@ export function getSeedDataForProject(projectId: string) {
 /**
  * Utility function to get all mock IDs
  */
-export function getAllMockIds() {
-  const { MOCK_PROJECT_IDS, MOCK_USER_IDS, MOCK_SUPPLIER_IDS, MOCK_CATALOG_IDS } = require('./constants');
+export async function getAllMockIds() {
+  const { MOCK_PROJECT_IDS, MOCK_USER_IDS, MOCK_SUPPLIER_IDS, MOCK_CATALOG_IDS } = await import('./constants');
   
   return {
     projects: MOCK_PROJECT_IDS,

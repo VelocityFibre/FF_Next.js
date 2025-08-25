@@ -3,7 +3,7 @@
  * Multi-dimensional performance trend tracking
  */
 
-import type { PerformanceTrend, GrowthTrend, ReviewVolumeTrend, TrendAnalysisOptions } from './trend-types';
+import type { PerformanceTrend, GrowthTrend, ReviewVolumeTrend } from './trend-types';
 
 export class SupplierPerformanceTracker {
   /**

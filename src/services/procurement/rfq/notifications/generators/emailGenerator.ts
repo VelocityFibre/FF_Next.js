@@ -27,13 +27,14 @@ export class RFQEmailGenerator extends BaseRFQGenerator {
           textContent: this.generateRFQIssuedEmailText(rfq, rfqUrl, additionalData)
         };
 
-      case 'deadline_extended':
-        const newDeadline = additionalData?.newDeadline || rfq.responseDeadline?.toDate();
+      case 'deadline_extended': {
+        const newDeadline = additionalData?.newDeadline || rfq.responseDeadline;
         return {
           subject: `RFQ Deadline Extended: ${rfq.title}`,
           content: this.generateDeadlineExtendedEmailHTML(rfq, newDeadline, rfqUrl, additionalData),
           textContent: this.generateDeadlineExtendedEmailText(rfq, newDeadline, rfqUrl, additionalData)
         };
+      }
 
       case 'cancelled':
         return {
@@ -49,13 +50,14 @@ export class RFQEmailGenerator extends BaseRFQGenerator {
           textContent: this.generateAwardedEmailText(rfq, additionalData)
         };
 
-      case 'reminder_deadline':
+      case 'reminder_deadline': {
         const hoursRemaining = this.getHoursRemaining(rfq);
         return {
           subject: `RFQ Response Reminder: ${rfq.title} - ${hoursRemaining} hours remaining`,
           content: this.generateReminderEmailHTML(rfq, hoursRemaining, responseUrl),
           textContent: this.generateReminderEmailText(rfq, hoursRemaining, responseUrl)
         };
+      }
 
       case 'response_confirmation':
         return {
@@ -73,8 +75,8 @@ export class RFQEmailGenerator extends BaseRFQGenerator {
     }
   }
 
-  private static generateRFQIssuedEmailHTML(rfq: RFQ, rfqUrl: string, responseUrl: string, additionalData?: any): string {
-    const deadline = rfq.responseDeadline?.toDate();
+  private static generateRFQIssuedEmailHTML(rfq: RFQ, rfqUrl: string, responseUrl: string, _additionalData?: any): string {
+    const deadline = rfq.responseDeadline;
     const deadlineText = deadline ? this.formatDeadline(deadline) : 'Not specified';
     
     return `
@@ -110,8 +112,8 @@ export class RFQEmailGenerator extends BaseRFQGenerator {
     `;
   }
 
-  private static generateRFQIssuedEmailText(rfq: RFQ, rfqUrl: string, additionalData?: any): string {
-    const deadline = rfq.responseDeadline?.toDate();
+  private static generateRFQIssuedEmailText(rfq: RFQ, rfqUrl: string, _additionalData?: any): string {
+    const deadline = rfq.responseDeadline;
     const deadlineText = deadline ? this.formatDeadline(deadline) : 'Not specified';
     
     return `
@@ -131,7 +133,7 @@ Please respond by ${deadlineText} to be considered for this project.
     `.trim();
   }
 
-  private static generateDeadlineExtendedEmailHTML(rfq: RFQ, newDeadline: Date, rfqUrl: string, additionalData?: any): string {
+  private static generateDeadlineExtendedEmailHTML(rfq: RFQ, newDeadline: Date, rfqUrl: string, _additionalData?: any): string {
     const deadlineText = this.formatDeadline(newDeadline);
     
     return `
@@ -158,7 +160,7 @@ Please respond by ${deadlineText} to be considered for this project.
     `;
   }
 
-  private static generateDeadlineExtendedEmailText(rfq: RFQ, newDeadline: Date, rfqUrl: string, additionalData?: any): string {
+  private static generateDeadlineExtendedEmailText(rfq: RFQ, newDeadline: Date, rfqUrl: string, _additionalData?: any): string {
     const deadlineText = this.formatDeadline(newDeadline);
     
     return `

@@ -3,15 +3,15 @@
  * Main orchestrator for supplier rating analytics
  */
 
-import { Supplier, PerformancePeriod } from '@/types/supplier.types';
-import { SupplierComparison, RatingStatistics, SupplierEvaluationReport, IAnalyticsService } from './types';
+import { Supplier, PerformancePeriod } from '@/types/supplier/base.types';
+import { SupplierComparison, RatingStatistics, SupplierEvaluationReport } from './types';
 import { SupplierRatingService } from './SupplierRatingService';
 import { SupplierStatisticsService } from './SupplierStatisticsService';
 import { SupplierEvaluationService } from './SupplierEvaluationService';
 import { SupplierBenchmarkService } from './SupplierBenchmarkService';
 import { SupplierTrendService } from './SupplierTrendService';
 
-export class SupplierRatingAnalyticsService implements IAnalyticsService {
+export class SupplierRatingAnalyticsService {
   /**
    * Get top-rated suppliers
    */

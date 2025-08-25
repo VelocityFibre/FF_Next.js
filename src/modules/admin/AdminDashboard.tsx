@@ -16,9 +16,7 @@ import {
 } from 'lucide-react';
 import { DocumentApprovalPanel } from '../contractors/components/admin/DocumentApprovalPanel';
 
-interface AdminDashboardProps {}
-
-export function AdminDashboard({}: AdminDashboardProps) {
+export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'documents' | 'contractors' | 'compliance' | 'settings'>('documents');
 
   return (

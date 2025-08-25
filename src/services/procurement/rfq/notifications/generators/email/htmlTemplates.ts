@@ -9,8 +9,8 @@ export class RFQEmailHTMLTemplates {
   /**
    * Generate HTML for RFQ issued email
    */
-  static generateRFQIssuedHTML(rfq: RFQ, rfqUrl: string, responseUrl: string, additionalData?: any): string {
-    const deadline = rfq.responseDeadline?.toDate();
+  static generateRFQIssuedHTML(rfq: RFQ, rfqUrl: string, responseUrl: string, _additionalData?: any): string {
+    const deadline = rfq.responseDeadline;
     const deadlineText = deadline ? this.formatDeadline(deadline) : 'Not specified';
     
     return `
@@ -49,7 +49,7 @@ export class RFQEmailHTMLTemplates {
   /**
    * Generate HTML for deadline extended email
    */
-  static generateDeadlineExtendedHTML(rfq: RFQ, newDeadline: Date, rfqUrl: string, additionalData?: any): string {
+  static generateDeadlineExtendedHTML(rfq: RFQ, newDeadline: Date, rfqUrl: string, _additionalData?: any): string {
     const deadlineText = this.formatDeadline(newDeadline);
     
     return `

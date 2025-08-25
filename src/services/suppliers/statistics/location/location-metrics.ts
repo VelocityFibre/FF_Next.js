@@ -3,7 +3,7 @@
  * Core calculations for geographic supplier metrics and distances
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   LocationDistribution, 
   ProvinceDistribution, 
@@ -93,7 +93,7 @@ export class LocationMetricsCalculator {
     const totalSuppliers = suppliers.length;
     const distribution: LocationDistribution[] = [];
 
-    locationCounts.forEach((data, key) => {
+    locationCounts.forEach((data) => {
       distribution.push({
         city: data.city,
         province: data.province,
@@ -215,22 +215,25 @@ export class LocationMetricsCalculator {
         const distance = this.calculateDistance(
           targetLat,
           targetLon,
-          address.coordinates.latitude,
-          address.coordinates.longitude
+          address.coordinates.lat,
+          address.coordinates.lng
         );
 
         if (distance <= radiusKm) {
           nearbySuppliers.push({
             supplierId: supplier.id,
-            supplierName: supplier.companyName,
+            supplierName: supplier.companyName || '',
             address: {
-              street: address.street,
+              street: address.street1,
               city: address.city || '',
               province: address.state,
               state: address.state,
               country: address.country,
               postalCode: address.postalCode,
-              coordinates: address.coordinates
+              coordinates: {
+                latitude: address.coordinates.lat,
+                longitude: address.coordinates.lng
+              }
             },
             distance: Math.round(distance * 100) / 100
           });
@@ -311,9 +314,9 @@ export class LocationMetricsCalculator {
     }
 
     const totalLat = suppliersWithCoords.reduce((sum, s) => 
-      sum + (s.addresses!.physical!.coordinates!.latitude || 0), 0);
+      sum + (s.addresses!.physical!.coordinates!.lat || 0), 0);
     const totalLon = suppliersWithCoords.reduce((sum, s) => 
-      sum + (s.addresses!.physical!.coordinates!.longitude || 0), 0);
+      sum + (s.addresses!.physical!.coordinates!.lng || 0), 0);
 
     return {
       latitude: totalLat / suppliersWithCoords.length,
@@ -337,12 +340,13 @@ export class LocationMetricsCalculator {
     }
 
     const totalDistance = suppliersWithCoords.reduce((sum, supplier) => {
-      const coords = supplier.addresses!.physical!.coordinates!;
+      const coords = supplier.addresses?.physical?.coordinates;
+      if (!coords) return sum;
       const distance = this.calculateDistance(
         center.latitude,
         center.longitude,
-        coords.latitude,
-        coords.longitude
+        coords.lat,
+        coords.lng
       );
       return sum + distance;
     }, 0);

@@ -3,7 +3,7 @@
  * Handles performance evaluations and reports
  */
 
-import { PerformancePeriod } from '@/types/supplier.types';
+import { PerformancePeriod } from '@/types/supplier/base.types';
 import { SupplierEvaluationReport, EvaluationActionItem } from './types';
 import { SupplierPerformanceCalculator } from './performanceCalculator';
 
@@ -271,7 +271,7 @@ export class SupplierEvaluationService {
             supplierId,
             description: item.description,
             priority: item.priority,
-            dueDate: item.dueDate
+            dueDate: item.dueDate || new Date()
           });
         });
       });

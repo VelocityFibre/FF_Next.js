@@ -3,14 +3,38 @@
  * Comprehensive error handling for stock management operations
  */
 
-// Re-export inventory errors
+// Re-export foundation types
+export type {
+  RecoveryOption,
+  RetryStrategy,
+  HandlerResult,
+  ErrorSeverity,
+  UserErrorDisplay,
+  SystemErrorLog,
+  ErrorAnalysisResult,
+  ErrorPattern,
+  ErrorTrend,
+  ErrorInsight,
+  StockErrorType,
+  MovementType,
+  AdjustmentType,
+  AlternativeLocation,
+  AlternativeItem,
+  ExistingReservation,
+  MovementOptions,
+  TransferOptions,
+  AdjustmentOptions,
+  InsufficientStockOptions,
+  TrackingOptions
+} from './types';
+
+// Re-export core error classes
 export {
   StockError,
   InsufficientStockError,
   StockReservationError
 } from './inventory';
 
-// Re-export tracking errors
 export {
   StockMovementError,
   StockTransferError,
@@ -18,27 +42,22 @@ export {
   StockTrackingError
 } from './tracking';
 
-// Re-export modular components
+// Import error classes for utility functions
+import { StockError } from './inventory';
+import type { StockErrorType } from './types';
+
+// Re-export clean components (no circular dependencies)
 export { StockErrorFactory } from './factory';
-export { StockErrorHandler, type RecoveryOption, type RetryStrategy } from './handler';
-export { StockErrorFormatter, type UserErrorDisplay, type SystemErrorLog } from './formatter';
-export { StockErrorAnalytics, type ErrorPattern, type ErrorTrend, type ErrorInsight } from './analytics';
+export { StockErrorHandler, ErrorRecoveryService } from './handler-clean';
 
-// Re-export handlers for backward compatibility
-export {
-  StockErrorFactory as LegacyStockErrorFactory,
-  StockErrorHandler as LegacyStockErrorHandler,
-  StockErrorAnalytics as LegacyStockErrorAnalytics
-} from './handlers';
+// Re-export handler utilities
+export { HandlerUtils, InventoryHandlers } from './handlers';
 
-// Convenience re-exports for backward compatibility
-export type StockErrorType = 
-  | 'insufficient_stock'
-  | 'stock_movement_failed'
-  | 'stock_reservation_failed'
-  | 'stock_transfer_failed'
-  | 'stock_adjustment_failed'
-  | 'stock_tracking_failed';
+// Keep legacy components available but use clean implementations internally
+export { StockErrorFormatter, type UserErrorDisplay as LegacyUserErrorDisplay, type SystemErrorLog as LegacySystemErrorLog } from './formatter';
+export { StockErrorAnalytics, type ErrorPattern as LegacyErrorPattern, type ErrorTrend as LegacyErrorTrend, type ErrorInsight as LegacyErrorInsight } from './analytics';
+
+// Note: StockErrorType is already exported from './types' above
 
 /**
  * Check if an error is a stock-related error

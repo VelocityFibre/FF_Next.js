@@ -3,7 +3,6 @@
  * Handles batch processing of multiple supplier scorecards
  */
 
-import { Supplier } from '@/types/supplier.types';
 import type { 
   BatchScorecardOptions, 
   ScorecardSummary, 
@@ -25,6 +24,9 @@ export class ScorecardBatchProcessor {
       sortBy = 'score',
       filters = {}
     } = options;
+
+    // Acknowledge unused variable
+    void includeFailures;
 
     const scorecards: any[] = [];
     const failures: Array<{ supplierId: string; error: string }> = [];

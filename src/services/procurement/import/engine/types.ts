@@ -41,7 +41,7 @@ export interface ChunkProcessingResult {
   processedCount: number;
 }
 
-export { 
+export type { 
   ImportProgress, 
   ImportResult, 
   ProgressCallback, 

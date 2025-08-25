@@ -10,8 +10,7 @@ import {
   CategoryRanking, 
   PerformanceMetrics,
   PerformanceMetricsDiff,
-  RankingOptions,
-  PerformanceContext 
+  RankingOptions
 } from './benchmark-types';
 
 /**
@@ -68,9 +67,6 @@ export class ComparisonEngine {
     options: RankingOptions = {}
   ): Promise<CategoryRanking[]> {
     try {
-      const supplier = await SupplierCrudService.getById(supplierId);
-      const supplierScore = (supplier.performance as any)?.overallScore || 0;
-      
       const rankings: CategoryRanking[] = [];
       
       for (const category of categories) {
@@ -106,7 +102,7 @@ export class ComparisonEngine {
   /**
    * Get suppliers in a specific category with filtering options
    */
-  private static async getSuppliersInCategory(category: string, options: RankingOptions = []): Promise<any[]> {
+  private static async getSuppliersInCategory(category: string, options: RankingOptions = {} as RankingOptions): Promise<any[]> {
     const allSuppliers = await SupplierCrudService.getAll();
     return allSuppliers.filter(supplier => {
       // Status filter
@@ -115,7 +111,7 @@ export class ComparisonEngine {
       }
 
       // Category membership
-      if (!supplier.categories?.includes(category)) {
+      if (!supplier.categories?.some(cat => cat.toString() === category.toString())) {
         return false;
       }
 
@@ -348,12 +344,12 @@ export class ComparisonEngine {
     
     // Performance insights
     const strongestMetric = Object.entries(scores).reduce((prev, current) => 
-      current[1] > (prev[1] as number) ? current : prev
+      (current[1] as number) > (prev[1] as number) ? current : prev
     )[0];
     insights.push(`Strongest performance area: ${strongestMetric.replace('Score', '')}`);
     
     const weakestMetric = Object.entries(scores).reduce((prev, current) => 
-      current[1] < (prev[1] as number) ? current : prev
+      (current[1] as number) < (prev[1] as number) ? current : prev
     )[0];
     insights.push(`Area for improvement: ${weakestMetric.replace('Score', '')}`);
     

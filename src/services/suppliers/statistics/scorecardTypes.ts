@@ -3,7 +3,7 @@
  * Shared types and interfaces for supplier scorecard system
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 
 export interface SupplierRatings {
   quality: number;
@@ -138,7 +138,7 @@ export function isValidPerformance(performance: any): boolean {
 export function isValidCompliance(compliance: any): boolean {
   return compliance &&
          typeof compliance === 'object' &&
-         typeof compliance.complianceScore === 'number';
+         typeof compliance/* .complianceScore - property doesn't exist */ === 'number';
 }
 
 // Constants

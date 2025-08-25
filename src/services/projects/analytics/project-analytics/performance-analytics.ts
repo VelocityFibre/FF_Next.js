@@ -29,7 +29,7 @@ export class ProjectPerformanceAnalytics {
         FROM projects p
         LEFT JOIN clients c ON p.client_id = c.id
         WHERE 
-          ${sql.raw(whereClause)}
+          (${whereClause})
           AND p.end_date < CURRENT_DATE 
           AND p.status NOT IN ('COMPLETED', 'CANCELLED')
         ORDER BY days_overdue DESC
@@ -60,14 +60,14 @@ export class ProjectPerformanceAnalytics {
           COUNT(*) as total_completed,
           COUNT(CASE WHEN updated_at <= end_date THEN 1 END) as on_time_completed
         FROM projects
-        WHERE status = 'COMPLETED' AND end_date IS NOT NULL AND ${sql.raw(whereClause)}
+        WHERE status = 'COMPLETED' AND end_date IS NOT NULL AND (${whereClause})
       `;
       
       const durationResult = await sql`
         SELECT 
           AVG(EXTRACT(DAY FROM (end_date - start_date))) as avg_duration
         FROM projects
-        WHERE start_date IS NOT NULL AND end_date IS NOT NULL AND ${sql.raw(whereClause)}
+        WHERE start_date IS NOT NULL AND end_date IS NOT NULL AND (${whereClause})
       `;
 
       const budgetResult = await sql`
@@ -80,7 +80,7 @@ export class ProjectPerformanceAnalytics {
             END
           ) as avg_budget_utilization
         FROM projects
-        WHERE ${sql.raw(whereClause)} AND budget > 0
+        WHERE is_active = true AND budget > 0
       `;
       
       const onTimeRate = onTimeResult[0].total_completed > 0 
@@ -187,7 +187,6 @@ export class ProjectPerformanceAnalytics {
   }> {
     try {
       const metrics = await this.getProjectPerformanceMetrics();
-      const overdueProjects = await this.getOverdueProjects();
       
       // Calculate efficiency metrics
       const productivity = Math.min(100, metrics.onTimeCompletionRate + 10); // Boost for good performance

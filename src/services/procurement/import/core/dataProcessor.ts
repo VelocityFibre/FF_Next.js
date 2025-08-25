@@ -3,8 +3,8 @@
  * Handles data validation, mapping, and transformation
  */
 
-import { ParsedBOQItem } from '@/lib/utils/excelParser';
-import { BOQItemForMatching, MatchResult, MappingException } from '@/lib/utils/catalogMatcher';
+import { ParsedBOQItem } from '../../../../lib/utils/excelParser';
+import { BOQItemForMatching, MatchResult, MappingException } from '../../../../lib/utils/catalogMatcher';
 import { ImportConfig, MappingResults } from './types';
 import { BOQImportCatalogManager } from './catalogManager';
 
@@ -54,8 +54,8 @@ export class BOQImportDataProcessor {
       const boqItem: BOQItemForMatching = {
         description: item.description,
         uom: item.uom,
-        itemCode: item.itemCode,
-        category: item.category
+        ...(item.itemCode !== undefined && item.itemCode !== null && { itemCode: item.itemCode }),
+        ...(item.category !== undefined && item.category !== null && { category: item.category })
       };
 
       const matches = await catalogMatcher.findMatches(boqItem);
@@ -86,8 +86,8 @@ export class BOQImportDataProcessor {
     const boqItem: BOQItemForMatching = {
       description: item.description,
       uom: item.uom,
-      itemCode: item.itemCode,
-      category: item.category
+      ...(item.itemCode !== undefined && item.itemCode !== null && { itemCode: item.itemCode }),
+      ...(item.category !== undefined && item.category !== null && { category: item.category })
     };
 
     return {
@@ -107,11 +107,11 @@ export class BOQImportDataProcessor {
     return {
       ...item,
       description: item.description.trim(),
-      itemCode: item.itemCode?.trim(),
-      category: item.category?.trim(),
+      itemCode: item.itemCode ? (item.itemCode.trim() || null) : null,
+      category: item.category ? (item.category.trim() || null) : null,
       uom: item.uom.trim().toLowerCase(),
       quantity: Math.max(0, item.quantity),
-      unitPrice: item.unitPrice ? Math.max(0, item.unitPrice) : undefined
+      unitPrice: item.unitPrice ? Math.max(0, item.unitPrice) : null
     };
   }
 

@@ -53,7 +53,7 @@ export function MeetingsDashboard() {
         actions={[
           {
             label: 'Schedule Meeting',
-            icon: Plus,
+            icon: Plus as React.ComponentType<{ className?: string; }>,
             onClick: () => setShowNewMeetingModal(true),
             variant: 'primary'
           }

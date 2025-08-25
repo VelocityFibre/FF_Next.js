@@ -144,15 +144,20 @@ export function validatePriceConsistency(items: ParsedBOQItem[]): {
   const errors: ImportError[] = [];
   const warnings: ImportWarning[] = [];
   
-  // Group items by description and UOM
-  const itemGroups = new Map<string, ParsedBOQItem[]>();
+  // Group items by description and UOM with their original index
+  interface ItemWithIndex {
+    item: ParsedBOQItem;
+    index: number;
+  }
+  
+  const itemGroups = new Map<string, ItemWithIndex[]>();
   
   items.forEach((item, index) => {
     const key = `${item.description.toLowerCase().trim()}|${item.uom.toLowerCase()}`;
     if (!itemGroups.has(key)) {
       itemGroups.set(key, []);
     }
-    itemGroups.get(key)!.push({ ...item, originalIndex: index });
+    itemGroups.get(key)!.push({ item, index });
   });
   
   // Check for price variations within similar items
@@ -160,8 +165,8 @@ export function validatePriceConsistency(items: ParsedBOQItem[]): {
     if (groupItems.length < 2) return;
     
     const prices = groupItems
-      .filter(item => item.unitPrice && item.unitPrice > 0)
-      .map(item => item.unitPrice!);
+      .filter(itemWithIndex => itemWithIndex.item.unitPrice && itemWithIndex.item.unitPrice > 0)
+      .map(itemWithIndex => itemWithIndex.item.unitPrice!);
     
     if (prices.length < 2) return;
     

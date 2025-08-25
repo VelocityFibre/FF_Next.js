@@ -70,7 +70,7 @@ export class StatusCore {
     reason?: string, 
     userId?: string
   ): Record<string, any> {
-    const data = { ...baseData, isActive: false };
+    const data: Record<string, any> = { ...baseData, isActive: false };
     
     if (reason) {
       data.blacklistReason = reason;
@@ -88,7 +88,7 @@ export class StatusCore {
     baseData: Record<string, any>, 
     reason?: string
   ): Record<string, any> {
-    const data = { ...baseData, isActive: false };
+    const data: Record<string, any> = { ...baseData, isActive: false };
     
     if (reason) {
       data.inactiveReason = reason;

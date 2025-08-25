@@ -21,7 +21,9 @@ function App(): JSX.Element {
     <ErrorBoundary
       onError={(error, errorInfo) => {
         // In production, send to error tracking service
-        console.error('Global error caught:', error, errorInfo);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Global error caught:', error, errorInfo);
+        }
       }}
     >
       <QueryClientProvider client={queryClient}>

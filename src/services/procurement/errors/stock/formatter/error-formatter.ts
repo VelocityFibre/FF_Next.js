@@ -46,7 +46,8 @@ export class CoreErrorFormatter {
           action: 'retry_operation',
           primary: true
         }
-      ]
+      ],
+      details: undefined
     };
   }
 
@@ -80,6 +81,7 @@ export class CoreErrorFormatter {
       ],
       details: {
         itemCode: error.itemCode,
+        location: undefined,
         quantity: error.requestedQuantity,
         timestamp: new Date()
       }
@@ -114,6 +116,7 @@ export class CoreErrorFormatter {
       ],
       details: {
         itemCode: error.itemCode,
+        location: undefined,
         quantity: error.quantity,
         timestamp: new Date()
       }
@@ -152,6 +155,7 @@ export class CoreErrorFormatter {
       ],
       details: {
         itemCode: error.itemCode,
+        location: undefined,
         quantity: error.requestedQuantity,
         timestamp: new Date()
       }

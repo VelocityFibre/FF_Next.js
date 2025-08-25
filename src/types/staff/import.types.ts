@@ -29,6 +29,7 @@ export interface StaffImportRow {
 
 export interface StaffImportResult {
   success: boolean;
+  total: number;
   imported: number;
   failed: number;
   errors: StaffImportError[];

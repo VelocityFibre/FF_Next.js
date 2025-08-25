@@ -31,13 +31,13 @@ export function PoleTrackerDetail() {
         actions={[
           {
             label: 'Back to List',
-            icon: ArrowLeft,
+            icon: ArrowLeft as React.ComponentType<{ className?: string; }>,
             onClick: () => navigate('/app/pole-tracker'),
             variant: 'secondary'
           },
           {
             label: 'Edit Pole',
-            icon: Edit,
+            icon: Edit as React.ComponentType<{ className?: string; }>,
             onClick: () => navigate(`/app/pole-tracker/${id}/edit`),
             variant: 'primary'
           }

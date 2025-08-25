@@ -33,14 +33,27 @@ export class ProcurementError extends Error {
    * Convert error to JSON for API responses and logging
    */
   toJSON() {
-    return {
+    const result: {
+      name: string;
+      message: string;
+      code: string;
+      statusCode: number;
+      timestamp: string;
+      context?: Record<string, any>;
+      [key: string]: any;
+    } = {
       name: this.name,
       message: this.message,
       code: this.code,
       statusCode: this.statusCode,
-      timestamp: this.timestamp.toISOString(),
-      context: this.context
+      timestamp: this.timestamp.toISOString()
     };
+    
+    if (this.context) {
+      result.context = this.context;
+    }
+    
+    return result;
   }
 
   /**
@@ -160,12 +173,12 @@ export class ProcurementNotFoundError extends ProcurementError {
  */
 export class ProcurementConflictError extends ProcurementError {
   public readonly conflictType: 'duplicate' | 'invalid_state' | 'version_mismatch';
-  public readonly conflictDetails?: Record<string, any>;
+  public readonly conflictDetails: Record<string, any> | undefined;
 
   constructor(
     message: string,
     conflictType: 'duplicate' | 'invalid_state' | 'version_mismatch',
-    conflictDetails?: Record<string, any>,
+    conflictDetails: Record<string, any> | undefined,
     context?: Record<string, any>
   ) {
     const code = conflictType === 'duplicate' ? 'DUPLICATE_ENTRY' : 

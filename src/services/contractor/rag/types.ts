@@ -182,3 +182,20 @@ export const SKILL_LEVEL_SCORES = {
   senior: 90,
   expert: 100
 } as const;
+
+// RAG Assessment Result interface
+export interface RAGAssessmentResult {
+  contractorId: string;
+  assessmentDate: Date;
+  overallScore: number;
+  ragStatus: 'red' | 'amber' | 'green';
+  breakdown: {
+    performance: RAGPerformanceBreakdown;
+    financial: RAGFinancialBreakdown;
+    reliability: RAGReliabilityBreakdown;
+    capabilities: RAGCapabilitiesBreakdown;
+  };
+  scores: RAGScoreComponents;
+  recommendations: string[];
+  riskFactors: string[];
+}

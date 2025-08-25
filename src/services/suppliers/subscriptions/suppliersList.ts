@@ -5,7 +5,7 @@
 
 import { query, collection, onSnapshot, orderBy, where, limit } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { Supplier, SupplierStatus } from '@/types/supplier.types';
+import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { SuppliersCallback, SupplierSubscriptionFilter, SubscriptionOptions } from './types';
 
 const COLLECTION_NAME = 'suppliers';

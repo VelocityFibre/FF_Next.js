@@ -188,8 +188,6 @@ export function createErrorReport(
   warnings: ImportWarning[],
   context?: { filename?: string; timestamp?: Date; totalRows?: number }
 ): string {
-  const summary = getErrorSummary(errors, warnings);
-  
   let report = `Validation Error Report\n`;
   report += `========================\n\n`;
   

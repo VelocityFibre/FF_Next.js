@@ -4,6 +4,7 @@
  */
 
 import type { BOQ, BOQWithItems, ProcurementContext, BOQCreateData } from './types';
+import type { BOQStatusType, MappingStatusType } from '@/types/procurement/boq.types';
 import { mockBOQs, mockBOQItems, mockExceptions } from './mockData';
 
 export class BOQOperations {
@@ -83,11 +84,12 @@ export class BOQOperations {
     const newBOQ: BOQ = {
       id: `boq-${Date.now()}`,
       projectId: context.projectId,
+      name: boqData.title || `BOQ ${boqData.version}`,
       version: boqData.version,
       title: boqData.title,
       description: boqData.description,
-      status: boqData.status || 'draft',
-      mappingStatus: boqData.mappingStatus || 'pending',
+      status: (boqData.status as BOQStatusType) || 'draft',
+      mappingStatus: (boqData.mappingStatus as MappingStatusType) || 'pending',
       mappingConfidence: boqData.mappingConfidence || 0,
       uploadedBy: context.userId,
       uploadedAt: new Date(),

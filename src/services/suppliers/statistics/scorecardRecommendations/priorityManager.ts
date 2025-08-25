@@ -81,11 +81,14 @@ export class PriorityManager {
     criteria: RecommendationCriteria,
     allRecommendations: string[]
   ): string[] {
-    return allRecommendations.filter(rec => 
-      rec.includes('improve') || 
-      rec.includes('enhance') || 
-      rec.includes('optimize')
-    );
+    // Use criteria for filtering medium priority items
+    const mediumKeywords = ['improve', 'enhance', 'optimize'];
+    return allRecommendations.filter(rec => {
+      const matchesKeywords = mediumKeywords.some(keyword => rec.includes(keyword));
+      // Apply urgency criteria - medium priority if urgency is medium
+      const matchesUrgency = (criteria as any).urgency === 'medium' || !(criteria as any).urgency;
+      return matchesKeywords && matchesUrgency;
+    });
   }
 
   /**
@@ -95,11 +98,14 @@ export class PriorityManager {
     criteria: RecommendationCriteria,
     allRecommendations: string[]
   ): string[] {
-    return allRecommendations.filter(rec => 
-      rec.includes('maintain') || 
-      rec.includes('consider') || 
-      rec.includes('explore')
-    );
+    // Use criteria for filtering low priority items
+    const lowKeywords = ['maintain', 'consider', 'explore'];
+    return allRecommendations.filter(rec => {
+      const matchesKeywords = lowKeywords.some(keyword => rec.includes(keyword));
+      // Apply urgency criteria - low priority if urgency is low or none specified
+      const matchesUrgency = (criteria as any).urgency === 'low' || !(criteria as any).urgency;
+      return matchesKeywords && matchesUrgency;
+    });
   }
 
   /**

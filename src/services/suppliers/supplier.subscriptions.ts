@@ -21,7 +21,7 @@ import {
   SupplierRatingData,
   SupplierComplianceData
 } from './subscriptions';
-import { SupplierStatus } from '@/types/supplier.types';
+// Removed unused import: SupplierStatus
 
 /**
  * Supplier subscription service for real-time updates

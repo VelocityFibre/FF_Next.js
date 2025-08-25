@@ -12,7 +12,7 @@ import {
   limit, 
   DocumentSnapshot
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '../../../../../config/firebase';
 import { Project, ProjectListQuery } from '../../../types/project.types';
 import { ProjectQueryResult } from '../types/service.types';
 

@@ -34,10 +34,15 @@ export class BOQDataTransformers {
       createdAt: now,
       updatedAt: now,
       uploadedAt: now,
+      name: data.title || 'Untitled BOQ',
       version: data.version || '1.0',
-      items: data.items || [],
-      totalValue: data.totalValue || 0,
-      currency: data.currency || 'USD'
+      uploadedBy: 'current-user', // TODO: Get from auth context
+      itemCount: 0,
+      mappedItems: 0,
+      unmappedItems: 0,
+      exceptionsCount: 0,
+      totalEstimatedValue: 0,
+      currency: data.currency || 'ZAR'
     };
   }
 
@@ -48,26 +53,26 @@ export class BOQDataTransformers {
     const firestoreDoc = { ...boq };
     
     // Convert dates to Firestore Timestamps
-    if (firestoreDoc.createdAt) {
-      firestoreDoc.createdAt = Timestamp.fromDate(firestoreDoc.createdAt);
+    if (firestoreDoc.createdAt instanceof Date) {
+      (firestoreDoc as any).createdAt = Timestamp.fromDate(firestoreDoc.createdAt);
     }
-    if (firestoreDoc.updatedAt) {
-      firestoreDoc.updatedAt = Timestamp.fromDate(firestoreDoc.updatedAt);
+    if (firestoreDoc.updatedAt instanceof Date) {
+      (firestoreDoc as any).updatedAt = Timestamp.fromDate(firestoreDoc.updatedAt);
     }
-    if (firestoreDoc.uploadedAt) {
-      firestoreDoc.uploadedAt = Timestamp.fromDate(firestoreDoc.uploadedAt);
+    if (firestoreDoc.uploadedAt instanceof Date) {
+      (firestoreDoc as any).uploadedAt = Timestamp.fromDate(firestoreDoc.uploadedAt);
     }
-    if (firestoreDoc.approvedAt) {
-      firestoreDoc.approvedAt = Timestamp.fromDate(firestoreDoc.approvedAt);
+    if (firestoreDoc.approvedAt instanceof Date) {
+      (firestoreDoc as any).approvedAt = Timestamp.fromDate(firestoreDoc.approvedAt);
     }
-    if (firestoreDoc.rejectedAt) {
-      firestoreDoc.rejectedAt = Timestamp.fromDate(firestoreDoc.rejectedAt);
+    if (firestoreDoc.rejectedAt instanceof Date) {
+      (firestoreDoc as any).rejectedAt = Timestamp.fromDate(firestoreDoc.rejectedAt);
     }
 
     // Remove undefined fields
     Object.keys(firestoreDoc).forEach(key => {
-      if (firestoreDoc[key] === undefined) {
-        delete firestoreDoc[key];
+      if ((firestoreDoc as any)[key] === undefined) {
+        delete (firestoreDoc as any)[key];
       }
     });
 

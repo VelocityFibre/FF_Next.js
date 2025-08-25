@@ -3,7 +3,7 @@
  * Re-exports all analyzer components for backward compatibility
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierTrends, SupplierBenchmarks } from '../scorecardTypes';
 import { TrendsCalculator } from './trendsCalculator';
 import { BenchmarkCalculator } from './benchmarkCalculator';

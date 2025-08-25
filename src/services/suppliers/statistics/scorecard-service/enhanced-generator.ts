@@ -3,7 +3,8 @@
  * Advanced scorecard generation with regional and category benchmarks
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
+import { ProductCategory } from '@/types/supplier/common.types';
 import type { 
   ScorecardGenerationResult, 
   EnhancedScorecardResult 
@@ -129,7 +130,7 @@ export class ScorecardEnhancedGenerator {
    */
   private static async calculateCategoryBenchmarks(
     supplier: Supplier, 
-    category: string
+    category: ProductCategory
   ): Promise<{
     category: string;
     categoryPercentile: number;
@@ -243,7 +244,9 @@ export class ScorecardEnhancedGenerator {
 
     // Check compliance
     const compliance = supplier.complianceStatus;
-    if (compliance?.complianceScore && compliance.complianceScore < 80) {
+    // Calculate basic compliance score
+    const complianceScore = this.calculateBasicComplianceScore(compliance);
+    if (complianceScore > 0 && complianceScore < 80) {
       recommendations.push({
         priority: 'high',
         category: 'Compliance',
@@ -305,5 +308,22 @@ export class ScorecardEnhancedGenerator {
       roiScore: (impactScores[rec.impact] * priorityScores[rec.priority]) / effortScores[rec.effort],
       priorityRank: index + 1
     })).sort((a, b) => b.roiScore - a.roiScore);
+  }
+
+  /**
+   * Calculate basic compliance score from available data
+   */
+  private static calculateBasicComplianceScore(compliance: any): number {
+    if (!compliance) return 0;
+    
+    let score = 0;
+    let factors = 0;
+    
+    if (compliance.taxCompliant) { score += 30; factors++; }
+    if (compliance.beeCompliant) { score += 25; factors++; }
+    if (compliance.isoCompliant) { score += 25; factors++; }
+    if (compliance.documentsVerified) { score += 20; factors++; }
+    
+    return factors > 0 ? score : 0;
   }
 }

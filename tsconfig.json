@@ -43,6 +43,13 @@
     "node_modules",
     "dist",
     "build",
-    "vite.config.ts"
+    "vite.config.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/__tests__/**/*",
+    "src/services/procurement/__tests__/**/*",
+    "dev-tools/testing/**/*"
   ]
 }

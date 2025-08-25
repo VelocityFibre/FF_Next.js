@@ -4,7 +4,17 @@
  */
 
 import { InsufficientStockError, StockReservationError } from './inventory';
-import { StockMovementError, StockTransferError, StockAdjustmentError } from './tracking';
+import { StockMovementError, StockTransferError, StockAdjustmentError, StockTrackingError } from './tracking';
+import type { 
+  MovementType,
+  AdjustmentType,
+  InsufficientStockOptions,
+  MovementOptions,
+  TransferOptions,
+  AdjustmentOptions,
+  TrackingOptions,
+  ExistingReservation
+} from './types';
 
 /**
  * Stock error factory for creating appropriate error instances
@@ -17,23 +27,7 @@ export class StockErrorFactory {
     itemCode: string,
     requestedQuantity: number,
     availableQuantity: number,
-    options?: {
-      reservedQuantity?: number;
-      alternativeLocations?: Array<{
-        location: string;
-        locationId: string;
-        availableQuantity: number;
-        estimatedTransferTime?: string;
-        transferCost?: number;
-      }>;
-      alternativeItems?: Array<{
-        itemCode: string;
-        itemName: string;
-        availableQuantity: number;
-        compatibility: number;
-        priceDifference?: number;
-      }>;
-    },
+    options?: InsufficientStockOptions,
     context?: Record<string, any>
   ): InsufficientStockError {
     return new InsufficientStockError(itemCode, requestedQuantity, availableQuantity, options, context);
@@ -44,14 +38,10 @@ export class StockErrorFactory {
    */
   static createMovementError(
     message: string,
-    movementType: 'inbound' | 'outbound' | 'transfer' | 'adjustment',
+    movementType: MovementType,
     itemCode: string,
     quantity: number,
-    options?: {
-      fromLocation?: string;
-      toLocation?: string;
-      movementId?: string;
-    },
+    options?: MovementOptions,
     context?: Record<string, any>
   ): StockMovementError {
     return new StockMovementError(message, movementType, itemCode, quantity, options, context);
@@ -64,12 +54,7 @@ export class StockErrorFactory {
     itemCode: string,
     requestedQuantity: number,
     availableQuantity: number,
-    existingReservations: Array<{
-      reservationId: string;
-      quantity: number;
-      expiresAt?: Date;
-      purpose: string;
-    }>,
+    existingReservations: ExistingReservation[],
     context?: Record<string, any>
   ): StockReservationError {
     return new StockReservationError(itemCode, requestedQuantity, availableQuantity, existingReservations, context);
@@ -84,9 +69,7 @@ export class StockErrorFactory {
     toLocation: string,
     quantity: number,
     reason: string,
-    options?: {
-      transferId?: string;
-    },
+    options?: TransferOptions,
     context?: Record<string, any>
   ): StockTransferError {
     return new StockTransferError(itemCode, fromLocation, toLocation, quantity, reason, options, context);
@@ -98,13 +81,11 @@ export class StockErrorFactory {
   static createAdjustmentError(
     itemCode: string,
     location: string,
-    adjustmentType: 'increase' | 'decrease' | 'recount',
+    adjustmentType: AdjustmentType,
     adjustmentQuantity: number,
     currentQuantity: number,
     message: string,
-    options?: {
-      adjustmentReason?: string;
-    },
+    options?: AdjustmentOptions,
     context?: Record<string, any>
   ): StockAdjustmentError {
     return new StockAdjustmentError(
@@ -120,12 +101,26 @@ export class StockErrorFactory {
   }
 
   /**
+   * Create a stock tracking error
+   */
+  static createTrackingError(
+    message: string,
+    itemCode: string,
+    operationType: string,
+    details: Record<string, any> = {},
+    options?: TrackingOptions,
+    context?: Record<string, any>
+  ): StockTrackingError {
+    return new StockTrackingError(message, itemCode, operationType, details, options, context);
+  }
+
+  /**
    * Create error from generic parameters
    */
   static createFromType(
     errorType: string,
     parameters: Record<string, any>
-  ): InsufficientStockError | StockMovementError | StockReservationError | StockTransferError | StockAdjustmentError {
+  ): InsufficientStockError | StockMovementError | StockReservationError | StockTransferError | StockAdjustmentError | StockTrackingError {
     switch (errorType) {
       case 'InsufficientStockError':
         return this.createInsufficientStockError(
@@ -178,6 +173,16 @@ export class StockErrorFactory {
           parameters.context
         );
 
+      case 'StockTrackingError':
+        return this.createTrackingError(
+          parameters.message,
+          parameters.itemCode,
+          parameters.operationType,
+          parameters.details || {},
+          parameters.options,
+          parameters.context
+        );
+
       default:
         throw new Error(`Unknown error type: ${errorType}`);
     }
@@ -192,7 +197,8 @@ export class StockErrorFactory {
       StockMovementError: ['message', 'movementType', 'itemCode', 'quantity'],
       StockReservationError: ['itemCode', 'requestedQuantity', 'availableQuantity', 'existingReservations'],
       StockTransferError: ['itemCode', 'fromLocation', 'toLocation', 'quantity', 'reason'],
-      StockAdjustmentError: ['itemCode', 'location', 'adjustmentType', 'adjustmentQuantity', 'currentQuantity', 'message']
+      StockAdjustmentError: ['itemCode', 'location', 'adjustmentType', 'adjustmentQuantity', 'currentQuantity', 'message'],
+      StockTrackingError: ['message', 'itemCode', 'operationType']
     };
 
     const required = requiredFields[errorType as keyof typeof requiredFields];
@@ -200,7 +206,7 @@ export class StockErrorFactory {
       return false;
     }
 
-    return required.every(field => parameters.hasOwnProperty(field) && parameters[field] !== undefined);
+    return required.every(field => Object.prototype.hasOwnProperty.call(parameters, field) && parameters[field] !== undefined);
   }
 
   /**
@@ -209,7 +215,7 @@ export class StockErrorFactory {
   static createValidated(
     errorType: string,
     parameters: Record<string, any>
-  ): InsufficientStockError | StockMovementError | StockReservationError | StockTransferError | StockAdjustmentError {
+  ): InsufficientStockError | StockMovementError | StockReservationError | StockTransferError | StockAdjustmentError | StockTrackingError {
     if (!this.validateParameters(errorType, parameters)) {
       throw new Error(`Invalid parameters for error type: ${errorType}`);
     }

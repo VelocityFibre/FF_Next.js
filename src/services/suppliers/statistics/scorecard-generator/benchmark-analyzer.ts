@@ -3,7 +3,7 @@
  * Trend analysis and benchmarking calculations
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { ScorecardScoreCalculator } from './score-calculator';
 import type { TrendData, BenchmarkData } from './scorecard-types';
 
@@ -61,7 +61,7 @@ export class ScorecardBenchmarkAnalyzer {
       }
 
       // Peer comparison
-      let peerComparison: 'above' | 'at' | 'below';
+      let peerComparison: 'above' | 'below' | 'at';
       if (industryPercentile >= 75) {
         peerComparison = 'above';
       } else if (industryPercentile <= 25) {
@@ -132,10 +132,11 @@ export class ScorecardBenchmarkAnalyzer {
         return `Performance has improved by ${changePercent.toFixed(1)}% over the last 3 months`;
       case 'declining':
         return `Performance has declined by ${changePercent.toFixed(1)}% over the last 3 months`;
-      case 'stable':
+      case 'stable': {
         const sixMonthTrend = sixMonthChange > 2 ? 'with overall improvement' : 
                              sixMonthChange < -2 ? 'following previous decline' : 'consistently';
         return `Performance has remained stable ${sixMonthTrend}`;
+      }
       default:
         return 'Performance trend data unavailable';
     }
@@ -149,6 +150,7 @@ export class ScorecardBenchmarkAnalyzer {
     description: string;
   } {
     const { industryPercentile, peerComparison } = benchmarks;
+    void peerComparison; // Variable extracted but not used in this function
 
     let position: 'leader' | 'competitive' | 'follower';
     let description: string;

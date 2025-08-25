@@ -66,13 +66,13 @@ export class ExceptionManager {
       boqId: exceptionData.boqId,
       boqItemId: exceptionData.boqItemId || `item-${Date.now()}`,
       projectId: context.projectId,
-      exceptionType: exceptionData.exceptionType || 'no_match',
-      severity: exceptionData.severity || 'medium',
+      exceptionType: (exceptionData.exceptionType as 'no_match' | 'multiple_matches' | 'data_issue' | 'manual_review') || 'no_match',
+      severity: (exceptionData.severity as 'low' | 'medium' | 'high' | 'critical') || 'medium',
       issueDescription: exceptionData.issueDescription,
       suggestedAction: exceptionData.suggestedAction,
       systemSuggestions: exceptionData.suggestions || [],
-      status: exceptionData.status || 'open',
-      priority: exceptionData.priority || 'medium',
+      status: (exceptionData.status as 'open' | 'in_review' | 'resolved' | 'ignored') || 'open',
+      priority: (exceptionData.priority as 'low' | 'medium' | 'high' | 'urgent') || 'medium',
       createdAt: new Date(),
       updatedAt: new Date()
     };

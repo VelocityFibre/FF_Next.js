@@ -10,13 +10,19 @@
 export * from './parser';
 
 // Import specific functions for backward compatibility
+import { readString } from './parser/data-reader';
+import { isEmailFormat, isPhoneFormat } from './parser/format-detector';
+
 export { 
   parseNumber,
-  parseDate,
   parseBoolean,
   readString,
   readValue
 } from './parser/data-reader';
+
+export {
+  parseDate
+} from './modules/validation-helpers';
 
 export {
   isNumberFormat,
@@ -41,12 +47,24 @@ export function validateString(
   errors: any[],
   warnings: any[],
   maxLength?: number,
-  required: boolean = false
+  _required: boolean = false
 ): string | undefined {
-  // Import the readString function and adapt it
-  const { readString } = require('./parser/data-reader');
-  const context = { row, field };
-  return readString(value, context, errors, warnings);
+  // Use the imported readString function
+  const context = { row, field, schema: undefined, strict: undefined };
+  const result = readString(value, context, errors, warnings);
+  
+  // Apply maxLength validation if specified
+  if (result && maxLength && result.length > maxLength) {
+    errors.push({
+      row,
+      field,
+      error: `String length exceeds maximum of ${maxLength} characters`,
+      value: result
+    });
+    return result.substring(0, maxLength);
+  }
+  
+  return result;
 }
 
 export function sanitizeText(text: string): string {
@@ -61,12 +79,10 @@ export function sanitizeText(text: string): string {
 }
 
 export function isValidEmail(email: string): boolean {
-  const { isEmailFormat } = require('./parser/format-detector');
   return isEmailFormat(email);
 }
 
 export function isValidPhone(phone: string): boolean {
-  const { isPhoneFormat } = require('./parser/format-detector');
   return isPhoneFormat(phone);
 }
 

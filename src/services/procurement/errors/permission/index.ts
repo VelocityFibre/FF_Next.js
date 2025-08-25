@@ -3,6 +3,12 @@
  * Unified exports for all permission error types
  */
 
+// Import error classes for factory usage
+import { ProcurementPermissionError } from './base';
+import { ProjectAccessDeniedError } from './project';
+import { SupplierAccessError } from './supplier';
+import { RoleAccessError } from './role';
+
 // Export base error class
 export { ProcurementPermissionError } from './base';
 

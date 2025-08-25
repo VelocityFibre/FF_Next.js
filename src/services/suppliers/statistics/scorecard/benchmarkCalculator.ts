@@ -3,7 +3,7 @@
  * Handles benchmarking and trend analysis for supplier scorecards
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { TrendData, BenchmarkData } from './types';
 import { ScoreCalculator } from './scoreCalculator';
 import { SupplierUtils } from './utils';
@@ -69,14 +69,13 @@ export class BenchmarkCalculator {
       const supplierCrudService = await import('../../supplier.crud');
       const allSuppliers = await supplierCrudService.SupplierCrudService.getAll();
       
-      const supplierScore = ScoreCalculator.calculateOverallScore(supplier);
-
       // Industry percentile (all suppliers)
       const allScores = allSuppliers
         .map(s => ScoreCalculator.calculateOverallScore(s))
         .filter(score => score > 0)
         .sort((a, b) => a - b);
       
+      const supplierScore = supplier.overallScore || 0;
       const industryPercentile = SupplierUtils.calculatePercentile(supplierScore, allScores);
 
       // Category percentile
@@ -136,7 +135,7 @@ export class BenchmarkCalculator {
       const allSuppliers = await supplierCrudService.SupplierCrudService.getAll();
       
       const categorySuppliers = allSuppliers.filter(s => 
-        s.categories?.includes(category)
+        s.categories?.includes(category as any)
       );
 
       if (categorySuppliers.length === 0) {
@@ -148,7 +147,8 @@ export class BenchmarkCalculator {
         };
       }
 
-      const supplierScore = ScoreCalculator.calculateOverallScore(supplier);
+      const _supplierScore = ScoreCalculator.calculateOverallScore(supplier);
+      void _supplierScore; // Variable calculated but not used in this function
       const categoryScores = categorySuppliers
         .map(s => ({
           id: s.id,
@@ -199,8 +199,9 @@ export class BenchmarkCalculator {
       const supplierCrudService = await import('../../supplier.crud');
       const allSuppliers = await supplierCrudService.SupplierCrudService.getAll();
       
-      const supplierScore = ScoreCalculator.calculateOverallScore(supplier);
-      const supplierAddress = supplier.address;
+      const _supplierScore = ScoreCalculator.calculateOverallScore(supplier);
+      void _supplierScore; // Variable calculated but not used in this function
+      const supplierAddress = supplier.addresses?.physical;
 
       if (!supplierAddress) {
         return {
@@ -213,19 +214,19 @@ export class BenchmarkCalculator {
 
       // City ranking
       const citySuppliers = allSuppliers.filter(s => 
-        s.address?.city === supplierAddress.city
+        s.addresses?.physical?.city === supplierAddress.city
       );
       const cityRank = this.calculateRank(supplier, citySuppliers);
 
       // Province ranking
       const provinceSuppliers = allSuppliers.filter(s => 
-        s.address?.province === supplierAddress.province
+        s.addresses?.physical?.state === supplierAddress.state
       );
       const provinceRank = this.calculateRank(supplier, provinceSuppliers);
 
       // Country ranking
       const countrySuppliers = allSuppliers.filter(s => 
-        s.address?.country === supplierAddress.country
+        s.addresses?.physical?.country === supplierAddress.country
       );
       const countryRank = this.calculateRank(supplier, countrySuppliers);
 
@@ -235,6 +236,7 @@ export class BenchmarkCalculator {
         .filter(score => score > 0)
         .sort((a, b) => a - b);
       
+      const supplierScore = supplier.overallScore || 0;
       const regionPercentile = SupplierUtils.calculatePercentile(supplierScore, provinceScores);
 
       return {

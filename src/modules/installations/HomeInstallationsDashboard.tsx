@@ -11,7 +11,6 @@ import {
 const HomeInstallationsDashboard: React.FC = () => {
   const {
     selectedTab,
-    filterStatus,
     filteredInstallations,
     stats,
     handleTabChange
@@ -25,7 +24,7 @@ const HomeInstallationsDashboard: React.FC = () => {
         actions={[
           {
             label: 'Schedule Installation',
-            icon: Plus,
+            icon: Plus as React.ComponentType<{ className?: string; }>,
             onClick: () => {},
             variant: 'primary'
           }

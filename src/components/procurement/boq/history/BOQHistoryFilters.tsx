@@ -48,7 +48,7 @@ export default function BOQHistoryFilters({
           <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <select
             value={filters.dateRange}
-            onChange={(e) => setFilters({ ...filters, dateRange: e.target.value as any })}
+            onChange={(e) => setFilters({ ...filters, dateRange: e.target.value as FilterState['dateRange'] })}
             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md text-sm"
           >
             <option value="all">All Time</option>

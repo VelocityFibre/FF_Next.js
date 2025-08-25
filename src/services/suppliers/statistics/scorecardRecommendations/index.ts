@@ -3,7 +3,7 @@
  * Re-exports all recommendation components for backward compatibility
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierCompliance } from '../scorecardTypes';
 import { RecommendationEngine } from './recommendationEngine';
 import { PriorityManager } from './priorityManager';

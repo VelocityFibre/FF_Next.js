@@ -21,7 +21,7 @@ export class SeasonalAnalyzer {
     const dailyMap = new Map<number, number[]>();
     const monthlyMap = new Map<number, number[]>();
 
-    errors.forEach(error => {
+    errors.forEach(_error => {
       // For demo purposes, we'll use current time
       // In practice, you'd extract timestamp from error
       const timestamp = new Date();
@@ -104,8 +104,8 @@ export class SeasonalAnalyzer {
     const errorTypesByTime: Record<string, Array<{ period: string; count: number }>> = {};
     const errorTypeCounts = new Map<string, Map<string, number>>();
 
-    errors.forEach(error => {
-      const errorType = error.constructor.name;
+    errors.forEach(_error => {
+      const errorType = _error.constructor.name;
       const timestamp = new Date();
       const period = `${timestamp.getMonth() + 1}-${timestamp.getDate()}`; // Month-day format
 
@@ -158,7 +158,7 @@ export class SeasonalAnalyzer {
     confidence: number;
   }> {
     const seasonalPatterns = this.identifySeasonalPatterns(baselineErrors);
-    const overallAverage = baselineErrors.length / 365; // Daily average
+    // const overallAverage = baselineErrors.length / 365; // Daily average
 
     return targetPeriods.map(period => {
       // Simple seasonal adjustment based on historical patterns

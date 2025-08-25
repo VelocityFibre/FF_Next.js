@@ -47,9 +47,9 @@ export function StaffAnalytics() {
         totalStaff={summary.totalStaff}
         activeStaff={summary.activeStaff}
         inactiveStaff={summary.inactiveStaff}
-        availableStaff={summary.availableStaff}
-        averageProjectLoad={summary.averageProjectLoad}
-        monthlyGrowth={summary.monthlyGrowth}
+        availableStaff={summary.availableStaff ?? 0}
+        averageProjectLoad={summary.averageProjectLoad ?? 0}
+        monthlyGrowth={summary.monthlyGrowth ?? 0}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -75,9 +75,9 @@ export function StaffAnalytics() {
         )}
       </div>
 
-      <TopPerformersTable topPerformers={summary.topPerformers} />
+      <TopPerformersTable topPerformers={summary.topPerformers ?? []} />
 
-      <SkillsOverview topSkills={summary.topSkills} />
+      <SkillsOverview topSkills={summary.topSkills ?? []} />
     </div>
   );
 }

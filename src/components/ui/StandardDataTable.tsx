@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, memo, useMemo, useCallback } from 'react';
 import { LoadingSpinner } from './LoadingSpinner';
 import { AlertCircle, FileX } from 'lucide-react';
 
@@ -21,7 +21,7 @@ interface StandardDataTableProps<T> {
   stickyHeader?: boolean;
 }
 
-export function StandardDataTable<T>({
+const StandardDataTableComponent = <T,>({
   columns,
   data,
   isLoading = false,
@@ -30,14 +30,42 @@ export function StandardDataTable<T>({
   onRowClick,
   getRowKey,
   stickyHeader = false
-}: StandardDataTableProps<T>) {
-  const renderCell = (item: T, column: TableColumn<T>) => {
+}: StandardDataTableProps<T>) => {
+  // Memoize cell rendering for performance
+  const renderCell = useCallback((item: T, column: TableColumn<T>) => {
     if (column.render) {
       return column.render(item);
     }
     const value = (item as any)[column.key];
     return value !== null && value !== undefined ? String(value) : '-';
-  };
+  }, []);
+
+  // Memoize row click handler to prevent unnecessary re-renders
+  const handleRowClick = useCallback((item: T) => {
+    onRowClick?.(item);
+  }, [onRowClick]);
+
+  // Memoize table rows to prevent re-rendering when data hasn't changed
+  const tableRows = useMemo(() => {
+    if (!data?.length) return null;
+    
+    return data.map((item) => (
+      <tr
+        key={getRowKey(item)}
+        onClick={() => handleRowClick(item)}
+        className={onRowClick ? "hover:bg-gray-50 cursor-pointer transition-colors" : ""}
+      >
+        {columns.map((column) => (
+          <td
+            key={column.key}
+            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+          >
+            {renderCell(item, column)}
+          </td>
+        ))}
+      </tr>
+    ));
+  }, [data, columns, getRowKey, handleRowClick, onRowClick, renderCell]);
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
@@ -85,30 +113,16 @@ export function StandardDataTable<T>({
               </tr>
             )}
             
-            {!isLoading && !error && data && data.map((item) => (
-              <tr
-                key={getRowKey(item)}
-                onClick={() => onRowClick && onRowClick(item)}
-                className={`${
-                  onRowClick ? 'hover:bg-gray-50 cursor-pointer' : ''
-                } transition-colors`}
-              >
-                {columns.map((column) => (
-                  <td
-                    key={column.key}
-                    className={`px-4 py-4 text-sm text-gray-900 ${column.className || ''}`}
-                  >
-                    {renderCell(item, column)}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {!isLoading && !error && tableRows}
           </tbody>
         </table>
       </div>
     </div>
   );
-}
+};
+
+// Export memoized version for performance optimization
+export const StandardDataTable = memo(StandardDataTableComponent) as typeof StandardDataTableComponent;
 
 // Pagination Component
 interface PaginationProps {

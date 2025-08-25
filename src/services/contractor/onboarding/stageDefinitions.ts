@@ -6,8 +6,9 @@
  * New code should use the modular stage system in ./stages/
  */
 
-import { DocumentType } from '@/types/contractor.types';
-import { OnboardingStage, DocumentRequirement } from './types';
+// import { DocumentType } from '@/types/contractor.types'; // Unused
+import { OnboardingStage } from './types';
+// import { DocumentRequirement } from './types'; // Unused
 import { 
   getAllOnboardingStages,
   getStageById,
@@ -54,3 +55,58 @@ export function calculateProgress(completedStages: string[]): {
 
 // Re-export everything from the new modular structure for convenience
 export * from './stages';
+
+// Additional helper functions for backward compatibility
+export function getDocumentRequirements(stageId: string): any[] {
+  const stage = getStageById(stageId);
+  return stage?.documents || [];
+}
+
+export function getRequiredDocumentTypes(stageId: string): string[] {
+  const stage = getStageById(stageId);
+  return stage?.documents?.filter((d: any) => d.required).map((d: any) => d.type) || [];
+}
+
+export function getStageIndex(stageId: string): number {
+  const stages = getAllOnboardingStages();
+  return stages.findIndex(stage => stage.id === stageId);
+}
+
+export function getNextStageId(currentStageId: string): string | null {
+  const stages = getAllOnboardingStages();
+  const currentIndex = getStageIndex(currentStageId);
+  if (currentIndex === -1 || currentIndex === stages.length - 1) {
+    return null;
+  }
+  return stages[currentIndex + 1].id;
+}
+
+export function getPreviousStageId(currentStageId: string): string | null {
+  const stages = getAllOnboardingStages();
+  const currentIndex = getStageIndex(currentStageId);
+  if (currentIndex <= 0) {
+    return null;
+  }
+  return stages[currentIndex - 1].id;
+}
+
+export function isFinalStage(stageId: string): boolean {
+  const stages = getAllOnboardingStages();
+  const currentIndex = getStageIndex(stageId);
+  return currentIndex === stages.length - 1;
+}
+
+export function getStageDocuments(stageId: string): any[] {
+  return getDocumentRequirements(stageId);
+}
+
+export function getStageCategories(): string[] {
+  const stages = getAllOnboardingStages();
+  const categories = new Set<string>();
+  stages.forEach(stage => {
+    if (stage.category) {
+      categories.add(stage.category);
+    }
+  });
+  return Array.from(categories);
+}

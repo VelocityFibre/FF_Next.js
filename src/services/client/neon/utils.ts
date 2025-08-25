@@ -49,7 +49,7 @@ export function mapDbToClient(dbClient: any): Client {
     serviceTypes: dbClient.metadata?.service_types || [],
     registrationNumber: dbClient.metadata?.registration_number || '',
     vatNumber: dbClient.metadata?.vat_number || ''
-  } as Client;
+  } as unknown as Client;
 }
 
 // Helper to prepare metadata JSON for database operations

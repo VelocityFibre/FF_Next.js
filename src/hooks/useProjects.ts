@@ -205,7 +205,7 @@ export function useProjectsSubscription(filter?: ProjectFilter, enabled = true) 
 
     const subscribeFilter: { status?: string; clientId?: string } = {};
     if (filter?.status?.[0]) subscribeFilter.status = filter.status[0];
-    if (filter?.clientId) subscribeFilter.clientId = filter.clientId;
+    if (filter?.clientId?.[0]) subscribeFilter.clientId = filter.clientId[0];
     
     const unsubscribe = projectService.subscribeToProjects((projects) => {
       // Update the cache with real-time data

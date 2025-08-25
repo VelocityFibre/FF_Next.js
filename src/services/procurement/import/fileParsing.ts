@@ -45,13 +45,6 @@ export async function readExcelFile(file: File): Promise<any[]> {
 }
 
 /**
- * Format cell values from Excel to consistent types
- */
-function formatCellValue(value: any): any {
-  return ExcelParser.formatCellValue(value);
-}
-
-/**
  * Read Excel file from specific worksheet
  */
 export async function readExcelWorksheet(file: File, worksheetName: string): Promise<any[]> {

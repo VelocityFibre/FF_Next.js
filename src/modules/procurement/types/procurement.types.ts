@@ -92,13 +92,21 @@ export interface ProcurementContextState {
 export interface ProcurementPermissions {
   canViewBOQ: boolean;
   canEditBOQ: boolean;
+  canViewRFQ: boolean;
   canCreateRFQ: boolean;
+  canViewQuotes: boolean;
   canEvaluateQuotes: boolean;
+  canViewPurchaseOrders: boolean;
+  canCreatePurchaseOrders: boolean;
   canAccessStock: boolean;
+  canManageStock: boolean;
   canApproveOrders: boolean;
+  canViewSuppliers: boolean;
+  canEditSuppliers: boolean;
   canManageSuppliers: boolean;
   canAccessReports: boolean;
-  approvalLimit: Money;
+  role: 'admin' | 'manager' | 'user' | 'viewer';
+  approvalLimit: number;
 }
 
 export type ProcurementAction = 

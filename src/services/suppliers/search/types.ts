@@ -2,12 +2,13 @@
  * Supplier Search Types and Interfaces
  */
 
-import { SupplierStatus, Supplier } from '@/types/supplier.types';
+import { SupplierStatus, Supplier } from '@/types/supplier/base.types';
+import { ProductCategory } from '@/types/supplier/common.types';
 
 export interface SupplierSearchFilters {
   searchTerm?: string;
   status?: SupplierStatus | SupplierStatus[];
-  categories?: string[];
+  categories?: ProductCategory[];
   isPreferred?: boolean;
   minRating?: number;
   maxRating?: number;
@@ -27,13 +28,13 @@ export interface CategorySearchOptions {
 }
 
 export interface PreferredSupplierOptions {
-  category?: string;
+  category?: ProductCategory;
   sortByPerformance?: boolean;
   limit?: number;
 }
 
 export interface RFQSearchCriteria {
-  categories: string[];
+  categories: ProductCategory[];
   location?: string;
   minRating?: number;
   maxDistance?: number;
@@ -47,7 +48,7 @@ export interface SupplierWithMatchScore extends Supplier {
 
 export interface SearchSuggestionContext {
   query?: string;
-  category?: string;
+  category?: ProductCategory;
   location?: string;
   userHistory?: string[];
 }

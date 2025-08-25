@@ -9,12 +9,23 @@ import {
   ContractorAssignment
 } from '../types';
 
+// Extended interface to include performance-specific properties
+interface ExtendedContractorAssignment extends ContractorAssignment {
+  startDate?: string;
+  endDate?: string;
+  expectedEndDate?: string;
+  clientFeedback?: {
+    rating?: number;
+  };
+  complexityLevel?: 'low' | 'medium' | 'high' | 'critical';
+}
+
 export class PerformanceCalculator {
   /**
    * Calculate performance score based on project history
    */
   static calculateScore(
-    assignments: ContractorAssignment[]
+    assignments: ExtendedContractorAssignment[]
   ): RAGScoreResult<RAGPerformanceBreakdown> {
     const completedAssignments = assignments.filter(a => a.status === 'completed');
     
@@ -36,7 +47,7 @@ export class PerformanceCalculator {
 
     // Calculate average quality scores
     const qualityScores = completedAssignments
-      .filter(a => a.qualityScore)
+      .filter(a => a.qualityScore !== undefined)
       .map(a => a.qualityScore!);
     const avgQualityScore = qualityScores.length > 0 
       ? qualityScores.reduce((sum, score) => sum + score, 0) / qualityScores.length
@@ -69,7 +80,7 @@ export class PerformanceCalculator {
   /**
    * Calculate timeliness score based on project delivery times
    */
-  private static calculateTimelinessScore(assignments: ContractorAssignment[]): number {
+  private static calculateTimelinessScore(assignments: ExtendedContractorAssignment[]): number {
     const timelyCounts = assignments.filter(a => {
       if (!a.startDate || !a.endDate || !a.expectedEndDate) return true; // No penalty for missing dates
       
@@ -88,9 +99,9 @@ export class PerformanceCalculator {
   /**
    * Calculate client satisfaction score
    */
-  private static calculateClientSatisfaction(assignments: ContractorAssignment[]): number {
+  private static calculateClientSatisfaction(assignments: ExtendedContractorAssignment[]): number {
     const satisfactionScores = assignments
-      .filter(a => a.clientFeedback?.rating)
+      .filter(a => a.clientFeedback?.rating !== undefined)
       .map(a => a.clientFeedback!.rating!);
 
     if (satisfactionScores.length === 0) return 70;
@@ -104,9 +115,9 @@ export class PerformanceCalculator {
   /**
    * Calculate project complexity handling score
    */
-  private static calculateProjectComplexity(assignments: ContractorAssignment[]): number {
+  private static calculateProjectComplexity(assignments: ExtendedContractorAssignment[]): number {
     const complexityScores = assignments
-      .filter(a => a.complexityLevel)
+      .filter(a => a.complexityLevel !== undefined)
       .map(a => {
         switch (a.complexityLevel) {
           case 'low': return 60;
@@ -138,11 +149,11 @@ export class PerformanceCalculator {
   /**
    * Get performance trend over time
    */
-  static getPerformanceTrend(assignments: ContractorAssignment[]): 'improving' | 'declining' | 'stable' {
+  static getPerformanceTrend(assignments: ExtendedContractorAssignment[]): 'improving' | 'declining' | 'stable' {
     if (assignments.length < 3) return 'stable';
 
     const sortedAssignments = assignments
-      .filter(a => a.endDate && a.qualityScore)
+      .filter(a => a.endDate && a.qualityScore !== undefined)
       .sort((a, b) => new Date(a.endDate!).getTime() - new Date(b.endDate!).getTime());
 
     if (sortedAssignments.length < 3) return 'stable';

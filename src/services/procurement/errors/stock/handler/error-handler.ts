@@ -4,7 +4,7 @@
  */
 
 import { InsufficientStockError, StockReservationError } from '../inventory';
-import { StockMovementError, StockTransferError, StockAdjustmentError } from '../tracking';
+import { StockMovementError } from '../tracking';
 import { RecoveryOption, HandlerResult } from './handler-types';
 
 /**

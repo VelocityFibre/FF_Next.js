@@ -11,7 +11,7 @@ import {
   where
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierBatchOptions } from './types';
 
 const COLLECTION_NAME = 'suppliers';

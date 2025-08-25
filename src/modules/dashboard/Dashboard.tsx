@@ -1,17 +1,10 @@
-import { 
-  FolderOpen, 
-  Users, 
-  CheckCircle, 
-  AlertTriangle, 
-  TrendingUp, 
-  Calendar,
-  Package,
-  MapPin
-} from 'lucide-react';
-import { StatsCard } from './components/StatsCard';
+import { Calendar, FolderOpen, Users, CheckCircle, AlertTriangle, MapPin, Package, TrendingUp } from 'lucide-react';
 import { ProjectOverviewCard } from './components/ProjectOverviewCard';
 import { RecentActivityFeed } from './components/RecentActivityFeed';
 import { QuickActions } from './components/QuickActions';
+import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
+import { useMainDashboardData } from '@/hooks/useDashboardData';
+import { getMainDashboardCards } from '@/config/dashboards/dashboardConfigs';
 import { useAuth } from '@/contexts/AuthContext';
 import { Permission } from '@/types/auth.types';
 
@@ -29,6 +22,14 @@ const mockStats = {
 
 export function Dashboard() {
   const { currentUser, hasPermission } = useAuth();
+  const { 
+    stats, 
+    trends, 
+ 
+    formatNumber, 
+    formatCurrency, 
+    formatPercentage
+  } = useMainDashboardData();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -38,6 +39,13 @@ export function Dashboard() {
     if (hour < 17) return `Good afternoon, ${name}`;
     return `Good evening, ${name}`;
   };
+
+  // 🟢 WORKING: Get dashboard cards configuration
+  const dashboardCards = getMainDashboardCards(
+    stats, 
+    trends, 
+    { formatNumber, formatCurrency, formatPercentage }
+  );
 
   const statsCards = [
     {
@@ -158,20 +166,20 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {visibleStats.map((stat, index) => (
-          <StatsCard
-            key={index}
-            title={stat.title}
-            value={stat.value}
-            icon={stat.icon}
-            description={stat.description}
-            trend={stat.trend}
-            variant={stat.variant}
-          />
-        ))}
-      </div>
+      {/* Enhanced Stats Grid */}
+      <StatsGrid 
+        cards={dashboardCards.filter(card => {
+          // Filter cards based on user permissions similar to original logic
+          if (card.route?.includes('/projects')) return hasPermission(Permission.PROJECTS_READ);
+          if (card.route?.includes('/staff')) return hasPermission(Permission.STAFF_READ);
+          if (card.route?.includes('/tasks')) return hasPermission(Permission.PROJECTS_READ);
+          if (card.route?.includes('/issues')) return hasPermission(Permission.VIEW_COMMUNICATIONS);
+          if (card.route?.includes('/analytics')) return hasPermission(Permission.ANALYTICS_READ);
+          return true; // Default to showing the card
+        })}
+        columns={3}
+        className="mb-6"
+      />
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

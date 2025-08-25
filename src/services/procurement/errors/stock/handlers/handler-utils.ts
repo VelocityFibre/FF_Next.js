@@ -4,6 +4,7 @@
  */
 
 import { StockError } from '../inventory';
+import type { ErrorSeverity, UserErrorDisplay } from '../types';
 
 /**
  * Utility functions for error handlers
@@ -13,10 +14,10 @@ export class HandlerUtils {
    * Determine error severity based on impact
    */
   static determineSeverity(error: StockError, context?: {
-    businessImpact?: 'low' | 'medium' | 'high' | 'critical';
-    urgency?: 'low' | 'medium' | 'high' | 'critical';
+    businessImpact?: ErrorSeverity;
+    urgency?: ErrorSeverity;
     customerImpact?: boolean;
-  }): 'low' | 'medium' | 'high' | 'critical' {
+  }): ErrorSeverity {
     // Business context takes priority
     if (context?.businessImpact === 'critical' || context?.customerImpact) {
       return 'critical';
@@ -219,5 +220,146 @@ export class HandlerUtils {
     }
 
     return groups;
+  }
+
+  /**
+   * Format error for user display
+   */
+  static formatErrorForUser(error: StockError): UserErrorDisplay {
+    const errorType = error.constructor.name;
+    
+    switch (errorType) {
+      case 'InsufficientStockError':
+        return {
+          title: 'Insufficient Stock',
+          message: `Not enough stock available for item ${(error as any).itemCode}`,
+          severity: 'error',
+          category: 'inventory',
+          itemCode: (error as any).itemCode,
+          priority: 'high',
+          actions: [
+            {
+              label: 'View Alternatives',
+              action: 'view_alternatives',
+              primary: true
+            },
+            {
+              label: 'Create Backorder',
+              action: 'create_backorder'
+            }
+          ]
+        };
+
+      case 'StockReservationError':
+        return {
+          title: 'Stock Reservation Failed',
+          message: `Cannot reserve stock for item ${(error as any).itemCode}`,
+          severity: 'warning',
+          category: 'reservation',
+          itemCode: (error as any).itemCode,
+          priority: 'medium',
+          actions: [
+            {
+              label: 'Join Queue',
+              action: 'join_queue',
+              primary: true
+            },
+            {
+              label: 'Request Override',
+              action: 'request_override'
+            }
+          ]
+        };
+
+      case 'StockMovementError':
+        return {
+          title: 'Stock Movement Failed',
+          message: `Stock movement operation failed: ${error.message}`,
+          severity: 'error',
+          category: 'movement',
+          itemCode: (error as any).itemCode,
+          priority: 'medium',
+          actions: [
+            {
+              label: 'Retry Movement',
+              action: 'retry_movement',
+              primary: true
+            },
+            {
+              label: 'Contact Support',
+              action: 'contact_support'
+            }
+          ]
+        };
+
+      case 'StockTransferError':
+        return {
+          title: 'Stock Transfer Failed',
+          message: `Transfer operation failed: ${error.message}`,
+          severity: 'error',
+          category: 'transfer',
+          itemCode: (error as any).itemCode,
+          priority: 'medium',
+          actions: [
+            {
+              label: 'Retry Transfer',
+              action: 'retry_transfer',
+              primary: true
+            },
+            {
+              label: 'Change Route',
+              action: 'change_route'
+            }
+          ]
+        };
+
+      case 'StockAdjustmentError':
+        return {
+          title: 'Stock Adjustment Failed',
+          message: `Adjustment operation failed: ${error.message}`,
+          severity: 'warning',
+          category: 'adjustment',
+          itemCode: (error as any).itemCode,
+          priority: 'low',
+          actions: [
+            {
+              label: 'Retry Adjustment',
+              action: 'retry_adjustment',
+              primary: true
+            },
+            {
+              label: 'Manual Review',
+              action: 'manual_review'
+            }
+          ]
+        };
+
+      case 'StockTrackingError':
+        return {
+          title: 'Stock Tracking Error',
+          message: `Tracking operation failed: ${error.message}`,
+          severity: 'info',
+          category: 'tracking',
+          itemCode: (error as any).itemCode,
+          priority: 'low',
+          actions: [
+            {
+              label: 'Retry Tracking',
+              action: 'retry_tracking',
+              primary: true
+            }
+          ]
+        };
+
+      default:
+        return {
+          title: 'Stock Error',
+          message: error.message,
+          severity: 'error',
+          category: 'general',
+          itemCode: undefined,
+          priority: 'medium'
+        };
+    }
   }
 }

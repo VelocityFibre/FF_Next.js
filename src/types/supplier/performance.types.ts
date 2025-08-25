@@ -63,6 +63,7 @@ export interface SupplierRating {
   delivery?: number;
   pricing?: number;
   communication?: number;
+  flexibility?: number;
   
   // Summary data
   totalReviews?: number;
@@ -146,4 +147,4 @@ export enum PerformancePeriod {
 }
 
 // Re-export Currency and PaymentTerms from base types
-export { Currency, PaymentTerms } from './base.types';
+export type { Currency, PaymentTerms } from './base.types';

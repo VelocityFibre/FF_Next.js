@@ -170,7 +170,7 @@ export class ProcurementRetryService implements IRetryService {
     for (let i = 0; i < operations.length; i += concurrency) {
       const chunk = operations.slice(i, i + concurrency);
       
-      const chunkPromises = chunk.map(async (operation, index) => {
+      const chunkPromises = chunk.map(async (operation, _index) => {
         try {
           const result = await this.retryOnError(operation, config);
           return { success: true, result };

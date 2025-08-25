@@ -8,8 +8,10 @@ export interface PerformanceTrends {
   year: number;
   totalSuppliers: number;
   newSuppliers: number;
+  activeSuppliers: number;
   averageRating: number;
   averagePerformance: number;
+  complianceRate: number;
   topPerformers: number;
   underPerformers: number;
   categoryBreakdown: Record<string, number>;
@@ -19,6 +21,11 @@ export interface PerformanceBenchmarks {
   overall: BenchmarkStats;
   byCategory: Record<string, BenchmarkStats>;
   byBusinessType: Record<string, BenchmarkStats>;
+  trends: {
+    improving: number;
+    stable: number;
+    declining: number;
+  };
   lastUpdated: string;
 }
 

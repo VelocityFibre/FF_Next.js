@@ -20,10 +20,12 @@ export class StatusValidation {
   ): StatusTransitionValidation {
     // Define valid transitions
     const validTransitions: Record<SupplierStatus, SupplierStatus[]> = {
-      [SupplierStatus.PENDING]: [SupplierStatus.ACTIVE, SupplierStatus.INACTIVE, SupplierStatus.BLACKLISTED],
-      [SupplierStatus.ACTIVE]: [SupplierStatus.INACTIVE, SupplierStatus.BLACKLISTED],
-      [SupplierStatus.INACTIVE]: [SupplierStatus.ACTIVE, SupplierStatus.BLACKLISTED],
-      [SupplierStatus.BLACKLISTED]: [SupplierStatus.ACTIVE] // Can only reactivate from blacklist with approval
+      [SupplierStatus.PENDING]: [SupplierStatus.ACTIVE, SupplierStatus.INACTIVE, SupplierStatus.BLACKLISTED, SupplierStatus.ARCHIVED],
+      [SupplierStatus.ACTIVE]: [SupplierStatus.INACTIVE, SupplierStatus.SUSPENDED, SupplierStatus.BLACKLISTED, SupplierStatus.ARCHIVED],
+      [SupplierStatus.INACTIVE]: [SupplierStatus.ACTIVE, SupplierStatus.BLACKLISTED, SupplierStatus.ARCHIVED],
+      [SupplierStatus.SUSPENDED]: [SupplierStatus.ACTIVE, SupplierStatus.INACTIVE, SupplierStatus.BLACKLISTED, SupplierStatus.ARCHIVED],
+      [SupplierStatus.BLACKLISTED]: [SupplierStatus.ACTIVE, SupplierStatus.ARCHIVED], // Can only reactivate from blacklist with approval
+      [SupplierStatus.ARCHIVED]: [] // Archived suppliers cannot be changed (permanent)
     };
 
     return this.validateTransition(currentStatus, newStatus, validTransitions);
@@ -151,7 +153,7 @@ export class StatusValidation {
       reasons.push('Company name is required');
     }
 
-    if (!supplier.contactEmail?.trim()) {
+    if (!supplier.email?.trim()) {
       reasons.push('Contact email is required');
     }
 

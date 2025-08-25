@@ -14,7 +14,6 @@ export { PatternAnalyzer } from './pattern-analyzer';
 export { ForecastingEngine } from './forecasting-engine';
 export { MetricsCalculator } from './metrics-calculator';
 export { RiskForecaster } from './risk-forecaster';
-export { SeasonalAnalyzer } from './seasonal-analyzer';
 
 // Legacy compatibility - Re-export main analytics class
 import { ErrorTracker } from './error-tracker';
@@ -24,12 +23,12 @@ import { PatternAnalyzer } from './pattern-analyzer';
 import { ForecastingEngine } from './forecasting-engine';
 import { MetricsCalculator } from './metrics-calculator';
 import { RiskForecaster } from './risk-forecaster';
-import { SeasonalAnalyzer } from './seasonal-analyzer';
 import { StockError } from '../inventory';
 import { 
   ErrorPattern, 
   ErrorInsight, 
   ErrorMetrics,
+  ErrorTrend,
   PredictiveInsights,
   TimeframeConfig
 } from './analytics-types';
@@ -86,17 +85,17 @@ export class StockErrorAnalytics {
   }
 
   /**
-   * New method: Identify seasonal patterns (delegates to TrendAnalyzer)
+   * Detect anomalies in error patterns (delegates to TrendAnalyzer)
    */
-  static identifySeasonalPatterns(errors: StockError[]) {
-    return TrendAnalyzer.identifySeasonalPatterns(errors);
+  static detectAnomalies(trends: ErrorTrend[], threshold?: number) {
+    return TrendAnalyzer.detectAnomalies(trends, threshold);
   }
 
   /**
-   * New method: Forecast trends (delegates to TrendAnalyzer)
+   * Analyze trend velocity (delegates to TrendAnalyzer)
    */
-  static forecastTrends(historicalErrors: StockError[], forecastPeriod: number) {
-    return TrendAnalyzer.forecastTrends(historicalErrors, forecastPeriod);
+  static analyzeTrendVelocity(trends: ErrorTrend[]) {
+    return TrendAnalyzer.analyzeTrendVelocity(trends);
   }
 
   /**
@@ -126,10 +125,10 @@ export class StockErrorAnalytics {
   }
 
   /**
-   * New method: Forecast item risks (delegates to ForecastingEngine)
+   * Forecast trends (delegates to ForecastingEngine)
    */
-  static forecastItemRisks(historicalErrors: StockError[], targetItems: string[]) {
-    return ForecastingEngine.forecastItemRisks(historicalErrors, targetItems);
+  static forecastTrends(historicalErrors: StockError[], forecastPeriod: number) {
+    return ForecastingEngine.forecastTrends(historicalErrors, forecastPeriod);
   }
 
   /**

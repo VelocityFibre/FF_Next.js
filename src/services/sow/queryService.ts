@@ -7,7 +7,7 @@ import { createNeonClient } from '@/lib/neon-sql';
 import { getTableName } from './schema';
 import { SOWData, SOWOperationResult } from './types';
 
-const { sql, query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
+const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
 /**
  * SOW data query service

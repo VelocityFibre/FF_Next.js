@@ -93,7 +93,7 @@ describe('ProcurementApiService - Authentication', () => {
       });
 
       const context = createMockContext();
-      const result = await procurementApiService.getBOQs(context);
+      await procurementApiService.getBOQs(context);
 
       // Should not fail due to project access
       expect(projectAccessMiddleware.checkProjectAccess).toHaveBeenCalled();
@@ -166,7 +166,7 @@ describe('ProcurementApiService - Authentication', () => {
         permissions: ['boq:read', 'boq:create', 'boq:update', 'boq:delete']
       });
 
-      const result = await procurementApiService.getBOQs(adminContext);
+      await procurementApiService.getBOQs(adminContext);
       
       expect(rbacMiddleware.checkPermission).toHaveBeenCalledWith(
         adminContext.userId,
@@ -182,7 +182,7 @@ describe('ProcurementApiService - Authentication', () => {
       });
 
       vi.mocked(rbacMiddleware.checkPermission).mockImplementation(
-        (userId, permission, projectId) => {
+        (_userId, permission, _projectId) => {
           if (permission === 'boq:create') {
             return Promise.resolve({
               success: false,
@@ -227,7 +227,7 @@ describe('ProcurementApiService - Authentication', () => {
         }
       });
 
-      const result = await procurementApiService.getBOQs(departmentContext);
+      await procurementApiService.getBOQs(departmentContext);
       
       expect(projectAccessMiddleware.checkProjectAccess).toHaveBeenCalledWith(
         departmentContext.userId,

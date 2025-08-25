@@ -3,12 +3,12 @@
  */
 
 import { ProjectFormData } from '@/types/project.types';
-import { ClientDto } from '@/types/client.types';
+import { ClientDropdownOption } from '@/types/client.types';
 
 interface ProjectClientInfoProps {
   formData: ProjectFormData;
   onInputChange: (field: keyof ProjectFormData, value: any) => void;
-  clients: ClientDto[];
+  clients: ClientDropdownOption[];
   isClientsLoading: boolean;
 }
 

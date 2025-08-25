@@ -5,16 +5,7 @@
 
 import { InsufficientStockError, StockReservationError } from '../inventory';
 import { HandlerUtils } from './handler-utils';
-
-export interface RecoveryOption {
-  type: string;
-  description: string;
-  action: string;
-  data: any;
-  priority?: number;
-  estimatedTime?: string;
-  cost?: number;
-}
+import type { RecoveryOption, ErrorSeverity } from '../types';
 
 /**
  * Handlers for inventory-specific stock errors
@@ -26,7 +17,7 @@ export class InventoryHandlers {
   static handleInsufficientStock(error: InsufficientStockError): {
     error: InsufficientStockError;
     recoveryOptions: RecoveryOption[];
-    severity: 'low' | 'medium' | 'high' | 'critical';
+    severity: ErrorSeverity;
     autoRecoverable: boolean;
   } {
     const recoveryOptions: RecoveryOption[] = [];
@@ -152,7 +143,7 @@ export class InventoryHandlers {
   static handleReservationError(error: StockReservationError): {
     error: StockReservationError;
     recoveryOptions: RecoveryOption[];
-    severity: 'low' | 'medium' | 'high' | 'critical';
+    severity: ErrorSeverity;
     autoRecoverable: boolean;
   } {
     const recoveryOptions: RecoveryOption[] = [];

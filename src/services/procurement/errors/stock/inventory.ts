@@ -4,6 +4,12 @@
  */
 
 import { ProcurementError } from '../base.errors';
+import type { 
+  AlternativeLocation, 
+  AlternativeItem, 
+  ExistingReservation,
+  InsufficientStockOptions 
+} from './types';
 
 /**
  * Stock management base error class
@@ -13,6 +19,22 @@ export class StockError extends ProcurementError {
     super(message, code, statusCode, context);
     this.name = 'StockError';
     Object.setPrototypeOf(this, StockError.prototype);
+  }
+
+  /**
+   * Get detailed error information for logging and debugging
+   */
+  getErrorDetails(): Record<string, any> {
+    return {
+      errorType: this.name,
+      errorCode: this.code,
+      message: this.message,
+      statusCode: this.statusCode,
+      timestamp: this.timestamp,
+      context: this.context || {},
+      severity: this.getSeverity(),
+      retryable: this.isRetryable()
+    };
   }
 }
 
@@ -24,42 +46,17 @@ export class InsufficientStockError extends StockError {
   public readonly requestedQuantity: number;
   public readonly availableQuantity: number;
   public readonly reservedQuantity?: number;
-  public readonly alternativeLocations?: Array<{
-    location: string;
-    locationId: string;
-    availableQuantity: number;
-    estimatedTransferTime?: string;
-    transferCost?: number;
-  }>;
-  public readonly alternativeItems?: Array<{
-    itemCode: string;
-    itemName: string;
-    availableQuantity: number;
-    compatibility: number; // 0-100%
-    priceDifference?: number;
-  }>;
+  public readonly category?: string;
+  public readonly specifications?: Record<string, any>;
+  public readonly unitPrice?: number;
+  public readonly alternativeLocations?: AlternativeLocation[];
+  public readonly alternativeItems?: AlternativeItem[];
 
   constructor(
     itemCode: string,
     requestedQuantity: number,
     availableQuantity: number,
-    options?: {
-      reservedQuantity?: number;
-      alternativeLocations?: Array<{
-        location: string;
-        locationId: string;
-        availableQuantity: number;
-        estimatedTransferTime?: string;
-        transferCost?: number;
-      }>;
-      alternativeItems?: Array<{
-        itemCode: string;
-        itemName: string;
-        availableQuantity: number;
-        compatibility: number;
-        priceDifference?: number;
-      }>;
-    },
+    options?: InsufficientStockOptions,
     context?: Record<string, any>
   ) {
     const message = `Insufficient stock for ${itemCode}. Requested: ${requestedQuantity}, Available: ${availableQuantity}`;
@@ -68,9 +65,24 @@ export class InsufficientStockError extends StockError {
     this.itemCode = itemCode;
     this.requestedQuantity = requestedQuantity;
     this.availableQuantity = availableQuantity;
-    this.reservedQuantity = options?.reservedQuantity;
-    this.alternativeLocations = options?.alternativeLocations;
-    this.alternativeItems = options?.alternativeItems;
+    if (options?.reservedQuantity !== undefined) {
+      this.reservedQuantity = options.reservedQuantity;
+    }
+    if (options?.category !== undefined) {
+      this.category = options.category;
+    }
+    if (options?.specifications !== undefined) {
+      this.specifications = options.specifications;
+    }
+    if (options?.unitPrice !== undefined) {
+      this.unitPrice = options.unitPrice;
+    }
+    if (options?.alternativeLocations !== undefined) {
+      this.alternativeLocations = options.alternativeLocations;
+    }
+    if (options?.alternativeItems !== undefined) {
+      this.alternativeItems = options.alternativeItems;
+    }
     Object.setPrototypeOf(this, InsufficientStockError.prototype);
   }
 
@@ -189,23 +201,16 @@ export class StockReservationError extends StockError {
   public readonly itemCode: string;
   public readonly requestedQuantity: number;
   public readonly availableQuantity: number;
-  public readonly existingReservations: Array<{
-    reservationId: string;
-    quantity: number;
-    expiresAt?: Date;
-    purpose: string;
-  }>;
+  public readonly location?: string;
+  public readonly quantity?: number;
+  public readonly priority?: string;
+  public readonly existingReservations: ExistingReservation[];
 
   constructor(
     itemCode: string,
     requestedQuantity: number,
     availableQuantity: number,
-    existingReservations: Array<{
-      reservationId: string;
-      quantity: number;
-      expiresAt?: Date;
-      purpose: string;
-    }>,
+    existingReservations: ExistingReservation[],
     context?: Record<string, any>
   ) {
     const message = `Cannot reserve ${requestedQuantity} units of ${itemCode}. Available: ${availableQuantity}`;
@@ -214,6 +219,9 @@ export class StockReservationError extends StockError {
     this.itemCode = itemCode;
     this.requestedQuantity = requestedQuantity;
     this.availableQuantity = availableQuantity;
+    this.location = context?.location;
+    this.quantity = requestedQuantity;
+    this.priority = context?.priority;
     this.existingReservations = existingReservations;
     Object.setPrototypeOf(this, StockReservationError.prototype);
   }
@@ -254,5 +262,12 @@ export class StockReservationError extends StockError {
   getExpiredQuantity(): number {
     return this.getExpiredReservations().reduce((total, reservation) => 
       total + reservation.quantity, 0);
+  }
+
+  /**
+   * Get the quantity shortfall (same logic as InsufficientStockError)
+   */
+  getShortfall(): number {
+    return Math.max(0, this.requestedQuantity - this.availableQuantity);
   }
 }

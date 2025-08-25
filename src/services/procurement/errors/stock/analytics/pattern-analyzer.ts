@@ -3,7 +3,7 @@
  * Pattern identification and analysis for stock errors
  */
 
-import { StockError, InsufficientStockError } from '../inventory';
+import { StockError } from '../inventory';
 import { ErrorPattern, ErrorInsight } from './analytics-types';
 import { ErrorTracker } from './error-tracker';
 

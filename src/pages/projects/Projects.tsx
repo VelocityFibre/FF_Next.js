@@ -76,8 +76,10 @@ export function Projects({ searchTerm: initialSearchTerm = '', initialFilter }: 
 
       {/* Summary Cards */}
       <StandardSummaryCards cards={summaryStats.map(stat => ({
-        ...stat,
-        label: stat.title
+        label: stat.title,
+        value: stat.value,
+        icon: stat.icon,
+        trend: stat.trend
       }))} />
 
       {/* Search and Filters */}
@@ -86,7 +88,6 @@ export function Projects({ searchTerm: initialSearchTerm = '', initialFilter }: 
         onSearch={setSearchTerm}
         placeholder="Search projects by name, code, or client..."
         showFilters={showFilters}
-        onToggleFilters={setShowFilters}
       />
 
       {/* Filter Panel */}

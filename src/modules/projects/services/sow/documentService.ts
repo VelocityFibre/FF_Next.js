@@ -11,13 +11,13 @@ import {
   serverTimestamp 
 } from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
-import { db, storage } from '@/config/firebase';
+import { db, storage } from '../../../../config/firebase';
 import { 
   SOWDocument, 
   SOWDocumentType, 
   DocumentStatus 
 } from '../../types/project.types';
-import { projectService } from '../projectService';
+import { projectService } from '../projectService/index';
 
 export class SOWDocumentService {
   /**
@@ -140,7 +140,7 @@ export class SOWDocumentService {
   static async updateMetadata(
     projectId: string,
     documentId: string,
-    metadata: any
+    metadata: Record<string, unknown>
   ): Promise<void> {
     const project = await projectService.getProjectById(projectId);
     

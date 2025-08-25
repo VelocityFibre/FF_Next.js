@@ -10,7 +10,7 @@ export class StatisticsService {
     const result = await neonService.query(POLE_QUERIES.getProjectStatistics, [projectId]);
     
     if (result.success && result.data.length > 0) {
-      return result.data[0];
+      return result.data[0] as ProjectStatistics;
     }
     
     return {

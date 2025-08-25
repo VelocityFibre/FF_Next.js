@@ -3,14 +3,13 @@
  * Handles main score calculations and detailed breakdowns
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   ScoreCalculationWeights,
   ScoreCalculationResult,
   DEFAULT_SCORE_WEIGHTS
 } from '../scorecardTypes';
 import { DataExtractors } from './dataExtractors';
-import { ValidationUtils } from './validationUtils';
 
 export class CoreCalculations {
   private static readonly weights: ScoreCalculationWeights = DEFAULT_SCORE_WEIGHTS;
@@ -110,7 +109,7 @@ export class CoreCalculations {
       score += 10;
     }
     
-    if (supplier.address) {
+    if (supplier.addresses?.physical) {
       score += 10;
     }
     

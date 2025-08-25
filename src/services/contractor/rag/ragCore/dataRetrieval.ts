@@ -8,9 +8,7 @@ import { contractors, projectAssignments, contractorTeams } from '@/lib/neon/sch
 import { eq } from 'drizzle-orm';
 import {
   ContractorAssignment,
-  ContractorTeam,
-  ContractorData,
-  RankedContractor
+  ContractorTeam
 } from '../types';
 
 export class DataRetrieval {
@@ -55,10 +53,10 @@ export class DataRetrieval {
         id: assignment.id,
         contractorId: assignment.contractorId,
         status: assignment.status,
-        qualityScore: assignment.qualityScore,
-        timelinessScore: assignment.timelinessScore,
-        performanceRating: assignment.performanceRating,
-        contractValue: assignment.contractValue || 0
+        qualityScore: Number(assignment.qualityScore || 0),
+        timelinessScore: Number(assignment.timelinessScore || 0),
+        performanceRating: Number(assignment.performanceRating || 0),
+        contractValue: Number(assignment.contractValue || 0)
       }));
     } catch (error) {
       console.error('Failed to get contractor assignments:', error);
@@ -80,8 +78,8 @@ export class DataRetrieval {
       return teams.map(team => ({
         id: team.id,
         contractorId: team.contractorId,
-        teamType: team.teamType,
-        skillLevel: (team.skillLevel as 'junior' | 'intermediate' | 'senior' | 'expert') || 'intermediate'
+        teamType: team.teamType || '',
+        skillLevel: 'intermediate' as 'junior' | 'intermediate' | 'senior' | 'expert'
       }));
     } catch (error) {
       console.error('Failed to get contractor teams:', error);

@@ -3,7 +3,7 @@
  * Main recommendation generation logic
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   RecommendationCriteria,
   SupplierCompliance

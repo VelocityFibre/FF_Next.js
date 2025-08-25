@@ -3,7 +3,7 @@
  * Type definitions for real-time supplier subscriptions
  */
 
-import { Supplier, SupplierStatus } from '@/types/supplier.types';
+import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 
 /**
  * Subscription callback types

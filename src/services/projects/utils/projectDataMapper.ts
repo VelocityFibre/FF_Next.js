@@ -86,7 +86,7 @@ export class ProjectDataMapper {
       name: project.name,
       status: project.status,
       progress: project.actualProgress || project.plannedProgress || 0,
-      budget: project.budget
+      budget: project.budget ?? null
     };
   }
 
@@ -96,10 +96,10 @@ export class ProjectDataMapper {
   static isOverdue(project: Project): boolean {
     if (!project.endDate) return false;
     
-    const endDate = new Date(project.endDate);
+    const endDate = new Date(project.endDate.toString());
     const now = new Date();
     
-    return endDate < now && project.status !== 'COMPLETED';
+    return endDate < now && project.status !== 'completed';
   }
 
   /**
@@ -108,8 +108,8 @@ export class ProjectDataMapper {
   static calculateDuration(project: Project): number | null {
     if (!project.startDate || !project.endDate) return null;
     
-    const start = new Date(project.startDate);
-    const end = new Date(project.endDate);
+    const start = new Date(project.startDate.toString());
+    const end = new Date(project.endDate.toString());
     
     const diffTime = Math.abs(end.getTime() - start.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -123,7 +123,7 @@ export class ProjectDataMapper {
   static calculateRemainingDays(project: Project): number | null {
     if (!project.endDate) return null;
     
-    const endDate = new Date(project.endDate);
+    const endDate = new Date(project.endDate.toString());
     const now = new Date();
     
     const diffTime = endDate.getTime() - now.getTime();
@@ -191,8 +191,8 @@ export class ProjectDataMapper {
     }
     
     if (project.startDate && project.endDate) {
-      const start = new Date(project.startDate);
-      const end = new Date(project.endDate);
+      const start = new Date(project.startDate.toString());
+      const end = new Date(project.endDate.toString());
       
       if (start > end) {
         errors.push('Start date must be before end date');

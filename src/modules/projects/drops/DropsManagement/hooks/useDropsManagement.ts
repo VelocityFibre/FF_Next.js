@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Drop, DropsStats, DropsFilters } from '../types/drops.types';
+import type { Drop, DropsStats, DropsFiltersState } from '../types/drops.types';
 
 export function useDropsManagement() {
   const [drops, setDrops] = useState<Drop[]>([]);
@@ -13,7 +13,7 @@ export function useDropsManagement() {
     averageInstallTime: 0,
     totalCableUsed: 0,
   });
-  const [filters, setFilters] = useState<DropsFilters>({
+  const [filters, setFilters] = useState<DropsFiltersState>({
     searchTerm: '',
     statusFilter: 'all',
   });
@@ -132,8 +132,8 @@ export function useDropsManagement() {
     return matchesSearch && matchesStatus;
   });
 
-  const updateFilters = (newFilters: Partial<DropsFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+  const updateFilters = (newFilters: Partial<DropsFiltersState>) => {
+    setFilters((prev: DropsFiltersState) => ({ ...prev, ...newFilters }));
   };
 
   return {

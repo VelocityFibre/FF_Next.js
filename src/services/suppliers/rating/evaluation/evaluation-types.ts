@@ -3,7 +3,7 @@
  * TypeScript interfaces and types for supplier evaluation
  */
 
-import { PerformancePeriod } from '@/types/supplier.types';
+import { PerformancePeriod } from '@/types/supplier/base.types';
 
 /**
  * Evaluation action item

@@ -3,7 +3,7 @@
  * Core analysis logic for supplier performance trends and benchmarks
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { PerformanceTrends, PerformanceBenchmarks, TrendAnalysis, BenchmarkStats } from './analyzer-types';
 import { PerformanceMetricsCalculator } from './performance-metrics';
 
@@ -16,18 +16,26 @@ export class PerformanceAnalysisEngine {
     averagePerformance: number;
     topPerformers: number;
     underPerformers: number;
+    complianceRate: number;
   } {
     const averageRating = PerformanceMetricsCalculator.calculateAverageRating(suppliers);
     const averagePerformance = PerformanceMetricsCalculator.calculateAveragePerformance(suppliers);
     
     const topPerformers = PerformanceMetricsCalculator.identifyTopPerformers(suppliers);
     const underPerformers = PerformanceMetricsCalculator.identifyUnderperformers(suppliers);
+    
+    // Calculate compliance rate based on supplier compliance status
+    const compliantSuppliers = suppliers.filter(s => 
+      s.complianceStatus && (s.complianceStatus as any).overall === 'compliant'
+    );
+    const complianceRate = suppliers.length > 0 ? compliantSuppliers.length / suppliers.length : 0;
 
     return {
       averageRating,
       averagePerformance,
       topPerformers: topPerformers.length,
-      underPerformers: underPerformers.length
+      underPerformers: underPerformers.length,
+      complianceRate
     };
   }
 
@@ -135,8 +143,10 @@ export class PerformanceAnalysisEngine {
           year: targetDate.getFullYear(),
           totalSuppliers: existingSuppliers.length,
           newSuppliers: newSuppliers.length,
+          activeSuppliers: existingSuppliers.filter(s => s.status === 'active').length,
           averageRating: performanceData.averageRating,
           averagePerformance: performanceData.averagePerformance,
+          complianceRate: performanceData.complianceRate || 0,
           topPerformers: performanceData.topPerformers,
           underPerformers: performanceData.underPerformers,
           categoryBreakdown
@@ -202,6 +212,11 @@ export class PerformanceAnalysisEngine {
         overall,
         byCategory,
         byBusinessType,
+        trends: {
+          improving: 0,
+          stable: 0,
+          declining: 0
+        },
         lastUpdated: new Date().toISOString()
       };
     } catch (error) {
@@ -210,6 +225,11 @@ export class PerformanceAnalysisEngine {
         overall: this.calculateBenchmarkStats([]),
         byCategory: {},
         byBusinessType: {},
+        trends: {
+          improving: 0,
+          stable: 0,
+          declining: 0
+        },
         lastUpdated: new Date().toISOString()
       };
     }

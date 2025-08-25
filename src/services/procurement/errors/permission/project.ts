@@ -4,16 +4,16 @@
  */
 
 import { ProcurementPermissionError } from './base';
-import { ProjectAccessOptions, AccessLevel } from './types';
+import { ProjectAccessOptions, AccessLevel, PermissionErrorOptions } from './types';
 
 /**
  * Project-specific access denied error
  */
 export class ProjectAccessDeniedError extends ProcurementPermissionError {
   public readonly projectId: string;
-  public readonly projectName?: string;
-  public readonly userRole?: string;
-  public readonly requiredRole?: string;
+  public readonly projectName?: string | undefined;
+  public readonly userRole?: string | undefined;
+  public readonly requiredRole?: string | undefined;
 
   constructor(
     projectId: string,
@@ -26,18 +26,22 @@ export class ProjectAccessDeniedError extends ProcurementPermissionError {
       options?.requiredRole ? `Required role: ${options.requiredRole}` : `Required permission: ${requiredPermission}`
     }${options?.userRole ? `. Current role: ${options.userRole}` : ''}`;
 
-    super(requiredPermission, userPermissions, {
+    const permissionOptions: PermissionErrorOptions = {
       resourceType: 'project',
       resourceId: projectId,
-      operation: options?.operation,
       customMessage: message
-    }, context);
+    };
+    if (options?.operation) {
+      permissionOptions.operation = options.operation;
+    }
+    
+    super(requiredPermission, userPermissions, permissionOptions, context);
 
     this.name = 'ProjectAccessDeniedError';
     this.projectId = projectId;
-    this.projectName = options?.projectName;
-    this.userRole = options?.userRole;
-    this.requiredRole = options?.requiredRole;
+    this.projectName = options?.projectName || undefined;
+    this.userRole = options?.userRole || undefined;
+    this.requiredRole = options?.requiredRole || undefined;
     Object.setPrototypeOf(this, ProjectAccessDeniedError.prototype);
   }
 

@@ -14,6 +14,7 @@ export interface OnboardingStage {
   completed: boolean;
   documents: DocumentType[];
   checklist: OnboardingChecklistItem[];
+  category?: string;
 }
 
 // Checklist item interface
@@ -22,7 +23,7 @@ export interface OnboardingChecklistItem {
   description: string;
   completed: boolean;
   required: boolean;
-  category: 'legal' | 'financial' | 'technical' | 'safety' | 'insurance';
+  category: 'legal' | 'financial' | 'technical' | 'safety' | 'insurance' | 'compliance';
 }
 
 // Overall onboarding progress interface
@@ -32,6 +33,7 @@ export interface OnboardingProgress {
   totalStages: number;
   completionPercentage: number;
   stages: OnboardingStage[];
+  completedStages?: string[];
   overallStatus: OnboardingStatus;
   approvedBy?: string;
   approvedAt?: Date;

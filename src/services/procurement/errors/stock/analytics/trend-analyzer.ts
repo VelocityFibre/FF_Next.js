@@ -298,7 +298,7 @@ export class TrendAnalyzer {
   private static identifyPeakHours(errors: StockError[]): number[] {
     const hourCounts = new Map<number, number>();
     
-    errors.forEach(error => {
+    errors.forEach(_error => {
       // In practice, extract from error timestamp
       const hour = new Date().getHours();
       hourCounts.set(hour, (hourCounts.get(hour) || 0) + 1);

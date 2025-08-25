@@ -4,7 +4,7 @@
  */
 
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '../../../../../config/firebase';
 import { ProjectCrudService } from './ProjectCrudService';
 
 const COLLECTION_NAME = 'projects';

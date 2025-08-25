@@ -17,7 +17,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { Product, PriceList, PriceListItem, CreatePriceListData, PriceAdjustment, ProductCategory } from './types';
+import { Product, PriceList, PriceListItem, CreatePriceListData, PriceAdjustment } from './types';
 
 const PRODUCTS_COLLECTION = 'products';
 const PRICE_LISTS_COLLECTION = 'price_lists';

@@ -58,7 +58,7 @@ export class BOQImportStatsCalculator {
   /**
    * Calculate average mapping confidence
    */
-  private calculateAverageMappingConfidence(completed: ImportJob[]): number {
+  private calculateAverageMappingConfidence(_completed: ImportJob[]): number {
     // TODO: This would need to be calculated from actual mapping results
     // For now, return a placeholder value
     return 0.85; // 85% average confidence

@@ -3,7 +3,7 @@
  * Main management interface for BOQ operations
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FileText, AlertTriangle, Clock, Loader2 } from 'lucide-react';
 import { BOQ, BOQStats } from '@/types/procurement/boq.types';
 import { ImportJob, ImportStats } from '@/services/procurement/boqImportService';
@@ -35,10 +35,10 @@ export default function BOQDashboard({ className }: BOQDashboardProps) {
   const [activeJobs, setActiveJobs] = useState<ImportJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Create data loader instance
-  const dataLoader = new BOQDataLoader();
+  // Create data loader instance (memoized to prevent recreating on every render)
+  const dataLoader = useMemo(() => new BOQDataLoader(), []);
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     if (!context) return;
 
     try {
@@ -58,19 +58,19 @@ export default function BOQDashboard({ className }: BOQDashboardProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [context, dataLoader]);
 
-  const loadActiveJobs = () => {
+  const loadActiveJobs = useCallback(() => {
     const jobs = dataLoader.getActiveJobs();
     setActiveJobs(jobs);
-  };
+  }, [dataLoader]);
 
   // Load dashboard data
   useEffect(() => {
     if (currentView === 'overview') {
       loadDashboardData();
     }
-  }, [currentView, context]);
+  }, [currentView, context, loadDashboardData]);
 
   // Refresh active jobs periodically
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function BOQDashboard({ className }: BOQDashboardProps) {
     }, 5000); // Refresh every 5 seconds
 
     return () => clearInterval(interval);
-  }, [currentView]);
+  }, [currentView, loadActiveJobs]);
 
   // Handle view navigation
   const navigateToView = (view: DashboardView, boq?: BOQ) => {

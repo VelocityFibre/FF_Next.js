@@ -3,7 +3,7 @@
  * Advanced geographic analysis and pattern recognition for supplier locations
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   LocationDistribution, 
   ProvinceDistribution, 
@@ -11,8 +11,7 @@ import {
   LocationSummary,
   SupplierLocation,
   LocationSearchOptions,
-  RegionAnalysis,
-  LocationTrend
+  RegionAnalysis
 } from './location-types';
 import { LocationMetricsCalculator } from './location-metrics';
 

@@ -55,7 +55,7 @@ export interface CreateBOQExceptionData {
   priority?: string;
 }
 
-export { 
+export type { 
   BOQ, 
   BOQItem, 
   BOQException, 

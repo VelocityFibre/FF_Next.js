@@ -139,6 +139,9 @@ export interface ProjectHierarchy {
 }
 
 export interface PhaseHierarchy extends Phase {
+  startDate?: Date | Timestamp | string;
+  endDate?: Date | Timestamp | string;
+  tasks?: Task[];
   steps?: StepHierarchy[];
 }
 

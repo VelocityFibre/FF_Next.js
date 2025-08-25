@@ -3,8 +3,9 @@
  * Handles intelligent mapping of Excel columns to BOQ item fields
  */
 
-import { ColumnMapping, DEFAULT_COLUMN_MAPPING, ImportError, ImportWarning, ParsedBOQItem } from './importTypes';
+import { ColumnMapping, DEFAULT_COLUMN_MAPPING, ParsedBOQItem } from './importTypes';
 import { parseNumber, validateString } from './importValidation';
+import { ImportError, ImportWarning } from './validation/modules/validation-types';
 
 /**
  * Map raw row data to BOQ item structure using column mapping configuration
@@ -29,7 +30,7 @@ export function mapRowToBoqItem(
 
   // Map item code
   const itemCodeValue = findColumnValue(row, columnMapping.itemCode);
-  mappedData.itemCode = validateString(itemCodeValue, rowNumber, 'itemCode', errors, warnings, 100, false) ?? undefined;
+  const itemCodeResult = validateString(itemCodeValue, rowNumber, 'itemCode', errors, warnings, 100, false); if (itemCodeResult) mappedData.itemCode = itemCodeResult;
 
   // Map description (required)
   const descriptionValue = findColumnValue(row, columnMapping.description);
@@ -37,7 +38,7 @@ export function mapRowToBoqItem(
 
   // Map category
   const categoryValue = findColumnValue(row, columnMapping.category);
-  mappedData.category = validateString(categoryValue, rowNumber, 'category', errors, warnings, 100, false) ?? undefined;
+  const categoryResult = validateString(categoryValue, rowNumber, 'category', errors, warnings, 100, false); if (categoryResult) mappedData.category = categoryResult;
 
   // Map quantity (required)
   const quantityValue = findColumnValue(row, columnMapping.quantity);
@@ -50,23 +51,23 @@ export function mapRowToBoqItem(
 
   // Map unit price
   const unitPriceValue = findColumnValue(row, columnMapping.unitPrice);
-  mappedData.unitPrice = parseNumber(unitPriceValue, rowNumber, 'unitPrice', errors, warnings, false);
+  const unitPriceResult = parseNumber(unitPriceValue, rowNumber, 'unitPrice', errors, warnings, false); if (unitPriceResult !== null && unitPriceResult !== undefined) mappedData.unitPrice = unitPriceResult;
 
   // Map total price
   const totalPriceValue = findColumnValue(row, columnMapping.totalPrice);
-  mappedData.totalPrice = parseNumber(totalPriceValue, rowNumber, 'totalPrice', errors, warnings, false);
+  const totalPriceResult = parseNumber(totalPriceValue, rowNumber, 'totalPrice', errors, warnings, false); if (totalPriceResult !== null && totalPriceResult !== undefined) mappedData.totalPrice = totalPriceResult;
 
   // Map phase
   const phaseValue = findColumnValue(row, columnMapping.phase);
-  mappedData.phase = validateString(phaseValue, rowNumber, 'phase', errors, warnings, 100, false);
+  const phaseResult = validateString(phaseValue, rowNumber, 'phase', errors, warnings, 100, false); if (phaseResult) mappedData.phase = phaseResult;
 
   // Map task
   const taskValue = findColumnValue(row, columnMapping.task);
-  mappedData.task = validateString(taskValue, rowNumber, 'task', errors, warnings, 100, false);
+  const taskResult = validateString(taskValue, rowNumber, 'task', errors, warnings, 100, false); if (taskResult) mappedData.task = taskResult;
 
   // Map site/location
   const siteValue = findColumnValue(row, columnMapping.site) || findColumnValue(row, columnMapping.location);
-  mappedData.site = validateString(siteValue, rowNumber, 'site', errors, warnings, 100, false);
+  const siteResult = validateString(siteValue, rowNumber, 'site', errors, warnings, 100, false); if (siteResult) mappedData.site = siteResult;
 
   return mappedData;
 }
@@ -146,14 +147,15 @@ export function detectColumnMapping(headers: string[]): {
       });
     });
 
-    if (bestMatch) {
-      detectedMapping[fieldName as keyof ColumnMapping] = [bestMatch.header];
+    if (bestMatch !== null) {
+      const match = bestMatch as { header: string; confidence: number };
+      detectedMapping[fieldName as keyof ColumnMapping] = [match.header];
       suggestions.push({
         field: fieldName,
-        detectedColumn: bestMatch.header,
-        confidence: bestMatch.confidence
+        detectedColumn: match.header,
+        confidence: match.confidence
       });
-      totalConfidence += bestMatch.confidence;
+      totalConfidence += match.confidence;
       matchedFields++;
     }
   });

@@ -49,7 +49,7 @@ export function calculateOnboardingProgress(completedStages: string[]): {
   total: number;
   remaining: string[];
 } {
-  const allStages = getAllOnboardingStages();
+  // const allStages = getAllOnboardingStages(); // Unused - kept for potential debugging
   const requiredStages = getRequiredStages();
   
   const completedRequired = completedStages.filter(stageId => 

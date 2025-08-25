@@ -1,10 +1,37 @@
-import { BarChart3, Users, Calendar, Target, Download } from 'lucide-react';
+import { BarChart3, Users, Calendar, Target, Download, RefreshCw, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
+import { useKPIDashboardData } from '@/hooks/useDashboardData';
+import { getKPIDashboardCards } from '@/config/dashboards/dashboardConfigs';
 
 export function KPIDashboard() {
   const navigate = useNavigate();
 
-  const kpiCards = [
+  const { 
+    stats, 
+    trends, 
+    isLoading: _isLoading, 
+    error: _error, 
+    formatNumber, 
+    formatCurrency, 
+    formatPercentage,
+    loadDashboardData 
+  } = useKPIDashboardData();
+
+  // Acknowledge unused variables
+  void _isLoading;
+  void _error;
+
+  // 🟢 WORKING: Get KPI dashboard cards
+  const dashboardKpiCards = getKPIDashboardCards(
+    stats, 
+    trends, 
+    { formatNumber, formatCurrency, formatPercentage }
+  );
+
+  // Legacy KPI cards for comparison
+  const legacyKpiCards = [
     {
       title: 'Project KPIs',
       value: '87%',
@@ -40,39 +67,60 @@ export function KPIDashboard() {
   ];
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">KPI Dashboard</h1>
-          <p className="text-gray-600 mt-1">Real-time performance metrics overview</p>
-        </div>
-        <button
-          onClick={() => navigate('/app/kpi-dashboard/export')}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          <Download className="w-4 h-4" />
-          Export Dashboard
-        </button>
-      </div>
+    <div className="ff-page-container">
+      <DashboardHeader 
+        title="KPI Dashboard"
+        subtitle="Real-time performance metrics and key performance indicators"
+        actions={[
+          {
+            label: 'Configure KPIs',
+            icon: Settings as React.ComponentType<{ className?: string; }>,
+            onClick: () => navigate('/app/kpi-dashboard/settings'),
+            variant: 'secondary'
+          },
+          {
+            label: 'Export Dashboard',
+            icon: Download as React.ComponentType<{ className?: string; }>,
+            onClick: () => navigate('/app/kpi-dashboard/export'),
+            variant: 'secondary'
+          },
+          {
+            label: 'Refresh Data',
+            icon: RefreshCw as React.ComponentType<{ className?: string; }>,
+            onClick: loadDashboardData,
+            variant: 'primary'
+          }
+        ]}
+      />
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {kpiCards.map((kpi) => (
-          <div key={kpi.title} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div className={`${kpi.color} p-3 rounded-lg`}>
-                <kpi.icon className="w-6 h-6 text-white" />
+      {/* Enhanced KPI Stats Cards */}
+      <StatsGrid 
+        cards={dashboardKpiCards}
+        columns={3}
+        className="mb-8"
+      />
+
+      {/* Legacy KPI Cards for comparison */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Legacy KPI View</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {legacyKpiCards.map((kpi) => (
+            <div key={kpi.title} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className={`${kpi.color} p-3 rounded-lg`}>
+                  <kpi.icon className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-bold text-gray-900">{kpi.value}</p>
+                  <span className={`text-sm ${kpi.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                    {kpi.change} vs last month
+                  </span>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-3xl font-bold text-gray-900">{kpi.value}</p>
-                <span className={`text-sm ${kpi.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-                  {kpi.change} vs last month
-                </span>
-              </div>
+              <h3 className="text-sm font-medium text-gray-600">{kpi.title}</h3>
             </div>
-            <h3 className="text-sm font-medium text-gray-600">{kpi.title}</h3>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Chart Placeholder */}

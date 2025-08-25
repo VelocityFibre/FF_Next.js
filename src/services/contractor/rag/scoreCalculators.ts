@@ -31,7 +31,8 @@ export {
   FinancialCalculator,
   ReliabilityCalculator,
   CapabilitiesCalculator,
-  RAGScoreCalculator
+  RAGScoreCalculator,
+  RAGScoreCalculator as OverallCalculator // Alias for backward compatibility
 } from './calculators';
 
 /**
@@ -78,7 +79,7 @@ export function calculateCapabilitiesScore(
   contractor: ContractorData,
   teams: ContractorTeam[]
 ): RAGScoreResult<RAGCapabilitiesBreakdown> {
-  return CapabilitiesCalculator.calculateScore(contractor, teams);
+  return CapabilitiesCalculator.calculateScore(contractor as any, teams);
 }
 
 /**

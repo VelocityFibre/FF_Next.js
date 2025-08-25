@@ -28,7 +28,6 @@ import {
   subscribeToContractor
 } from './subscriptionHandlers';
 import {
-  buildQueryConstraints,
   applyClientSideFilters,
   sortContractors
 } from './searchFilters';

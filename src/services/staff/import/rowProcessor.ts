@@ -7,7 +7,7 @@ import {
   StaffImportRow, 
   StaffImportResult, 
   StaffImportError,
-  StaffFormData
+  StaffFormData, ContractType, StaffStatus
 } from '@/types/staff.types';
 import { extractUniqueManagers, sortByManagerHierarchy, findManagerByName } from './managerResolver';
 import { parseDate, parseSkills } from './parsers';
@@ -17,14 +17,14 @@ import { parseDate, parseSkills } from './parsers';
  */
 export async function processImportRows(
   rows: StaffImportRow[], 
-  overwriteExisting: boolean = true
+  _overwriteExisting: boolean = true
 ): Promise<StaffImportResult> {
   const { staffService } = await import('../../staffService');
   const errors: StaffImportError[] = [];
   const importedStaff = [];
   let successful = 0;
   let failed = 0;
-  const skipped = 0;
+  // const skipped = 0; // Not used in current implementation
   
   // Extract all manager names first
   const managerNames = extractUniqueManagers(rows);
@@ -143,29 +143,29 @@ export async function processImportRows(
         name: row.name.trim(),
         email: row.email.trim(),
         phone: row.phone.trim() || '',
-        alternatePhone: row.alternativePhone || '',
+        ...(row.alternativePhone && { alternativePhone: row.alternativePhone }),
         employeeId: employeeId,
         position: row.position || 'Staff',
         department: row.department || 'Operations',
-        employmentType: 'full_time' as any, // Default employment type
-        status: 'active' as any, // Default status
-        reportsTo: reportsTo, // Will be undefined if no manager or can't resolve
-        salary: 0,
+        contractType: ContractType.PERMANENT, // Default contract type
+        status: StaffStatus.ACTIVE, // Default status
+        ...(reportsTo && { reportsTo }), // Only include if manager found
         startDate: startDate, // Use parsed date
-        joinDate: startDate.toISOString(),
-        endDate: undefined,
+        // endDate not included as it.s undefined
         address: row.address || '',
         city: row.city || '',
         province: row.province || '',
         postalCode: row.postalCode || '',
-        emergencyContact: {
-          name: row.emergencyContactName || '',
-          relationship: 'Contact',
-          phone: row.emergencyContactPhone || ''
-        },
+        ...(row.emergencyContactName && { emergencyContactName: row.emergencyContactName }),
+        ...(row.emergencyContactPhone && { emergencyContactPhone: row.emergencyContactPhone }),
+        experienceYears: 0,
+        workingHours: "9:00-17:00",
+        availableWeekends: false,
+        availableNights: false,
+        timeZone: "Africa/Johannesburg",
+        maxProjectCount: 5,
         skills: parseSkills(row.skills),
-        certifications: [],
-        notes: ''
+        // notes not included as it's empty
       };
       
       // Import the staff member using createOrUpdate to handle both new and existing
@@ -198,10 +198,9 @@ export async function processImportRows(
   return {
     success: failed === 0,
     total: rows.length,
-    successful,
+    imported: successful,
     failed,
-    skipped,
     errors,
-    importedStaff
+    staffMembers: importedStaff
   };
 }

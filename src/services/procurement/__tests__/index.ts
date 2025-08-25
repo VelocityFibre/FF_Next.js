@@ -3,9 +3,28 @@
  * Exports all test modules for unified access
  */
 
-// Re-export test helpers for use in other test files
-export * from './shared/testHelpers';
-export * from './testHelpers'; // Legacy compatibility
+// Re-export test helpers for use in other test files - resolve duplicates
+export {
+  createMockContext,
+  mockSuccessfulAuth,
+  mockBoqData,
+  mockBoqItems,
+  mockRfqData,
+  setupMocks
+} from './shared/testHelpers';
+
+// Additional exports from main testHelpers
+export {
+  mockFailedProjectAccess,
+  mockInsufficientPermissions,
+  mockDatabaseSelect,
+  mockDatabaseInsert,
+  mockDatabaseError,
+  teardownMocks,
+  createValidBOQImportData,
+  createValidRFQData,
+  createInvalidRFQData
+} from './testHelpers';
 
 // Re-export the main service for testing
 export { procurementApiService } from '../procurementApiService';

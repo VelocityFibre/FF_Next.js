@@ -4,5 +4,5 @@
  * This file maintained for backward compatibility.
  */
 
-// Re-export BOQCalculations from modular structure
-export { BOQCalculations } from './calculations';
+// Re-export from modular structure to avoid circular imports
+export * from './calculations/index';

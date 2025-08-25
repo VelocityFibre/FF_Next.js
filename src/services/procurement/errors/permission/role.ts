@@ -4,7 +4,7 @@
  */
 
 import { ProcurementPermissionError } from './base';
-import { RoleAccessOptions } from './types';
+import { RoleAccessOptions, PermissionErrorOptions } from './types';
 
 /**
  * Role-based access error with hierarchy information
@@ -12,8 +12,8 @@ import { RoleAccessOptions } from './types';
 export class RoleAccessError extends ProcurementPermissionError {
   public readonly userRole: string;
   public readonly requiredRole: string;
-  public readonly roleHierarchy?: string[];
-  public readonly departmentRestriction?: string;
+  public readonly roleHierarchy?: string[] | undefined;
+  public readonly departmentRestriction?: string | undefined;
 
   constructor(
     userRole: string,
@@ -27,16 +27,20 @@ export class RoleAccessError extends ProcurementPermissionError {
       options?.departmentRestriction ? ` (Department: ${options.departmentRestriction})` : ''
     }`;
 
-    super(requiredPermission, userPermissions, {
-      operation: options?.operation,
+    const permissionOptions: PermissionErrorOptions = {
       customMessage: message
-    }, context);
+    };
+    if (options?.operation) {
+      permissionOptions.operation = options.operation;
+    }
+    
+    super(requiredPermission, userPermissions, permissionOptions, context);
 
     this.name = 'RoleAccessError';
     this.userRole = userRole;
     this.requiredRole = requiredRole;
-    this.roleHierarchy = options?.roleHierarchy;
-    this.departmentRestriction = options?.departmentRestriction;
+    this.roleHierarchy = options?.roleHierarchy || undefined;
+    this.departmentRestriction = options?.departmentRestriction || undefined;
     Object.setPrototypeOf(this, RoleAccessError.prototype);
   }
 

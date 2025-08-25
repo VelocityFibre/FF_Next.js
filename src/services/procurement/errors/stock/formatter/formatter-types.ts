@@ -13,12 +13,12 @@ export interface UserErrorDisplay {
     primary?: boolean;
     variant?: 'default' | 'destructive' | 'outline';
   }>;
-  details?: {
-    itemCode?: string;
-    location?: string;
-    quantity?: number;
-    timestamp?: Date;
-  };
+  details: {
+    itemCode: string | undefined;
+    location: string | undefined;
+    quantity: number | undefined;
+    timestamp: Date | undefined;
+  } | undefined;
 }
 
 export interface SystemErrorLog {
@@ -28,8 +28,8 @@ export interface SystemErrorLog {
   severity: 'critical' | 'high' | 'medium' | 'low';
   message: string;
   details: Record<string, any>;
-  stackTrace?: string;
-  context?: Record<string, any>;
+  stackTrace: string | undefined;
+  context: Record<string, any> | undefined;
   tags: string[];
 }
 

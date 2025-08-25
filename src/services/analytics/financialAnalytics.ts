@@ -24,11 +24,28 @@ export class FinancialAnalyticsService {
         })
         .from(financialTransactions);
 
+      let results;
       if (projectId) {
-        return await baseQuery.where(eq(financialTransactions.projectId, projectId));
+        results = await baseQuery.where(eq(financialTransactions.projectId, projectId));
+      } else {
+        results = await baseQuery;
       }
 
-      return await baseQuery;
+      // Transform results to match FinancialOverview interface
+      return results.map(row => ({
+        totalInvoices: row.totalInvoices,
+        totalAmount: Number(row.totalAmount || 0),
+        paidAmount: row.paidAmount,
+        pendingAmount: row.pendingAmount,
+        overdueCount: row.overdueCount,
+        // Required FinancialMetrics fields
+        totalRevenue: Number(row.totalAmount || 0),
+        totalExpenses: 0, // Would need expenses data
+        netProfit: row.paidAmount - 0, // paidAmount minus expenses
+        profitMargin: row.paidAmount > 0 ? ((row.paidAmount - 0) / row.paidAmount) * 100 : 0,
+        cashFlow: row.paidAmount - row.pendingAmount,
+        budgetUtilization: 0 // Would need budget data
+      }));
     } catch (error) {
       console.error('Failed to get financial overview:', error);
       throw error;

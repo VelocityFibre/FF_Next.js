@@ -12,6 +12,10 @@ export {
   parseBoolean
 } from './parser';
 
+// Import transformer functions for internal use
+import { transformPoles, transformDrops, transformFibre } from './transformer';
+import { validatePoles, validateDrops, validateFibre } from './validator';
+
 // Export transformer functions
 export {
   transformPoles,
@@ -45,37 +49,31 @@ export class SOWDataProcessor {
 
   // Process Lawley-style poles data
   processPoles(rawData: any[]) {
-    const { transformPoles } = require('./transformer');
     return transformPoles(rawData);
   }
 
   // Process Lawley-style drops data
   processDrops(rawData: any[]) {
-    const { transformDrops } = require('./transformer');
     return transformDrops(rawData);
   }
 
   // Process Lawley-style fibre data
   processFibre(rawData: any[]) {
-    const { transformFibre } = require('./transformer');
     return transformFibre(rawData);
   }
 
   // Validate poles data
   validatePoles(poles: any[]) {
-    const { validatePoles } = require('./validator');
     return validatePoles(poles);
   }
 
   // Validate drops data
   validateDrops(drops: any[]) {
-    const { validateDrops } = require('./validator');
     return validateDrops(drops);
   }
 
   // Validate fibre data
   validateFibre(fibres: any[]) {
-    const { validateFibre } = require('./validator');
     return validateFibre(fibres);
   }
 }

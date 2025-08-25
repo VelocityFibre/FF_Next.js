@@ -3,7 +3,7 @@
  * Main search orchestration and public API
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   SupplierSearchFilters, 
   CategorySearchOptions, 

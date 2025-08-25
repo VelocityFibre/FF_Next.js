@@ -25,12 +25,55 @@ export function mapToStaffMember(staff: any): StaffMember {
     contractType: staff.type || 'PERMANENT',
     createdAt: staff.created_at || new Date(),
     updatedAt: staff.updated_at || new Date(),
+    createdBy: staff.created_by || '',
+    lastModifiedBy: staff.last_modified_by || '',
+    
+    // Skills and Experience
+    experienceYears: staff.experience_years || 0,
+    specializations: staff.specializations || [],
+    
+    // Availability and Scheduling
+    workingHours: staff.working_hours || '',
+    availableWeekends: staff.available_weekends ?? false,
+    availableNights: staff.available_nights ?? false,
+    timeZone: staff.time_zone || 'UTC',
+    
+    // Project Management
+    activeProjectIds: staff.active_project_ids || [],
+    currentProjectCount: staff.current_project_count || 0,
+    maxProjectCount: staff.max_project_count || 5,
+    
+    // Performance Metrics
+    totalProjectsCompleted: staff.total_projects_completed || 0,
+    averageProjectRating: staff.average_project_rating || 0,
+    onTimeCompletionRate: staff.on_time_completion_rate || 0,
+    
+    // Management Hierarchy
+    managerId: staff.manager_id,
+    reportsTo: staff.reports_to,
+    level: staff.level,
+    
+    // Equipment and Tools
+    assignedEquipment: staff.assigned_equipment || [],
+    vehicleAssigned: staff.vehicle_assigned,
+    toolsAssigned: staff.tools_assigned || [],
+    
+    // Training and Development
+    trainingRecords: staff.training_records || [],
+    nextTrainingDue: staff.next_training_due,
+    safetyTrainingExpiry: staff.safety_training_expiry,
+    
+    // Employment Terms
+    endDate: staff.end_date,
+    salaryGrade: staff.salary_grade,
+    hourlyRate: staff.hourly_rate,
+    
     // Required fields with defaults
-    joinDate: staff.join_date || new Date(),
+    // joinDate is mapped to startDate above
     managerEmployeeId: staff.manager_employee_id || '',
     isActive: staff.is_active ?? true,
     lastActiveDate: staff.last_active_date,
-    profileImageUrl: staff.profile_image_url,
+    profilePhotoUrl: staff.profile_image_url,
     emergencyContactName: staff.emergency_contact_name || '',
     emergencyContactPhone: staff.emergency_contact_phone || '',
     address: staff.address || '',
@@ -47,6 +90,8 @@ export function mapToStaffMember(staff: any): StaffMember {
     skills: staff.skills || [],
     certifications: staff.certifications || [],
     performanceRating: staff.performance_rating || 0,
+    performanceNotes: staff.performance_notes || '',
+    bio: staff.bio,
     notes: staff.notes || ''
   };
 }

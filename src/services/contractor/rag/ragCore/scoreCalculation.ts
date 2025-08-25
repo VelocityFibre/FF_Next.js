@@ -13,8 +13,8 @@ import {
   FinancialCalculator,
   ReliabilityCalculator,
   CapabilitiesCalculator,
-  OverallCalculator
-} from '../scoreCalculators';
+  RAGScoreCalculator
+} from '../calculators';
 
 export class ScoreCalculation {
   /**
@@ -35,11 +35,11 @@ export class ScoreCalculation {
     // Calculate individual component scores
     const performance = PerformanceCalculator.calculateScore(assignments);
     const financial = FinancialCalculator.calculateScore(contractor);
-    const reliability = ReliabilityCalculator.calculateScore(assignments);
-    const capabilities = CapabilitiesCalculator.calculateScore(teams);
+    const reliability = ReliabilityCalculator.calculateScore(assignments, teams);
+    const capabilities = CapabilitiesCalculator.calculateScore(contractor, teams);
 
     // Calculate weighted overall score
-    const overall = OverallCalculator.calculateOverallScore({
+    const overall = RAGScoreCalculator.calculateOverallScore({
       performance: performance.score,
       financial: financial.score,
       reliability: reliability.score,
@@ -47,7 +47,7 @@ export class ScoreCalculation {
     });
 
     // Determine risk level
-    const risk = OverallCalculator.determineRiskLevel(overall);
+    const risk = RAGScoreCalculator.determineRiskLevel(overall);
 
     return {
       performance,

@@ -180,7 +180,7 @@ export function detectCommonFormats(samples: any[], dataType: DataType): string[
   const formats: string[] = [];
 
   switch (dataType) {
-    case 'date':
+    case 'date': {
       const dateFormats = new Set<string>();
       samples.forEach(sample => {
         if (typeof sample === 'string') {
@@ -197,8 +197,9 @@ export function detectCommonFormats(samples: any[], dataType: DataType): string[
       });
       formats.push(...Array.from(dateFormats));
       break;
+    }
 
-    case 'number':
+    case 'number': {
       const numberFormats = new Set<string>();
       samples.forEach(sample => {
         if (typeof sample === 'string') {
@@ -212,8 +213,9 @@ export function detectCommonFormats(samples: any[], dataType: DataType): string[
       });
       formats.push(...Array.from(numberFormats));
       break;
+    }
 
-    case 'phone':
+    case 'phone': {
       const phoneFormats = new Set<string>();
       samples.forEach(sample => {
         const phoneStr = String(sample);
@@ -227,6 +229,7 @@ export function detectCommonFormats(samples: any[], dataType: DataType): string[
       });
       formats.push(...Array.from(phoneFormats));
       break;
+    }
   }
 
   return formats;
@@ -238,16 +241,16 @@ export function detectCommonFormats(samples: any[], dataType: DataType): string[
 export function analyzeDataConsistency(samples: any[]): {
   consistency: number;
   inconsistentSamples: any[];
-  commonPattern?: RegExp;
+  commonPattern: RegExp | undefined;
 } {
   if (!samples || samples.length === 0) {
-    return { consistency: 0, inconsistentSamples: [] };
+    return { consistency: 0, inconsistentSamples: [], commonPattern: undefined };
   }
 
   const validSamples = samples.filter(s => s !== null && s !== undefined && s !== '');
   
   if (validSamples.length === 0) {
-    return { consistency: 0, inconsistentSamples: [] };
+    return { consistency: 0, inconsistentSamples: [], commonPattern: undefined };
   }
 
   // Detect the most common type
@@ -298,15 +301,38 @@ export function analyzeDataConsistency(samples: any[]): {
  * Generate a regex pattern for common data formats
  */
 function generateCommonPattern(samples: any[], dataType: DataType): RegExp | undefined {
+  // Use samples to create more specific patterns
+  const validSamples = samples.filter(s => s != null && s !== '').slice(0, 10);
+  
   switch (dataType) {
     case 'email':
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    case 'phone':
-      return /^[\d\s\-\(\)\.]+$/;
+    case 'phone': {
+      // Check if samples contain common phone separators
+      const hasParens = validSamples.some(s => String(s).includes('('));
+      const hasDashes = validSamples.some(s => String(s).includes('-'));
+      const hasDots = validSamples.some(s => String(s).includes('.'));
+      let phonePattern = '^[\\d\\s';
+      if (hasParens) phonePattern += '()';
+      if (hasDashes) phonePattern += '-';
+      if (hasDots) phonePattern += '.';
+      phonePattern += ']+$';
+      return new RegExp(phonePattern);
+    }
     case 'date':
-      return /^[\d\/\-\.\s:]+$/;
-    case 'number':
-      return /^[\d\.\,\$\%\-\+\s]+$/;
+      return /^[\d/\-.s:]+$/;
+    case 'number': {
+      // Analyze samples for common number formats
+      const hasCommas = validSamples.some(s => String(s).includes(','));
+      const hasDollars = validSamples.some(s => String(s).includes('$'));
+      const hasPercent = validSamples.some(s => String(s).includes('%'));
+      let numberPattern = '^[\\d.\\s+-';
+      if (hasCommas) numberPattern += ',';
+      if (hasDollars) numberPattern += '$';
+      if (hasPercent) numberPattern += '%';
+      numberPattern += ']+$';
+      return new RegExp(numberPattern);
+    }
     default:
       return undefined;
   }

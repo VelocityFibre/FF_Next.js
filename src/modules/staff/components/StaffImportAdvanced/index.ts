@@ -8,12 +8,12 @@ export * from './StaffImportAdvanced';
 
 // Sub-components
 export * from './components/FileUploadArea';
-export * from './components/ImportProgress';
+export { ImportProgress as ImportProgressComponent } from './components/ImportProgress';
 export * from './components/ImportResults';
 
 // Hooks
 export * from './hooks/useStaffImportAdvanced';
 
 // Types and utilities
-export * from './types/importAdvanced.types';
-export * from './utils/importUtils';
+export type { ImportProgress as ImportProgressType, StaffImportAdvancedState } from './types/importAdvanced.types';
+export type * from './utils/importUtils';

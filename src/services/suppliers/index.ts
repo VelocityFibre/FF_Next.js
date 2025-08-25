@@ -43,6 +43,15 @@ export {
 // Legacy compatibility - maintain original interface
 export { supplierService } from './supplierService';
 
+// Import all services for default export
+import { SupplierCrudService } from './supplier.crud';
+import { SupplierStatusService } from './supplier.status';
+import { SupplierRatingService } from './supplier.rating';
+import { SupplierSearchService } from './supplier.search';
+import { SupplierComplianceService } from './supplier.compliance';
+import { SupplierSubscriptionService } from './supplier.subscriptions';
+import { SupplierStatisticsService } from './supplier.statistics';
+
 // Default export for new modular approach
 export default {
   // Core operations

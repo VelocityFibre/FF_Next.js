@@ -4,26 +4,30 @@
  */
 
 // Real-time subscriptions
-export { RFQSubscriptions } from './subscriptions';
+import { RFQSubscriptions } from './subscriptions';
+export { RFQSubscriptions };
 export type { SubscriptionFilter } from './subscriptions';
 
 // Notification content generation
-export { RFQNotificationContentGenerator } from './contentGenerator';
+import { RFQContentGenerator } from './contentGenerator';
+export { RFQContentGenerator };
 export type { 
   NotificationContent,
-  NotificationAction,
-  NotificationEvent
+  RFQNotificationEvent
 } from './contentGenerator';
 
 // Email services
-export { RFQEmailService } from './emailService';
+import { RFQEmailService } from './emailService';
+import { RFQEmailValidator } from './email/email-validator';
+export { RFQEmailService };
 export type { 
   EmailContent, 
   EmailNotificationOptions 
 } from './emailService';
 
 // Deadline alerts
-export { RFQDeadlineAlerts } from './deadlineAlerts';
+import { RFQDeadlineAlerts } from './deadlineAlerts';
+export { RFQDeadlineAlerts };
 export type { 
   DeadlineAlert, 
   AlertThresholds 
@@ -31,26 +35,27 @@ export type {
 
 // Backward compatibility - consolidated notification class
 export class RFQNotifications {
-  // Re-export subscription methods
+  // Re-export subscription methods (only available methods)
   static subscribeToRFQ = RFQSubscriptions.subscribeToRFQ;
   static subscribeToResponses = RFQSubscriptions.subscribeToResponses;
   static subscribeToProjectRFQs = RFQSubscriptions.subscribeToProjectRFQs;
   static subscribeToRFQsByStatus = RFQSubscriptions.subscribeToRFQsByStatus;
   static subscribeToAllRFQs = RFQSubscriptions.subscribeToAllRFQs;
   static subscribeToSupplierRFQs = RFQSubscriptions.subscribeToSupplierRFQs;
-  static subscribeToUpcomingDeadlines = RFQSubscriptions.subscribeToUpcomingDeadlines;
-  static subscribeToActivityFeed = RFQSubscriptions.subscribeToActivityFeed;
-  static batchSubscribeToRFQs = RFQSubscriptions.batchSubscribeToRFQs;
-  static subscribeToRFQMetrics = RFQSubscriptions.subscribeToRFQMetrics;
-  static createCustomSubscription = RFQSubscriptions.createCustomSubscription;
+  // TODO: Implement these methods in RFQSubscriptionManager
+  // static subscribeToUpcomingDeadlines = RFQSubscriptions.subscribeToUpcomingDeadlines;
+  // static subscribeToActivityFeed = RFQSubscriptions.subscribeToActivityFeed;
+  // static batchSubscribeToRFQs = RFQSubscriptions.batchSubscribeToRFQs;
+  // static subscribeToRFQMetrics = RFQSubscriptions.subscribeToRFQMetrics;
+  // static createCustomSubscription = RFQSubscriptions.createCustomSubscription;
 
   // Re-export content generation methods
-  static generateNotificationContent = RFQNotificationContentGenerator.generateNotificationContent;
+  static generateNotificationContent = RFQContentGenerator.generateNotificationContent;
 
   // Re-export email methods
   static sendSupplierNotification = RFQEmailService.sendSupplierNotification;
   static sendBulkNotifications = RFQEmailService.sendBulkNotifications;
-  static validateEmailAddresses = RFQEmailService.validateEmailAddresses;
+  static validateEmailAddresses = RFQEmailValidator.validateEmailAddresses;
   static generateRFQAttachment = RFQEmailService.generateRFQAttachment;
 
   // Re-export deadline alert methods

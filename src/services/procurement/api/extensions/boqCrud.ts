@@ -4,15 +4,16 @@
  */
 
 import { BOQ, BOQWithItems, ProcurementContext, CreateBOQData } from './types';
+import { BOQStatusType, MappingStatusType } from '@/types/procurement/boq.types';
 import { mockBOQs, mockBOQItems, mockExceptions } from './mockData';
 
 export class BOQCrud {
   /**
    * Get BOQ with its items and exceptions
    */
-  static async getBOQWithItems(context: ProcurementContext, boqId: string): Promise<BOQWithItems> {
+  static async getBOQWithItems(_context: ProcurementContext, boqId: string): Promise<BOQWithItems> {
     // In a real implementation, this would make API calls
-    const boq = mockBOQs.find(b => b.id === boqId && b.projectId === context.projectId);
+    const boq = mockBOQs.find(b => b.id === boqId && b.projectId === _context.projectId);
     if (!boq) {
       throw new Error('BOQ not found');
     }
@@ -30,7 +31,7 @@ export class BOQCrud {
   /**
    * Get all BOQs for a project
    */
-  static async getBOQsByProject(context: ProcurementContext, projectId: string): Promise<BOQ[]> {
+  static async getBOQsByProject(_context: ProcurementContext, projectId: string): Promise<BOQ[]> {
     // Filter by project and apply access control
     return mockBOQs.filter(boq => boq.projectId === projectId);
   }
@@ -38,8 +39,8 @@ export class BOQCrud {
   /**
    * Get BOQ by ID
    */
-  static async getBOQ(context: ProcurementContext, boqId: string): Promise<BOQ> {
-    const boq = mockBOQs.find(b => b.id === boqId && b.projectId === context.projectId);
+  static async getBOQ(_context: ProcurementContext, boqId: string): Promise<BOQ> {
+    const boq = mockBOQs.find(b => b.id === boqId && b.projectId === _context.projectId);
     if (!boq) {
       throw new Error('BOQ not found');
     }
@@ -49,8 +50,8 @@ export class BOQCrud {
   /**
    * Update BOQ
    */
-  static async updateBOQ(context: ProcurementContext, boqId: string, updates: Partial<BOQ>): Promise<BOQ> {
-    const boqIndex = mockBOQs.findIndex(b => b.id === boqId && b.projectId === context.projectId);
+  static async updateBOQ(_context: ProcurementContext, boqId: string, updates: Partial<BOQ>): Promise<BOQ> {
+    const boqIndex = mockBOQs.findIndex(b => b.id === boqId && b.projectId === _context.projectId);
     if (boqIndex === -1) {
       throw new Error('BOQ not found');
     }
@@ -67,8 +68,8 @@ export class BOQCrud {
   /**
    * Delete BOQ
    */
-  static async deleteBOQ(context: ProcurementContext, boqId: string): Promise<void> {
-    const boqIndex = mockBOQs.findIndex(b => b.id === boqId && b.projectId === context.projectId);
+  static async deleteBOQ(_context: ProcurementContext, boqId: string): Promise<void> {
+    const boqIndex = mockBOQs.findIndex(b => b.id === boqId && b.projectId === _context.projectId);
     if (boqIndex === -1) {
       throw new Error('BOQ not found');
     }
@@ -79,17 +80,18 @@ export class BOQCrud {
   /**
    * Create BOQ
    */
-  static async createBOQ(context: ProcurementContext, boqData: CreateBOQData): Promise<BOQ> {
+  static async createBOQ(_context: ProcurementContext, boqData: CreateBOQData): Promise<BOQ> {
     const newBOQ: BOQ = {
       id: `boq-${Date.now()}`,
-      projectId: context.projectId,
+      name: boqData.title || `BOQ-${Date.now()}`,
+      projectId: _context.projectId,
       version: boqData.version,
       title: boqData.title,
       description: boqData.description,
-      status: boqData.status || 'draft',
-      mappingStatus: boqData.mappingStatus || 'pending',
+      status: 'draft' as BOQStatusType,
+      mappingStatus: 'pending' as MappingStatusType,
       mappingConfidence: boqData.mappingConfidence || 0,
-      uploadedBy: context.userId,
+      uploadedBy: _context.userId,
       uploadedAt: new Date(),
       fileName: boqData.fileName,
       fileSize: boqData.fileSize,
@@ -107,18 +109,12 @@ export class BOQCrud {
     return newBOQ;
   }
 
-  /**
-   * Validate BOQ access for context
-   */
-  private static validateAccess(context: ProcurementContext, boq: BOQ): boolean {
-    return boq.projectId === context.projectId;
-  }
 
   /**
    * Get BOQs with pagination
    */
   static async getBOQsPaginated(
-    context: ProcurementContext,
+    _context: ProcurementContext,
     projectId: string,
     limit: number = 10,
     offset: number = 0

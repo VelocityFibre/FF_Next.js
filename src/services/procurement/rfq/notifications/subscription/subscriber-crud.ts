@@ -92,7 +92,7 @@ export class RFQSubscriberCrud {
       // Apply client-side filters that can't be done in Firestore
       if (filters.supplierIds && filters.supplierIds.length > 0) {
         rfqs = rfqs.filter(rfq => 
-          rfq.supplierIds?.some(id => filters.supplierIds!.includes(id))
+          rfq.invitedSuppliers?.some((id: string) => filters.supplierIds!.includes(id))
         );
       }
 

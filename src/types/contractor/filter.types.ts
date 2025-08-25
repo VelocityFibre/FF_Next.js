@@ -17,6 +17,8 @@ export interface ContractorFilter {
   hasActiveProjects?: boolean;
   documentsExpiring?: boolean;
   tags?: string[];
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface TeamFilter {

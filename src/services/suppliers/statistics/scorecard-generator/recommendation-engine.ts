@@ -3,7 +3,7 @@
  * Generate improvement recommendations and compliance analysis
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { ScorecardScoreCalculator } from './score-calculator';
 import type { ComplianceData } from './scorecard-types';
 
@@ -14,10 +14,39 @@ export class ScorecardRecommendationEngine {
   static extractCompliance(supplier: Supplier): ComplianceData {
     const compliance = supplier.complianceStatus;
     
+    // Calculate compliance score from available compliance data
+    let score = 0;
+    if (compliance) {
+      let factors = 0;
+      let totalScore = 0;
+      
+      if (compliance.taxCompliant) {
+        totalScore += 30; // 30% for tax compliance
+        factors++;
+      }
+      
+      if (compliance.beeCompliant) {
+        totalScore += 25; // 25% for BEE compliance
+        factors++;
+      }
+      
+      if (compliance.isoCompliant) {
+        totalScore += 25; // 25% for ISO compliance
+        factors++;
+      }
+      
+      if (compliance.documentsVerified) {
+        totalScore += 20; // 20% for document verification
+        factors++;
+      }
+      
+      score = factors > 0 ? totalScore : 0;
+    }
+    
     return {
-      score: compliance?.complianceScore || 0,
-      status: this.determineComplianceStatus(compliance?.complianceScore || 0),
-      lastCheck: compliance?.lastComplianceCheck || new Date()
+      score,
+      status: this.determineComplianceStatus(score),
+      lastCheck: compliance?.lastAuditDate ? new Date(compliance.lastAuditDate) : new Date()
     };
   }
 
@@ -115,21 +144,21 @@ export class ScorecardRecommendationEngine {
   private static addCategorySpecificRecommendations(supplier: Supplier, recommendations: string[]): void {
     const categories = supplier.categories || [];
     
-    if (categories.includes('Technology')) {
+    if (categories.includes('software' as any)) {
       const techPerformance = (supplier.performance as any)?.technologyScore || 0;
       if (techPerformance < 80) {
         recommendations.push('Upgrade technology capabilities and infrastructure');
       }
     }
 
-    if (categories.includes('Manufacturing')) {
+    if (categories.includes('hardware' as any)) {
       const qualityScore = (supplier.performance as any)?.qualityScore || 0;
       if (qualityScore < 85) {
         recommendations.push('Implement lean manufacturing and quality management systems');
       }
     }
 
-    if (categories.includes('Logistics')) {
+    if (categories.includes('services' as any)) {
       const deliveryScore = (supplier.performance as any)?.onTimeDelivery || 0;
       if (deliveryScore < 90) {
         recommendations.push('Optimize supply chain and logistics processes');

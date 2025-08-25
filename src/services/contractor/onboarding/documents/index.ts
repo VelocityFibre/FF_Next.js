@@ -1,9 +1,11 @@
 // Document management module exports
-export { DocumentQuery } from './documentQuery';
-export { DocumentValidation } from './documentValidation';
-export { DocumentStatus } from './documentStatus';
-export { DocumentStageOperations } from './documentStageOperations';
-export { DocumentInstructions } from './documentInstructions';
+import { DocumentQuery } from './documentQuery';
+import { DocumentValidation } from './documentValidation';
+import { DocumentStatus } from './documentStatus';
+import { DocumentStageOperations } from './documentStageOperations';
+import { DocumentInstructions } from './documentInstructions';
+
+export { DocumentQuery, DocumentValidation, DocumentStatus, DocumentStageOperations, DocumentInstructions };
 
 // Re-export original DocumentManager class for backward compatibility
 export class DocumentManager {

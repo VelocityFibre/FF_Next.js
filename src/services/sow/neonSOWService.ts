@@ -9,6 +9,9 @@ import { SOWQueryService } from './queryService';
 import { SOWHealthService } from './healthService';
 import { NeonPoleData, NeonDropData, NeonFibreData, SOWOperationResult } from './types';
 
+// Re-export types for external use
+export type { NeonPoleData, NeonDropData, NeonFibreData, SOWOperationResult };
+
 /**
  * Main Neon SOW Service class
  * Provides a unified interface for all SOW operations

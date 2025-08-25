@@ -123,7 +123,7 @@ export class OnboardingProgressManager {
 
       // Reset progress
       progress.overallStatus = 'in_progress';
-      progress.rejectionReason = undefined;
+      delete progress.rejectionReason;
       progress.lastUpdated = new Date();
 
       // Reset incomplete stages

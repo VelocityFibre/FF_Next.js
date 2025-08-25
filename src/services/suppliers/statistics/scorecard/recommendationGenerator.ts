@@ -5,10 +5,8 @@
  * New code should import from '../recommendation-generator' directly
  */
 
-import { Supplier } from '@/types/supplier.types';
-import { ComplianceInfo, RECOMMENDATION_THRESHOLDS } from './types';
-import { SupplierUtils } from './utils';
-import { ScoreCalculator } from './scoreCalculator';
+import { Supplier } from '@/types/supplier/base.types';
+import { ComplianceInfo } from './types';
 import {
   CoreRecommendationEngine,
   RecommendationPriorityAnalyzer,
@@ -102,8 +100,10 @@ export class RecommendationGenerator {
     longTerm: string[];
   } {
     // Convert legacy format to new format
+    // Add supplier context to recommendations
+    const supplierContext = `for ${supplier.name}`;
     const newFormatRecs: RecommendationItem[] = recommendations.map(rec => ({
-      recommendation: rec.recommendation,
+      recommendation: `${rec.recommendation} ${supplierContext}`,
       priority: rec.priority === 'high' ? 'high' : rec.priority,
       category: rec.category as any,
       impact: rec.impact,

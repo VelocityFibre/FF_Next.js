@@ -11,7 +11,6 @@ export * from './performance';
 
 // Import classes for backward compatibility
 import { PerformanceAnalysisEngine } from './performance/analyzer-engine';
-import { PerformanceReportsGenerator } from './performance/performance-reports';
 
 /**
  * Legacy PerformanceAnalyzer class for backward compatibility

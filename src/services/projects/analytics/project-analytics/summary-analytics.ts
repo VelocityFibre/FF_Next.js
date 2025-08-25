@@ -17,7 +17,24 @@ export class ProjectSummaryAnalytics {
    */
   static async getProjectSummary(query?: AnalyticsQuery): Promise<ProjectSummary> {
     try {
-      const whereClause = this.buildWhereClause(query);
+      // Build dynamic conditions using proper SQL fragments
+      let conditions = sql`is_active = true`;
+      
+      if (query?.startDate) {
+        conditions = sql`${conditions} AND created_at >= ${query.startDate.toISOString()}`;
+      }
+      if (query?.endDate) {
+        conditions = sql`${conditions} AND created_at <= ${query.endDate.toISOString()}`;
+      }
+      if (query?.clientId) {
+        conditions = sql`${conditions} AND client_id = ${query.clientId}`;
+      }
+      if (query?.status && query.status.length > 0) {
+        conditions = sql`${conditions} AND status = ANY(${query.status})`;
+      }
+      if (query?.includeInactive) {
+        conditions = sql`TRUE`;
+      }
       
       const result = await sql`
         SELECT 
@@ -27,7 +44,7 @@ export class ProjectSummaryAnalytics {
           COUNT(CASE WHEN status = 'ON_HOLD' THEN 1 END) as on_hold_projects,
           AVG(progress) as avg_progress
         FROM projects
-        WHERE ${sql.raw(whereClause)}
+        WHERE ${conditions}
       `;
       
       return {
@@ -54,12 +71,29 @@ export class ProjectSummaryAnalytics {
    */
   static async getProjectsByStatus(query?: AnalyticsQuery): Promise<ProjectStatusStats[]> {
     try {
-      const whereClause = this.buildWhereClause(query);
+      // Build dynamic conditions using proper SQL fragments
+      let conditions = sql`is_active = true`;
+      
+      if (query?.startDate) {
+        conditions = sql`${conditions} AND created_at >= ${query.startDate.toISOString()}`;
+      }
+      if (query?.endDate) {
+        conditions = sql`${conditions} AND created_at <= ${query.endDate.toISOString()}`;
+      }
+      if (query?.clientId) {
+        conditions = sql`${conditions} AND client_id = ${query.clientId}`;
+      }
+      if (query?.status && query.status.length > 0) {
+        conditions = sql`${conditions} AND status = ANY(${query.status})`;
+      }
+      if (query?.includeInactive) {
+        conditions = sql`TRUE`;
+      }
       
       const result = await sql`
         SELECT status, COUNT(*) as count
         FROM projects
-        WHERE ${sql.raw(whereClause)}
+        WHERE ${conditions}
         GROUP BY status
         ORDER BY count DESC
       `;
@@ -79,7 +113,24 @@ export class ProjectSummaryAnalytics {
    */
   static async getProjectsByClient(query?: AnalyticsQuery): Promise<ClientProjectStats[]> {
     try {
-      const whereClause = this.buildWhereClause(query);
+      // Build dynamic conditions for the project filter
+      let projectConditions = sql`p.is_active = true`;
+      
+      if (query?.startDate) {
+        projectConditions = sql`${projectConditions} AND p.created_at >= ${query.startDate.toISOString()}`;
+      }
+      if (query?.endDate) {
+        projectConditions = sql`${projectConditions} AND p.created_at <= ${query.endDate.toISOString()}`;
+      }
+      if (query?.clientId) {
+        projectConditions = sql`${projectConditions} AND p.client_id = ${query.clientId}`;
+      }
+      if (query?.status && query.status.length > 0) {
+        projectConditions = sql`${projectConditions} AND p.status = ANY(${query.status})`;
+      }
+      if (query?.includeInactive) {
+        projectConditions = sql`TRUE`;
+      }
       
       const result = await sql`
         SELECT 
@@ -88,7 +139,7 @@ export class ProjectSummaryAnalytics {
           COUNT(p.id) as project_count,
           COALESCE(SUM(p.budget), 0) as total_budget
         FROM clients c
-        LEFT JOIN projects p ON c.id = p.client_id AND ${sql.raw(whereClause.replace('is_active = true', 'p.is_active = true'))}
+        LEFT JOIN projects p ON c.id = p.client_id AND ${projectConditions}
         GROUP BY c.id, c.name
         HAVING COUNT(p.id) > 0
         ORDER BY project_count DESC
@@ -208,33 +259,6 @@ export class ProjectSummaryAnalytics {
     }
   }
 
-  /**
-   * Build WHERE clause for filtering
-   */
-  private static buildWhereClause(query?: AnalyticsQuery): string {
-    const conditions = ['is_active = true'];
-
-    if (query) {
-      if (query.startDate) {
-        conditions.push(`created_at >= '${query.startDate.toISOString()}'`);
-      }
-      if (query.endDate) {
-        conditions.push(`created_at <= '${query.endDate.toISOString()}'`);
-      }
-      if (query.clientId) {
-        conditions.push(`client_id = '${query.clientId}'`);
-      }
-      if (query.status && query.status.length > 0) {
-        const statusList = query.status.map(s => `'${s}'`).join(',');
-        conditions.push(`status IN (${statusList})`);
-      }
-      if (query.includeInactive) {
-        conditions[0] = 'TRUE'; // Remove is_active filter
-      }
-    }
-
-    return conditions.join(' AND ');
-  }
 
   /**
    * Calculate growth rate between two periods

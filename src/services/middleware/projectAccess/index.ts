@@ -21,5 +21,5 @@ export { ProjectAccessValidator } from './validator';
 export { ProjectAccessDataService } from './dataService';
 export { ProjectAccessController } from './accessController';
 
-// Main middleware class
-export { ProjectAccessMiddleware } from './projectAccessMiddleware';
+// Main middleware class and instance
+export { ProjectAccessMiddleware, projectAccessMiddleware } from './projectAccessMiddleware';

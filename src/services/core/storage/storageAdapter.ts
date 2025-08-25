@@ -3,7 +3,7 @@
  * Abstract interface for different storage types
  */
 
-import type { StorageType, StorageItem } from './types';
+import type { StorageItem } from './types';
 
 export abstract class StorageAdapter {
   abstract setItem(key: string, value: string): void;

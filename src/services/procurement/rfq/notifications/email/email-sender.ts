@@ -3,6 +3,7 @@
  * Core email sending functionality for RFQ notifications
  */
 
+import { Timestamp } from 'firebase/firestore';
 import { RFQ } from '@/types/procurement.types';
 import { RFQEmailTemplates } from './email-templates';
 import type { 
@@ -10,6 +11,33 @@ import type {
   EmailNotificationOptions, 
   BulkNotification 
 } from './email-types';
+
+/**
+ * Utility to convert Timestamp or Date to Date object
+ */
+function toDate(timestampOrDate: Date | Timestamp | any): Date {
+  if (!timestampOrDate) {
+    return new Date();
+  }
+  
+  // If it's already a Date, return it
+  if (timestampOrDate instanceof Date) {
+    return timestampOrDate;
+  }
+  
+  // If it's a Firestore Timestamp, convert it
+  if (timestampOrDate && typeof timestampOrDate.toDate === 'function') {
+    return timestampOrDate.toDate();
+  }
+  
+  // If it's a timestamp number, convert it
+  if (typeof timestampOrDate === 'number') {
+    return new Date(timestampOrDate);
+  }
+  
+  // Fallback: try to parse as date
+  return new Date(timestampOrDate);
+}
 
 /**
  * RFQ Email Sender
@@ -38,8 +66,8 @@ export class RFQEmailSender {
       const emailOptions: EmailNotificationOptions = {
         to: supplierEmails,
         from: options?.from || this.DEFAULT_FROM,
-        replyTo: options?.replyTo,
-        attachments: options?.attachments,
+        ...(options?.replyTo && { replyTo: options.replyTo }),
+        ...(options?.attachments && { attachments: options.attachments }),
         ...options
       };
       
@@ -127,12 +155,13 @@ export class RFQEmailSender {
           content: RFQEmailTemplates.generateIssuedEmailTemplate(rfq, rfqUrl)
         };
 
-      case 'deadline_extended':
-        const newDeadline = additionalData?.newDeadline || rfq.responseDeadline?.toDate();
+      case 'deadline_extended': {
+        const newDeadline = additionalData?.newDeadline || toDate(rfq.responseDeadline);
         return {
           subject: `RFQ Deadline Extended: ${rfq.title} - ${rfq.rfqNumber}`,
           content: RFQEmailTemplates.generateDeadlineExtendedTemplate(rfq, rfqUrl, newDeadline, additionalData?.reason)
         };
+      }
 
       case 'cancelled':
         return {
@@ -164,10 +193,10 @@ export class RFQEmailSender {
       rfqNumber: rfq.rfqNumber,
       title: rfq.title,
       description: rfq.description,
-      responseDeadline: rfq.responseDeadline?.toDate().toISOString(),
-      items: rfq.items || [],
-      terms: rfq.terms,
-      contact: rfq.contactInfo
+      responseDeadline: toDate(rfq.responseDeadline).toISOString(),
+      items: [], // Items are stored separately in RFQItem table
+      terms: rfq.paymentTerms || rfq.deliveryTerms,
+      contact: rfq.createdBy // Contact info not directly on RFQ
     };
 
     return {

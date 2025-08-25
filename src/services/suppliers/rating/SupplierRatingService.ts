@@ -5,7 +5,7 @@
 
 import { query, collection, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SupplierComparison } from './types';
 import { SupplierCrudService } from '../supplier.crud';
 import { SupplierRatingManager } from './ratingManager';
@@ -71,7 +71,7 @@ export class SupplierRatingService {
         comparisons.push({
           supplier,
           ratings,
-          performance: supplier.performance
+          ...(supplier.performance && { performance: supplier.performance })
         });
       }
 
@@ -152,12 +152,12 @@ export class SupplierRatingService {
         .filter(supplier => {
           const updatedAt = supplier.updatedAt;
           if (!updatedAt) return false;
-          const updateDate = updatedAt.toDate ? updatedAt.toDate() : new Date(updatedAt);
+          const updateDate = typeof updatedAt === 'string' ? new Date(updatedAt) : updatedAt;
           return updateDate >= cutoffDate;
         })
         .sort((a, b) => {
-          const aDate = a.updatedAt?.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt || 0);
-          const bDate = b.updatedAt?.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt || 0);
+          const aDate = a.updatedAt ? (typeof a.updatedAt === 'string' ? new Date(a.updatedAt) : a.updatedAt) : new Date(0);
+          const bDate = b.updatedAt ? (typeof b.updatedAt === 'string' ? new Date(b.updatedAt) : b.updatedAt) : new Date(0);
           return bDate.getTime() - aDate.getTime();
         })
         .slice(0, limit);

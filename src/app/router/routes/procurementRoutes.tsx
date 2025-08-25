@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Loading } from '../components';
-import { ProcurementLayout, ProcurementDashboard } from '../lazyImports';
+import { ProcurementPage, ProcurementOverview } from '../lazyImports';
 import { boqRoutes } from './procurement/boqRoutes';
 import { rfqRoutes } from './procurement/rfqRoutes';
 import { stockRoutes } from './procurement/stockRoutes';
@@ -15,7 +15,7 @@ export const procurementRoutes = {
   path: 'procurement',
   element: (
     <Suspense fallback={<Loading />}>
-      <ProcurementLayout />
+      <ProcurementPage />
     </Suspense>
   ),
   children: [
@@ -24,7 +24,7 @@ export const procurementRoutes = {
       index: true,
       element: (
         <Suspense fallback={<Loading />}>
-          <ProcurementDashboard />
+          <ProcurementOverview />
         </Suspense>
       ),
     },

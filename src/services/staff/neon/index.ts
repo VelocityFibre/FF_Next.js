@@ -5,9 +5,7 @@
 
 import { 
   StaffMember, 
-  StaffFormData,
   StaffFilter,
-  StaffSummary,
   StaffDropdownOption
 } from '@/types/staff.types';
 import { queryStaffWithFilters, queryStaffById, queryActiveStaff, queryProjectManagers } from './queryBuilders';

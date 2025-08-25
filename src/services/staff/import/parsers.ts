@@ -3,6 +3,8 @@
  * Utility functions for parsing import data
  */
 
+import { Skill } from '@/types/staff/enums.types';
+
 /**
  * Parse date from various formats
  */
@@ -75,15 +77,23 @@ export function parseEnum<T>(value: string | undefined, enumValues: string[], de
 /**
  * Parse skills from comma-separated string
  */
-export function parseSkills(skillsString: string | undefined): string[] {
+export function parseSkills(skillsString: string | undefined): Skill[] {
   if (!skillsString) return [];
   
-  const skills: string[] = [];
+  const skills: Skill[] = [];
   const skillsList = skillsString.split(',').map(s => s.trim());
   
   for (const skill of skillsList) {
     if (skill) {
-      skills.push(skill);
+      // Try to find matching skill enum value
+      const matchingSkill = Object.values(Skill).find(
+        enumSkill => enumSkill.toLowerCase().replace(/_/g, ' ') === skill.toLowerCase() ||
+                     enumSkill.toLowerCase() === skill.toLowerCase()
+      );
+      
+      if (matchingSkill) {
+        skills.push(matchingSkill);
+      }
     }
   }
   

@@ -32,6 +32,8 @@ export interface Client {
   // Business Information
   registrationNumber?: string;
   vatNumber?: string;
+  taxNumber?: string;
+  organizationType?: string;
   industry: string;
   website?: string;
   
@@ -39,10 +41,13 @@ export interface Client {
   alternativeEmail?: string;
   alternativePhone?: string;
   faxNumber?: string;
+  contactPosition?: string;
   
   // Financial Information
   creditLimit: number;
   currentBalance: number;
+  outstandingBalance?: number;
+  totalRevenue?: number;
   paymentTerms: PaymentTerms;
   creditRating: CreditRating;
   

@@ -8,7 +8,7 @@ import { BasicRules } from './basicRules';
 import { FormatRules } from './formatRules';
 import { DateRules } from './dateRules';
 import { ValidationUtilities } from './utilities';
-import type { ValidationResult, ValidationRule, ValidationSchema } from './types';
+import type { ValidationRule } from './types';
 
 export class ValidationCore extends FieldValidator {
   private basicRules = new BasicRules();

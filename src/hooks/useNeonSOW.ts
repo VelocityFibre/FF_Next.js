@@ -57,7 +57,7 @@ export function useNeonHealth() {
         connected: health,
         info,
         sowTablesExist: tables.success ? tables.data.length === 3 : false,
-        availableTables: tables.success ? tables.data.map(t => t.table_name) : []
+        availableTables: tables.success ? tables.data.map(t => (t as { table_name: string }).table_name) : []
       };
     },
     staleTime: 60 * 1000, // 1 minute

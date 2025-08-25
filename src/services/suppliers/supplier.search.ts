@@ -20,7 +20,7 @@ import {
   SearchSuggestionContext,
   SearchFacets
 } from './search';
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 
 /**
  * Supplier search and filtering service

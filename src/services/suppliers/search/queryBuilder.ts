@@ -12,7 +12,7 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
-import { Supplier, SupplierStatus } from '@/types/supplier.types';
+import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -160,13 +160,13 @@ export class SupplierQueryBuilder {
   /**
    * Get top rated suppliers
    */
-  static async getTopRatedSuppliers(limit: number): Promise<Supplier[]> {
+  static async getTopRatedSuppliers(limitCount: number): Promise<Supplier[]> {
     try {
       const q = query(
         collection(db, COLLECTION_NAME),
         where('status', '==', SupplierStatus.ACTIVE),
         orderBy('rating.overall', 'desc'),
-        limit(limit)
+        limit(limitCount)
       );
       
       const snapshot = await getDocs(q);

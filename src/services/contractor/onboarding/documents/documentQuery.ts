@@ -6,7 +6,7 @@
 import { db } from '@/lib/neon/connection';
 import { contractorDocuments } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
-import { ContractorDocument, DocumentType } from '@/types/contractor.types';
+import { ContractorDocument } from '@/types/contractor.types';
 import { getDocumentRequirements } from '../stageDefinitions';
 
 /**
@@ -34,7 +34,7 @@ export class DocumentQuery {
    */
   static async getDocumentsByStage(contractorId: string): Promise<Record<string, ContractorDocument[]>> {
     const documents = await this.getContractorDocuments(contractorId);
-    const documentRequirements = getDocumentRequirements();
+    const documentRequirements = getDocumentRequirements('');
     
     const documentsByStage: Record<string, ContractorDocument[]> = {};
 

@@ -6,7 +6,8 @@
 import { useMemo } from 'react';
 import { ProjectStatus, Priority } from '@/types/project.types';
 import { useProjects, useDeleteProject, useProjectFilters } from '@/hooks/useProjects';
-import { ProjectSummaryCard, ProjectFilter } from '../types';
+import { ProjectSummaryCard } from '../types';
+import { ProjectFilter } from '@/types/project/form.types';
 import { Building2, Activity, Clock, AlertCircle } from 'lucide-react';
 
 export function useProjectsData(filter?: ProjectFilter) {

@@ -3,7 +3,10 @@
  * Shared types for supplier status management
  */
 
-import { SupplierStatus, Supplier } from '@/types/supplier.types';
+import { SupplierStatus, Supplier } from '@/types/supplier/base.types';
+
+// Re-export for convenience
+export { SupplierStatus } from '@/types/supplier/base.types';
 
 export interface StatusUpdateData {
   status: SupplierStatus;
@@ -48,4 +51,4 @@ export interface PreferenceUpdate {
 
 export type StatusSummary = Record<SupplierStatus, number>;
 
-export type { SupplierStatus, Supplier };
+export type { Supplier };

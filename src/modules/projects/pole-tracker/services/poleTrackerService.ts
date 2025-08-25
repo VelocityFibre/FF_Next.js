@@ -18,7 +18,7 @@ import {
   PoleSyncService
 } from './tracker';
 
-export { Pole } from './tracker';
+export type { Pole } from './tracker';
 
 export class PoleTrackerService {
   // Aliases for hook compatibility
@@ -84,6 +84,7 @@ export class PoleTrackerService {
         );
         // Remove status from updates since it's handled by PoleStatusService
         const { status, ...otherUpdates } = updates;
+        void status; // Acknowledge unused destructured variable
         if (Object.keys(otherUpdates).length > 0) {
           await PoleCrudService.update(id, otherUpdates);
         }

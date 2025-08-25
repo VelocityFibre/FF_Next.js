@@ -15,10 +15,13 @@ import {
 export type {
   Product,
   ProductFormData,
-  ProductAvailability,
   ProductCategory,
   PriceList,
   PriceListItem
+};
+
+export {
+  ProductAvailability
 };
 
 export interface ProductFilter {

@@ -4,9 +4,25 @@
 
 import { Activity, Clock, AlertCircle, Calendar } from 'lucide-react';
 import { Project, ProjectStatus } from '@/types/project.types';
+import { Timestamp } from 'firebase/firestore';
 
 interface ProjectsSummaryCardsProps {
   projects: Project[];
+}
+
+/**
+ * Helper function to safely convert Date | Timestamp | string to Date
+ */
+function toDate(dateValue: Date | Timestamp | string): Date {
+  if (dateValue instanceof Date) {
+    return dateValue;
+  }
+  if (dateValue && typeof dateValue === 'object' && 'toDate' in dateValue) {
+    // It's a Timestamp
+    return dateValue.toDate();
+  }
+  // It's a string
+  return new Date(dateValue);
 }
 
 export function ProjectsSummaryCards({ projects }: ProjectsSummaryCardsProps) {
@@ -15,11 +31,12 @@ export function ProjectsSummaryCards({ projects }: ProjectsSummaryCardsProps) {
     active: projects.filter(p => p.status === ProjectStatus.ACTIVE).length,
     delayed: projects.filter(p => {
       if (p.status !== ProjectStatus.ACTIVE || !p.endDate) return false;
-      const endDate = p.endDate instanceof Date ? p.endDate : new Date(p.endDate);
+      const endDate = toDate(p.endDate);
       return endDate < new Date();
     }).length,
     thisMonth: projects.filter(p => {
-      const startDate = p.startDate instanceof Date ? p.startDate : new Date(p.startDate);
+      if (!p.startDate) return false;
+      const startDate = toDate(p.startDate);
       const now = new Date();
       return startDate.getMonth() === now.getMonth() && 
              startDate.getFullYear() === now.getFullYear();

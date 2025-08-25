@@ -3,13 +3,12 @@
  * Priority-based recommendation analysis and ranking
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { CoreRecommendationEngine } from './core-recommendations';
 import type { 
   ComplianceInfo, 
   RecommendationItem, 
   ImprovementPlan,
-  TIMELINE_CATEGORIES
 } from './recommendation-types';
 
 export class RecommendationPriorityAnalyzer {
@@ -151,7 +150,7 @@ export class RecommendationPriorityAnalyzer {
    * Calculate ROI score for recommendations
    */
   static calculateROIScore(recommendation: RecommendationItem): number {
-    const impactScores = {
+    const impactScores: Record<string, number> = {
       'Significant business risk mitigation': 10,
       'Significant score improvement potential': 8,
       'Risk mitigation and score improvement': 7,

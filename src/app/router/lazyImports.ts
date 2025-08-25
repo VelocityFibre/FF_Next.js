@@ -19,6 +19,8 @@ export const StaffImport = lazy(() => import('@/modules/staff/StaffImport').then
 export const StaffSettings = lazy(() => import('@/modules/settings/StaffSettings').then(m => ({ default: m.StaffSettings })));
 
 // Procurement Module - Main Layout
+export const ProcurementPage = lazy(() => import('@/modules/procurement/ProcurementPage').then(m => ({ default: m.ProcurementPage })));
+export const ProcurementOverview = lazy(() => import('@/modules/procurement/ProcurementOverview').then(m => ({ default: m.ProcurementOverview })));
 export const ProcurementLayout = lazy(() => import('@/modules/procurement/components/layout/ProcurementLayout').then(m => ({ default: m.ProcurementLayout })));
 export const ProcurementDashboard = lazy(() => import('@/modules/procurement/components/ProcurementDashboard/ProcurementDashboard').then(m => ({ default: m.ProcurementDashboard })));
 

@@ -4,256 +4,225 @@
  */
 
 import {
-  RAGReliabilityBreakdown,
   RAGScoreResult,
   ContractorAssignment,
   ContractorTeam
 } from '../types';
+import { 
+  RELIABILITY_WEIGHTS, 
+  SCORING_CONFIG, 
+  COMPLIANCE_CONFIG,
+  GAP_MESSAGES,
+  RECOMMENDATION_MESSAGES 
+} from './config/reliability-config';
+import {
+  applyThresholdScoring,
+  applyFallbackScoring,
+  calculateFilteredAverage,
+  calculateTenureInYears,
+  clampScore
+} from './utils/scoring-utils';
+
+// Extended interfaces to match calculator requirements
+interface ExtendedAssignment extends ContractorAssignment {
+  clientFeedback?: number;
+  issuesReported?: number;
+  issuesResolved?: number;
+  startDate?: string;
+  endDate?: string;
+  expectedEndDate?: string;
+}
+
+interface ExtendedTeam extends ContractorTeam {
+  members?: {
+    id: string;
+    joinDate?: string;
+  }[];
+}
+
+interface ExtendedReliabilityBreakdown {
+  projectHistory: number;
+  teamStability: number;
+  certificationStatus: number;
+  complianceRecord: number;
+  communicationRating: number;
+}
 
 export class ReliabilityCalculator {
   /**
    * Calculate reliability score based on consistency metrics
    */
   static calculateScore(
-    assignments: ContractorAssignment[],
-    teams: ContractorTeam[]
-  ): RAGScoreResult<RAGReliabilityBreakdown> {
+    assignments: ExtendedAssignment[],
+    teams: ExtendedTeam[]
+  ): RAGScoreResult<ExtendedReliabilityBreakdown> {
     
     if (assignments.length === 0) {
-      // New contractor - neutral score
-      const breakdown: RAGReliabilityBreakdown = {
-        consistency: 70,
-        communication: 70,
-        issueResolution: 70,
-        teamStability: 70,
-        commitmentAdherence: 70
-      };
-      
-      return { score: 70, breakdown };
+      return this.getDefaultScoreForNewContractor();
     }
 
-    // Calculate individual reliability metrics
-    const consistency = this.calculateConsistencyScore(assignments);
-    const communication = this.calculateCommunicationScore(assignments);
-    const issueResolution = this.calculateIssueResolutionScore(assignments);
-    const teamStability = this.calculateTeamStabilityScore(teams);
-    const commitmentAdherence = this.calculateCommitmentAdherenceScore(assignments);
-
-    const breakdown: RAGReliabilityBreakdown = {
-      consistency,
-      communication,
-      issueResolution,
-      teamStability,
-      commitmentAdherence
+    const breakdown: ExtendedReliabilityBreakdown = {
+      projectHistory: this.calculateProjectHistoryScore(assignments),
+      teamStability: this.calculateTeamStabilityScore(teams),
+      certificationStatus: this.calculateCertificationScore(),
+      complianceRecord: this.calculateComplianceScore(assignments),
+      communicationRating: this.calculateCommunicationScore(assignments)
     };
 
-    // Calculate weighted average
     const score = this.calculateWeightedScore(breakdown);
-
     return { score: Math.round(score), breakdown };
   }
 
   /**
-   * Calculate consistency score based on performance variation
+   * Get default score for new contractors
    */
-  private static calculateConsistencyScore(assignments: ContractorAssignment[]): number {
-    const qualityScores = assignments
-      .filter(a => a.qualityScore && a.status === 'completed')
-      .map(a => a.qualityScore!);
-
-    if (qualityScores.length < 2) return 70;
-
-    // Calculate standard deviation of quality scores
-    const mean = qualityScores.reduce((sum, score) => sum + score, 0) / qualityScores.length;
-    const variance = qualityScores.reduce((sum, score) => sum + Math.pow(score - mean, 2), 0) / qualityScores.length;
-    const standardDeviation = Math.sqrt(variance);
-
-    // Lower standard deviation = higher consistency
-    if (standardDeviation <= 5) return 95;
-    if (standardDeviation <= 10) return 85;
-    if (standardDeviation <= 15) return 75;
-    if (standardDeviation <= 20) return 65;
-    if (standardDeviation <= 25) return 45;
-    return 25;
-  }
-
-  /**
-   * Calculate communication score
-   */
-  private static calculateCommunicationScore(assignments: ContractorAssignment[]): number {
-    const communicationScores = assignments
-      .filter(a => a.clientFeedback?.communicationRating)
-      .map(a => a.clientFeedback!.communicationRating!);
-
-    if (communicationScores.length === 0) return 70;
-
-    const avgCommunication = communicationScores.reduce((sum, rating) => sum + rating, 0) / communicationScores.length;
+  private static getDefaultScoreForNewContractor(): RAGScoreResult<ExtendedReliabilityBreakdown> {
+    const breakdown: ExtendedReliabilityBreakdown = {
+      projectHistory: SCORING_CONFIG.DEFAULT_SCORE,
+      teamStability: SCORING_CONFIG.DEFAULT_SCORE,
+      certificationStatus: SCORING_CONFIG.DEFAULT_SCORE,
+      complianceRecord: SCORING_CONFIG.DEFAULT_SCORE,
+      communicationRating: SCORING_CONFIG.DEFAULT_SCORE
+    };
     
-    // Convert 5-star rating to 100-point scale
-    return (avgCommunication / 5) * 100;
+    return { score: SCORING_CONFIG.DEFAULT_SCORE, breakdown };
   }
 
   /**
-   * Calculate issue resolution score
+   * Calculate project history score based on past performance
    */
-  private static calculateIssueResolutionScore(assignments: ContractorAssignment[]): number {
-    const issueData = assignments
-      .filter(a => a.issuesReported !== undefined && a.issuesResolved !== undefined)
-      .map(a => ({
-        reported: a.issuesReported!,
-        resolved: a.issuesResolved!
-      }));
+  private static calculateProjectHistoryScore(assignments: ExtendedAssignment[]): number {
+    if (assignments.length === 0) return SCORING_CONFIG.DEFAULT_SCORE;
 
-    if (issueData.length === 0) return 70;
+    const completedCount = assignments.filter(a => a.status === 'completed').length;
+    const successRate = completedCount / assignments.length;
+    
+    // Apply success rate scoring
+    let score = applyThresholdScoring(successRate, SCORING_CONFIG.SUCCESS_RATE_BONUSES as any, SCORING_CONFIG.DEFAULT_SCORE);
+    
+    // Add performance quality scoring
+    const avgPerformance = calculateFilteredAverage(
+      assignments, 
+      a => a.performanceRating
+    );
+    
+    if (avgPerformance > 0) {
+      score += applyThresholdScoring(avgPerformance, SCORING_CONFIG.PERFORMANCE_BONUSES as any, 0);
+    }
 
-    const totalReported = issueData.reduce((sum, data) => sum + data.reported, 0);
-    const totalResolved = issueData.reduce((sum, data) => sum + data.resolved, 0);
+    return clampScore(score);
+  }
 
-    if (totalReported === 0) return 95; // No issues is excellent
-
-    const resolutionRate = (totalResolved / totalReported) * 100;
-
-    if (resolutionRate >= 95) return 95;
-    if (resolutionRate >= 90) return 85;
-    if (resolutionRate >= 80) return 75;
-    if (resolutionRate >= 70) return 65;
-    if (resolutionRate >= 50) return 45;
-    return 25;
+  /**
+   * Calculate communication score based on client feedback
+   */
+  private static calculateCommunicationScore(assignments: ExtendedAssignment[]): number {
+    const avgFeedback = calculateFilteredAverage(assignments, a => a.clientFeedback);
+    
+    return avgFeedback > 0 
+      ? applyFallbackScoring(avgFeedback, SCORING_CONFIG.FEEDBACK_SCORES as any)
+      : SCORING_CONFIG.DEFAULT_SCORE;
   }
 
   /**
    * Calculate team stability score
    */
-  private static calculateTeamStabilityScore(teams: ContractorTeam[]): number {
-    if (teams.length === 0) return 70;
+  private static calculateTeamStabilityScore(teams: ExtendedTeam[]): number {
+    if (teams.length === 0) return SCORING_CONFIG.DEFAULT_SCORE;
 
-    const stabilityScores: number[] = [];
+    const memberTenures = teams.flatMap(team => 
+      (team.members || []).filter(member => member.joinDate)
+        .map(member => calculateTenureInYears(member.joinDate!))
+    );
 
-    teams.forEach(team => {
-      if (!team.members || team.members.length === 0) {
-        stabilityScores.push(70);
-        return;
-      }
+    if (memberTenures.length === 0) return SCORING_CONFIG.DEFAULT_SCORE;
 
-      // Calculate average tenure of team members
-      const avgTenure = team.members
-        .filter(member => member.tenure !== undefined)
-        .reduce((sum, member) => sum + (member.tenure || 0), 0) / team.members.length;
-
-      // Calculate team stability based on average tenure
-      let teamScore = 70;
-      if (avgTenure >= 24) teamScore = 95; // 2+ years
-      else if (avgTenure >= 18) teamScore = 85; // 1.5+ years
-      else if (avgTenure >= 12) teamScore = 75; // 1+ year
-      else if (avgTenure >= 6) teamScore = 65; // 6+ months
-      else if (avgTenure >= 3) teamScore = 45; // 3+ months
-      else teamScore = 25; // Less than 3 months
-
-      stabilityScores.push(teamScore);
-    });
-
-    return stabilityScores.reduce((sum, score) => sum + score, 0) / stabilityScores.length;
+    const avgTenure = memberTenures.reduce((sum, tenure) => sum + tenure, 0) / memberTenures.length;
+    
+    return clampScore(
+      applyThresholdScoring(avgTenure, SCORING_CONFIG.TENURE_BONUSES as any, SCORING_CONFIG.DEFAULT_SCORE)
+    );
   }
 
   /**
-   * Calculate commitment adherence score
+   * Calculate certification status score
    */
-  private static calculateCommitmentAdherenceScore(assignments: ContractorAssignment[]): number {
-    const completedAssignments = assignments.filter(a => 
-      a.status === 'completed' && a.startDate && a.endDate && a.expectedEndDate
+  private static calculateCertificationScore(): number {
+    // Default implementation - would typically check certification database
+    return COMPLIANCE_CONFIG.DEFAULT_SCORE; // Neutral score until certification system is integrated
+  }
+
+  /**
+   * Calculate compliance record score
+   */
+  private static calculateComplianceScore(assignments: ExtendedAssignment[]): number {
+    const issueAssignments = assignments.filter(a => 
+      a.issuesReported !== undefined && (a.issuesReported || 0) > 0
     );
 
-    if (completedAssignments.length === 0) return 70;
+    if (issueAssignments.length === 0) {
+      return COMPLIANCE_CONFIG.DEFAULT_SCORE + COMPLIANCE_CONFIG.NO_ISSUES_BONUS;
+    }
 
-    const adherenceScores: number[] = [];
-
-    completedAssignments.forEach(assignment => {
-      const actualEnd = new Date(assignment.endDate!);
-      const expectedEnd = new Date(assignment.expectedEndDate!);
-      const daysDifference = Math.ceil((actualEnd.getTime() - expectedEnd.getTime()) / (1000 * 60 * 60 * 24));
-
-      // Score based on how close to expected delivery
-      let score = 95;
-      if (daysDifference <= 0) score = 95; // On time or early
-      else if (daysDifference <= 2) score = 85; // Up to 2 days late
-      else if (daysDifference <= 5) score = 75; // Up to 5 days late
-      else if (daysDifference <= 10) score = 65; // Up to 10 days late
-      else if (daysDifference <= 20) score = 45; // Up to 20 days late
-      else score = 25; // More than 20 days late
-
-      adherenceScores.push(score);
-    });
-
-    return adherenceScores.reduce((sum, score) => sum + score, 0) / adherenceScores.length;
+    const avgIssues = calculateFilteredAverage(issueAssignments, a => a.issuesReported);
+    const penalty = applyThresholdScoring(avgIssues, COMPLIANCE_CONFIG.ISSUE_PENALTIES as any, 0);
+    
+    return clampScore(COMPLIANCE_CONFIG.DEFAULT_SCORE + penalty);
   }
 
   /**
    * Calculate weighted reliability score
    */
-  private static calculateWeightedScore(breakdown: RAGReliabilityBreakdown): number {
+  private static calculateWeightedScore(breakdown: ExtendedReliabilityBreakdown): number {
     return (
-      breakdown.consistency * 0.25 +
-      breakdown.communication * 0.20 +
-      breakdown.issueResolution * 0.20 +
-      breakdown.teamStability * 0.20 +
-      breakdown.commitmentAdherence * 0.15
+      breakdown.projectHistory * RELIABILITY_WEIGHTS.PROJECT_HISTORY +
+      breakdown.teamStability * RELIABILITY_WEIGHTS.TEAM_STABILITY +
+      breakdown.certificationStatus * RELIABILITY_WEIGHTS.CERTIFICATION_STATUS +
+      breakdown.complianceRecord * RELIABILITY_WEIGHTS.COMPLIANCE_RECORD +
+      breakdown.communicationRating * RELIABILITY_WEIGHTS.COMMUNICATION_RATING
     );
   }
 
   /**
-   * Get reliability trend analysis
+   * Get reliability gaps analysis
    */
-  static getReliabilityTrend(assignments: ContractorAssignment[]): 'improving' | 'declining' | 'stable' {
-    if (assignments.length < 6) return 'stable';
+  static getReliabilityGaps(breakdown: ExtendedReliabilityBreakdown): string[] {
+    const gaps: string[] = [];
+    const { THRESHOLD } = SCORING_CONFIG;
 
-    const sortedAssignments = assignments
-      .filter(a => a.endDate && a.clientFeedback?.rating)
-      .sort((a, b) => new Date(a.endDate!).getTime() - new Date(b.endDate!).getTime());
+    const checks = [
+      { value: breakdown.projectHistory, message: GAP_MESSAGES.PROJECT_HISTORY },
+      { value: breakdown.teamStability, message: GAP_MESSAGES.TEAM_STABILITY },
+      { value: breakdown.certificationStatus, message: GAP_MESSAGES.CERTIFICATION_STATUS },
+      { value: breakdown.complianceRecord, message: GAP_MESSAGES.COMPLIANCE_RECORD },
+      { value: breakdown.communicationRating, message: GAP_MESSAGES.COMMUNICATION_RATING }
+    ];
 
-    if (sortedAssignments.length < 6) return 'stable';
+    checks.forEach(({ value, message }) => {
+      if (value < THRESHOLD) gaps.push(message);
+    });
 
-    const recentAssignments = sortedAssignments.slice(-3);
-    const olderAssignments = sortedAssignments.slice(-6, -3);
-
-    const recentAvgRating = recentAssignments.reduce((sum, a) => sum + a.clientFeedback!.rating!, 0) / recentAssignments.length;
-    const olderAvgRating = olderAssignments.reduce((sum, a) => sum + a.clientFeedback!.rating!, 0) / olderAssignments.length;
-
-    const improvement = recentAvgRating - olderAvgRating;
-
-    if (improvement > 0.5) return 'improving';
-    if (improvement < -0.5) return 'declining';
-    return 'stable';
+    return gaps.length > 0 ? gaps : [GAP_MESSAGES.NO_GAPS];
   }
 
   /**
    * Get reliability recommendations
    */
-  static getReliabilityRecommendations(breakdown: RAGReliabilityBreakdown): string[] {
+  static getReliabilityRecommendations(breakdown: ExtendedReliabilityBreakdown): string[] {
     const recommendations: string[] = [];
+    const threshold = 80;
 
-    if (breakdown.consistency < 70) {
-      recommendations.push('Focus on maintaining consistent quality standards across all projects');
-    }
+    const checks = [
+      { value: breakdown.projectHistory, message: RECOMMENDATION_MESSAGES.PROJECT_HISTORY },
+      { value: breakdown.teamStability, message: RECOMMENDATION_MESSAGES.TEAM_STABILITY },
+      { value: breakdown.certificationStatus, message: RECOMMENDATION_MESSAGES.CERTIFICATION_STATUS },
+      { value: breakdown.complianceRecord, message: RECOMMENDATION_MESSAGES.COMPLIANCE_RECORD },
+      { value: breakdown.communicationRating, message: RECOMMENDATION_MESSAGES.COMMUNICATION_RATING }
+    ];
 
-    if (breakdown.communication < 70) {
-      recommendations.push('Improve client communication frequency and quality');
-    }
-
-    if (breakdown.issueResolution < 70) {
-      recommendations.push('Enhance issue tracking and resolution processes');
-    }
-
-    if (breakdown.teamStability < 70) {
-      recommendations.push('Work on team retention and stability improvements');
-    }
-
-    if (breakdown.commitmentAdherence < 70) {
-      recommendations.push('Improve project planning to better meet delivery commitments');
-    }
-
-    if (recommendations.length === 0) {
-      recommendations.push('Maintain current reliability standards');
-    }
+    checks.forEach(({ value, message }) => {
+      if (value < threshold) recommendations.push(message);
+    });
 
     return recommendations;
   }

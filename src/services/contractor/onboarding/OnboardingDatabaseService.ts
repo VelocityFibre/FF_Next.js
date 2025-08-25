@@ -88,13 +88,13 @@ export class OnboardingDatabaseService {
    */
   async updateOnboardingData(
     contractorId: string, 
-    onboardingData: any
+    onboardingProgress: number
   ): Promise<void> {
     try {
       await db
         .update(contractors)
         .set({ 
-          onboardingData,
+          onboardingProgress,
           updatedAt: new Date()
         })
         .where(eq(contractors.id, contractorId));
@@ -110,12 +110,12 @@ export class OnboardingDatabaseService {
   async getOnboardingData(contractorId: string): Promise<any | null> {
     try {
       const result = await db
-        .select({ onboardingData: contractors.onboardingData })
+        .select({ onboardingProgress: contractors.onboardingProgress })
         .from(contractors)
         .where(eq(contractors.id, contractorId))
         .limit(1);
       
-      return result.length > 0 ? result[0].onboardingData : null;
+      return result.length > 0 ? result[0].onboardingProgress : null;
     } catch (error) {
       console.error('Failed to get onboarding data:', error);
       return null;

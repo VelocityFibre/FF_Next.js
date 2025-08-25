@@ -64,6 +64,7 @@ export function StaffImport({ onComplete }: StaffImportProps) {
       console.error('Import error:', error);
       setImportResult({
         success: false,
+        total: 0,
         imported: 0,
         failed: 1,
         errors: [{

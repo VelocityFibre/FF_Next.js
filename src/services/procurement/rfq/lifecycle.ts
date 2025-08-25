@@ -18,6 +18,33 @@ import { db } from '@/config/firebase';
 import { RFQStatus } from '@/types/procurement.types';
 import { RFQOperations } from './operations';
 
+/**
+ * Utility to convert Timestamp or Date to Date object
+ */
+function toDate(timestampOrDate: Date | Timestamp | any): Date {
+  if (!timestampOrDate) {
+    return new Date();
+  }
+  
+  // If it's already a Date, return it
+  if (timestampOrDate instanceof Date) {
+    return timestampOrDate;
+  }
+  
+  // If it's a Firestore Timestamp, convert it
+  if (timestampOrDate && typeof timestampOrDate.toDate === 'function') {
+    return timestampOrDate.toDate();
+  }
+  
+  // If it's a timestamp number, convert it
+  if (typeof timestampOrDate === 'number') {
+    return new Date(timestampOrDate);
+  }
+  
+  // Fallback: try to parse as date
+  return new Date(timestampOrDate);
+}
+
 const RESPONSES_COLLECTION = 'rfq_responses';
 const COLLECTION_NAME = 'rfqs';
 
@@ -244,7 +271,7 @@ export class RFQLifecycle {
    */
   private static async getCurrentDeadline(rfqId: string): Promise<Date> {
     const rfq = await RFQOperations.getById(rfqId);
-    return rfq.responseDeadline?.toDate() || new Date();
+    return toDate(rfq.responseDeadline);
   }
 
   /**
@@ -253,8 +280,8 @@ export class RFQLifecycle {
   static async isRFQPastDeadline(rfqId: string): Promise<boolean> {
     try {
       const rfq = await RFQOperations.getById(rfqId);
-      const deadline = rfq.responseDeadline?.toDate();
-      return deadline ? new Date() > deadline : false;
+      const deadline = toDate(rfq.responseDeadline);
+      return new Date() > deadline;
     } catch (error) {
       console.error('Error checking RFQ deadline:', error);
       return false;
@@ -264,7 +291,7 @@ export class RFQLifecycle {
   /**
    * Get RFQ status transition history
    */
-  static async getStatusHistory(rfqId: string): Promise<Array<{
+  static async getStatusHistory(_rfqId: string): Promise<Array<{
     status: RFQStatus;
     timestamp: Date;
     userId: string;
@@ -280,9 +307,11 @@ export class RFQLifecycle {
    */
   static validateStatusTransition(currentStatus: RFQStatus, newStatus: RFQStatus): boolean {
     const validTransitions: Record<RFQStatus, RFQStatus[]> = {
-      [RFQStatus.DRAFT]: [RFQStatus.ISSUED, RFQStatus.CANCELLED],
+      [RFQStatus.DRAFT]: [RFQStatus.READY_TO_SEND, RFQStatus.CANCELLED],
+      [RFQStatus.READY_TO_SEND]: [RFQStatus.ISSUED, RFQStatus.CANCELLED],
       [RFQStatus.ISSUED]: [RFQStatus.RESPONSES_RECEIVED, RFQStatus.CLOSED, RFQStatus.CANCELLED],
-      [RFQStatus.RESPONSES_RECEIVED]: [RFQStatus.AWARDED, RFQStatus.CLOSED, RFQStatus.CANCELLED],
+      [RFQStatus.RESPONSES_RECEIVED]: [RFQStatus.EVALUATED, RFQStatus.AWARDED, RFQStatus.CLOSED, RFQStatus.CANCELLED],
+      [RFQStatus.EVALUATED]: [RFQStatus.AWARDED, RFQStatus.CLOSED, RFQStatus.CANCELLED],
       [RFQStatus.AWARDED]: [RFQStatus.CLOSED],
       [RFQStatus.CLOSED]: [],
       [RFQStatus.CANCELLED]: []

@@ -3,9 +3,9 @@
  * UI/display formatting and visualization helpers for stock errors
  */
 
-import { StockError, InsufficientStockError, StockReservationError } from '../inventory';
+import { StockError, InsufficientStockError } from '../inventory';
 import { StockMovementError, StockTransferError, StockAdjustmentError } from '../tracking';
-import { UserErrorDisplay, MultipleErrorsResult, ErrorReport } from './formatter-types';
+import { MultipleErrorsResult, ErrorReport } from './formatter-types';
 import { CoreErrorFormatter } from './error-formatter';
 
 /**
@@ -55,14 +55,14 @@ export class DisplayFormatter {
       errorsByType[type] = (errorsByType[type] || 0) + 1;
 
       // Count by item (if available)
-      if ('itemCode' in error && error.itemCode) {
+      if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
         errorsByItem[error.itemCode] = (errorsByItem[error.itemCode] || 0) + 1;
       }
 
       // Count by location (if available)
-      if ('location' in error && error.location) {
+      if ('location' in error && error.location && typeof error.location === 'string') {
         errorsByLocation[error.location] = (errorsByLocation[error.location] || 0) + 1;
-      } else if ('fromLocation' in error && error.fromLocation) {
+      } else if ('fromLocation' in error && error.fromLocation && typeof error.fromLocation === 'string') {
         errorsByLocation[error.fromLocation] = (errorsByLocation[error.fromLocation] || 0) + 1;
       }
     });
@@ -190,17 +190,17 @@ export class DisplayFormatter {
       errorTypes[type] = (errorTypes[type] || 0) + 1;
 
       // Track affected items and locations
-      if ('itemCode' in error && error.itemCode) {
+      if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
         affectedItems.add(error.itemCode);
       }
       
-      if ('location' in error && error.location) {
+      if ('location' in error && error.location && typeof error.location === 'string') {
         affectedLocations.add(error.location);
-      } else if ('fromLocation' in error && error.fromLocation) {
+      } else if ('fromLocation' in error && error.fromLocation && typeof error.fromLocation === 'string') {
         affectedLocations.add(error.fromLocation);
       }
       
-      if ('toLocation' in error && error.toLocation) {
+      if ('toLocation' in error && error.toLocation && typeof error.toLocation === 'string') {
         affectedLocations.add(error.toLocation);
       }
     });
@@ -251,12 +251,17 @@ export class DisplayFormatter {
       itemCode = error.itemCode;
     }
 
-    return {
+    const result: any = {
       title: error.constructor.name.replace(/Error$/, '').replace(/([A-Z])/g, ' $1').trim(),
       message: error.message,
       priority,
-      category,
-      itemCode
+      category
     };
+    
+    if (itemCode !== undefined) {
+      result.itemCode = itemCode;
+    }
+    
+    return result;
   }
 }

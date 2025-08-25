@@ -9,6 +9,7 @@ import { ProcurementPermission, ProcurementRoles, getRolePermissions } from './p
 
 // User permission cache interface
 export interface UserPermissionCache {
+  userId: string;
   permissions: Set<ProcurementPermission>;
   roles: string[];
   projectAccessLevel: ProjectAccessLevel;

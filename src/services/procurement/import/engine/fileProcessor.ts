@@ -7,9 +7,7 @@ import {
   ImportResult, 
   ProcessingOptions, 
   ProcessingContext,
-  ColumnMapping,
-  ImportError,
-  ImportWarning 
+  ColumnMapping 
 } from './types';
 import { readFile } from '../fileParsing';
 import { detectColumnMapping } from '../columnMapping';

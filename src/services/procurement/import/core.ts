@@ -4,14 +4,10 @@
  */
 
 import type { 
-  ImportProgress, 
   ImportResult, 
   ProgressCallback, 
-  ColumnMapping, 
-  DEFAULT_COLUMN_MAPPING,
-  ParsedBOQItem,
-  ImportError,
-  ImportWarning
+  ColumnMapping,
+  ParsedBOQItem
 } from './importTypes';
 import { readFile } from './fileParsing';
 import { validateDataConsistency } from './importValidation';

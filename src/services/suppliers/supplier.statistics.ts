@@ -17,9 +17,9 @@ import {
   ScorecardGenerator,
   SupplierStatistics,
   CategoryAnalytics,
-  PerformanceTrends,
+  PerformanceTrends as LegacyPerformanceTrends,
   LocationDistribution,
-  PerformanceBenchmarks,
+  PerformanceBenchmarks as LegacyPerformanceBenchmarks,
   SupplierScorecard
 } from './statistics';
 
@@ -48,7 +48,7 @@ export class SupplierStatisticsService {
    * Get performance trends over time
    * @deprecated Use PerformanceAnalyzer.getPerformanceTrends() instead
    */
-  static async getPerformanceTrends(months: number = 12): Promise<PerformanceTrends[]> {
+  static async getPerformanceTrends(months: number = 12): Promise<LegacyPerformanceTrends[]> {
     return PerformanceAnalyzer.getPerformanceTrends(months);
   }
 
@@ -64,8 +64,43 @@ export class SupplierStatisticsService {
    * Get performance benchmarks
    * @deprecated Use PerformanceAnalyzer.getPerformanceBenchmarks() instead
    */
-  static async getPerformanceBenchmarks(): Promise<PerformanceBenchmarks> {
-    return PerformanceAnalyzer.getPerformanceBenchmarks();
+  static async getPerformanceBenchmarks(): Promise<LegacyPerformanceBenchmarks> {
+    const analyzerBenchmarks = await PerformanceAnalyzer.getPerformanceBenchmarks();
+    
+    // Convert from analyzer-types format to local statistics format
+    return {
+      overall: {
+        topQuartile: analyzerBenchmarks.overall.q3,
+        median: analyzerBenchmarks.overall.median,
+        bottomQuartile: analyzerBenchmarks.overall.q1
+      },
+      byCategory: Object.keys(analyzerBenchmarks.byCategory).reduce((acc, key) => {
+        const stats = analyzerBenchmarks.byCategory[key];
+        acc[key] = {
+          topQuartile: stats.q3,
+          median: stats.median,
+          bottomQuartile: stats.q1,
+          sampleSize: stats.sampleSize
+        };
+        return acc;
+      }, {} as Record<string, any>),
+      byBusinessType: Object.keys(analyzerBenchmarks.byBusinessType).reduce((acc, key) => {
+        const stats = analyzerBenchmarks.byBusinessType[key];
+        acc[key] = {
+          topQuartile: stats.q3,
+          median: stats.median,
+          bottomQuartile: stats.q1,
+          sampleSize: stats.sampleSize
+        };
+        return acc;
+      }, {} as Record<string, any>),
+      trends: {
+        improving: 0,
+        stable: 0,
+        declining: 0
+      },
+      lastUpdated: new Date(analyzerBenchmarks.lastUpdated)
+    };
   }
 
   /**

@@ -4,6 +4,7 @@
 
 import { Search, Settings } from 'lucide-react';
 import { FilterState, VisibleColumns, INITIAL_FILTERS } from './BOQViewerTypes';
+import { BOQItemMappingStatusType, ProcurementStatusType } from '@/types/procurement/boq.types';
 
 interface BOQViewerFiltersProps {
   filters: FilterState;
@@ -43,7 +44,7 @@ export default function BOQViewerFilters({
         {/* Mapping Status */}
         <select
           value={filters.mappingStatus}
-          onChange={(e) => setFilters({ ...filters, mappingStatus: e.target.value as any })}
+          onChange={(e) => setFilters({ ...filters, mappingStatus: e.target.value as BOQItemMappingStatusType | '' })}
           className="px-3 py-2 border border-gray-300 rounded-md text-sm"
         >
           <option value="">All Mapping Status</option>
@@ -56,7 +57,7 @@ export default function BOQViewerFilters({
         {/* Procurement Status */}
         <select
           value={filters.procurementStatus}
-          onChange={(e) => setFilters({ ...filters, procurementStatus: e.target.value as any })}
+          onChange={(e) => setFilters({ ...filters, procurementStatus: e.target.value as ProcurementStatusType | '' })}
           className="px-3 py-2 border border-gray-300 rounded-md text-sm"
         >
           <option value="">All Procurement Status</option>

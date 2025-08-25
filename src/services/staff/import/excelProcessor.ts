@@ -65,20 +65,20 @@ export async function importFromExcel(file: File, overwriteExisting: boolean = t
  * Export staff to Excel file
  */
 export function exportToExcel(staff: StaffMember[]): void {
-  // Define columns for export
-  const columns = [
-    { header: 'Employee ID', key: 'employeeId', width: 15 },
-    { header: 'Name', key: 'name', width: 20 },
-    { header: 'Email', key: 'email', width: 25 },
-    { header: 'Phone', key: 'phone', width: 15 },
-    { header: 'Position', key: 'position', width: 20 },
-    { header: 'Department', key: 'department', width: 20 },
-    { header: 'Status', key: 'status', width: 10 },
-    { header: 'Start Date', key: 'joinDate', width: 15 },
-    { header: 'Manager', key: 'managerName', width: 20 },
-    { header: 'Alternative Phone', key: 'alternativePhone', width: 15 },
-    { header: 'Contract Type', key: 'contractType', width: 15 },
-  ];
+  // Define columns for export (not currently used)
+  // const columns = [
+  //   { header: 'Employee ID', key: 'employeeId', width: 15 },
+  //   { header: 'Name', key: 'name', width: 20 },
+  //   { header: 'Email', key: 'email', width: 25 },
+  //   { header: 'Phone', key: 'phone', width: 15 },
+  //   { header: 'Position', key: 'position', width: 20 },
+  //   { header: 'Department', key: 'department', width: 20 },
+  //   { header: 'Status', key: 'status', width: 10 },
+  //   { header: 'Start Date', key: 'joinDate', width: 15 },
+  //   { header: 'Manager', key: 'managerName', width: 20 },
+  //   { header: 'Alternative Phone', key: 'alternativePhone', width: 15 },
+  //   { header: 'Contract Type', key: 'contractType', width: 15 },
+  // ];
   
   // Prepare data for export
   const exportData = staff.map(member => ({
@@ -89,7 +89,7 @@ export function exportToExcel(staff: StaffMember[]): void {
     'Position': member.position || '',
     'Department': member.department || '',
     'Status': member.status,
-    'Start Date': member.joinDate ? new Date(member.joinDate).toLocaleDateString() : '',
+    'Start Date': member.startDate ? new Date(member.startDate.toDate()).toLocaleDateString() : '',
     'Manager': member.managerName || '',
     'Alternative Phone': member.alternativePhone || '',
     'Contract Type': member.contractType || ''

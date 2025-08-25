@@ -3,7 +3,7 @@
  * Core statistical calculations and aggregations
  */
 
-import { Supplier, SupplierStatus } from '@/types/supplier.types';
+import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { SupplierStatistics, StatisticsOptions } from './types';
 
 export class BasicStatsCalculator {
@@ -206,8 +206,8 @@ export class BasicStatsCalculator {
 
     suppliers.forEach(supplier => {
       if (supplier.complianceStatus) {
-        const compliance = supplier.complianceStatus;
-        if (compliance.complianceScore >= 80) {
+        const compliance = supplier.complianceStatus as any;
+        if (compliance.complianceScore >= 80 || (compliance.taxCompliant && compliance.beeCompliant && compliance.insuranceValid)) {
           compliant++;
         } else {
           nonCompliant++;

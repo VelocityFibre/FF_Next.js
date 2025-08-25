@@ -11,43 +11,73 @@ export * from './core';
 // Import services for legacy class compatibility
 import { validateFile } from '@/lib/utils/excelParser';
 import { ProcurementContext } from '@/types/procurement/base.types';
-import { 
+// Import types from types file
+import type { 
   ImportJob,
   ImportConfig, 
   ProgressCallback, 
-  ImportStats,
-  BOQImportJobManager,
-  BOQImportCatalogManager,
-  BOQImportDataProcessor,
-  BOQImportProcessor,
-  BOQImportDatabaseSaver,
-  BOQImportStatsCalculator
-} from './core';
+  ImportStats
+} from './core/types';
+
+// Import classes directly from individual files
+import { BOQImportJobManager as CoreJobManager } from './core/jobManager';
+import { BOQImportCatalogManager as CoreCatalogManager } from './core/catalogManager';
+import { BOQImportDataProcessor as CoreDataProcessor } from './core/dataProcessor';
+import { BOQImportProcessor as CoreImportProcessor } from './core/importProcessor';
+import { BOQImportDatabaseSaver as CoreDatabaseSaver } from './core/databaseSaver';
+import { BOQImportStatsCalculator as CoreStatsCalculator } from './core/statsCalculator';
+
+// Export types for external use
+export type { 
+  ImportJob,
+  ImportConfig, 
+  ProgressCallback, 
+  ImportStats
+};
+
+// Re-export the actual implementations
+export { 
+  BOQImportJobManager 
+} from './core/jobManager';
+export { 
+  BOQImportCatalogManager 
+} from './core/catalogManager';
+export { 
+  BOQImportDataProcessor 
+} from './core/dataProcessor';
+export { 
+  BOQImportProcessor 
+} from './core/importProcessor';
+export { 
+  BOQImportDatabaseSaver 
+} from './core/databaseSaver';
+export { 
+  BOQImportStatsCalculator 
+} from './core/statsCalculator';
 
 /**
  * BOQ Import Core Service
  * @deprecated Use individual services from './core' instead
  */
 export class BOQImportCore {
-  private jobManager: BOQImportJobManager;
-  private catalogManager: BOQImportCatalogManager;
-  private dataProcessor: BOQImportDataProcessor;
-  private processor: BOQImportProcessor;
-  private databaseSaver: BOQImportDatabaseSaver;
-  private statsCalculator: BOQImportStatsCalculator;
+  private jobManager: CoreJobManager;
+  private catalogManager: CoreCatalogManager;
+  private dataProcessor: CoreDataProcessor;
+  private processor: CoreImportProcessor;
+  private databaseSaver: CoreDatabaseSaver;
+  private statsCalculator: CoreStatsCalculator;
 
   constructor() {
-    this.jobManager = new BOQImportJobManager();
-    this.catalogManager = new BOQImportCatalogManager();
-    this.dataProcessor = new BOQImportDataProcessor(this.catalogManager);
-    this.databaseSaver = new BOQImportDatabaseSaver();
-    this.processor = new BOQImportProcessor(
+    this.jobManager = new CoreJobManager();
+    this.catalogManager = new CoreCatalogManager();
+    this.dataProcessor = new CoreDataProcessor(this.catalogManager);
+    this.databaseSaver = new CoreDatabaseSaver();
+    this.processor = new CoreImportProcessor(
       this.jobManager,
-      this.catalogManager,
       this.dataProcessor,
       this.databaseSaver
     );
-    this.statsCalculator = new BOQImportStatsCalculator(this.jobManager);
+    this.statsCalculator = new CoreStatsCalculator(this.jobManager);
   }
 
   /**
@@ -80,8 +110,12 @@ export class BOQImportCore {
     };
 
     // Start processing in background
-    this.processor.processImport(job, file, context, fullConfig, onProgress).catch(error => {
-      this.jobManager.updateProgress(job.id, 'failed', 100, error.message);
+    this.processor.processImport(job, file, context, fullConfig, onProgress).catch((error: Error) => {
+      // Update job status to failed
+      job.status = 'failed';
+      job.error = error.message;
+      job.completedAt = new Date();
+      this.jobManager.updateJob(job);
       onProgress?.(job, 'failed', 100, error.message);
     });
 
@@ -130,4 +164,4 @@ export class BOQImportCore {
 }
 
 // Default export for backward compatibility
-export { BOQImportProcessor as default } from './core';
+export { BOQImportCore as default };

@@ -3,14 +3,16 @@
 // RFQ Status enumeration matching database schema
 export enum RFQStatus {
   DRAFT = 'draft',
+  READY_TO_SEND = 'ready_to_send',
   ISSUED = 'issued',
   RESPONSES_RECEIVED = 'responses_received',
   EVALUATED = 'evaluated',
   AWARDED = 'awarded',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  CLOSED = 'closed'
 }
 
-export type RFQStatusType = 'draft' | 'issued' | 'responses_received' | 'evaluated' | 'awarded' | 'cancelled';
+export type RFQStatusType = 'draft' | 'ready_to_send' | 'issued' | 'responses_received' | 'evaluated' | 'awarded' | 'cancelled' | 'closed';
 
 // Quote Status enumeration
 export enum QuoteStatus {

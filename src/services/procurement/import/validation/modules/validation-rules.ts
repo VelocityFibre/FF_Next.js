@@ -39,7 +39,7 @@ export function applyValidationRules(
   row: number,
   rules: ValidationOptions,
   errors: ImportError[],
-  warnings: ImportWarning[]
+  _warnings: ImportWarning[]
 ): boolean {
   let isValid = true;
 

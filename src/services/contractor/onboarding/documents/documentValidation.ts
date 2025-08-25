@@ -41,7 +41,7 @@ export class DocumentValidation {
     unverifiedDocuments: DocumentType[];
   }> {
     const documents = await DocumentQuery.getContractorDocuments(contractorId);
-    const requiredDocs = getRequiredDocumentTypes();
+    const requiredDocs = getRequiredDocumentTypes('');
     
     const missingDocuments: DocumentType[] = [];
     const unverifiedDocuments: DocumentType[] = [];
@@ -50,9 +50,9 @@ export class DocumentValidation {
       const doc = documents.find(d => d.documentType === docType);
       
       if (!doc) {
-        missingDocuments.push(docType);
+        missingDocuments.push(docType as DocumentType);
       } else if (doc.verificationStatus !== 'verified') {
-        unverifiedDocuments.push(docType);
+        unverifiedDocuments.push(docType as DocumentType);
       }
     }
 
@@ -78,7 +78,7 @@ export class DocumentValidation {
     unverified: DocumentType[];
   }> {
     const documents = await DocumentQuery.getContractorDocuments(contractorId);
-    const documentRequirements = getDocumentRequirements();
+    const documentRequirements = getDocumentRequirements('');
     
     const stageRequirements = documentRequirements.filter(req => 
       req.stageId === stageId && req.required

@@ -6,7 +6,6 @@
 import { 
   ImportJob, 
   ImportJobStatus, 
-  ImportJobMetadata,
   IJobManager 
 } from './types';
 
@@ -127,7 +126,7 @@ export class BOQImportJobManager implements IJobManager {
    * Get job count by status
    */
   getJobCountByStatus(status: ImportJobStatus): number {
-    const allJobs = [...this.activeJobs.values(), ...this.jobHistory];
+    const allJobs = Array.from(this.activeJobs.values()).concat(this.jobHistory);
     return allJobs.filter(job => job.status === status).length;
   }
 

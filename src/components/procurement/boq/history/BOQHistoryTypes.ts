@@ -23,7 +23,7 @@ export interface BOQVersion {
   mappedItems: number;
   exceptionsCount: number;
   changes?: ChangeRecord[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ChangeRecord {
@@ -31,8 +31,8 @@ export interface ChangeRecord {
   type: 'item_added' | 'item_removed' | 'item_modified' | 'mapping_changed' | 'status_changed';
   itemId?: string;
   field?: string;
-  oldValue?: any;
-  newValue?: any;
+  oldValue?: unknown;
+  newValue?: unknown;
   description: string;
   timestamp: Date;
   userId: string;
@@ -48,8 +48,8 @@ export interface VersionComparison {
       item: BOQItem;
       changes: Array<{
         field: string;
-        oldValue: any;
-        newValue: any;
+        oldValue: unknown;
+        newValue: unknown;
       }>;
     }>;
   };

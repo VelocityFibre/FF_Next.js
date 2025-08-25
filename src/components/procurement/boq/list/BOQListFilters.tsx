@@ -34,7 +34,7 @@ export default function BOQListFilters({
         {/* Status */}
         <select
           value={filters.status}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value as any })}
+          onChange={(e) => setFilters({ ...filters, status: e.target.value as FilterState['status'] })}
           className="px-3 py-2 border border-gray-300 rounded-md text-sm"
         >
           <option value="">All Statuses</option>
@@ -46,7 +46,7 @@ export default function BOQListFilters({
         {/* Mapping Status */}
         <select
           value={filters.mappingStatus}
-          onChange={(e) => setFilters({ ...filters, mappingStatus: e.target.value as any })}
+          onChange={(e) => setFilters({ ...filters, mappingStatus: e.target.value as FilterState['mappingStatus'] })}
           className="px-3 py-2 border border-gray-300 rounded-md text-sm"
         >
           <option value="">All Mapping</option>
@@ -77,7 +77,7 @@ export default function BOQListFilters({
           <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <select
             value={filters.dateRange}
-            onChange={(e) => setFilters({ ...filters, dateRange: e.target.value as any })}
+            onChange={(e) => setFilters({ ...filters, dateRange: e.target.value as FilterState['dateRange'] })}
             className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm"
           >
             <option value="all">All Time</option>

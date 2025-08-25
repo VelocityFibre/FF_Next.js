@@ -8,5 +8,6 @@ export { FileInfoExtractor } from './fileInfoExtractor';
 
 // New modular components
 export { FileValidator } from './fileValidator';
-export { FileAnalyzer, FileAnalysis } from './fileAnalyzer';
+export { FileAnalyzer } from './fileAnalyzer';
+export type { FileAnalysis } from './fileAnalyzer';
 export { EncodingDetector } from './encodingDetector';

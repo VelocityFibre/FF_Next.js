@@ -3,7 +3,7 @@
  * Handles all score calculation logic for supplier scorecards
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import {
   ScoreWeights,
   DEFAULT_SCORE_WEIGHTS,
@@ -40,7 +40,7 @@ export class ScoreCalculator {
     }
 
     // Compliance score
-    const complianceScore = supplier.complianceStatus?.complianceScore || 0;
+    const complianceScore = this.calculateBasicComplianceScore(supplier.complianceStatus);
     if (complianceScore > 0) {
       totalScore += (complianceScore / 100) * weights.compliance;
       weightedSum += weights.compliance;
@@ -108,10 +108,11 @@ export class ScoreCalculator {
   static extractCompliance(supplier: Supplier): ComplianceInfo {
     const compliance = supplier.complianceStatus;
     
+    const complianceScore = this.calculateBasicComplianceScore(compliance);
     return {
-      score: compliance?.complianceScore || 0,
-      status: this.determineComplianceStatus(compliance?.complianceScore || 0),
-      lastCheck: compliance?.lastComplianceCheck || new Date()
+      score: complianceScore,
+      status: this.determineComplianceStatus(complianceScore),
+      lastCheck: compliance?.lastAuditDate ? new Date(compliance.lastAuditDate) : new Date()
     };
   }
 
@@ -199,7 +200,7 @@ export class ScoreCalculator {
     }
 
     // Check location
-    if (supplier.address) {
+    if (supplier.addresses?.physical) {
       completenessScore++;
     } else {
       issues.push('Missing address information');
@@ -234,5 +235,22 @@ export class ScoreCalculator {
     }
 
     return totalWeight > 0 ? totalScore / totalWeight : 0;
+  }
+
+  /**
+   * Calculate basic compliance score from available data
+   */
+  private static calculateBasicComplianceScore(compliance: any): number {
+    if (!compliance) return 0;
+    
+    let score = 0;
+    let factors = 0;
+    
+    if (compliance.taxCompliant) { score += 30; factors++; }
+    if (compliance.beeCompliant) { score += 25; factors++; }
+    if (compliance.isoCompliant) { score += 25; factors++; }
+    if (compliance.documentsVerified) { score += 20; factors++; }
+    
+    return factors > 0 ? score : 0;
   }
 }

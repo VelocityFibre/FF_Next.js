@@ -3,7 +3,7 @@
  * Core rating trend analysis functionality
  */
 
-import type { RatingTrend, TrendAnalysisOptions, TrendMetrics } from './trend-types';
+import type { RatingTrend, TrendMetrics } from './trend-types';
 
 export class SupplierRatingAnalyzer {
   /**
@@ -13,7 +13,7 @@ export class SupplierRatingAnalyzer {
     try {
       // In a real implementation, this would query historical rating data
       // For now, return mock trend analysis with realistic patterns
-      const trends = [];
+      const trends: RatingTrend[] = [];
       const currentDate = new Date();
       
       // Base values for realistic trend generation
@@ -54,8 +54,8 @@ export class SupplierRatingAnalyzer {
         const newReviews = Math.floor((supplierCount * 0.6) + Math.random() * (supplierCount * 0.4));
         
         // Determine trend direction
-        const previousRating = i < months - 1 ? trends[trends.length - 1]?.averageRating ?? baseRating : baseRating;
-        const ratingDiff = finalRating - previousRating;
+        const previousRating: number = i < months - 1 ? trends[trends.length - 1]?.averageRating ?? baseRating : baseRating;
+        const ratingDiff: number = finalRating - previousRating;
         
         trends.push({
           period: periodName,
@@ -141,7 +141,13 @@ export class SupplierRatingAnalyzer {
     description: string;
     impact: number;
   }> {
-    const anomalies = [];
+    const anomalies: Array<{
+      period: string;
+      type: 'spike' | 'drop' | 'unusual_activity';
+      severity: 'low' | 'medium' | 'high';
+      description: string;
+      impact: number;
+    }> = [];
     
     if (trends.length < 3) return anomalies;
     

@@ -201,7 +201,7 @@ export class BOQQueryOperations {
       };
 
       // Initialize status counts
-      const statuses: BOQStatusType[] = ['draft', 'approved', 'pending', 'rejected', 'archived'];
+      const statuses: BOQStatusType[] = ['draft', 'mapping_review', 'approved', 'archived'];
       statuses.forEach(status => {
         stats.byStatus[status] = 0;
       });

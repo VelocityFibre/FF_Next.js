@@ -4,19 +4,21 @@
  */
 
 export interface ImportError {
-  type: 'validation' | 'parsing' | 'business';
+  type: 'validation' | 'mapping' | 'processing' | 'system' | 'parsing' | 'business';
   row: number;
-  column: string;
+  column?: string;
   message: string;
   severity?: 'error' | 'warning';
+  details?: any;
 }
 
 export interface ImportWarning {
-  type: 'validation' | 'parsing' | 'business';
+  type: 'mapping' | 'validation' | 'data' | 'parsing' | 'business';
   row: number;
-  column: string;
+  column?: string;
   message: string;
   severity?: 'warning' | 'info';
+  details?: any;
 }
 
 export interface ValidationOptions {
@@ -34,7 +36,7 @@ export interface ParseOptions {
 }
 
 export interface ValidationResult<T = any> {
-  value?: T;
+  value: T | undefined;
   isValid: boolean;
   errors: ImportError[];
   warnings: ImportWarning[];

@@ -5,10 +5,21 @@
 import { ChevronRight } from 'lucide-react';
 import { ProjectHierarchy, TaskStatus } from '@/types/project.types';
 import { getPhaseStatusIcon } from './ProjectDetailHelpers';
+import { Timestamp } from 'firebase/firestore';
 
 interface ProjectHierarchyViewProps {
   hierarchy: ProjectHierarchy | undefined;
   isLoading: boolean;
+}
+
+function toDate(date: Date | Timestamp | string | undefined): Date | null {
+  if (!date) return null;
+  if (date instanceof Date) return date;
+  if (typeof date === 'string') return new Date(date);
+  if (date && typeof date === 'object' && 'toDate' in date) {
+    return (date as Timestamp).toDate();
+  }
+  return null;
 }
 
 export function ProjectHierarchyView({ hierarchy, isLoading }: ProjectHierarchyViewProps) {
@@ -18,7 +29,7 @@ export function ProjectHierarchyView({ hierarchy, isLoading }: ProjectHierarchyV
         return '✅';
       case TaskStatus.IN_PROGRESS:
         return '🔄';
-      case TaskStatus.PENDING:
+      case TaskStatus.NOT_STARTED:
         return '⏳';
       default:
         return '⚪';
@@ -56,8 +67,8 @@ export function ProjectHierarchyView({ hierarchy, isLoading }: ProjectHierarchyV
                 <h3 className="ml-3 text-lg font-medium text-gray-900">{phase.name}</h3>
               </div>
               <span className="text-sm text-gray-500">
-                {phase.startDate && new Date(phase.startDate).toLocaleDateString()} - 
-                {phase.endDate && new Date(phase.endDate).toLocaleDateString()}
+                {toDate(phase.startDate)?.toLocaleDateString()} - 
+                {toDate(phase.endDate)?.toLocaleDateString()}
               </span>
             </div>
             {phase.description && (

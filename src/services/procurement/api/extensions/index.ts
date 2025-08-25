@@ -3,13 +3,13 @@
  * Modular BOQ API extensions system
  */
 
-// Main service class
-export { BOQApiExtensions } from './apiService';
-
 // Core components
 export { BOQCrud } from './boqCrud';
 export { ItemManager } from './itemManager';
 export { ExceptionManager } from './exceptionManager';
+
+// Main service class
+export { BOQApiExtensions } from './apiService';
 
 // Mock data
 export { mockBOQs, mockBOQItems, mockExceptions } from './mockData';
@@ -25,6 +25,9 @@ export type {
   BOQWithItems,
   ProcurementContext
 } from './types';
+
+// Import the class for use in service extension
+import { BOQApiExtensions } from './apiService';
 
 // Service extension for backward compatibility
 export const procurementApiService = {

@@ -1,6 +1,9 @@
 // BOQ CRUD module exports
-export { BOQReadOperations } from './read-operations';
-export { BOQWriteOperations } from './write-operations';
+import { BOQReadOperations } from './read-operations';
+import { BOQWriteOperations } from './write-operations';
+
+// Re-export classes
+export { BOQReadOperations, BOQWriteOperations };
 
 // Backward compatibility - Re-export as BOQCrud class
 export class BOQCrud {

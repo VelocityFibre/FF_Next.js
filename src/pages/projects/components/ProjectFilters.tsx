@@ -10,7 +10,8 @@ export function ProjectFilters({
   filter,
   onUpdateFilter,
   onClearFilter,
-  showFilters
+  showFilters,
+  onToggleFilters: _onToggleFilters
 }: ProjectFiltersProps) {
   if (!showFilters) return null;
 

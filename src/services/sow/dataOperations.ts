@@ -8,7 +8,7 @@ import { getTableName } from './schema';
 import { NeonPoleData, NeonDropData, NeonFibreData, SOWOperationResult } from './types';
 import { SOWSummaryService } from './summaryService';
 
-const { sql, query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
+const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
 /**
  * SOW data operations service

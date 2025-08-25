@@ -3,7 +3,7 @@
  * Handles catalog loading and matcher initialization
  */
 
-import { CatalogMatcher, CatalogItem } from '@/lib/utils/catalogMatcher';
+import { CatalogMatcher, CatalogItem } from '../../../../lib/utils/catalogMatcher';
 
 export class BOQImportCatalogManager {
   private catalogMatcher?: CatalogMatcher;
@@ -122,7 +122,7 @@ export class BOQImportCatalogManager {
     return this.catalogItems.filter(item =>
       item.description.toLowerCase().includes(term) ||
       item.code.toLowerCase().includes(term) ||
-      item.keywords.some(keyword => keyword.toLowerCase().includes(term)) ||
+      item.keywords?.some(keyword => keyword.toLowerCase().includes(term)) ||
       item.aliases?.some(alias => alias.toLowerCase().includes(term))
     );
   }

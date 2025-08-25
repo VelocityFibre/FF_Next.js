@@ -5,8 +5,6 @@
  * New code should import from './email' directly
  */
 
-import { RFQ } from '@/types/procurement.types';
-
 // Re-export everything from the modular structure
 export {
   RFQEmailSender as RFQEmailService,

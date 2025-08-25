@@ -1,25 +1,24 @@
 import { Suspense } from 'react';
 import { Loading } from '../../components';
 import {
-  // Quote Evaluation
-  QuoteEvaluationDashboard,
+  QuoteEvaluationPage,
+  PurchaseOrdersPage,
+  SupplierPortalPage,
+  ReportsAnalyticsPage
+} from './placeholderComponents';
+
+// Legacy imports for backward compatibility (only importing what's actually used)
+import {
   QuoteComparison,
   EvaluationMatrix,
   AwardProcess,
   QuoteHistory,
-  
-  // Purchase Orders
-  PurchaseOrderDashboard,
   PurchaseOrderCreate,
   PurchaseOrderEdit,
   PurchaseOrderView,
   PurchaseOrderList,
-  
-  // Supplier Portal
   SupplierPortalDashboard,
   SuppliersPage,
-  
-  // Reporting
   ProcurementReporting,
   ProcurementKPIDashboard,
   CostAnalysis,
@@ -27,30 +26,23 @@ import {
   ComplianceReports
 } from '../../lazyImports';
 
+// New unified tab routes
 export const quoteEvaluationRoutes = {
-  path: 'quote-evaluation',
+  path: 'quotes',
   children: [
     {
       index: true,
       element: (
         <Suspense fallback={<Loading />}>
-          <QuoteEvaluationDashboard />
+          <QuoteEvaluationPage />
         </Suspense>
       ),
     },
     {
-      path: 'comparison',
+      path: 'compare',
       element: (
         <Suspense fallback={<Loading />}>
           <QuoteComparison />
-        </Suspense>
-      ),
-    },
-    {
-      path: 'matrix',
-      element: (
-        <Suspense fallback={<Loading />}>
-          <EvaluationMatrix />
         </Suspense>
       ),
     },
@@ -59,6 +51,14 @@ export const quoteEvaluationRoutes = {
       element: (
         <Suspense fallback={<Loading />}>
           <AwardProcess />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'evaluation/:id',
+      element: (
+        <Suspense fallback={<Loading />}>
+          <EvaluationMatrix />
         </Suspense>
       ),
     },
@@ -74,18 +74,26 @@ export const quoteEvaluationRoutes = {
 };
 
 export const purchaseOrderRoutes = {
-  path: 'purchase-orders',
+  path: 'orders',
   children: [
     {
       index: true,
       element: (
         <Suspense fallback={<Loading />}>
-          <PurchaseOrderDashboard />
+          <PurchaseOrdersPage />
         </Suspense>
       ),
     },
     {
-      path: 'list',
+      path: 'new',
+      element: (
+        <Suspense fallback={<Loading />}>
+          <PurchaseOrderCreate />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'import',
       element: (
         <Suspense fallback={<Loading />}>
           <PurchaseOrderList />
@@ -93,10 +101,10 @@ export const purchaseOrderRoutes = {
       ),
     },
     {
-      path: 'create',
+      path: ':id',
       element: (
         <Suspense fallback={<Loading />}>
-          <PurchaseOrderCreate />
+          <PurchaseOrderView />
         </Suspense>
       ),
     },
@@ -105,14 +113,6 @@ export const purchaseOrderRoutes = {
       element: (
         <Suspense fallback={<Loading />}>
           <PurchaseOrderEdit />
-        </Suspense>
-      ),
-    },
-    {
-      path: ':id/view',
-      element: (
-        <Suspense fallback={<Loading />}>
-          <PurchaseOrderView />
         </Suspense>
       ),
     },
@@ -126,12 +126,28 @@ export const supplierPortalRoutes = {
       index: true,
       element: (
         <Suspense fallback={<Loading />}>
+          <SupplierPortalPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'invite',
+      element: (
+        <Suspense fallback={<Loading />}>
           <SupplierPortalDashboard />
         </Suspense>
       ),
     },
     {
-      path: 'list',
+      path: 'performance',
+      element: (
+        <Suspense fallback={<Loading />}>
+          <SupplierPerformance />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'manage',
       element: (
         <Suspense fallback={<Loading />}>
           <SuppliersPage />
@@ -142,10 +158,18 @@ export const supplierPortalRoutes = {
 };
 
 export const reportingRoutes = {
-  path: 'reporting',
+  path: 'reports',
   children: [
     {
       index: true,
+      element: (
+        <Suspense fallback={<Loading />}>
+          <ReportsAnalyticsPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'generate',
       element: (
         <Suspense fallback={<Loading />}>
           <ProcurementReporting />
@@ -153,7 +177,7 @@ export const reportingRoutes = {
       ),
     },
     {
-      path: 'kpi',
+      path: 'analytics',
       element: (
         <Suspense fallback={<Loading />}>
           <ProcurementKPIDashboard />
@@ -169,10 +193,18 @@ export const reportingRoutes = {
       ),
     },
     {
-      path: 'supplier-performance',
+      path: 'savings',
       element: (
         <Suspense fallback={<Loading />}>
-          <SupplierPerformance />
+          <CostAnalysis />
+        </Suspense>
+      ),
+    },
+    {
+      path: 'activity',
+      element: (
+        <Suspense fallback={<Loading />}>
+          <ProcurementReporting />
         </Suspense>
       ),
     },

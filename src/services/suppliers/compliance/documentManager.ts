@@ -21,7 +21,7 @@ export class DocumentManager {
       const newDocument: SupplierDocument = {
         id: `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         ...document,
-        uploadedAt: new Date(),
+        uploadedDate: new Date(),
         verified: false
       };
 
@@ -111,7 +111,7 @@ export class DocumentManager {
         documentId,
         verifiedBy,
         verifiedAt: new Date(),
-        issues
+        ...(issues && issues.length > 0 && { issues })
       };
 
       console.log(`[DocumentManager] Document verification completed: ${documentId}`);
@@ -143,13 +143,18 @@ export class DocumentManager {
     futureDate.setDate(futureDate.getDate() + daysAhead);
 
     return documents
-      .filter(doc => doc.expiryDate && doc.expiryDate <= futureDate)
-      .map(doc => ({
-        ...doc,
-        daysUntilExpiry: doc.expiryDate 
-          ? Math.ceil((doc.expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-          : 0
-      }))
+      .filter(doc => doc.expiryDate)
+      .map(doc => {
+        const expiryDate = typeof doc.expiryDate === 'string' ? new Date(doc.expiryDate) : doc.expiryDate!;
+        return {
+          ...doc,
+          daysUntilExpiry: Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+        };
+      })
+      .filter(doc => {
+        const expiryDate = typeof doc.expiryDate === 'string' ? new Date(doc.expiryDate) : doc.expiryDate!;
+        return expiryDate <= futureDate;
+      })
       .sort((a, b) => a.daysUntilExpiry - b.daysUntilExpiry);
   }
 
@@ -176,7 +181,7 @@ export class DocumentManager {
   ): number {
     if (requiredTypes.length === 0) return 100;
 
-    const providedTypes = new Set(documents.map(doc => doc.type));
+    const providedTypes = new Set(documents.map(doc => doc.type.toString()));
     const completedRequired = requiredTypes.filter(type => providedTypes.has(type));
     
     return Math.round((completedRequired.length / requiredTypes.length) * 100);

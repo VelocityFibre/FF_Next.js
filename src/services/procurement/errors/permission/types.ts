@@ -8,6 +8,9 @@ export interface PermissionErrorOptions {
   resourceId?: string;
   operation?: string;
   customMessage?: string;
+  userId?: string;
+  projectId?: string;
+  requiredPermission?: string;
 }
 
 export interface ProjectAccessOptions {

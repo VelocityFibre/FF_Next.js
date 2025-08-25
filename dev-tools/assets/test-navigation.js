@@ -112,20 +112,26 @@ async function testRoute(route) {
   });
 }
 
+const log = (...args) => {
+  if (typeof window !== 'undefined' && window.console) {
+    window.console.log(...args);
+  }
+};
+
 async function runTests() {
-  console.log('Starting navigation tests...');
-  console.log('Total routes to test:', routes.length);
+  log('Starting navigation tests...');
+  log('Total routes to test:', routes.length);
   
   for (let i = 0; i < routes.length; i++) {
     const route = routes[i];
-    console.log(`Testing ${i + 1}/${routes.length}: ${route.label} (${route.path})`);
+    log(`Testing ${i + 1}/${routes.length}: ${route.label} (${route.path})`);
     
     const result = await testRoute(route);
     testResults.push(result);
     
-    console.log(`Result: ${result.status}`);
+    log(`Result: ${result.status}`);
     if (result.error) {
-      console.error(`Error: ${result.error}`);
+      log(`Error: ${result.error}`);
     }
     
     // Wait a bit between tests
@@ -133,7 +139,7 @@ async function runTests() {
   }
   
   // Generate report
-  console.log('\n=== TEST RESULTS SUMMARY ===\n');
+  log('\n=== TEST RESULTS SUMMARY ===\n');
   
   const bySection = {};
   testResults.forEach(result => {
@@ -144,7 +150,7 @@ async function runTests() {
   });
   
   Object.keys(bySection).forEach(section => {
-    console.log(`\n${section}:`);
+    log(`\n${section}:`);
     bySection[section].forEach(result => {
       const status = result.status === 'SUCCESS' ? '✅' : 
                      result.status === 'ERROR' ? '❌' :
@@ -152,9 +158,9 @@ async function runTests() {
                      result.status === 'EMPTY' ? '⚠️' :
                      result.status === 'NOT_FOUND' ? '🔍' :
                      '❓';
-      console.log(`  ${status} ${result.label}: ${result.status}`);
+      log(`  ${status} ${result.label}: ${result.status}`);
       if (result.error) {
-        console.log(`     Error: ${result.error}`);
+        log(`     Error: ${result.error}`);
       }
     });
   });
@@ -164,17 +170,22 @@ async function runTests() {
   const errorCount = testResults.filter(r => r.status === 'ERROR' || r.status === 'CRASH').length;
   const emptyCount = testResults.filter(r => r.status === 'EMPTY').length;
   
-  console.log('\n=== STATISTICS ===');
-  console.log(`Total Routes: ${routes.length}`);
-  console.log(`✅ Success: ${successCount}`);
-  console.log(`❌ Errors: ${errorCount}`);
-  console.log(`⚠️ Empty: ${emptyCount}`);
-  console.log(`Success Rate: ${((successCount / routes.length) * 100).toFixed(1)}%`);
+  log('\n=== STATISTICS ===');
+  log(`Total Routes: ${routes.length}`);
+  log(`✅ Success: ${successCount}`);
+  log(`❌ Errors: ${errorCount}`);
+  log(`⚠️ Empty: ${emptyCount}`);
+  log(`Success Rate: ${((successCount / routes.length) * 100).toFixed(1)}%`);
   
   return testResults;
 }
 
 // Instructions
-console.log('Navigation Test Script Loaded');
-console.log('To run tests: runTests()');
-console.log('Make sure you are logged in first!');
+log('Navigation Test Script Loaded');
+log('To run tests: runTests()');
+log('Make sure you are logged in first!');
+
+// Export for use
+if (typeof window !== 'undefined') {
+  window.runNavigationTests = runTests;
+}

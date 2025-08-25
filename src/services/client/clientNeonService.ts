@@ -3,7 +3,7 @@
  * Delegates to specific modules for cleaner separation of concerns
  */
 
-import { ClientFormData } from '@/types/client.types';
+// ClientFormData type available in client.types.ts if needed
 import { 
   getAllClients, 
   getClientById, 

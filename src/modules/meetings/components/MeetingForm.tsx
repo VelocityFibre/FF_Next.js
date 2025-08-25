@@ -39,7 +39,11 @@ export function MeetingForm({ meeting, isOpen, onClose, onSave }: MeetingFormPro
     addParticipant,
     removeParticipant,
     updateParticipant,
-  } = useMeetingForm({ meeting, onSave, onClose });
+  } = useMeetingForm({ 
+    ...(meeting && { meeting }), 
+    onSave, 
+    onClose 
+  });
 
   if (!isOpen) return null;
 

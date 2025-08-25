@@ -107,13 +107,13 @@ export function PoleTrackerDashboard() {
         actions={[
           {
             label: 'Add New Pole',
-            icon: Plus,
+            icon: Plus as React.ComponentType<{ className?: string; }>,
             onClick: () => navigate('/app/pole-tracker/new'),
             variant: 'primary'
           },
           {
             label: 'Import Poles',
-            icon: Upload,
+            icon: Upload as React.ComponentType<{ className?: string; }>,
             onClick: () => navigate('/app/pole-tracker/import'),
             variant: 'secondary'
           }

@@ -3,34 +3,29 @@
  * Main import processing logic and workflow orchestration
  */
 
-import { parseFile, validateFile } from '@/lib/utils/excelParser';
-import { ProcurementContext } from '@/types/procurement/base.types';
+import { parseFile, validateFile } from '../../../../lib/utils/excelParser';
+import { ProcurementContext } from '../../../../types/procurement/base.types';
 import { 
   ImportJob,
   ImportConfig, 
   ProgressCallback,
-  IImportProcessor,
-  SaveResult
+  IImportProcessor
 } from './types';
 import { BOQImportJobManager } from './jobManager';
-import { BOQImportCatalogManager } from './catalogManager';
 import { BOQImportDataProcessor } from './dataProcessor';
 import { BOQImportDatabaseSaver } from './databaseSaver';
 
 export class BOQImportProcessor implements IImportProcessor {
   private jobManager: BOQImportJobManager;
-  private catalogManager: BOQImportCatalogManager;
   private dataProcessor: BOQImportDataProcessor;
   private databaseSaver: BOQImportDatabaseSaver;
 
   constructor(
     jobManager: BOQImportJobManager,
-    catalogManager: BOQImportCatalogManager,
     dataProcessor: BOQImportDataProcessor,
     databaseSaver: BOQImportDatabaseSaver
   ) {
     this.jobManager = jobManager;
-    this.catalogManager = catalogManager;
     this.dataProcessor = dataProcessor;
     this.databaseSaver = databaseSaver;
   }

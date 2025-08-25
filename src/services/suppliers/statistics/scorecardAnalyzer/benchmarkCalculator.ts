@@ -3,7 +3,7 @@
  * Handles percentile calculations and benchmarking against peers
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { 
   SupplierBenchmarks,
   PercentileCalculation,

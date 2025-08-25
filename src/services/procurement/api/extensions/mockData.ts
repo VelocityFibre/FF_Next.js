@@ -9,6 +9,7 @@ export const mockBOQs: BOQ[] = [
   {
     id: 'boq-1',
     projectId: 'project-1',
+    name: 'Main Building Infrastructure',
     version: 'v1.3',
     title: 'Main Building Infrastructure',
     description: 'Complete BOQ for main building electrical and fiber infrastructure',
@@ -33,6 +34,7 @@ export const mockBOQs: BOQ[] = [
   {
     id: 'boq-2',
     projectId: 'project-1',
+    name: 'Outdoor Infrastructure',
     version: 'v2.1',
     title: 'Outdoor Infrastructure',
     description: 'BOQ for outdoor cabling and equipment installation',

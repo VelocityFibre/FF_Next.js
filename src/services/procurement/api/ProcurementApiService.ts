@@ -29,7 +29,7 @@ export class ProcurementApiService extends BaseService {
     // Initialize operation handlers
     this.boqOps = new BOQOperations(this);
     this.rfqOps = new RFQOperations(this);
-    this.stockOps = new StockOperations(this);
+    this.stockOps = new StockOperations();
   }
 
   // ==============================================

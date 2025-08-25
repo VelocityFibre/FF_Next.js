@@ -85,7 +85,7 @@ export class RFQStateError extends RFQError {
   public readonly currentState: string;
   public readonly requestedOperation: string;
   public readonly allowedOperations: string[];
-  public readonly stateTransitions?: Record<string, string[]>;
+  public readonly stateTransitions?: Record<string, string[]> | undefined;
 
   constructor(
     currentState: string,
@@ -100,7 +100,7 @@ export class RFQStateError extends RFQError {
     this.currentState = currentState;
     this.requestedOperation = requestedOperation;
     this.allowedOperations = allowedOperations;
-    this.stateTransitions = stateTransitions;
+    this.stateTransitions = stateTransitions || undefined;
     Object.setPrototypeOf(this, RFQStateError.prototype);
   }
 
@@ -203,23 +203,23 @@ export class RFQDeadlineError extends RFQError {
 export class RFQSupplierError extends RFQError {
   public readonly supplierIds: string[];
   public readonly issueType: 'not_invited' | 'no_suppliers' | 'supplier_declined' | 'invalid_supplier';
-  public readonly availableSuppliers?: Array<{
+  public readonly availableSuppliers: Array<{
     id: string;
     name: string;
     category: string;
     rating?: number;
-  }>;
+  }> | undefined;
 
   constructor(
     message: string,
     supplierIds: string[],
     issueType: 'not_invited' | 'no_suppliers' | 'supplier_declined' | 'invalid_supplier',
-    availableSuppliers?: Array<{
+    availableSuppliers: Array<{
       id: string;
       name: string;
       category: string;
       rating?: number;
-    }>,
+    }> | undefined,
     context?: Record<string, any>
   ) {
     const code = issueType === 'no_suppliers' ? 'RFQ_NO_SUPPLIERS' : 'RFQ_SUPPLIER_ERROR';
@@ -261,11 +261,14 @@ export class RFQSupplierError extends RFQError {
     
     return this.availableSuppliers.reduce((acc, supplier) => {
       if (!acc[supplier.category]) acc[supplier.category] = [];
-      acc[supplier.category].push({
+      const supplierItem: { id: string; name: string; rating?: number } = {
         id: supplier.id,
-        name: supplier.name,
-        rating: supplier.rating
-      });
+        name: supplier.name
+      };
+      if (supplier.rating !== undefined) {
+        supplierItem.rating = supplier.rating;
+      }
+      acc[supplier.category].push(supplierItem);
       return acc;
     }, {} as Record<string, Array<{ id: string; name: string; rating?: number }>>);
   }

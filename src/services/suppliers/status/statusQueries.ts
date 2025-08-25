@@ -95,7 +95,9 @@ export class StatusQueries {
         [SupplierStatus.PENDING]: 0,
         [SupplierStatus.ACTIVE]: 0,
         [SupplierStatus.INACTIVE]: 0,
-        [SupplierStatus.BLACKLISTED]: 0
+        [SupplierStatus.SUSPENDED]: 0,
+        [SupplierStatus.BLACKLISTED]: 0,
+        [SupplierStatus.ARCHIVED]: 0
       };
 
       // Get counts for each status
@@ -150,7 +152,7 @@ export class StatusQueries {
     isActive?: boolean;
   }): Promise<Supplier[]> {
     try {
-      let q = collection(db, COLLECTION_NAME);
+      const collectionRef = collection(db, COLLECTION_NAME);
       const constraints = [];
 
       if (conditions.status) {
@@ -165,10 +167,7 @@ export class StatusQueries {
         constraints.push(where('isActive', '==', conditions.isActive));
       }
 
-      if (constraints.length > 0) {
-        q = query(q, ...constraints);
-      }
-
+      const q = constraints.length > 0 ? query(collectionRef, ...constraints) : collectionRef;
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => ({
         id: doc.id,

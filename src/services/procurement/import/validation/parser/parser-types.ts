@@ -33,7 +33,7 @@ export interface DataFormat {
 }
 
 export interface ParseResult<T = any> {
-  value?: T;
+  value: T | undefined;
   success: boolean;
   errors: ImportError[];
   warnings: ImportWarning[];
@@ -57,8 +57,8 @@ export interface DataSchema {
 export interface ValidationContext {
   row: number;
   field: string;
-  schema?: SchemaField;
-  strict?: boolean;
+  schema: SchemaField | undefined;
+  strict: boolean | undefined;
 }
 
 export type DataType = 'string' | 'number' | 'date' | 'boolean' | 'email' | 'phone' | 'unknown';

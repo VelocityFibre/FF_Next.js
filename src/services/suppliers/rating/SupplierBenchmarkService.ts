@@ -13,7 +13,6 @@ export * from './benchmark';
 import { BenchmarkCalculator } from './benchmark/benchmark-calculator';
 import { ComparisonEngine } from './benchmark/comparison-engine';
 import { BenchmarkReports } from './benchmark/benchmark-reports';
-import { SupplierCrudService } from '../supplier.crud';
 
 /**
  * Legacy SupplierBenchmarkService class for backward compatibility
@@ -98,18 +97,7 @@ export class SupplierBenchmarkService {
     return ComparisonEngine.getCategoryRankings(supplierId, categories);
   }
 
-  /**
-   * Get all suppliers in a specific category
-   * @deprecated This method is now private in ComparisonEngine
-   */
-  private static async getSuppliersInCategory(category: string) {
-    const allSuppliers = await SupplierCrudService.getAll();
-    return allSuppliers.filter(supplier => 
-      supplier.status === 'active' && 
-      supplier.categories?.includes(category) &&
-      supplier.performance
-    );
-  }
+  // Method removed - functionality moved to ComparisonEngine
 
   /**
    * Get benchmark trends over time

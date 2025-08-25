@@ -3,7 +3,7 @@
  * Analyze supplier performance and distribution by category
  */
 
-import { Supplier, SupplierStatus } from '@/types/supplier.types';
+import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { CategoryAnalytics } from './types';
 
 export class CategoryAnalyticsService {
@@ -46,7 +46,7 @@ export class CategoryAnalyticsService {
       const activeSuppliers = suppliers.filter(s => s.status === SupplierStatus.ACTIVE);
 
       const categorySuppliers = activeSuppliers.filter(s => 
-        s.categories?.includes(category)
+        s.categories?.some(cat => cat.toString() === category.toString())
       );
 
       if (categorySuppliers.length === 0) {
@@ -142,7 +142,7 @@ export class CategoryAnalyticsService {
    */
   private static generateCategoryAnalytics(category: string, allSuppliers: Supplier[]): CategoryAnalytics {
     const categorySuppliers = allSuppliers.filter(s => 
-      s.categories?.includes(category)
+      s.categories?.some(cat => cat.toString() === category.toString())
     );
 
     const activeSuppliers = categorySuppliers.filter(s => 
@@ -204,13 +204,13 @@ export class CategoryAnalyticsService {
       const monthEnd = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
       
       const categorySuppliers = suppliers.filter(s => 
-        s.categories?.includes(category) && 
+        s.categories?.some(cat => cat.toString() === category.toString()) && 
         s.createdAt && 
         new Date(s.createdAt) <= monthEnd
       );
 
       const newSuppliers = suppliers.filter(s => {
-        if (!s.categories?.includes(category) || !s.createdAt) return false;
+        if (!s.categories?.some(cat => cat.toString() === category.toString()) || !s.createdAt) return false;
         const createdDate = new Date(s.createdAt);
         return createdDate.getFullYear() === targetDate.getFullYear() &&
                createdDate.getMonth() === targetDate.getMonth();
@@ -281,7 +281,7 @@ export class CategoryAnalyticsService {
       const suppliers = await supplierCrudService.SupplierCrudService.getAll();
       
       const categoryStats = this.getAllCategories(suppliers).map(category => {
-        const categorySuppliers = suppliers.filter(s => s.categories?.includes(category));
+        const categorySuppliers = suppliers.filter(s => s.categories?.some(cat => cat.toString() === category.toString()));
         return {
           category,
           count: categorySuppliers.length,

@@ -3,7 +3,7 @@
  * Generate search suggestions and facets
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 import { SearchSuggestionContext, SearchFacets } from './types';
 import { SupplierQueryBuilder } from './queryBuilder';
 import { SupplierScoringService } from './scoring';

@@ -15,7 +15,6 @@ import {
   query,
   where,
   orderBy,
-  limit,
   Timestamp
 } from 'firebase/firestore';
 
@@ -53,6 +52,7 @@ export interface ProjectFormData {
   budget?: number;
   teamMembers?: string[];
   tags?: string[];
+  metadata?: Record<string, any>;
 }
 
 export interface ProjectFilter {

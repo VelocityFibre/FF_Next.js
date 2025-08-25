@@ -92,12 +92,80 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
     target: 'esnext',
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          query: ['@tanstack/react-query'],
+        manualChunks: (id) => {
+          // Core React dependencies
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor';
+          }
+          
+          // Router and navigation
+          if (id.includes('node_modules/react-router-dom')) {
+            return 'router';
+          }
+          
+          // State management and data fetching
+          if (id.includes('node_modules/@tanstack/react-query') || id.includes('node_modules/zustand')) {
+            return 'query';
+          }
+          
+          // Excel processing library (large dependency)
+          if (id.includes('node_modules/xlsx') || id.includes('node_modules/papaparse')) {
+            return 'xlsx';
+          }
+          
+          // UI libraries
+          if (id.includes('node_modules/@mui') || id.includes('node_modules/@emotion') || id.includes('node_modules/framer-motion')) {
+            return 'ui-libs';
+          }
+          
+          // Charts and analytics
+          if (id.includes('node_modules/recharts')) {
+            return 'charts';
+          }
+          
+          // Firebase
+          if (id.includes('node_modules/firebase')) {
+            return 'firebase';
+          }
+          
+          // Database and ORM
+          if (id.includes('node_modules/drizzle-orm') || id.includes('node_modules/@neondatabase')) {
+            return 'database';
+          }
+          
+          // Icons
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons';
+          }
+          
+          // Module-specific chunks for large modules
+          if (id.includes('src/modules/analytics')) {
+            return 'analytics-module';
+          }
+          
+          if (id.includes('src/modules/suppliers')) {
+            return 'suppliers-module';
+          }
+          
+          if (id.includes('src/modules/procurement')) {
+            return 'procurement-module';
+          }
+          
+          if (id.includes('src/modules/projects')) {
+            return 'projects-module';
+          }
+          
+          if (id.includes('src/modules/contractors')) {
+            return 'contractors-module';
+          }
+          
+          // Services
+          if (id.includes('src/services')) {
+            return 'services';
+          }
         },
       },
     },

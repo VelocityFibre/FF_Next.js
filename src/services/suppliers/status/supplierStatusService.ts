@@ -6,7 +6,6 @@
 import { 
   SupplierStatus,
   Supplier,
-  StatusUpdateData,
   BatchOperationResult,
   PreferenceUpdateResult,
   StatusSummary,
@@ -32,7 +31,10 @@ export class SupplierStatusService {
     reason?: string,
     userId?: string
   ): Promise<void> {
-    return StatusCore.updateStatus(id, { status, reason, userId });
+    const updateData: { status: SupplierStatus; reason?: string; userId?: string } = { status };
+    if (reason !== undefined) updateData.reason = reason;
+    if (userId !== undefined) updateData.userId = userId;
+    return StatusCore.updateStatus(id, updateData);
   }
 
   static async setPreferred(

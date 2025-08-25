@@ -5,7 +5,7 @@
 /**
  * Safely capitalize first letter of a string
  */
-export function safeCapitalize(str: any): string {
+export function safeCapitalize(str: unknown): string {
   if (!str || typeof str !== 'string') return ''
   if (str.length === 0) return ''
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
@@ -14,7 +14,7 @@ export function safeCapitalize(str: any): string {
 /**
  * Safely get first character and capitalize
  */
-export function safeFirstChar(str: any, fallback: string = ''): string {
+export function safeFirstChar(str: unknown, fallback: string = ''): string {
   if (!str || typeof str !== 'string' || str.length === 0) return fallback
   return str.charAt(0).toUpperCase()
 }
@@ -22,7 +22,7 @@ export function safeFirstChar(str: any, fallback: string = ''): string {
 /**
  * Safely format status/enum strings
  */
-export function safeFormatEnum(value: any, fallback: string = 'Unknown'): string {
+export function safeFormatEnum(value: unknown, fallback: string = 'Unknown'): string {
   if (!value || typeof value !== 'string') return fallback
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase().replace(/_/g, ' ')
 }
@@ -30,15 +30,15 @@ export function safeFormatEnum(value: any, fallback: string = 'Unknown'): string
 /**
  * Safely get property from object
  */
-export function safeGet<T>(obj: any, path: string, fallback: T): T {
-  if (!obj) return fallback
+export function safeGet<T>(obj: Record<string, unknown> | null | undefined, path: string, fallback: T): T {
+  if (!obj || typeof obj !== 'object') return fallback
   
   const keys = path.split('.')
-  let result = obj
+  let result: unknown = obj
   
   for (const key of keys) {
-    if (result?.[key] !== undefined) {
-      result = result[key]
+    if (result && typeof result === 'object' && result !== null && key in result) {
+      result = (result as Record<string, unknown>)[key]
     } else {
       return fallback
     }
@@ -50,7 +50,7 @@ export function safeGet<T>(obj: any, path: string, fallback: T): T {
 /**
  * Safely get array element
  */
-export function safeArrayAccess<T>(arr: any, index: number, fallback: T): T {
+export function safeArrayAccess<T>(arr: unknown, index: number, fallback: T): T {
   if (!Array.isArray(arr) || index < 0 || index >= arr.length) {
     return fallback
   }
@@ -72,7 +72,7 @@ export function safeJsonParse<T>(json: string, fallback: T): T {
 /**
  * Safely stringify JSON
  */
-export function safeJsonStringify(obj: any, fallback: string = '{}'): string {
+export function safeJsonStringify(obj: unknown, fallback: string = '{}'): string {
   try {
     return JSON.stringify(obj)
   } catch {
@@ -83,7 +83,7 @@ export function safeJsonStringify(obj: any, fallback: string = '{}'): string {
 /**
  * Safely convert to number
  */
-export function safeNumber(value: any, fallback: number = 0): number {
+export function safeNumber(value: unknown, fallback: number = 0): number {
   const num = Number(value)
   return isNaN(num) ? fallback : num
 }
@@ -91,7 +91,7 @@ export function safeNumber(value: any, fallback: number = 0): number {
 /**
  * Safely convert to boolean
  */
-export function safeBoolean(value: any, fallback: boolean = false): boolean {
+export function safeBoolean(value: unknown, fallback: boolean = false): boolean {
   if (value === true || value === false) return value
   if (value === 'true') return true
   if (value === 'false') return false
@@ -101,7 +101,7 @@ export function safeBoolean(value: any, fallback: boolean = false): boolean {
 /**
  * Safely get length of array/string
  */
-export function safeLength(value: any, fallback: number = 0): number {
+export function safeLength(value: unknown, fallback: number = 0): number {
   if (!value) return fallback
   if (typeof value === 'string' || Array.isArray(value)) {
     return value.length
@@ -115,7 +115,7 @@ export function safeLength(value: any, fallback: number = 0): number {
 /**
  * Safely slice string or array
  */
-export function safeSlice<T extends string | any[]>(
+export function safeSlice<T extends string | unknown[]>(
   value: T | null | undefined,
   start: number,
   end?: number
@@ -132,7 +132,7 @@ export function safeSlice<T extends string | any[]>(
 /**
  * Safely split string
  */
-export function safeSplit(str: any, separator: string | RegExp, limit?: number): string[] {
+export function safeSplit(str: unknown, separator: string | RegExp, limit?: number): string[] {
   if (!str || typeof str !== 'string') return []
   try {
     return str.split(separator, limit)
@@ -144,7 +144,7 @@ export function safeSplit(str: any, separator: string | RegExp, limit?: number):
 /**
  * Safely trim string
  */
-export function safeTrim(str: any, fallback: string = ''): string {
+export function safeTrim(str: unknown, fallback: string = ''): string {
   if (!str || typeof str !== 'string') return fallback
   return str.trim()
 }
@@ -152,7 +152,7 @@ export function safeTrim(str: any, fallback: string = ''): string {
 /**
  * Safely get user initials
  */
-export function safeGetInitials(name: any, fallback: string = '?'): string {
+export function safeGetInitials(name: unknown, fallback: string = '?'): string {
   if (!name || typeof name !== 'string') return fallback
   
   const parts = name.trim().split(/\s+/)
@@ -168,7 +168,7 @@ export function safeGetInitials(name: any, fallback: string = '?'): string {
 /**
  * Safely format currency
  */
-export function safeFormatCurrency(amount: any, fallback: string = '$0.00'): string {
+export function safeFormatCurrency(amount: unknown, fallback: string = '$0.00'): string {
   const num = safeNumber(amount, 0)
   try {
     return new Intl.NumberFormat('en-US', {
@@ -183,7 +183,7 @@ export function safeFormatCurrency(amount: any, fallback: string = '$0.00'): str
 /**
  * Safely format percentage
  */
-export function safeFormatPercent(value: any, decimals: number = 0, fallback: string = '0%'): string {
+export function safeFormatPercent(value: unknown, decimals: number = 0, fallback: string = '0%'): string {
   const num = safeNumber(value, 0)
   try {
     return `${num.toFixed(decimals)}%`

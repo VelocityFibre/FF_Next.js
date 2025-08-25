@@ -3,9 +3,9 @@
  * Type definitions and interfaces for BOQ import processing
  */
 
-import { ProcurementContext } from '@/types/procurement/base.types';
-import { ParsedBOQItem } from '@/lib/utils/excelParser';
-import { MatchResult, MappingException } from '@/lib/utils/catalogMatcher';
+import { ProcurementContext } from '../../../../types/procurement/base.types';
+import { ParsedBOQItem } from '../../../../lib/utils/excelParser';
+import { MatchResult, MappingException } from '../../../../lib/utils/catalogMatcher';
 
 /**
  * Import job status

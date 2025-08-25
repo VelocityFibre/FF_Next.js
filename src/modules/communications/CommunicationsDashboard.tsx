@@ -25,13 +25,13 @@ const CommunicationsDashboard: React.FC = () => {
         actions={[
           {
             label: 'Schedule Meeting',
-            icon: Calendar,
+            icon: Calendar as React.ComponentType<{ className?: string; }>,
             onClick: () => {},
             variant: 'primary'
           },
           {
             label: 'Add Action Item',
-            icon: Plus,
+            icon: Plus as React.ComponentType<{ className?: string; }>,
             onClick: () => {},
             variant: 'secondary'
           }

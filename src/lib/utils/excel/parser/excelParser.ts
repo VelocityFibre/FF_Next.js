@@ -111,13 +111,14 @@ export class ExcelParser {
         return this.parseExcel(file, onProgress);
       case 'csv':
         return this.parseCSV(file, onProgress);
-      default:
+      default: {
         const startTime = Date.now();
         return ResultBuilder.buildErrorResult(
           'Unsupported file format. Please use .xlsx or .csv files',
           file,
           startTime
         );
+      }
     }
   }
 

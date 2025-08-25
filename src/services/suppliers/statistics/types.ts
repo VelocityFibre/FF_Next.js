@@ -2,7 +2,7 @@
  * Supplier Statistics Types and Interfaces
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 
 /**
  * Overall supplier statistics
@@ -94,6 +94,7 @@ export interface PerformanceBenchmarks {
     stable: number;
     declining: number;
   };
+  lastUpdated?: Date;
 }
 
 /**

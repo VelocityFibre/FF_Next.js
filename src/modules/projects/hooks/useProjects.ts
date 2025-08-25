@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { projectService } from '../services/projectService';
+import { projectService } from '../services/projectService/index';
 import { 
   Project, 
   CreateProjectRequest, 

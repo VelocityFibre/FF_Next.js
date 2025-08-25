@@ -115,7 +115,7 @@ export class RecoveryHandler {
     };
   }
 
-  private static async executeAlternativeItem(option: RecoveryOption): Promise<any> {
+  private static async executeAlternativeItem(_option: RecoveryOption): Promise<any> {
     // Mock implementation - would query alternative items
     return {
       success: true,
@@ -142,7 +142,7 @@ export class RecoveryHandler {
     };
   }
 
-  private static async executeReleaseReservations(option: RecoveryOption): Promise<any> {
+  private static async executeReleaseReservations(_option: RecoveryOption): Promise<any> {
     // Mock implementation - would release expired reservations
     return {
       success: true,
@@ -154,7 +154,7 @@ export class RecoveryHandler {
     };
   }
 
-  private static async executeQueueReservation(option: RecoveryOption): Promise<any> {
+  private static async executeQueueReservation(_option: RecoveryOption): Promise<any> {
     // Mock implementation - would add to queue
     return {
       success: true,
@@ -166,7 +166,7 @@ export class RecoveryHandler {
     };
   }
 
-  private static async executeRetryWithValidation(option: RecoveryOption): Promise<any> {
+  private static async executeRetryWithValidation(_option: RecoveryOption): Promise<any> {
     // Mock implementation - would retry with enhanced validation
     return {
       success: true,

@@ -3,7 +3,7 @@
  * Type definitions for BOQ utility functions
  */
 
-import { BOQItem, BOQStatus, BOQItemMappingStatusType, ProcurementStatusType } from '@/types/procurement/boq.types';
+// Types are defined locally to avoid circular dependencies
 
 export interface StatusDisplayInfo {
   label: string;

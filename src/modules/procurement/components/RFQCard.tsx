@@ -24,7 +24,7 @@ export function RFQCard({ rfq }: RFQCardProps) {
         return <Award className="h-4 w-4 text-purple-500" />;
       case RFQStatus.CANCELLED:
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case RFQStatus.CANCELLED:
+      case RFQStatus.EVALUATED:
         return <Clock className="h-4 w-4 text-gray-500" />;
       default:
         return <Clock className="h-4 w-4 text-yellow-500" />;
@@ -39,16 +39,12 @@ export function RFQCard({ rfq }: RFQCardProps) {
         return 'bg-blue-100 text-blue-800';
       case RFQStatus.RESPONSES_RECEIVED:
         return 'bg-yellow-100 text-yellow-800';
-      case RFQStatus.RESPONSES_RECEIVED:
-        return 'bg-green-100 text-green-800';
       case RFQStatus.EVALUATED:
         return 'bg-indigo-100 text-indigo-800';
       case RFQStatus.AWARDED:
         return 'bg-purple-100 text-purple-800';
       case RFQStatus.CANCELLED:
         return 'bg-red-100 text-red-800';
-      case RFQStatus.CANCELLED:
-        return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }

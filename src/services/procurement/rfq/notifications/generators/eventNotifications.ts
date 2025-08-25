@@ -79,7 +79,7 @@ export class RFQEventNotificationGenerator extends BaseRFQGenerator {
   }
 
   private static generatePublishedNotification(rfq: RFQ, additionalData?: any): NotificationContent {
-    const supplierCount = additionalData?.supplierCount || rfq.supplierIds?.length || 0;
+    const supplierCount = additionalData?.supplierCount || rfq.invitedSuppliers?.length || 0;
     
     return {
       title: 'RFQ Published',
@@ -179,7 +179,7 @@ export class RFQEventNotificationGenerator extends BaseRFQGenerator {
   }
 
   private static generateDeadlineExtendedNotification(rfq: RFQ, additionalData?: any): NotificationContent {
-    const newDeadline = additionalData?.newDeadline || rfq.responseDeadline?.toDate();
+    const newDeadline = additionalData?.newDeadline || rfq.responseDeadline;
     const deadlineText = newDeadline ? this.formatDeadline(newDeadline) : 'a new date';
     
     return {

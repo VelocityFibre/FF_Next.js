@@ -81,13 +81,38 @@
       "Bash(npx eslint:*)",
       "Bash(npx eslint:*)",
       "WebFetch(domain:localhost)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(for:*)",
+      "Bash(npm test:*)",
+      "Bash(\"C:\\Jarvis\\AI Workspace\\ForgeFlow v2\\start-forgeflow.bat\")",
+      "Bash(npm start)",
+      "Bash(npm audit:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh label create:*)",
+      "Bash(cd:*)",
+      "Bash(npm run:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(pkill:*)",
+      "Bash(dir:*)",
+      "Bash(timeout:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue update:*)",
+      "Bash(gh issue edit:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue list:*)",
+      "Bash(/dev/null)",
+      "Bash(echo:*)",
+      "Bash(gh issue close:*)",
+      "Bash(touch:*)"
     ],
     "deny": [],
     "ask": [],
     "additionalDirectories": [
       "C:\\Jarvis\\AI Workspace",
-      "C:\\tmp"
+      "C:\\tmp",
+      "C:\\c\\Jarvis\\AI Workspace"
     ]
   }
 }

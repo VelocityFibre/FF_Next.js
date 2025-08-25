@@ -18,7 +18,7 @@ export class ContextualNotificationGenerator extends BaseRFQGenerator {
   ): NotificationContent {
     const isSupplierUser = userRole === 'supplier';
     const userSupplierInvited = context?.userSupplier && 
-      rfq.supplierIds?.includes(context.userSupplier);
+      rfq.invitedSuppliers?.includes(context.userSupplier);
 
     if (isSupplierUser && userSupplierInvited) {
       return this.generateSupplierNotification(rfq, context);
@@ -73,7 +73,7 @@ export class ContextualNotificationGenerator extends BaseRFQGenerator {
 
     // Check if already responded
     const hasResponded = context?.userSupplier && 
-      rfq.responses?.some(r => r.supplierId === context.userSupplier);
+      rfq.respondedSuppliers?.includes(context.userSupplier);
 
     if (hasResponded) {
       return {
@@ -139,8 +139,9 @@ export class ContextualNotificationGenerator extends BaseRFQGenerator {
       case 'draft':
         return this.generateDraftNotification(rfq, userRole);
         
-      case 'published':
-      case 'open':
+      case 'issued':
+      case 'responses_received':
+      case 'evaluated':
         return this.generateActiveNotification(rfq, userRole);
         
       case 'closed':
@@ -239,8 +240,8 @@ export class ContextualNotificationGenerator extends BaseRFQGenerator {
   }
 
   private static generateActiveNotification(rfq: RFQ, userRole: UserRole): NotificationContent {
-    const responseCount = rfq.responses?.length || 0;
-    const totalSuppliers = rfq.supplierIds?.length || 0;
+    const responseCount = rfq.respondedSuppliers?.length || 0;
+    const totalSuppliers = rfq.invitedSuppliers?.length || 0;
     
     return {
       title: 'Active RFQ',

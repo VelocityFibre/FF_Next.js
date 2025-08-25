@@ -3,7 +3,7 @@
  * Type definitions for contractor onboarding system
  */
 
-export {
+export type {
   OnboardingProgress,
   StageUpdateRequest,
   ApprovalRequest,

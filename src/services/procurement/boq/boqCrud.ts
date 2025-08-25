@@ -93,7 +93,15 @@ export class BOQCrud {
     try {
       const boq = {
         ...data,
+        name: data.title || 'Untitled BOQ',
         status: 'draft' as BOQStatusType,
+        uploadedBy: 'current-user', // TODO: Get from auth context
+        itemCount: 0,
+        mappedItems: 0,
+        unmappedItems: 0,
+        exceptionsCount: 0,
+        totalEstimatedValue: 0,
+        currency: data.currency || 'ZAR',
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
         uploadedAt: Timestamp.now()
@@ -150,7 +158,7 @@ export class BOQCrud {
       
       if (status === 'approved') {
         updateData.approvedAt = Timestamp.now();
-      } else if (status === 'rejected') {
+      } else if (status === 'archived') {
         updateData.rejectedAt = Timestamp.now();
       }
       

@@ -4,7 +4,7 @@
  */
 
 // Export types
-export type * from "./types";
+export type * from "./importTypes";
 
 // Export specialized modules
 export { ProgressTracker } from "./progressTracker";
@@ -22,3 +22,6 @@ export {
   type ImportStats,
   type ImportConfig
 } from "./boqImportService";
+
+// Note: Helper functions removed - use direct imports of ExcelImportEngine from './core' instead
+// This ensures proper ES module compatibility and TypeScript support

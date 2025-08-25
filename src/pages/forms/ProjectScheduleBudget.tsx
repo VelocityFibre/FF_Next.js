@@ -3,12 +3,12 @@
  */
 
 import { ProjectFormData } from '@/types/project.types';
-import { StaffMember } from '@/types/staff.types';
+import { StaffDropdownOption } from '@/types/staff.types';
 
 interface ProjectScheduleBudgetProps {
   formData: ProjectFormData;
   onInputChange: (field: keyof ProjectFormData, value: any) => void;
-  managers: StaffMember[];
+  managers: StaffDropdownOption[];
   isManagersLoading: boolean;
 }
 

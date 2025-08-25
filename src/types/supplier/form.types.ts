@@ -12,7 +12,7 @@ import {
 } from './base.types';
 import { ProductCategory } from './product.types';
 
-export interface SupplierFormData {
+export interface SupplierFormInput {
   name: string;
   tradingName?: string;
   registrationNumber?: string;
@@ -43,7 +43,7 @@ export interface SupplierQuickAdd {
 }
 
 export interface SupplierImportData {
-  suppliers: Partial<SupplierFormData>[];
+  suppliers: Partial<SupplierFormInput>[];
   mapping?: {
     [key: string]: string; // CSV column to field mapping
   };

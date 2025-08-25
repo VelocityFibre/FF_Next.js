@@ -72,15 +72,14 @@ export class ProcurementErrorAggregator implements IErrorAggregator {
   getMostCommonErrors(
     errors: BatchErrorItem[], 
     limit: number = 5
-  ): Array<{ type: string; count: number; percentage: number; severity: string }> {
+  ): Array<{ code: string; message: string; count: number; }> {
     const aggregation = this.aggregateErrors(errors);
     
     return Object.entries(aggregation.errorSummary.byType)
-      .map(([type, count]) => ({
-        type,
-        count,
-        percentage: Math.round((count / aggregation.errorSummary.total) * 100),
-        severity: getErrorSeverity(type)
+      .map(([code, count]) => ({
+        code,
+        message: `Common error type: ${code}`,
+        count
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, limit);
@@ -124,14 +123,14 @@ export class ProcurementErrorAggregator implements IErrorAggregator {
    */
   createErrorReport(errors: BatchErrorItem[]): {
     summary: ErrorAggregationResult['errorSummary'];
-    mostCommon: ReturnType<typeof this.getMostCommonErrors>;
-    bySeverity: ReturnType<typeof this.getErrorDistributionBySeverity>;
+    mostCommon: Array<{ code: string; message: string; count: number; }>;
+    bySeverity: Record<string, number>;
     recommendations: string[];
     criticalIssues: Array<{ item: any; error: any }>;
   } {
     const aggregation = this.aggregateErrors(errors);
     const mostCommon = this.getMostCommonErrors(errors);
-    const bySeverity = this.getErrorDistributionBySeverity(errors);
+    const bySeverity = aggregation.errorSummary.bySeverity;
     
     // Extract critical issues
     const criticalIssues = aggregation.detailedErrors.filter(
@@ -154,39 +153,39 @@ export class ProcurementErrorAggregator implements IErrorAggregator {
    * Generate recommendations based on error patterns
    */
   private generateRecommendations(
-    mostCommon: ReturnType<typeof this.getMostCommonErrors>,
-    bySeverity: ReturnType<typeof this.getErrorDistributionBySeverity>
+    mostCommon: Array<{ code: string; message: string; count: number; }>,
+    bySeverity: Record<string, number>
   ): string[] {
     const recommendations: string[] = [];
 
     // Check for high validation error rate
-    const validationErrors = mostCommon.find(e => e.type === 'VALIDATION_ERROR');
-    if (validationErrors && validationErrors.percentage > 30) {
+    const validationErrors = mostCommon.find(e => e.code === 'VALIDATION_ERROR');
+    if (validationErrors && validationErrors.count > 10) {
       recommendations.push('High validation error rate detected. Review input data quality and validation rules.');
     }
 
     // Check for network/service errors
     const serviceErrors = mostCommon.find(e => 
-      e.type === 'EXTERNAL_SERVICE_ERROR' || e.type === 'API_RATE_LIMIT'
+      e.code === 'EXTERNAL_SERVICE_ERROR' || e.code === 'API_RATE_LIMIT'
     );
-    if (serviceErrors && serviceErrors.percentage > 15) {
+    if (serviceErrors && serviceErrors.count > 5) {
       recommendations.push('External service issues detected. Consider implementing retry logic and circuit breakers.');
     }
 
     // Check for permission errors
-    const permissionErrors = mostCommon.find(e => e.type === 'INSUFFICIENT_PERMISSIONS');
-    if (permissionErrors && permissionErrors.percentage > 10) {
+    const permissionErrors = mostCommon.find(e => e.code === 'INSUFFICIENT_PERMISSIONS');
+    if (permissionErrors && permissionErrors.count > 3) {
       recommendations.push('Permission errors detected. Review user access controls and role assignments.');
     }
 
     // Check for critical severity
-    const criticalSeverity = bySeverity.find(s => s.severity === 'critical');
-    if (criticalSeverity && criticalSeverity.percentage > 5) {
+    const criticalCount = bySeverity.critical || 0;
+    if (criticalCount > 2) {
       recommendations.push('Critical errors detected. Immediate investigation and resolution required.');
     }
 
     // Check for high error rate overall
-    if (mostCommon.length > 0 && mostCommon[0].percentage > 50) {
+    if (mostCommon.length > 0 && mostCommon[0].count > 20) {
       recommendations.push('Single error type dominates failures. Focus on resolving the primary issue first.');
     }
 

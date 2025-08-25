@@ -3,7 +3,7 @@
  * Manage multiple supplier subscriptions with automatic cleanup
  */
 
-import { SupplierStatus } from '@/types/supplier.types';
+// Removed unused import: SupplierStatus
 import { 
   ISubscriptionManager, 
   SupplierCallback, 

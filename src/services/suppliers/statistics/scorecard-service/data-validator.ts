@@ -3,7 +3,7 @@
  * Data quality validation and reliability calculation for scorecards
  */
 
-import { Supplier } from '@/types/supplier.types';
+import { Supplier } from '@/types/supplier/base.types';
 
 export class ScorecardDataValidator {
   /**
@@ -28,7 +28,7 @@ export class ScorecardDataValidator {
     ];
 
     requiredFields.forEach(({ field, weight }) => {
-      if (!this.hasValidValue(supplier[field])) {
+      if (!this.hasValidValue((supplier as any)[field])) {
         missingFields.push(field);
         completeness -= weight;
         issues.push(`Missing or invalid ${field}`);
@@ -45,7 +45,7 @@ export class ScorecardDataValidator {
     ];
 
     optionalFields.forEach(({ field, weight }) => {
-      if (!this.hasValidValue(supplier[field])) {
+      if (!this.hasValidValue((supplier as any)[field])) {
         completeness -= weight;
         issues.push(`Missing ${field} data`);
       }
@@ -81,14 +81,11 @@ export class ScorecardDataValidator {
 
     // Validate compliance data
     if (supplier.complianceStatus) {
-      if (typeof supplier.complianceStatus.complianceScore !== 'number' || 
-          supplier.complianceStatus.complianceScore < 0 || 
-          supplier.complianceStatus.complianceScore > 100) {
-        issues.push('Invalid compliance score');
-      }
-
-      if (!supplier.complianceStatus.lastComplianceCheck) {
-        issues.push('Missing compliance check date');
+      // Note: complianceScore property doesn't exist in ComplianceStatus interface
+      // We'll validate available properties instead
+      
+      if (!supplier.complianceStatus.lastAuditDate) {
+        issues.push('Missing compliance audit date');
       }
     }
 
@@ -249,7 +246,13 @@ export class ScorecardDataValidator {
 
     // Check compliance vs status consistency
     if (supplier.status === 'active' && supplier.complianceStatus) {
-      if (supplier.complianceStatus.complianceScore < 60) {
+      // Calculate basic compliance score from available data
+      let complianceFactors = 0;
+      if (supplier.complianceStatus.taxCompliant) complianceFactors++;
+      if (supplier.complianceStatus.beeCompliant) complianceFactors++;
+      if (supplier.complianceStatus.isoCompliant) complianceFactors++;
+      
+      if (complianceFactors < 2) {
         consistencyScore -= 10; // Active supplier with poor compliance
       }
     }

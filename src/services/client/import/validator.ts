@@ -103,7 +103,7 @@ function isValidEmail(email: string): boolean {
  */
 function isValidPhone(phone: string): boolean {
   // Allow various phone formats
-  const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+  const phoneRegex = /^[+]?[0-9\s\-()]{10,}$/;
   return phoneRegex.test(phone);
 }
 

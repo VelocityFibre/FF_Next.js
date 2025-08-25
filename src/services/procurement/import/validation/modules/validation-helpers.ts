@@ -204,6 +204,13 @@ export function parseDate(
         } else {
           // MM/DD/YYYY or DD/MM/YYYY format - assume MM/DD/YYYY
           [, month, day, year] = match;
+          // Add warning for potentially ambiguous date format
+          warnings.push({
+            type: 'validation',
+            row,
+            column: field,
+            message: `Ambiguous date format "${value}" interpreted as MM/DD/YYYY. Consider using YYYY-MM-DD format for clarity.`
+          });
         }
 
         const parsedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));

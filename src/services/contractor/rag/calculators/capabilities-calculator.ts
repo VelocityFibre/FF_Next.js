@@ -4,66 +4,101 @@
  */
 
 import {
-  RAGCapabilitiesBreakdown,
   RAGScoreResult,
-  ContractorData,
   ContractorTeam
 } from '../types';
+import { Contractor, TeamMember } from '@/types/contractor.types';
+import {
+  CAPABILITIES_WEIGHTS,
+  CAPABILITIES_CONFIG,
+  CAPABILITY_GAP_MESSAGES,
+  CAPABILITY_RECOMMENDATION_MESSAGES
+} from './config/capabilities-config';
+import {
+  applyThresholdScoring,
+  applyFallbackScoring,
+  clampScore
+} from './utils/scoring-utils';
+import {
+  calculateEquipmentItemScore,
+  calculateSpecializationCountBonus,
+  applyGrowthIndicators
+} from './utils/capabilities-utils';
+
+// Extended interfaces to match calculator requirements
+interface ExtendedContractor extends Contractor {
+  equipment?: {
+    age: number;
+    condition: string;
+    lastMaintenance?: string;
+  }[];
+  serviceAreas?: string[];
+  recentGrowth?: {
+    staffIncrease?: number;
+    revenueGrowth?: number;
+  };
+}
+
+interface ExtendedTeam extends ContractorTeam {
+  members?: ExtendedMember[];
+  currentWorkload?: number;
+}
+
+interface ExtendedMember extends TeamMember {
+  experience?: number;
+  status: 'active' | 'inactive';
+}
+
+interface ExtendedCapabilitiesBreakdown {
+  technicalSkills: number;
+  equipmentRating: number;
+  teamExperience: number;
+  certificationLevel: number;
+  specializationDepth: number;
+}
 
 export class CapabilitiesCalculator {
   /**
    * Calculate capabilities score based on technical skills and capacity
    */
   static calculateScore(
-    contractor: ContractorData,
-    teams: ContractorTeam[]
-  ): RAGScoreResult<RAGCapabilitiesBreakdown> {
+    contractor: ExtendedContractor,
+    teams: ExtendedTeam[]
+  ): RAGScoreResult<ExtendedCapabilitiesBreakdown> {
     
-    // Calculate individual capability metrics
-    const technicalSkills = this.calculateTechnicalSkillsScore(contractor, teams);
-    const equipmentCapacity = this.calculateEquipmentScore(contractor);
-    const teamCapacity = this.calculateTeamCapacityScore(teams);
-    const specialization = this.calculateSpecializationScore(contractor);
-    const scalability = this.calculateScalabilityScore(contractor, teams);
-
-    const breakdown: RAGCapabilitiesBreakdown = {
-      technicalSkills,
-      equipmentCapacity,
-      teamCapacity,
-      specialization,
-      scalability
+    const breakdown: ExtendedCapabilitiesBreakdown = {
+      technicalSkills: this.calculateTechnicalSkillsScore(contractor, teams),
+      equipmentRating: this.calculateEquipmentScore(contractor),
+      teamExperience: this.calculateTeamCapacityScore(teams),
+      certificationLevel: this.calculateSpecializationScore(contractor),
+      specializationDepth: this.calculateScalabilityScore(contractor, teams)
     };
 
-    // Calculate weighted average
     const score = this.calculateWeightedScore(breakdown);
-
     return { score: Math.round(score), breakdown };
   }
 
   /**
    * Calculate technical skills score
    */
-  private static calculateTechnicalSkillsScore(contractor: ContractorData, teams: ContractorTeam[]): number {
-    let skillsScore = 70; // Default neutral score
-
-    // Assess contractor-level certifications
+  private static calculateTechnicalSkillsScore(contractor: ExtendedContractor, teams: ExtendedTeam[]): number {
     const certifications = contractor.certifications || [];
-    const relevantCerts = certifications.filter(cert => 
-      cert.isActive && cert.category === 'technical'
+    const relevantCerts = certifications.filter((cert: string) => 
+      cert.includes('technical') || cert.includes('fiber') || cert.includes('telecom')
     );
 
-    // Base score from certifications
-    if (relevantCerts.length >= 5) skillsScore = 95;
-    else if (relevantCerts.length >= 3) skillsScore = 85;
-    else if (relevantCerts.length >= 2) skillsScore = 75;
-    else if (relevantCerts.length >= 1) skillsScore = 65;
+    // Base score from contractor certifications
+    let skillsScore = applyFallbackScoring(
+      relevantCerts.length, 
+      CAPABILITIES_CONFIG.TECHNICAL_SKILLS.CERT_SCORES as any
+    );
 
-    // Assess team skills if available
+    // Enhance with team skills if available
     if (teams.length > 0) {
       const teamSkillsScores = teams.map(team => this.assessTeamSkills(team));
       const avgTeamSkills = teamSkillsScores.reduce((sum, score) => sum + score, 0) / teamSkillsScores.length;
       
-      // Weighted combination of contractor and team skills
+      // Weighted combination: 40% contractor, 60% team
       skillsScore = (skillsScore * 0.4) + (avgTeamSkills * 0.6);
     }
 
@@ -73,28 +108,29 @@ export class CapabilitiesCalculator {
   /**
    * Assess individual team skills
    */
-  private static assessTeamSkills(team: ContractorTeam): number {
-    if (!team.members || team.members.length === 0) return 70;
+  private static assessTeamSkills(team: ExtendedTeam): number {
+    if (!team.members || team.members.length === 0) return CAPABILITIES_CONFIG.DEFAULT_SCORE;
 
-    const memberSkills = team.members.map(member => {
+    const memberSkills = team.members.map((member: ExtendedMember) => {
       const certifications = member.certifications?.length || 0;
       const experience = member.experience || 0;
       
       let memberScore = 50;
       
-      // Experience scoring
-      if (experience >= 10) memberScore += 30;
-      else if (experience >= 5) memberScore += 25;
-      else if (experience >= 3) memberScore += 20;
-      else if (experience >= 1) memberScore += 15;
+      // Apply experience and certification bonuses
+      memberScore += applyThresholdScoring(
+        experience, 
+        CAPABILITIES_CONFIG.TECHNICAL_SKILLS.MEMBER_EXPERIENCE as any, 
+        0
+      );
       
-      // Certification scoring
-      if (certifications >= 5) memberScore += 20;
-      else if (certifications >= 3) memberScore += 15;
-      else if (certifications >= 2) memberScore += 10;
-      else if (certifications >= 1) memberScore += 5;
+      memberScore += applyThresholdScoring(
+        certifications, 
+        CAPABILITIES_CONFIG.TECHNICAL_SKILLS.MEMBER_CERTS as any, 
+        0
+      );
       
-      return Math.min(memberScore, 100);
+      return clampScore(memberScore);
     });
 
     return memberSkills.reduce((sum, score) => sum + score, 0) / memberSkills.length;
@@ -103,79 +139,53 @@ export class CapabilitiesCalculator {
   /**
    * Calculate equipment capacity score
    */
-  private static calculateEquipmentScore(contractor: ContractorData): number {
+  private static calculateEquipmentScore(contractor: ExtendedContractor): number {
     const equipment = contractor.equipment || [];
     
-    if (equipment.length === 0) return 50; // Low score for no equipment
+    if (equipment.length === 0) return CAPABILITIES_CONFIG.EQUIPMENT_SCORES.NO_EQUIPMENT;
 
-    // Assess equipment quality and condition
-    const equipmentScores = equipment.map(item => {
-      let itemScore = 70; // Base score
-      
-      // Age factor
-      if (item.age <= 2) itemScore += 15; // Very new
-      else if (item.age <= 5) itemScore += 10; // Relatively new
-      else if (item.age <= 10) itemScore += 5; // Moderate age
-      else itemScore -= 10; // Old equipment
-      
-      // Condition factor
-      switch (item.condition?.toLowerCase()) {
-        case 'excellent': itemScore += 15; break;
-        case 'good': itemScore += 10; break;
-        case 'fair': itemScore += 5; break;
-        case 'poor': itemScore -= 10; break;
-      }
-      
-      // Maintenance status
-      if (item.lastMaintenance) {
-        const daysSinceService = Math.floor(
-          (new Date().getTime() - new Date(item.lastMaintenance).getTime()) / (1000 * 60 * 60 * 24)
-        );
-        
-        if (daysSinceService <= 90) itemScore += 10; // Recently serviced
-        else if (daysSinceService <= 180) itemScore += 5; // Moderately recent
-        else if (daysSinceService > 365) itemScore -= 10; // Overdue service
-      }
-      
-      return Math.max(Math.min(itemScore, 100), 0);
-    });
-
+    const equipmentScores = equipment.map(calculateEquipmentItemScore);
     return equipmentScores.reduce((sum, score) => sum + score, 0) / equipmentScores.length;
   }
+
 
   /**
    * Calculate team capacity score
    */
-  private static calculateTeamCapacityScore(teams: ContractorTeam[]): number {
+  private static calculateTeamCapacityScore(teams: ExtendedTeam[]): number {
     if (teams.length === 0) return 50;
 
-    const teamCapacityScores = teams.map(team => {
+    const teamCapacityScores = teams.map((team: ExtendedTeam) => {
       const memberCount = team.members?.length || 0;
       const activeMembers = team.members?.filter(member => member.status === 'active').length || 0;
       
-      let capacityScore = 70;
+      let capacityScore = CAPABILITIES_CONFIG.TEAM_CAPACITY.BASE_SCORE;
       
-      // Team size scoring
-      if (memberCount >= 10) capacityScore += 20;
-      else if (memberCount >= 5) capacityScore += 15;
-      else if (memberCount >= 3) capacityScore += 10;
-      else if (memberCount >= 2) capacityScore += 5;
-      else if (memberCount === 1) capacityScore -= 10;
+      // Apply team size scoring
+      capacityScore += applyThresholdScoring(
+        memberCount, 
+        CAPABILITIES_CONFIG.TEAM_CAPACITY.SIZE_BONUSES as any, 
+        0
+      );
       
-      // Active member ratio
+      // Apply active member ratio scoring
       const activeRatio = memberCount > 0 ? activeMembers / memberCount : 0;
-      if (activeRatio >= 0.9) capacityScore += 10;
-      else if (activeRatio >= 0.8) capacityScore += 5;
-      else if (activeRatio < 0.6) capacityScore -= 10;
+      capacityScore += applyThresholdScoring(
+        activeRatio, 
+        CAPABILITIES_CONFIG.TEAM_CAPACITY.ACTIVE_RATIO_BONUSES as any, 
+        0
+      );
       
-      // Current workload factor
+      // Apply workload factor
       if (team.currentWorkload !== undefined) {
-        if (team.currentWorkload <= 70) capacityScore += 10; // Good availability
-        else if (team.currentWorkload <= 85) capacityScore += 5; // Moderate availability
-        else if (team.currentWorkload >= 100) capacityScore -= 15; // Overloaded
+        capacityScore += applyThresholdScoring(
+          team.currentWorkload, 
+          CAPABILITIES_CONFIG.TEAM_CAPACITY.WORKLOAD_BONUSES as any, 
+          0
+        );
       }
       
-      return Math.max(Math.min(capacityScore, 100), 0);
+      return clampScore(capacityScore);
     });
 
     return teamCapacityScores.reduce((sum, score) => sum + score, 0) / teamCapacityScores.length;
@@ -184,151 +194,114 @@ export class CapabilitiesCalculator {
   /**
    * Calculate specialization score
    */
-  private static calculateSpecializationScore(contractor: ContractorData): number {
+  private static calculateSpecializationScore(contractor: ExtendedContractor): number {
     const specializations = contractor.specializations || [];
     const serviceAreas = contractor.serviceAreas || [];
-    
-    let specializationScore = 70;
-    
-    // Number of specializations (more isn't always better)
-    if (specializations.length >= 3 && specializations.length <= 5) {
-      specializationScore += 15; // Sweet spot
-    } else if (specializations.length >= 2) {
-      specializationScore += 10;
-    } else if (specializations.length === 1) {
-      specializationScore += 5; // Highly focused
-    } else {
-      specializationScore -= 10; // No clear specialization
-    }
-    
-    // Service area coverage
-    if (serviceAreas.length >= 5) specializationScore += 10;
-    else if (serviceAreas.length >= 3) specializationScore += 5;
-    else if (serviceAreas.length === 0) specializationScore -= 5;
-    
-    // Industry experience depth
     const yearsInBusiness = contractor.yearsInBusiness || 0;
-    if (yearsInBusiness >= 10) specializationScore += 15;
-    else if (yearsInBusiness >= 5) specializationScore += 10;
-    else if (yearsInBusiness >= 2) specializationScore += 5;
-    else if (yearsInBusiness < 1) specializationScore -= 10;
     
-    return Math.max(Math.min(specializationScore, 100), 0);
+    let specializationScore = CAPABILITIES_CONFIG.SPECIALIZATION.BASE_SCORE;
+    
+    // Apply specialization count bonus
+    specializationScore += calculateSpecializationCountBonus(specializations.length);
+    
+    // Apply service area and experience bonuses
+    specializationScore += applyThresholdScoring(
+      serviceAreas.length, 
+      CAPABILITIES_CONFIG.SPECIALIZATION.SERVICE_AREA_BONUSES as any, 
+      0
+    );
+    
+    specializationScore += applyThresholdScoring(
+      yearsInBusiness, 
+      CAPABILITIES_CONFIG.SPECIALIZATION.EXPERIENCE_BONUSES as any, 
+      0
+    );
+    
+    return clampScore(specializationScore);
   }
 
   /**
    * Calculate scalability score
    */
-  private static calculateScalabilityScore(contractor: ContractorData, teams: ContractorTeam[]): number {
-    let scalabilityScore = 70;
+  private static calculateScalabilityScore(contractor: ExtendedContractor, teams: ExtendedTeam[]): number {
+    let scalabilityScore: number = CAPABILITIES_CONFIG.SCALABILITY.BASE_SCORE;
     
-    // Team structure flexibility
-    if (teams.length >= 3) {
-      scalabilityScore += 20; // Multiple teams suggest scalability
-    } else if (teams.length === 2) {
-      scalabilityScore += 10;
-    } else if (teams.length === 0) {
-      scalabilityScore -= 10;
-    }
+    // Apply team structure flexibility bonus
+    scalabilityScore += applyThresholdScoring(
+      teams.length, 
+      CAPABILITIES_CONFIG.SCALABILITY.TEAM_COUNT_BONUSES as any, 
+      0
+    );
     
-    // Current capacity utilization
+    // Apply capacity utilization scoring
     const totalCurrentWorkload = teams.reduce((sum, team) => sum + (team.currentWorkload || 0), 0);
     const avgWorkload = teams.length > 0 ? totalCurrentWorkload / teams.length : 100;
     
-    if (avgWorkload <= 60) scalabilityScore += 15; // Lots of spare capacity
-    else if (avgWorkload <= 75) scalabilityScore += 10; // Good spare capacity
-    else if (avgWorkload <= 85) scalabilityScore += 5; // Some spare capacity
-    else if (avgWorkload >= 100) scalabilityScore -= 15; // No spare capacity
+    scalabilityScore += applyThresholdScoring(
+      avgWorkload, 
+      CAPABILITIES_CONFIG.SCALABILITY.WORKLOAD_BONUSES as any, 
+      0
+    );
     
-    // Growth indicators
-    const recentGrowth = contractor.recentGrowth || {};
-    if (recentGrowth.staffIncrease && recentGrowth.staffIncrease > 0) {
-      scalabilityScore += 10;
-    }
-    if (recentGrowth.revenueGrowth && recentGrowth.revenueGrowth > 0.1) {
-      scalabilityScore += 5;
-    }
+    // Apply growth indicators
+    scalabilityScore = applyGrowthIndicators(scalabilityScore, contractor.recentGrowth);
     
-    return Math.max(Math.min(scalabilityScore, 100), 0);
+    return clampScore(scalabilityScore);
   }
 
   /**
    * Calculate weighted capabilities score
    */
-  private static calculateWeightedScore(breakdown: RAGCapabilitiesBreakdown): number {
+  private static calculateWeightedScore(breakdown: ExtendedCapabilitiesBreakdown): number {
     return (
-      breakdown.technicalSkills * 0.30 +
-      breakdown.equipmentCapacity * 0.25 +
-      breakdown.teamCapacity * 0.20 +
-      breakdown.specialization * 0.15 +
-      breakdown.scalability * 0.10
+      breakdown.technicalSkills * CAPABILITIES_WEIGHTS.TECHNICAL_SKILLS +
+      breakdown.equipmentRating * CAPABILITIES_WEIGHTS.EQUIPMENT_CAPACITY +
+      breakdown.teamExperience * CAPABILITIES_WEIGHTS.TEAM_CAPACITY +
+      breakdown.certificationLevel * CAPABILITIES_WEIGHTS.SPECIALIZATION +
+      breakdown.specializationDepth * CAPABILITIES_WEIGHTS.SCALABILITY
     );
   }
 
   /**
    * Get capability gaps analysis
    */
-  static getCapabilityGaps(breakdown: RAGCapabilitiesBreakdown, industry: string = 'telecommunications'): string[] {
+  static getCapabilityGaps(breakdown: ExtendedCapabilitiesBreakdown): string[] {
     const gaps: string[] = [];
-    const threshold = 70;
+    const { THRESHOLD } = CAPABILITIES_CONFIG;
 
-    if (breakdown.technicalSkills < threshold) {
-      gaps.push('Technical skills need enhancement - consider additional training and certifications');
-    }
+    const checks = [
+      { value: breakdown.technicalSkills, message: CAPABILITY_GAP_MESSAGES.TECHNICAL_SKILLS },
+      { value: breakdown.equipmentRating, message: CAPABILITY_GAP_MESSAGES.EQUIPMENT_CAPACITY },
+      { value: breakdown.teamExperience, message: CAPABILITY_GAP_MESSAGES.TEAM_CAPACITY },
+      { value: breakdown.certificationLevel, message: CAPABILITY_GAP_MESSAGES.SPECIALIZATION },
+      { value: breakdown.specializationDepth, message: CAPABILITY_GAP_MESSAGES.SCALABILITY }
+    ];
 
-    if (breakdown.equipmentCapacity < threshold) {
-      gaps.push('Equipment needs upgrade or expansion to meet industry standards');
-    }
+    checks.forEach(({ value, message }) => {
+      if (value < THRESHOLD) gaps.push(message);
+    });
 
-    if (breakdown.teamCapacity < threshold) {
-      gaps.push('Team capacity is insufficient - consider hiring or restructuring');
-    }
-
-    if (breakdown.specialization < threshold) {
-      gaps.push('Specialization focus needs improvement - develop core competencies');
-    }
-
-    if (breakdown.scalability < threshold) {
-      gaps.push('Scalability constraints - develop systems and processes for growth');
-    }
-
-    if (gaps.length === 0) {
-      gaps.push('No significant capability gaps identified');
-    }
-
-    return gaps;
+    return gaps.length > 0 ? gaps : [CAPABILITY_GAP_MESSAGES.NO_GAPS];
   }
 
   /**
    * Get capability recommendations
    */
-  static getCapabilityRecommendations(breakdown: RAGCapabilitiesBreakdown): string[] {
+  static getCapabilityRecommendations(breakdown: ExtendedCapabilitiesBreakdown): string[] {
     const recommendations: string[] = [];
+    const thresholds = { technical: 85, equipment: 80, team: 80, specialization: 75, scalability: 75 };
 
-    // Technical skills recommendations
-    if (breakdown.technicalSkills < 85) {
-      recommendations.push('Invest in ongoing technical training and industry certifications');
-    }
+    const checks = [
+      { value: breakdown.technicalSkills, threshold: thresholds.technical, message: CAPABILITY_RECOMMENDATION_MESSAGES.TECHNICAL_SKILLS },
+      { value: breakdown.equipmentRating, threshold: thresholds.equipment, message: CAPABILITY_RECOMMENDATION_MESSAGES.EQUIPMENT_CAPACITY },
+      { value: breakdown.teamExperience, threshold: thresholds.team, message: CAPABILITY_RECOMMENDATION_MESSAGES.TEAM_CAPACITY },
+      { value: breakdown.certificationLevel, threshold: thresholds.specialization, message: CAPABILITY_RECOMMENDATION_MESSAGES.SPECIALIZATION },
+      { value: breakdown.specializationDepth, threshold: thresholds.scalability, message: CAPABILITY_RECOMMENDATION_MESSAGES.SCALABILITY }
+    ];
 
-    // Equipment recommendations  
-    if (breakdown.equipmentCapacity < 80) {
-      recommendations.push('Develop equipment modernization and maintenance schedule');
-    }
-
-    // Team capacity recommendations
-    if (breakdown.teamCapacity < 80) {
-      recommendations.push('Optimize team structure and workload distribution');
-    }
-
-    // Specialization recommendations
-    if (breakdown.specialization < 75) {
-      recommendations.push('Focus on developing core specializations and market positioning');
-    }
-
-    // Scalability recommendations
-    if (breakdown.scalability < 75) {
-      recommendations.push('Build scalable processes and systems to support growth');
-    }
+    checks.forEach(({ value, threshold, message }) => {
+      if (value < threshold) recommendations.push(message);
+    });
 
     return recommendations;
   }

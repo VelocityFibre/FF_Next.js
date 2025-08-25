@@ -50,7 +50,6 @@ export class MetricsCalculator {
     impactScore: number;
     resolutionComplexity: number;
   } {
-    const totalErrors = errors.length;
 
     // Error frequency index (higher = more concentrated errors)
     const errorFrequencyIndex = this.calculateConcentrationIndex(errors);
@@ -155,8 +154,9 @@ export class MetricsCalculator {
     const itemErrorCounts = new Map<string, number>();
     
     errors.forEach(error => {
-      if ('itemCode' in error && error.itemCode) {
-        itemErrorCounts.set(error.itemCode, (itemErrorCounts.get(error.itemCode) || 0) + 1);
+      if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
+        const itemCode = error.itemCode as string;
+        itemErrorCounts.set(itemCode, (itemErrorCounts.get(itemCode) || 0) + 1);
       }
     });
 
@@ -220,15 +220,15 @@ export class MetricsCalculator {
     const uniqueLocations = new Set<string>();
     
     errors.forEach(error => {
-      if ('itemCode' in error && error.itemCode) {
-        uniqueItems.add(error.itemCode);
+      if ('itemCode' in error && error.itemCode && typeof error.itemCode === 'string') {
+        uniqueItems.add(error.itemCode as string);
       }
       
       // Extract location
-      if ('location' in error && error.location) {
-        uniqueLocations.add(error.location);
-      } else if ('fromLocation' in error && error.fromLocation) {
-        uniqueLocations.add(error.fromLocation);
+      if ('location' in error && error.location && typeof error.location === 'string') {
+        uniqueLocations.add(error.location as string);
+      } else if ('fromLocation' in error && error.fromLocation && typeof error.fromLocation === 'string') {
+        uniqueLocations.add(error.fromLocation as string);
       }
     });
     
@@ -246,7 +246,7 @@ export class MetricsCalculator {
   /**
    * Calculate quality score
    */
-  private static calculateQualityScore(errors: StockError[], metrics: ErrorMetrics): { score: number; grade: 'A' | 'B' | 'C' | 'D' | 'F' } {
+  private static calculateQualityScore(_errors: StockError[], metrics: ErrorMetrics): { score: number; grade: 'A' | 'B' | 'C' | 'D' | 'F' } {
     let score = 100;
 
     // Deduct points based on error rate

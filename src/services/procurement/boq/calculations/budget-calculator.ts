@@ -4,6 +4,7 @@
  */
 
 import { BOQCrud } from '../crud';
+import { BOQ } from '../../../../types/procurement/boq.types';
 
 /**
  * BOQ Budget and Risk Analysis Calculator
@@ -32,11 +33,11 @@ export class BOQBudgetCalculator {
       const boqs = await BOQCrud.getByProject(projectId);
       const approvedBOQs = boqs.filter(boq => boq.status === 'approved');
 
-      const totalBudget = approvedBOQs.reduce((sum, boq) => 
+      const totalBudget = approvedBOQs.reduce((sum: number, boq: BOQ) => 
         sum + (boq.totalEstimatedValue || 0), 0
       );
 
-      const boqBreakdown = approvedBOQs.map(boq => ({
+      const boqBreakdown = approvedBOQs.map((boq: BOQ) => ({
         boqId: boq.id,
         title: boq.title || 'Untitled BOQ',
         version: boq.version || '1.0',
@@ -46,7 +47,7 @@ export class BOQBudgetCalculator {
       }));
 
       // Simple risk analysis based on BOQ complexity
-      const avgItemCount = boqs.reduce((sum, boq) => 
+      const avgItemCount = boqs.reduce((sum: number, boq: BOQ) => 
         sum + (boq.itemCount || 0), 0) / boqs.length;
 
       let overBudgetRisk: 'low' | 'medium' | 'high' = 'low';

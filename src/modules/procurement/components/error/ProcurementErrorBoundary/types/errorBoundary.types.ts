@@ -41,6 +41,6 @@ export interface ErrorLogData {
   timestamp: string;
   url: string;
   userAgent: string;
-  projectId?: string | null;
-  userId?: string | null;
+  projectId?: string | null | undefined;
+  userId?: string | null | undefined;
 }

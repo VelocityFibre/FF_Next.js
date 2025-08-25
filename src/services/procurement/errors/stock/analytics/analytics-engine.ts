@@ -311,7 +311,7 @@ export class AnalyticsEngine {
   /**
    * Generate immediate actions
    */
-  private static generateImmediateActions(analysis: any) {
+  private static generateImmediateActions(_analysis: any) {
     return [
       { action: 'Review top problematic items', priority: 1, effort: 'low' as const },
       { action: 'Check stock levels for frequent shortage items', priority: 2, effort: 'low' as const },
@@ -322,7 +322,7 @@ export class AnalyticsEngine {
   /**
    * Generate short-term actions
    */
-  private static generateShortTermActions(analysis: any) {
+  private static generateShortTermActions(_analysis: any) {
     return [
       { action: 'Implement monitoring for top 10 items', timeline: '1-2 weeks', expectedImpact: 'Reduce item-specific errors by 40%' },
       { action: 'Audit high-error locations', timeline: '2-3 weeks', expectedImpact: 'Identify root causes of location issues' }
@@ -332,7 +332,7 @@ export class AnalyticsEngine {
   /**
    * Generate long-term actions
    */
-  private static generateLongTermActions(analysis: any) {
+  private static generateLongTermActions(_analysis: any) {
     return [
       { action: 'Implement predictive inventory system', timeline: '2-3 months', expectedImpact: 'Reduce overall errors by 60%' },
       { action: 'Redesign inventory processes', timeline: '3-6 months', expectedImpact: 'Systematic improvement in error rates' }

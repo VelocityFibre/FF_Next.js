@@ -2,7 +2,6 @@
  * Scorecard Generator Types and Interfaces
  */
 
-import { Supplier } from '@/types/supplier.types';
 
 /**
  * Scorecard generation configuration

@@ -4,12 +4,20 @@
  */
 
 import { StockError } from './inventory';
+import type { 
+  MovementType, 
+  AdjustmentType, 
+  MovementOptions, 
+  TransferOptions, 
+  AdjustmentOptions,
+  TrackingOptions 
+} from './types';
 
 /**
  * Stock movement error for tracking issues
  */
 export class StockMovementError extends StockError {
-  public readonly movementType: 'inbound' | 'outbound' | 'transfer' | 'adjustment';
+  public readonly movementType: MovementType;
   public readonly fromLocation?: string;
   public readonly toLocation?: string;
   public readonly itemCode: string;
@@ -18,14 +26,10 @@ export class StockMovementError extends StockError {
 
   constructor(
     message: string,
-    movementType: 'inbound' | 'outbound' | 'transfer' | 'adjustment',
+    movementType: MovementType,
     itemCode: string,
     quantity: number,
-    options?: {
-      fromLocation?: string;
-      toLocation?: string;
-      movementId?: string;
-    },
+    options?: MovementOptions,
     context?: Record<string, any>
   ) {
     super(message, 'STOCK_MOVEMENT_FAILED', 400, context);
@@ -33,9 +37,9 @@ export class StockMovementError extends StockError {
     this.movementType = movementType;
     this.itemCode = itemCode;
     this.quantity = quantity;
-    this.fromLocation = options?.fromLocation;
-    this.toLocation = options?.toLocation;
-    this.movementId = options?.movementId;
+    if (options?.fromLocation !== undefined) this.fromLocation = options.fromLocation;
+    if (options?.toLocation !== undefined) this.toLocation = options.toLocation;
+    if (options?.movementId !== undefined) this.movementId = options.movementId;
     Object.setPrototypeOf(this, StockMovementError.prototype);
   }
 
@@ -87,9 +91,7 @@ export class StockTransferError extends StockError {
     toLocation: string,
     quantity: number,
     reason: string,
-    options?: {
-      transferId?: string;
-    },
+    options?: TransferOptions,
     context?: Record<string, any>
   ) {
     const message = `Stock transfer failed: ${reason}`;
@@ -100,7 +102,7 @@ export class StockTransferError extends StockError {
     this.toLocation = toLocation;
     this.quantity = quantity;
     this.reason = reason;
-    this.transferId = options?.transferId;
+    if (options?.transferId !== undefined) this.transferId = options.transferId;
     Object.setPrototypeOf(this, StockTransferError.prototype);
   }
 
@@ -131,7 +133,7 @@ export class StockTransferError extends StockError {
 export class StockAdjustmentError extends StockError {
   public readonly itemCode: string;
   public readonly location: string;
-  public readonly adjustmentType: 'increase' | 'decrease' | 'recount';
+  public readonly adjustmentType: AdjustmentType;
   public readonly adjustmentQuantity: number;
   public readonly currentQuantity: number;
   public readonly adjustmentReason?: string;
@@ -139,13 +141,11 @@ export class StockAdjustmentError extends StockError {
   constructor(
     itemCode: string,
     location: string,
-    adjustmentType: 'increase' | 'decrease' | 'recount',
+    adjustmentType: AdjustmentType,
     adjustmentQuantity: number,
     currentQuantity: number,
     message: string,
-    options?: {
-      adjustmentReason?: string;
-    },
+    options?: AdjustmentOptions,
     context?: Record<string, any>
   ) {
     super(message, 'STOCK_ADJUSTMENT_FAILED', 400, context);
@@ -155,7 +155,7 @@ export class StockAdjustmentError extends StockError {
     this.adjustmentType = adjustmentType;
     this.adjustmentQuantity = adjustmentQuantity;
     this.currentQuantity = currentQuantity;
-    this.adjustmentReason = options?.adjustmentReason;
+    if (options?.adjustmentReason !== undefined) this.adjustmentReason = options.adjustmentReason;
     Object.setPrototypeOf(this, StockAdjustmentError.prototype);
   }
 
@@ -220,9 +220,7 @@ export class StockTrackingError extends StockError {
     itemCode: string,
     operationType: string,
     details: Record<string, any> = {},
-    options?: {
-      trackingId?: string;
-    },
+    options?: TrackingOptions,
     context?: Record<string, any>
   ) {
     super(message, 'STOCK_TRACKING_FAILED', 400, context);
@@ -230,7 +228,7 @@ export class StockTrackingError extends StockError {
     this.itemCode = itemCode;
     this.operationType = operationType;
     this.details = details;
-    this.trackingId = options?.trackingId;
+    if (options?.trackingId !== undefined) this.trackingId = options.trackingId;
     Object.setPrototypeOf(this, StockTrackingError.prototype);
   }
 

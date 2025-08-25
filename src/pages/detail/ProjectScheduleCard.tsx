@@ -4,12 +4,26 @@
 
 import { Calendar, Clock, DollarSign, Users } from 'lucide-react';
 import { Project } from '@/types/project.types';
+import { Timestamp } from 'firebase/firestore';
 
 interface ProjectScheduleCardProps {
   project: Project;
 }
 
+function toDate(date: Date | Timestamp | string | undefined): Date | null {
+  if (!date) return null;
+  if (date instanceof Date) return date;
+  if (typeof date === 'string') return new Date(date);
+  if (date && typeof date === 'object' && 'toDate' in date) {
+    return (date as Timestamp).toDate();
+  }
+  return null;
+}
+
 export function ProjectScheduleCard({ project }: ProjectScheduleCardProps) {
+  const startDate = toDate(project.startDate);
+  const endDate = toDate(project.endDate);
+  
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Schedule & Resources</h2>
@@ -21,7 +35,7 @@ export function ProjectScheduleCard({ project }: ProjectScheduleCardProps) {
             <span className="text-sm">Start Date</span>
           </div>
           <span className="text-sm font-medium text-gray-900">
-            {project.startDate ? new Date(project.startDate).toLocaleDateString() : 'Not set'}
+            {startDate ? startDate.toLocaleDateString() : 'Not set'}
           </span>
         </div>
         
@@ -31,7 +45,7 @@ export function ProjectScheduleCard({ project }: ProjectScheduleCardProps) {
             <span className="text-sm">End Date</span>
           </div>
           <span className="text-sm font-medium text-gray-900">
-            {project.endDate ? new Date(project.endDate).toLocaleDateString() : 'Not set'}
+            {endDate ? endDate.toLocaleDateString() : 'Not set'}
           </span>
         </div>
         
@@ -41,8 +55,8 @@ export function ProjectScheduleCard({ project }: ProjectScheduleCardProps) {
             <span className="text-sm">Duration</span>
           </div>
           <span className="text-sm font-medium text-gray-900">
-            {project.startDate && project.endDate
-              ? `${Math.ceil((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24))} days`
+            {startDate && endDate
+              ? `${Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))} days`
               : 'Not set'}
           </span>
         </div>
@@ -57,14 +71,14 @@ export function ProjectScheduleCard({ project }: ProjectScheduleCardProps) {
           </span>
         </div>
         
-        {project.projectManagerName && (
+        {project.projectManager && (
           <div className="flex items-center justify-between">
             <div className="flex items-center text-gray-600">
               <Users className="h-4 w-4 mr-2" />
               <span className="text-sm">Project Manager</span>
             </div>
             <span className="text-sm font-medium text-gray-900">
-              {project.projectManagerName}
+              {project.projectManager}
             </span>
           </div>
         )}

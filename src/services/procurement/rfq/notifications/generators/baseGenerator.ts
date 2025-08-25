@@ -4,7 +4,7 @@
  */
 
 import { RFQ } from '@/types/procurement.types';
-import { NotificationContent, RFQNotificationEvent } from './types';
+import { RFQNotificationEvent } from './types';
 
 export abstract class BaseRFQGenerator {
   protected static baseUrl: string = '';
@@ -56,7 +56,7 @@ export abstract class BaseRFQGenerator {
    * Check if RFQ is overdue
    */
   protected static isOverdue(rfq: RFQ): boolean {
-    const deadline = rfq.responseDeadline?.toDate();
+    const deadline = rfq.responseDeadline;
     return deadline ? deadline < new Date() : false;
   }
 
@@ -64,7 +64,7 @@ export abstract class BaseRFQGenerator {
    * Check if RFQ deadline is approaching (within 24 hours)
    */
   protected static isDeadlineApproaching(rfq: RFQ): boolean {
-    const deadline = rfq.responseDeadline?.toDate();
+    const deadline = rfq.responseDeadline;
     if (!deadline) return false;
     
     const now = new Date();
@@ -76,7 +76,7 @@ export abstract class BaseRFQGenerator {
    * Get hours remaining until deadline
    */
   protected static getHoursRemaining(rfq: RFQ): number {
-    const deadline = rfq.responseDeadline?.toDate();
+    const deadline = rfq.responseDeadline;
     if (!deadline) return 0;
     
     const now = new Date();

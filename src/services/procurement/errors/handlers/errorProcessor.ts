@@ -4,7 +4,7 @@
  */
 
 import { ProcurementError } from '../base.errors';
-import { getErrorSeverity, isUserFacingError } from '../error.constants';
+import { isUserFacingError } from '../error.constants';
 import { ErrorResponse, ErrorLogContext, IErrorHandler } from './types';
 import { ProcurementErrorFactory } from './errorFactory';
 import { ProcurementErrorLogger } from './errorLogger';
@@ -23,9 +23,19 @@ export class ProcurementErrorProcessor implements IErrorHandler {
   handleError(error: unknown): ErrorResponse {
     // Handle ProcurementError and its subclasses
     if (error instanceof ProcurementError) {
+      const errorJson = error.toJSON();
+      const errorObj: ErrorResponse['error'] = {
+        ...errorJson
+      };
+      
+      // Only include context if it exists
+      if (errorJson.context) {
+        errorObj.context = errorJson.context;
+      }
+      
       return {
         success: false,
-        error: error.toJSON(),
+        error: errorObj,
         statusCode: error.statusCode
       };
     }
@@ -42,9 +52,19 @@ export class ProcurementErrorProcessor implements IErrorHandler {
       { originalError: error instanceof Error ? error.stack : String(error) }
     );
 
+    const errorJson = genericError.toJSON();
+    const errorObj: ErrorResponse['error'] = {
+      ...errorJson
+    };
+    
+    // Only include context if it exists
+    if (errorJson.context) {
+      errorObj.context = errorJson.context;
+    }
+
     return {
       success: false,
-      error: genericError.toJSON(),
+      error: errorObj,
       statusCode: 500
     };
   }

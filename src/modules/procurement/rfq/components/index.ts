@@ -1,8 +1,10 @@
 // RFQ Components - Index Export
 import React from 'react';
 
-// Placeholder exports - to be implemented in next phase
-export const RFQDashboard: React.FC = () => React.createElement('div', null, 'RFQDashboard - Coming Soon');
+// 🟢 WORKING: Fully functional RFQ Dashboard component
+export { RFQDashboard } from './RFQDashboard';
+
+// 🟡 PARTIAL: Placeholder exports - to be implemented in next phase
 export const RFQCreate: React.FC = () => React.createElement('div', null, 'RFQCreate - Coming Soon');
 export const RFQEdit: React.FC = () => React.createElement('div', null, 'RFQEdit - Coming Soon');
 export const RFQView: React.FC = () => React.createElement('div', null, 'RFQView - Coming Soon');

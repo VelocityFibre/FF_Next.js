@@ -21,17 +21,18 @@ export interface ProjectFormData {
   contractorId?: string;
   milestones?: any[];
   tags?: string[];
+  metadata?: Record<string, any>;
 }
 
 export interface ProjectFilter {
   status?: ProjectStatus[];
   projectType?: ProjectType[];
-  clientId?: string;
+  clientId?: string[];
   projectManagerId?: string;
   priority?: Priority[];
   dateRange?: {
-    start: Date | string;
-    end: Date | string;
+    startDate?: Date;
+    endDate?: Date;
   };
   budgetRange?: {
     min: number;

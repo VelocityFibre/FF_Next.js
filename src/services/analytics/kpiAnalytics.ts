@@ -34,11 +34,21 @@ export class KPIAnalyticsService {
         .from(kpiMetrics)
         .groupBy(kpiMetrics.metricType, kpiMetrics.metricName, kpiMetrics.unit);
 
+      let results;
       if (conditions.length > 0) {
-        return await baseQuery.where(and(...conditions));
+        results = await baseQuery.where(and(...conditions));
+      } else {
+        results = await baseQuery;
       }
 
-      return await baseQuery;
+      // Transform results to ensure proper types
+      return results.map(row => ({
+        metricType: row.metricType,
+        metricName: row.metricName,
+        currentValue: Number(row.currentValue || 0),
+        unit: row.unit || '',
+        recordCount: row.recordCount
+      }));
     } catch (error) {
       console.error('Failed to get KPI dashboard:', error);
       throw error;
@@ -66,7 +76,7 @@ export class KPIAnalyticsService {
         conditions.push(eq(kpiMetrics.projectId, projectId));
       }
 
-      return await neonDb
+      const results = await neonDb
         .select({
           date: sql<string>`DATE(${kpiMetrics.recordedDate})`,
           value: avg(kpiMetrics.metricValue),
@@ -76,6 +86,12 @@ export class KPIAnalyticsService {
         .where(and(...conditions))
         .groupBy(sql`DATE(${kpiMetrics.recordedDate})`)
         .orderBy(sql`DATE(${kpiMetrics.recordedDate})`);
+
+      return results.map(row => ({
+        date: row.date,
+        value: Number(row.value || 0),
+        count: row.count
+      }));
     } catch (error) {
       console.error('Failed to get KPI trends:', error);
       throw error;
