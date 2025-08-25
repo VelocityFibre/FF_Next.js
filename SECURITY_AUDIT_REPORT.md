@@ -32,7 +32,8 @@ This security audit identified **18 dependency vulnerabilities** (2 low, 12 mode
 
 **Before:**
 ```typescript
-const connectionString = 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+// REDACTED - Hardcoded database credentials were found and removed
+const connectionString = 'postgresql://[REDACTED_CREDENTIALS]@[REDACTED_HOST]/[DATABASE]?sslmode=require';
 ```
 
 **After:**
