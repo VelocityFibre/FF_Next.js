@@ -13,16 +13,25 @@ const cleanupInterval = setInterval(() => {
   rbacMiddleware.cleanupCache();
 }, 10 * 60 * 1000);
 
-// Cleanup on process termination
-process.on('SIGTERM', () => {
-  clearInterval(cleanupInterval);
-  rbacMiddleware.destroy();
-});
+// Cleanup on browser page unload (browser-compatible)
+if (typeof window !== 'undefined') {
+  // Browser environment - cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    clearInterval(cleanupInterval);
+    rbacMiddleware.destroy();
+  });
+} else if (typeof process !== 'undefined') {
+  // Node.js environment - cleanup on process termination
+  process.on('SIGTERM', () => {
+    clearInterval(cleanupInterval);
+    rbacMiddleware.destroy();
+  });
 
-process.on('SIGINT', () => {
-  clearInterval(cleanupInterval);
-  rbacMiddleware.destroy();
-});
+  process.on('SIGINT', () => {
+    clearInterval(cleanupInterval);
+    rbacMiddleware.destroy();
+  });
+}
 
 // Export as default for backward compatibility
 export default rbacMiddleware;

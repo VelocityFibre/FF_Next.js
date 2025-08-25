@@ -15,7 +15,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend
-} from 'recharts';
+} from '@/components/ui/DynamicChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
 import { StatusBadge } from '@/components/ui';
 import {

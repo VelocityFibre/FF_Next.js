@@ -1,90 +1,573 @@
-# 🚨 AGENT #5: CONTINUOUS VALIDATION REPORT
+# Database Schema Validation Report
 
-## SYSTEM STATUS: MAJOR IMPROVEMENT DETECTED! 🎯
+Generated: 2025-08-25T13:12:59.740Z
 
-**Last Check**: 2025-08-24 18:47:00  
-**Next Check**: 2025-08-24 18:57:00  
-**Progress**: ~40% error reduction achieved by other agents!
+## Issues Found: 140
 
-## CRITICAL ISSUES STATUS UPDATE
 
-### 1. TypeScript Compilation: SIGNIFICANTLY IMPROVED ✅
-- **Previous**: 40+ critical errors across multiple systems
-- **Current**: ~24 remaining errors (40% reduction!)
-- **Impact**: Deployment risk reduced, many systems now stable
-- **Remaining**: Procurement permissions, stock analytics, circular refs
+### HIGH: rfqs.response_deadline
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'response_deadline' expected by application but missing from database
 
-### 2. ESLint Status: CHECKING (LIKELY IMPROVED) 🔄
-- **Previous**: 40 errors, 1557 warnings
-- **Current**: Lint check running without immediate failures
-- **Progress**: Likely significant reduction based on file updates
+### HIGH: rfqs.extended_deadline
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'extended_deadline' expected by application but missing from database
 
-### 3. Test Infrastructure: STILL NEEDS ATTENTION ❌
-- **Status**: 55/55 test files failing (Playwright conflicts)
-- **Impact**: No functionality validation possible
-- **Priority**: Lower due to app stability improvements
+### HIGH: rfqs.closed_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'closed_at' expected by application but missing from database
 
-### 4. Development Server ✅
-- **Status**: RUNNING on port 5175
-- **Performance**: Fast reload, no runtime errors detected
-- **URL**: http://localhost:5175
+### HIGH: rfqs.issued_by
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'issued_by' expected by application but missing from database
 
-## KEY FUNCTIONALITY STATUS
+### HIGH: rfqs.delivery_terms
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'delivery_terms' expected by application but missing from database
 
-### Core Features Still Working ✅
-- **Build Process**: Completes despite warnings (1m 18s)
-- **Development Server**: Running and responsive
-- **Hot Reload**: Active and functioning
-- **Bundle Generation**: Successful (3.2MB total)
+### HIGH: rfqs.validity_period
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'validity_period' expected by application but missing from database
 
-### At-Risk Features ⚠️
-- **Type Safety**: MUCH IMPROVED, remaining issues isolated
-- **Quality Assurance**: No test coverage validation (lower priority)
-- **Production Deployment**: Risk significantly reduced
+### HIGH: rfqs.currency
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'currency' expected by application but missing from database
 
-## MASSIVE REPAIR ACTIVITY OBSERVED 🔧
+### HIGH: rfqs.technical_requirements
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'technical_requirements' expected by application but missing from database
 
-### Agent Coordination Success ✅
-- **100+ files** systematically updated by other agents
-- **Complete supplier system overhaul**: All statistics, compliance, rating modules
-- **Procurement error handling**: Comprehensive fixes being applied
-- **Type system repairs**: Base types and performance types updated
-- **Development server**: Remained stable throughout all changes
+### HIGH: rfqs.responded_suppliers
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'responded_suppliers' expected by application but missing from database
 
-### Key Systems Repaired:
-1. **Supplier Management**: Complete module restructuring
-2. **Procurement Analytics**: Error handling improvements  
-3. **Performance Monitoring**: Type fixes and optimizations
-4. **Rating & Benchmarking**: Full compatibility restore
+### HIGH: rfqs.item_count
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'item_count' expected by application but missing from database
 
-## MONITORING SCHEDULE
+### HIGH: rfqs.total_budget_estimate
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'total_budget_estimate' expected by application but missing from database
 
-- **Every 10 minutes**: Quick health check (build, server status)
-- **Every 30 minutes**: Functionality verification
-- **After any major fixes**: Full validation cycle
-- **Before deployment**: Comprehensive test suite
+### HIGH: rfqs.lowest_quote_value
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'lowest_quote_value' expected by application but missing from database
 
-## RECOMMENDATIONS FOR OTHER AGENTS
+### HIGH: rfqs.highest_quote_value
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'highest_quote_value' expected by application but missing from database
 
-1. **Priority Fix Order**:
-   - TypeScript errors first (blocking deployment)
-   - ESLint critical errors (code quality)
-   - Test infrastructure (validation capability)
+### HIGH: rfqs.average_quote_value
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'average_quote_value' expected by application but missing from database
 
-2. **Test-First Development**:
-   - Fix one issue, validate immediately
-   - Monitor server logs during changes
-   - Check build status after each fix
+### HIGH: rfqs.awarded_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'awarded_at' expected by application but missing from database
 
-3. **Risk Mitigation**:
-   - Keep development server running for immediate feedback
-   - Stage changes carefully to avoid breaking working features
-   - Monitor bundle size and performance impacts
+### HIGH: rfqs.awarded_to
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'awarded_to' expected by application but missing from database
 
-## CONTINUOUS MONITORING ACTIVE 🤖
+### HIGH: rfqs.award_notes
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'award_notes' expected by application but missing from database
 
-Agent #5 will continue monitoring and update this report every 10 minutes.
-Any critical changes will trigger immediate validation cycles.
+### LOW: rfqs.closing_date
+- **Type**: EXTRA_COLUMN
+- **Description**: Column 'closing_date' exists in database but not expected by application
 
----
-*Generated by Agent #5: Validation & Functionality Testing*
+### LOW: rfqs.terms_conditions
+- **Type**: EXTRA_COLUMN
+- **Description**: Column 'terms_conditions' exists in database but not expected by application
+
+### LOW: rfqs.delivery_requirements
+- **Type**: EXTRA_COLUMN
+- **Description**: Column 'delivery_requirements' exists in database but not expected by application
+
+### LOW: rfqs.total_items
+- **Type**: EXTRA_COLUMN
+- **Description**: Column 'total_items' exists in database but not expected by application
+
+### LOW: rfqs.responses_received
+- **Type**: EXTRA_COLUMN
+- **Description**: Column 'responses_received' exists in database but not expected by application
+
+### HIGH: rfq_items.id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'id' expected by application but missing from database
+
+### HIGH: rfq_items.rfq_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'rfq_id' expected by application but missing from database
+
+### HIGH: rfq_items.boq_item_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'boq_item_id' expected by application but missing from database
+
+### HIGH: rfq_items.project_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'project_id' expected by application but missing from database
+
+### HIGH: rfq_items.line_number
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'line_number' expected by application but missing from database
+
+### HIGH: rfq_items.item_code
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'item_code' expected by application but missing from database
+
+### HIGH: rfq_items.description
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'description' expected by application but missing from database
+
+### HIGH: rfq_items.category
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'category' expected by application but missing from database
+
+### HIGH: rfq_items.quantity
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'quantity' expected by application but missing from database
+
+### HIGH: rfq_items.uom
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'uom' expected by application but missing from database
+
+### HIGH: rfq_items.budget_price
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'budget_price' expected by application but missing from database
+
+### HIGH: rfq_items.specifications
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'specifications' expected by application but missing from database
+
+### HIGH: rfq_items.technical_requirements
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'technical_requirements' expected by application but missing from database
+
+### HIGH: rfq_items.acceptable_alternatives
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'acceptable_alternatives' expected by application but missing from database
+
+### HIGH: rfq_items.evaluation_weight
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'evaluation_weight' expected by application but missing from database
+
+### HIGH: rfq_items.is_critical_item
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'is_critical_item' expected by application but missing from database
+
+### HIGH: rfq_items.created_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'created_at' expected by application but missing from database
+
+### HIGH: rfq_items.updated_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'updated_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'id' expected by application but missing from database
+
+### HIGH: supplier_invitations.rfq_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'rfq_id' expected by application but missing from database
+
+### HIGH: supplier_invitations.supplier_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'supplier_id' expected by application but missing from database
+
+### HIGH: supplier_invitations.project_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'project_id' expected by application but missing from database
+
+### HIGH: supplier_invitations.supplier_name
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'supplier_name' expected by application but missing from database
+
+### HIGH: supplier_invitations.supplier_email
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'supplier_email' expected by application but missing from database
+
+### HIGH: supplier_invitations.contact_person
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'contact_person' expected by application but missing from database
+
+### HIGH: supplier_invitations.invitation_status
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'invitation_status' expected by application but missing from database
+
+### HIGH: supplier_invitations.invited_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'invited_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.viewed_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'viewed_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.responded_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'responded_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.declined_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'declined_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.access_token
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'access_token' expected by application but missing from database
+
+### HIGH: supplier_invitations.token_expires_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'token_expires_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.magic_link_token
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'magic_link_token' expected by application but missing from database
+
+### HIGH: supplier_invitations.last_login_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'last_login_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.invitation_message
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'invitation_message' expected by application but missing from database
+
+### HIGH: supplier_invitations.decline_reason
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'decline_reason' expected by application but missing from database
+
+### HIGH: supplier_invitations.reminders_sent
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'reminders_sent' expected by application but missing from database
+
+### HIGH: supplier_invitations.last_reminder_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'last_reminder_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.created_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'created_at' expected by application but missing from database
+
+### HIGH: supplier_invitations.updated_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'updated_at' expected by application but missing from database
+
+### HIGH: quotes.id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'id' expected by application but missing from database
+
+### HIGH: quotes.rfq_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'rfq_id' expected by application but missing from database
+
+### HIGH: quotes.supplier_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'supplier_id' expected by application but missing from database
+
+### HIGH: quotes.supplier_invitation_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'supplier_invitation_id' expected by application but missing from database
+
+### HIGH: quotes.project_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'project_id' expected by application but missing from database
+
+### HIGH: quotes.quote_number
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'quote_number' expected by application but missing from database
+
+### HIGH: quotes.quote_reference
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'quote_reference' expected by application but missing from database
+
+### HIGH: quotes.status
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'status' expected by application but missing from database
+
+### HIGH: quotes.submission_date
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'submission_date' expected by application but missing from database
+
+### HIGH: quotes.valid_until
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'valid_until' expected by application but missing from database
+
+### HIGH: quotes.total_value
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'total_value' expected by application but missing from database
+
+### HIGH: quotes.subtotal
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'subtotal' expected by application but missing from database
+
+### HIGH: quotes.tax_amount
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'tax_amount' expected by application but missing from database
+
+### HIGH: quotes.discount_amount
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'discount_amount' expected by application but missing from database
+
+### HIGH: quotes.currency
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'currency' expected by application but missing from database
+
+### HIGH: quotes.lead_time
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'lead_time' expected by application but missing from database
+
+### HIGH: quotes.payment_terms
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'payment_terms' expected by application but missing from database
+
+### HIGH: quotes.delivery_terms
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'delivery_terms' expected by application but missing from database
+
+### HIGH: quotes.warranty_terms
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'warranty_terms' expected by application but missing from database
+
+### HIGH: quotes.validity_period
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'validity_period' expected by application but missing from database
+
+### HIGH: quotes.notes
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'notes' expected by application but missing from database
+
+### HIGH: quotes.terms
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'terms' expected by application but missing from database
+
+### HIGH: quotes.conditions
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'conditions' expected by application but missing from database
+
+### HIGH: quotes.evaluation_score
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'evaluation_score' expected by application but missing from database
+
+### HIGH: quotes.technical_score
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'technical_score' expected by application but missing from database
+
+### HIGH: quotes.commercial_score
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'commercial_score' expected by application but missing from database
+
+### HIGH: quotes.evaluation_notes
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'evaluation_notes' expected by application but missing from database
+
+### HIGH: quotes.is_winner
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'is_winner' expected by application but missing from database
+
+### HIGH: quotes.awarded_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'awarded_at' expected by application but missing from database
+
+### HIGH: quotes.rejected_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'rejected_at' expected by application but missing from database
+
+### HIGH: quotes.rejection_reason
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'rejection_reason' expected by application but missing from database
+
+### HIGH: quotes.created_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'created_at' expected by application but missing from database
+
+### HIGH: quotes.updated_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'updated_at' expected by application but missing from database
+
+### HIGH: quote_items.id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'id' expected by application but missing from database
+
+### HIGH: quote_items.quote_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'quote_id' expected by application but missing from database
+
+### HIGH: quote_items.rfq_item_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'rfq_item_id' expected by application but missing from database
+
+### HIGH: quote_items.project_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'project_id' expected by application but missing from database
+
+### HIGH: quote_items.line_number
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'line_number' expected by application but missing from database
+
+### HIGH: quote_items.item_code
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'item_code' expected by application but missing from database
+
+### HIGH: quote_items.description
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'description' expected by application but missing from database
+
+### HIGH: quote_items.quoted_quantity
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'quoted_quantity' expected by application but missing from database
+
+### HIGH: quote_items.unit_price
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'unit_price' expected by application but missing from database
+
+### HIGH: quote_items.total_price
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'total_price' expected by application but missing from database
+
+### HIGH: quote_items.discount_percentage
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'discount_percentage' expected by application but missing from database
+
+### HIGH: quote_items.discount_amount
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'discount_amount' expected by application but missing from database
+
+### HIGH: quote_items.alternate_offered
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'alternate_offered' expected by application but missing from database
+
+### HIGH: quote_items.alternate_description
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'alternate_description' expected by application but missing from database
+
+### HIGH: quote_items.alternate_part_number
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'alternate_part_number' expected by application but missing from database
+
+### HIGH: quote_items.alternate_unit_price
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'alternate_unit_price' expected by application but missing from database
+
+### HIGH: quote_items.lead_time
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'lead_time' expected by application but missing from database
+
+### HIGH: quote_items.minimum_order_quantity
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'minimum_order_quantity' expected by application but missing from database
+
+### HIGH: quote_items.packaging_unit
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'packaging_unit' expected by application but missing from database
+
+### HIGH: quote_items.manufacturer_name
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'manufacturer_name' expected by application but missing from database
+
+### HIGH: quote_items.part_number
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'part_number' expected by application but missing from database
+
+### HIGH: quote_items.model_number
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'model_number' expected by application but missing from database
+
+### HIGH: quote_items.technical_notes
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'technical_notes' expected by application but missing from database
+
+### HIGH: quote_items.compliance_certificates
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'compliance_certificates' expected by application but missing from database
+
+### HIGH: quote_items.technical_compliance
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'technical_compliance' expected by application but missing from database
+
+### HIGH: quote_items.commercial_score
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'commercial_score' expected by application but missing from database
+
+### HIGH: quote_items.technical_score
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'technical_score' expected by application but missing from database
+
+### HIGH: quote_items.created_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'created_at' expected by application but missing from database
+
+### HIGH: quote_items.updated_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'updated_at' expected by application but missing from database
+
+### HIGH: quote_documents.id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'id' expected by application but missing from database
+
+### HIGH: quote_documents.quote_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'quote_id' expected by application but missing from database
+
+### HIGH: quote_documents.project_id
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'project_id' expected by application but missing from database
+
+### HIGH: quote_documents.file_name
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'file_name' expected by application but missing from database
+
+### HIGH: quote_documents.original_name
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'original_name' expected by application but missing from database
+
+### HIGH: quote_documents.file_size
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'file_size' expected by application but missing from database
+
+### HIGH: quote_documents.file_type
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'file_type' expected by application but missing from database
+
+### HIGH: quote_documents.document_type
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'document_type' expected by application but missing from database
+
+### HIGH: quote_documents.file_url
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'file_url' expected by application but missing from database
+
+### HIGH: quote_documents.file_path
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'file_path' expected by application but missing from database
+
+### HIGH: quote_documents.storage_provider
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'storage_provider' expected by application but missing from database
+
+### HIGH: quote_documents.uploaded_by
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'uploaded_by' expected by application but missing from database
+
+### HIGH: quote_documents.description
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'description' expected by application but missing from database
+
+### HIGH: quote_documents.is_public
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'is_public' expected by application but missing from database
+
+### HIGH: quote_documents.created_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'created_at' expected by application but missing from database
+
+### HIGH: quote_documents.updated_at
+- **Type**: MISSING_COLUMN
+- **Description**: Column 'updated_at' expected by application but missing from database
+
+
+## Next Steps
+1. Run migration scripts to add missing columns
+2. Update application code to handle extra columns
+3. Verify all functionality after schema updates
+4. Add validation to prevent future schema drift

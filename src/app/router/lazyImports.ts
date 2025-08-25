@@ -54,7 +54,7 @@ export const AwardProcess = lazy(() => import('@/modules/procurement/quote-evalu
 export const QuoteHistory = lazy(() => import('@/modules/procurement/quote-evaluation/components').then(m => ({ default: m.QuoteHistory })));
 
 // Stock Management
-export const StockManagementDashboard = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.StockManagementDashboard })));
+export const StockManagementDashboard = lazy(() => import('@/modules/procurement/stock/StockManagement').then(m => ({ default: m.default })));
 export const StockDashboard = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.StockDashboard })));
 export const GoodsReceipt = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.GoodsReceipt })));
 export const StockMovements = lazy(() => import('@/modules/procurement/stock/components').then(m => ({ default: m.StockMovements })));

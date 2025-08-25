@@ -609,8 +609,6 @@ export class StockCommandService extends BaseService {
       const newDrum = {
         id: uuidv4(),
         ...drumData,
-        currentLength: drumData.currentLength || drumData.originalLength,
-        usedLength: drumData.usedLength || 0,
         drumCondition: drumData.drumCondition || 'good',
         installationStatus: drumData.installationStatus || 'available',
         originalLength: drumData.originalLength.toString(),

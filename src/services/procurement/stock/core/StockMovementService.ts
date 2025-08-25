@@ -760,7 +760,7 @@ export class StockMovementService extends BaseService {
 
         case 'TRANSFER':
           if (!bulkData.fromProjectId || !bulkData.toProjectId) {
-            throw new StockMovementError('Transfer requires fromProjectId and toProjectId', 'TRANSFER' as MovementTypeType, '', 0);
+            throw new StockMovementError('Transfer requires fromProjectId and toProjectId', MovementType.TRANSFER, '', 0);
           }
           
           const transferData: TransferData = {
@@ -783,7 +783,7 @@ export class StockMovementService extends BaseService {
         default:
           throw new StockMovementError(
             `Bulk processing not supported for movement type: ${bulkData.movementType}`,
-            bulkData.movementType as MovementTypeType,
+            bulkData.movementType,
             '',
             0
           );

@@ -96,34 +96,36 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Core React dependencies
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+          // Core React dependencies and ALL React-dependent libraries in vendor chunk
+          if (id.includes('node_modules/react') || 
+              id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/react-router-dom') ||
+              id.includes('node_modules/@tanstack/react-query') || 
+              id.includes('node_modules/zustand') ||
+              id.includes('node_modules/recharts') ||
+              id.includes('node_modules/lucide-react') ||
+              id.includes('node_modules/@mui') || 
+              id.includes('node_modules/@emotion') || 
+              id.includes('node_modules/framer-motion')) {
             return 'vendor';
           }
           
-          // Router and navigation
-          if (id.includes('node_modules/react-router-dom')) {
-            return 'router';
-          }
-          
-          // State management and data fetching
-          if (id.includes('node_modules/@tanstack/react-query') || id.includes('node_modules/zustand')) {
-            return 'query';
+          // All context files and React hooks must be in vendor chunk to ensure React is available
+          if (id.includes('src/contexts/') || 
+              id.includes('Context.tsx') || 
+              id.includes('context/') ||
+              id.includes('/context.tsx') ||
+              id.includes('src/hooks/') ||
+              id.includes('src/components/ui/') ||
+              id.includes('useState') ||
+              id.includes('useEffect') ||
+              id.includes('forwardRef')) {
+            return 'vendor';
           }
           
           // Excel processing library (large dependency)
           if (id.includes('node_modules/xlsx') || id.includes('node_modules/papaparse')) {
             return 'xlsx';
-          }
-          
-          // UI libraries
-          if (id.includes('node_modules/@mui') || id.includes('node_modules/@emotion') || id.includes('node_modules/framer-motion')) {
-            return 'ui-libs';
-          }
-          
-          // Charts and analytics
-          if (id.includes('node_modules/recharts')) {
-            return 'charts';
           }
           
           // Firebase
@@ -136,30 +138,25 @@ export default defineConfig({
             return 'database';
           }
           
-          // Icons
-          if (id.includes('node_modules/lucide-react')) {
-            return 'icons';
-          }
-          
           // Module-specific chunks for large modules
           if (id.includes('src/modules/analytics')) {
-            return 'analytics-module';
+            return 'vendor';
           }
           
           if (id.includes('src/modules/suppliers')) {
-            return 'suppliers-module';
+            return 'vendor';
           }
           
           if (id.includes('src/modules/procurement')) {
-            return 'procurement-module';
+            return 'vendor';
           }
           
           if (id.includes('src/modules/projects')) {
-            return 'projects-module';
+            return 'vendor';
           }
           
           if (id.includes('src/modules/contractors')) {
-            return 'contractors-module';
+            return 'vendor';
           }
           
           // Services
@@ -171,6 +168,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom'],
+    include: ['react', 'react-dom', 'react-router-dom', 'recharts', '@tanstack/react-query', 'zustand', 'lucide-react', '@mui/material'],
   },
 })

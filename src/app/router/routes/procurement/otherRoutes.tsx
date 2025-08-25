@@ -1,11 +1,17 @@
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { Loading } from '../../components';
-import {
-  QuoteEvaluationPage,
-  PurchaseOrdersPage,
-  SupplierPortalPage,
-  ReportsAnalyticsPage
-} from './placeholderComponents';
+// Real component imports - replacing placeholders with actual implementations
+const QuoteEvaluationPage = lazy(() => 
+  import('@/modules/procurement/quotes/QuoteEvaluationPage').then(m => ({ default: m.default }))
+);
+
+const PurchaseOrdersPage = lazy(() => 
+  import('@/modules/procurement/orders/PurchaseOrdersPage').then(m => ({ default: m.default }))
+);
+
+const SupplierPortalPage = lazy(() => 
+  import('@/modules/procurement/suppliers/SupplierPortalPage').then(m => ({ default: m.default }))
+);
 
 // Legacy imports for backward compatibility (only importing what's actually used)
 import {
@@ -25,6 +31,11 @@ import {
   SupplierPerformance,
   ComplianceReports
 } from '../../lazyImports';
+
+// Import the real ReportsAnalyticsPage component
+const ReportsAnalyticsPage = lazy(() => 
+  import('@/modules/procurement/reports/ReportsAnalyticsPage').then(m => ({ default: m.default }))
+);
 
 // New unified tab routes
 export const quoteEvaluationRoutes = {

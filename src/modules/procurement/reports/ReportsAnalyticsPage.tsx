@@ -13,7 +13,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend
-} from 'recharts';
+} from '@/components/ui/DynamicChart';
 import {
   TrendingUp,
   DollarSign,

@@ -1,0 +1,1 @@
+window.debugMode = true; setTimeout(() => { try { console.log("React global:", typeof window.React); console.log("React createContext:", typeof window.React?.createContext); const modules = Array.from(document.scripts).map(s => s.src); console.log("Script modules:", modules); } catch(e) { console.error("Debug error:", e.message); } }, 1000);

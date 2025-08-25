@@ -3,7 +3,7 @@
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from '@/components/ui/DynamicChart';
 import { DashboardChartsProps } from './AnalyticsDashboardTypes';
 
 export function DashboardCharts({ projectTrends, kpiDashboard }: DashboardChartsProps) {
