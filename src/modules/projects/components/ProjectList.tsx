@@ -33,7 +33,7 @@ export function ProjectList() {
     e.preventDefault();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (_id: string) => {
     if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
       return;
     }

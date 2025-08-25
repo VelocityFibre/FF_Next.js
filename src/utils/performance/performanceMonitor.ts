@@ -65,7 +65,7 @@ class PerformanceMonitor {
       // Track navigation timing
       this.trackNavigationTiming();
     } catch (error) {
-      console.warn('Performance tracking not supported:', error);
+      // console.warn('Performance tracking not supported:', error);
     }
   }
 
@@ -232,7 +232,7 @@ class PerformanceMonitor {
     const result = renderFn();
     const endTime = performance.now();
     
-    console.debug(`${componentName} render time: ${(endTime - startTime).toFixed(2)}ms`);
+    // console.debug(`${componentName} render time: ${(endTime - startTime).toFixed(2)}ms`);
     
     return result;
   }
@@ -245,11 +245,11 @@ class PerformanceMonitor {
     try {
       const result = await asyncFn();
       const endTime = performance.now();
-      console.debug(`${operationName} execution time: ${(endTime - startTime).toFixed(2)}ms`);
+      // console.debug(`${operationName} execution time: ${(endTime - startTime).toFixed(2)}ms`);
       return result;
     } catch (error) {
       const endTime = performance.now();
-      console.error(`${operationName} failed after ${(endTime - startTime).toFixed(2)}ms:`, error);
+      // console.error(`${operationName} failed after ${(endTime - startTime).toFixed(2)}ms:`, error);
       throw error;
     }
   }
@@ -385,7 +385,7 @@ export function usePerformanceMonitor(componentName: string) {
 
   React.useEffect(() => {
     const endTime = performance.now();
-    console.debug(`${componentName} mount time: ${(endTime - startTime).toFixed(2)}ms`);
+    // console.debug(`${componentName} mount time: ${(endTime - startTime).toFixed(2)}ms`);
   }, [componentName, startTime]);
 
   const measureRender = React.useCallback((renderFn: () => any) => {
@@ -409,7 +409,7 @@ export function withPerformanceMonitoring<P extends Record<string, unknown>>(
     
     React.useEffect(() => {
       const renderEnd = performance.now();
-      console.debug(`${displayName} render time: ${(renderEnd - renderStart).toFixed(2)}ms`);
+      // console.debug(`${displayName} render time: ${(renderEnd - renderStart).toFixed(2)}ms`);
     });
 
     return React.createElement(WrappedComponent, props);

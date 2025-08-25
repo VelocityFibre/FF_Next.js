@@ -105,7 +105,7 @@ export function StaffDebug() {
         {managers.length === 0 && activeStaff.length > 0 && (
           <div className="bg-yellow-100 p-3 rounded">
             <p className="text-sm">
-              No project managers found. Staff must have status 'active' and level of 'senior', 'lead', 'manager', or 'executive'.
+              No project managers found. Staff must have status &apos;active&apos; and level of &apos;senior&apos;, &apos;lead&apos;, &apos;manager&apos;, or &apos;executive&apos;.
             </p>
             <p className="text-sm mt-2">
               Current active staff levels:

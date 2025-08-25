@@ -13,7 +13,7 @@ export async function testFirebaseConnection(): Promise<boolean> {
     // Firebase connection successful
     return true;
   } catch (error) {
-    console.error('❌ Firebase connection failed:', error);
+    // console.error('❌ Firebase connection failed:', error);
     return false;
   }
 }

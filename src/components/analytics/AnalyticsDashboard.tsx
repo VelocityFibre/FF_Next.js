@@ -58,7 +58,7 @@ export function AnalyticsDashboard() {
         projectTrends
       });
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      // console.error('Failed to load dashboard data:', error);
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ export function AnalyticsDashboard() {
       setLastSyncTime(new Date());
       await loadDashboardData();
     } catch (error) {
-      console.error('Sync failed:', error);
+      // console.error('Sync failed:', error);
     } finally {
       setSyncing(false);
     }

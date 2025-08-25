@@ -63,7 +63,7 @@ export function LoginForm({ onSuccess, mode = 'login', onModeChange }: LoginForm
       }
       onSuccess?.();
     } catch (err) {
-      console.error('Authentication error:', err);
+      // console.error('Authentication error:', err);
       // Error is handled by the auth context
     } finally {
       setIsLoading(false);
@@ -76,7 +76,7 @@ export function LoginForm({ onSuccess, mode = 'login', onModeChange }: LoginForm
       await signInWithGoogleEnhanced(rememberMe);
       onSuccess?.();
     } catch (err) {
-      console.error('Google sign-in error:', err);
+      // console.error('Google sign-in error:', err);
       // Error is handled by the auth context
     }
   };
@@ -134,7 +134,7 @@ export function LoginForm({ onSuccess, mode = 'login', onModeChange }: LoginForm
         </form>
 
         <div className="text-center text-xs text-gray-500">
-          By continuing, you agree to FibreFlow's Terms of Service and Privacy Policy
+          By continuing, you agree to FibreFlow&apos;s Terms of Service and Privacy Policy
         </div>
       </div>
     </div>

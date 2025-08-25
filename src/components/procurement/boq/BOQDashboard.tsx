@@ -53,7 +53,7 @@ export default function BOQDashboard({ className }: BOQDashboardProps) {
       setRecentActivity(data.recentActivity);
       setActiveJobs(data.activeJobs);
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      // console.error('Failed to load dashboard data:', error);
       toast.error('Failed to load dashboard data');
     } finally {
       setIsLoading(false);

@@ -114,7 +114,7 @@ export function useSOWDocuments() {
     setSowDocuments(prev => prev.filter(doc => doc.id !== id));
   };
 
-  const downloadDocument = async (doc: SOWListItem) => {
+  const downloadDocument = async (_doc: SOWListItem) => {
 
     // Implement actual download logic
   };

@@ -29,7 +29,7 @@ export function SOWListPage() {
 
   };
 
-  const handleEditDocument = (doc: SOWListItem) => {
+  const handleEditDocument = (_doc: SOWListItem) => {
     // Navigate to edit page
 
   };

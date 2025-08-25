@@ -307,11 +307,11 @@ export default function StockManagementPage() {
     );
   };
 
-  const handleStockAction = (itemId: string, action: 'issue' | 'receive' | 'adjust' | 'transfer') => {
+  const handleStockAction = (_itemId: string, _action: 'issue' | 'receive' | 'adjust' | 'transfer') => {
 
   };
 
-  const handleBulkAction = (action: string) => {
+  const handleBulkAction = (_action: string) => {
     if (selectedItems.length === 0) return;
 
   };

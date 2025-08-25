@@ -67,7 +67,7 @@ export function FieldAppPortal() {
     setShowTaskDialog(true);
   };
 
-  const handleTechnicianSelect = (technician: FieldTechnician) => {
+  const handleTechnicianSelect = (_technician: FieldTechnician) => {
   };
 
   const handleRefresh = () => {

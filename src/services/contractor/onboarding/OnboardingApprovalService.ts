@@ -20,7 +20,7 @@ export class OnboardingApprovalService {
   /**
    * Submit contractor for final approval
    */
-  async submitForApproval(contractorId: string): Promise<OnboardingProgress> {
+  async submitForApproval(_contractorId: string): Promise<OnboardingProgress> {
     try {
       const progress = await this.progressManager.getProgress(contractorId);
       
@@ -123,7 +123,7 @@ export class OnboardingApprovalService {
   /**
    * Check if contractor can be submitted for approval
    */
-  async canSubmitForApproval(contractorId: string): Promise<{ canSubmit: boolean; reason?: string }> {
+  async canSubmitForApproval(_contractorId: string): Promise<{ canSubmit: boolean; reason?: string }> {
     try {
       const progress = await this.progressManager.getProgress(contractorId);
       return ProgressTracker.canSubmitForApproval(progress);
@@ -136,7 +136,7 @@ export class OnboardingApprovalService {
   /**
    * Get approval history for a contractor
    */
-  async getApprovalHistory(_contractorId: string): Promise<Array<{
+  async getApprovalHistory(__contractorId: string): Promise<Array<{
     action: 'approved' | 'rejected' | 'submitted';
     timestamp: Date;
     by?: string;

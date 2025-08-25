@@ -61,7 +61,7 @@ export function ClientImport({ onComplete }: ClientImportProps = {}) {
         onComplete();
       }
     } catch (error) {
-      console.error('Import error:', error);
+      // console.error('Import error:', error);
       setImportResult({
         success: false,
         imported: 0,
@@ -102,7 +102,7 @@ export function ClientImport({ onComplete }: ClientImportProps = {}) {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Export error:', error);
+      // console.error('Export error:', error);
       alert('Failed to export client data');
     }
   };

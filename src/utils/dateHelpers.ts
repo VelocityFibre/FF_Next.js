@@ -46,7 +46,7 @@ export function safeToISOString(date: any): string {
     // Default to current date
     return new Date().toISOString();
   } catch (error) {
-    console.warn('Error converting date:', error, date);
+    // console.warn('Error converting date:', error, date);
     return new Date().toISOString();
   }
 }
@@ -95,7 +95,7 @@ export function safeToDate(date: any): Date {
     // Default to current date
     return new Date();
   } catch (error) {
-    console.warn('Error converting date:', error, date);
+    // console.warn('Error converting date:', error, date);
     return new Date();
   }
 }
@@ -115,7 +115,7 @@ export function safeFormatDate(date: any, fallback: string = 'N/A'): string {
     }
     return fallback;
   } catch (error) {
-    console.warn('Error formatting date:', error, date);
+    // console.warn('Error formatting date:', error, date);
     return fallback;
   }
 }

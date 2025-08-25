@@ -19,10 +19,10 @@ const queryClient = new QueryClient({
 function App(): JSX.Element {
   return (
     <ErrorBoundary
-      onError={(error, errorInfo) => {
+      onError={(_error, _errorInfo) => {
         // In production, send to error tracking service
         if (process.env.NODE_ENV === 'development') {
-          console.error('Global error caught:', error, errorInfo);
+          // console.error('Global error caught:', error, errorInfo);
         }
       }}
     >

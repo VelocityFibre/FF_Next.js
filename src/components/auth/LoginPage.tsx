@@ -145,7 +145,7 @@ export function LoginPage() {
 
         <div className="text-center">
           <p className="mt-2 text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <span className="font-medium text-blue-600 hover:text-blue-500 cursor-pointer">
               Contact your administrator
             </span>

@@ -7,7 +7,7 @@ interface DropsGridProps {
 }
 
 export function DropsGrid({ drops }: DropsGridProps) {
-  const handleDropClick = (drop: Drop) => {
+  const handleDropClick = (_drop: Drop) => {
 
   };
 

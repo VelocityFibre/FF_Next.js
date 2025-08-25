@@ -1,15 +1,10 @@
 /**
- * Procurement section configuration
+ * Procurement section configuration - Updated for Portal Architecture
  */
 
 import {
   ShoppingCart,
-  FileText,
-  BarChart3,
-  Activity,
-  FileSignature,
   Truck,
-  TrendingUp
 } from 'lucide-react';
 import type { NavSection } from './types';
 
@@ -19,58 +14,18 @@ export const procurementSection: NavSection = {
     {
       to: '/app/procurement',
       icon: ShoppingCart,
-      label: 'Procurement Dashboard',
+      label: 'Procurement Portal',
       shortLabel: 'Procure',
       permissions: [],
+      description: 'Dashboard, BOQ, RFQ, Quote Evaluation, Stock Movement, Purchase Orders'
     },
     {
-      to: '/app/procurement/boq',
-      icon: FileText,
-      label: 'Bill of Quantities',
-      shortLabel: 'BOQ',
-      permissions: [],
-    },
-    {
-      to: '/app/procurement/rfq',
-      icon: FileText,
-      label: 'Request for Quote',
-      shortLabel: 'RFQ',
-      permissions: [],
-    },
-    {
-      to: '/app/procurement/quotes',
-      icon: BarChart3,
-      label: 'Quote Evaluation',
-      shortLabel: 'Quotes',
-      permissions: [],
-    },
-    {
-      to: '/app/procurement/stock',
-      icon: Activity,
-      label: 'Stock Management',
-      shortLabel: 'Stock',
-      permissions: [],
-    },
-    {
-      to: '/app/procurement/orders',
-      icon: FileSignature,
-      label: 'Purchase Orders',
-      shortLabel: 'Orders',
-      permissions: [],
-    },
-    {
-      to: '/app/procurement/suppliers',
+      to: '/app/suppliers',
       icon: Truck,
-      label: 'Suppliers',
+      label: 'Suppliers Portal',
       shortLabel: 'Supply',
       permissions: [],
-    },
-    {
-      to: '/app/procurement/reports',
-      icon: TrendingUp,
-      label: 'Procurement Reports',
-      shortLabel: 'Reports',
-      permissions: [],
+      description: 'Dashboard, RFQ Invites, Company Profile, Performance, Documents, Messages'
     },
   ]
 };

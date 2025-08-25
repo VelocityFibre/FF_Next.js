@@ -62,7 +62,7 @@ export async function reverseGeocode(lat: number, lng: number): Promise<Location
     };
 
   } catch (error) {
-    console.error('Reverse geocoding failed:', error);
+    // console.error('Reverse geocoding failed:', error);
     return null;
   }
 }

@@ -280,7 +280,7 @@ export function AssignmentManagement({ contractorId, contractorName }: Assignmen
       {showAssignmentForm && (
         <AssignmentForm
           teams={teams}
-          onSubmit={async (data) => {
+          onSubmit={async (_data) => {
             // Handle assignment creation
 
             setShowAssignmentForm(false);

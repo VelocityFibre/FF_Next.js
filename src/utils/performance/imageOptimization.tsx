@@ -291,7 +291,7 @@ export class ImageCompressor {
         });
         results[`${size}w`] = compressed;
       } catch (error) {
-        console.warn(`Failed to generate ${size}w version:`, error);
+        // console.warn(`Failed to generate ${size}w version:`, error);
       }
     }
 

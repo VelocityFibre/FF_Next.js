@@ -99,7 +99,7 @@ export const exportBOQToCSV = (
 
     toast.success('BOQ exported successfully');
   } catch (error) {
-    console.error('Failed to export BOQ:', error);
+    // console.error('Failed to export BOQ:', error);
     toast.error('Failed to export BOQ');
   }
 };

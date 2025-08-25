@@ -70,6 +70,7 @@ export const PurchaseOrderList = lazy(() => import('@/modules/procurement/purcha
 // Supplier Portal
 export const SupplierPortalDashboard = lazy(() => import('@/modules/procurement/supplier-portal/components').then(m => ({ default: m.SupplierPortalDashboard })));
 export const SuppliersPage = lazy(() => import('@/modules/suppliers/SuppliersPage').then(m => ({ default: m.SuppliersPage })));
+export const SuppliersPortalPage = lazy(() => import('@/modules/suppliers/SuppliersPortalPage').then(m => ({ default: m.SuppliersPortalPage })));
 
 // Reporting
 export const ProcurementReporting = lazy(() => import('@/modules/procurement/reporting/components').then(m => ({ default: m.ProcurementReporting })));

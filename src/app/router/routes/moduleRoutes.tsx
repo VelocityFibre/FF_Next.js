@@ -29,7 +29,8 @@ import {
   EnhancedKPIDashboard,
   KPIDashboard,
   ReportsDashboard,
-  Settings
+  Settings,
+  SuppliersPortalPage
 } from '../lazyImports';
 
 export const moduleRoutes = [
@@ -269,6 +270,15 @@ export const moduleRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <StaffSettings />
+      </Suspense>
+    ),
+  },
+  // Suppliers Portal
+  {
+    path: 'suppliers',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <SuppliersPortalPage />
       </Suspense>
     ),
   },

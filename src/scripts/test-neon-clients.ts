@@ -3,9 +3,9 @@ import { sql } from '../lib/neon';
 async function testNeonClients() {
   try {
     // 1. Test basic connection
-    const test = await sql`SELECT NOW() as current_time`;
+    await sql`SELECT NOW() as current_time`;
     // 2. Check if clients table exists
-    const tables = await sql`
+    await sql`
       SELECT table_name 
       FROM information_schema.tables 
       WHERE table_schema = 'public' 
@@ -31,12 +31,12 @@ async function testNeonClients() {
         ORDER BY created_at DESC 
         LIMIT 3
       `;
-      sample.forEach((client, i) => {
+      sample.forEach((_client, _i) => {
       });
     }
     
     // 6. Test the query used in the service
-    const serviceQuery = await sql`
+    await sql`
       SELECT 
         c.*,
         s.name as account_manager_name
