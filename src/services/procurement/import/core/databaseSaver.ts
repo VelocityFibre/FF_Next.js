@@ -48,8 +48,7 @@ export class BOQImportDatabaseSaver {
     
     // Mock database operation
     await new Promise(resolve => setTimeout(resolve, 100));
-    
-    console.log(`Created BOQ record: ${boqId} for project: ${context.projectId}`);
+
     return boqId;
   }
 
@@ -70,7 +69,7 @@ export class BOQImportDatabaseSaver {
         if (config.duplicateHandling === 'skip') {
           const exists = await this.checkItemExists(boqId, item);
           if (exists) {
-            console.log(`Skipping duplicate item: ${item.description}`);
+
             continue;
           }
         }
@@ -134,8 +133,7 @@ export class BOQImportDatabaseSaver {
       mapping_confidence: item.catalogMatch?.confidence,
       created_at: new Date().toISOString()
     };
-    
-    console.log(`Saving BOQ item: ${itemRecord.description}`);
+
   }
 
   /**
@@ -158,8 +156,7 @@ export class BOQImportDatabaseSaver {
       suggestions: JSON.stringify(exception.exception.suggestions),
       created_at: exception.exception.createdAt.toISOString()
     };
-    
-    console.log(`Saving mapping exception: ${exceptionRecord.exception_id}`);
+
   }
 
   /**
@@ -171,7 +168,7 @@ export class BOQImportDatabaseSaver {
   ): Promise<void> {
     // TODO: Implement Neon database status update
     await new Promise(resolve => setTimeout(resolve, 50));
-    console.log(`Updated BOQ ${boqId} status to: ${status}`);
+
   }
 
   /**

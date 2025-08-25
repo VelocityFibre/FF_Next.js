@@ -105,9 +105,6 @@ export class StockOperations extends BaseService {
       reorderLevel: positionData.reorderLevel || 0,
       maxStockLevel: positionData.maxStockLevel || 0,
       economicOrderQuantity: positionData.economicOrderQuantity || 0,
-      lastMovementDate: null,
-      lastCountDate: null,
-      nextCountDue: null,
       isActive: true,
       stockStatus: 'normal',
     };
@@ -264,7 +261,7 @@ export class StockOperations extends BaseService {
       // Transform return data to GRN format (returns are like receipts)
       const grnData: GRNData = {
         referenceNumber: returnData.referenceNumber,
-        ...(returnData.originalIssueNumber && { poNumber: returnData.originalIssueNumber }),
+        poNumber: returnData.originalIssueNumber || 'RETURN-' + returnData.referenceNumber,
         supplierName: `Return from ${returnData.returnedBy}`,
         receivedBy: returnData.returnedTo,
         receivedDate: returnData.returnDate,

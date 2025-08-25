@@ -51,7 +51,6 @@ export class ScorecardGenerator {
         lastUpdated: new Date()
       };
 
-      console.log(`[ScorecardGenerator] Generated scorecard for supplier ${supplierName}: ${overallScore}/100`);
       return scorecard;
     } catch (error) {
       console.error('Error generating supplier scorecard:', error);

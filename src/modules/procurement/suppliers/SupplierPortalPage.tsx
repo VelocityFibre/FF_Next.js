@@ -192,8 +192,7 @@ const SupplierPortalPage: React.FC<SupplierPortalProps> = () => {
   const handleSubmitQuote = async (quoteData: any) => {
     try {
       // In production, this would submit the quote via the API
-      console.log('Submitting quote:', quoteData);
-      
+
       // Update the RFQ status to submitted
       setRFQInvitations(prev => 
         prev.map(rfq => 

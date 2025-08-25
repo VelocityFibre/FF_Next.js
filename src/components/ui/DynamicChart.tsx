@@ -8,20 +8,21 @@ import { ChartErrorBoundary } from './ChartErrorBoundary';
 const createLazyChartComponent = (componentName: string) => 
   lazy(() => 
     import('recharts')
-      .then(module => {
+      .then((module: any) => {
         if (!module[componentName]) {
           throw new Error(`Component ${componentName} not found in recharts module`);
         }
-        return { default: module[componentName] };
+        return { default: module[componentName] as React.ComponentType<any> };
       })
       .catch(error => {
         console.error(`Failed to load recharts component ${componentName}:`, error);
         // Return a fallback component
-        return {
-          default: () => React.createElement('div', {
+        const FallbackComponent: React.ComponentType<any> = () => 
+          React.createElement('div', {
             className: 'p-4 text-center text-gray-500 border-2 border-dashed border-gray-300 rounded'
-          }, `Chart component (${componentName}) failed to load`)
-        };
+          }, `Chart component (${componentName}) failed to load`);
+        
+        return { default: FallbackComponent };
       })
   );
 

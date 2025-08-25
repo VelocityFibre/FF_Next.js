@@ -250,8 +250,7 @@ export class TrackingHandlers {
     shouldRetry: boolean | undefined;
   }> {
     try {
-      console.log(`Executing tracking retry: ${retryStrategy.type}`, retryStrategy.data);
-      
+
       switch (retryStrategy.action) {
         case 'resync_tracking_data':
           return {

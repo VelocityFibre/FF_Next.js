@@ -3,7 +3,19 @@
  * Functions to transform database results to domain models
  */
 
-import { StaffMember, StaffDropdownOption } from '@/types/staff.types';
+import { StaffMember, StaffDropdownOption, Timestamp } from '@/types/staff.types';
+import { safeToDate } from '@/utils/dateHelpers';
+
+// Helper function to convert Date to Timestamp for Firebase compatibility
+function dateToTimestamp(date: Date): Timestamp {
+  return {
+    seconds: Math.floor(date.getTime() / 1000),
+    nanoseconds: (date.getTime() % 1000) * 1000000,
+    toDate: () => date,
+    toMillis: () => date.getTime(),
+    isEqual: (other: Timestamp) => date.getTime() === other.toMillis()
+  } as Timestamp;
+}
 
 /**
  * Map database result to StaffMember
@@ -20,11 +32,11 @@ export function mapToStaffMember(staff: any): StaffMember {
     employeeId: staff.employee_id || '',
     managerName: staff.manager_name || '',
     managerPosition: staff.manager_position || '',
-    startDate: staff.join_date || new Date(),
+    startDate: staff.join_date ? dateToTimestamp(safeToDate(staff.join_date)) : dateToTimestamp(new Date()),
     alternativePhone: staff.alternate_phone || '',
     contractType: staff.type || 'PERMANENT',
-    createdAt: staff.created_at || new Date(),
-    updatedAt: staff.updated_at || new Date(),
+    createdAt: staff.created_at ? dateToTimestamp(safeToDate(staff.created_at)) : dateToTimestamp(new Date()),
+    updatedAt: staff.updated_at ? dateToTimestamp(safeToDate(staff.updated_at)) : dateToTimestamp(new Date()),
     createdBy: staff.created_by || '',
     lastModifiedBy: staff.last_modified_by || '',
     
@@ -60,11 +72,11 @@ export function mapToStaffMember(staff: any): StaffMember {
     
     // Training and Development
     trainingRecords: staff.training_records || [],
-    nextTrainingDue: staff.next_training_due,
-    safetyTrainingExpiry: staff.safety_training_expiry,
+    nextTrainingDue: staff.next_training_due ? dateToTimestamp(safeToDate(staff.next_training_due)) : undefined,
+    safetyTrainingExpiry: staff.safety_training_expiry ? dateToTimestamp(safeToDate(staff.safety_training_expiry)) : undefined,
     
     // Employment Terms
-    endDate: staff.end_date,
+    endDate: staff.end_date ? dateToTimestamp(safeToDate(staff.end_date)) : undefined,
     salaryGrade: staff.salary_grade,
     hourlyRate: staff.hourly_rate,
     
@@ -72,7 +84,7 @@ export function mapToStaffMember(staff: any): StaffMember {
     // joinDate is mapped to startDate above
     managerEmployeeId: staff.manager_employee_id || '',
     isActive: staff.is_active ?? true,
-    lastActiveDate: staff.last_active_date,
+    ...(staff.last_active_date && { lastActiveDate: dateToTimestamp(safeToDate(staff.last_active_date)) }),
     profilePhotoUrl: staff.profile_image_url,
     emergencyContactName: staff.emergency_contact_name || '',
     emergencyContactPhone: staff.emergency_contact_phone || '',

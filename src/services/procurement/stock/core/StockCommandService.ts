@@ -327,9 +327,8 @@ export class StockCommandService extends BaseService {
           // Validate we don't go below reserved quantity
           if (newOnHand < currentReserved) {
             throw new InsufficientStockError(
-              'Adjustment would result in on-hand quantity less than reserved quantity',
               adjustmentData.itemCode,
-              adjustmentData.adjustmentQuantity,
+              Number(adjustmentData.adjustmentQuantity),
               currentOnHand - currentReserved
             );
           }
@@ -465,9 +464,8 @@ export class StockCommandService extends BaseService {
         // Check if enough stock is available
         if (currentAvailable < reservationData.reservedQuantity) {
           throw new InsufficientStockError(
-            'Insufficient stock available for reservation',
             reservationData.itemCode,
-            reservationData.reservedQuantity,
+            Number(reservationData.reservedQuantity),
             currentAvailable
           );
         }
@@ -537,10 +535,10 @@ export class StockCommandService extends BaseService {
         // Check if enough reservation exists to release
         if (currentReserved < releaseQuantity) {
           throw new StockReservationError(
-            `Cannot release ${releaseQuantity} units. Only ${currentReserved} units are reserved`,
             itemCode,
-            releaseQuantity,
-            currentReserved
+            Number(releaseQuantity),
+            currentReserved,
+            []
           );
         }
 
@@ -718,64 +716,72 @@ export class StockCommandService extends BaseService {
   }
 
   private mapStockPosition(position: any): StockPosition {
-    return {
+    const result: StockPosition = {
       id: position.id,
       projectId: position.projectId,
       itemCode: position.itemCode,
       itemName: position.itemName,
-      description: position.description || undefined,
-      category: position.category || undefined,
       uom: position.uom,
       onHandQuantity: Number(position.onHandQuantity || 0),
       reservedQuantity: Number(position.reservedQuantity || 0),
       availableQuantity: Number(position.availableQuantity || 0),
       inTransitQuantity: Number(position.inTransitQuantity || 0),
-      averageUnitCost: position.averageUnitCost ? Number(position.averageUnitCost) : undefined,
-      totalValue: position.totalValue ? Number(position.totalValue) : undefined,
-      warehouseLocation: position.warehouseLocation || undefined,
-      binLocation: position.binLocation || undefined,
-      reorderLevel: position.reorderLevel ? Number(position.reorderLevel) : undefined,
-      maxStockLevel: position.maxStockLevel ? Number(position.maxStockLevel) : undefined,
-      economicOrderQuantity: position.economicOrderQuantity ? Number(position.economicOrderQuantity) : undefined,
-      lastMovementDate: position.lastMovementDate || undefined,
-      lastCountDate: position.lastCountDate || undefined,
-      nextCountDue: position.nextCountDue || undefined,
       isActive: Boolean(position.isActive),
       stockStatus: position.stockStatus,
       createdAt: position.createdAt,
       updatedAt: position.updatedAt,
     };
+
+    // Only add optional properties if they have values
+    if (position.description) result.description = position.description;
+    if (position.category) result.category = position.category;
+    if (position.averageUnitCost) result.averageUnitCost = Number(position.averageUnitCost);
+    if (position.totalValue) result.totalValue = Number(position.totalValue);
+    if (position.warehouseLocation) result.warehouseLocation = position.warehouseLocation;
+    if (position.binLocation) result.binLocation = position.binLocation;
+    if (position.reorderLevel) result.reorderLevel = Number(position.reorderLevel);
+    if (position.maxStockLevel) result.maxStockLevel = Number(position.maxStockLevel);
+    if (position.economicOrderQuantity) result.economicOrderQuantity = Number(position.economicOrderQuantity);
+    if (position.lastMovementDate) result.lastMovementDate = position.lastMovementDate;
+    if (position.lastCountDate) result.lastCountDate = position.lastCountDate;
+    if (position.nextCountDue) result.nextCountDue = position.nextCountDue;
+
+    return result;
   }
 
   private mapCableDrum(drum: any): CableDrum {
-    return {
+    const result: CableDrum = {
       id: drum.id,
       projectId: drum.projectId,
-      stockPositionId: drum.stockPositionId || undefined,
       drumNumber: drum.drumNumber,
-      serialNumber: drum.serialNumber || undefined,
-      supplierDrumId: drum.supplierDrumId || undefined,
       cableType: drum.cableType,
-      cableSpecification: drum.cableSpecification || undefined,
-      manufacturerName: drum.manufacturerName || undefined,
-      partNumber: drum.partNumber || undefined,
       originalLength: Number(drum.originalLength),
       currentLength: Number(drum.currentLength),
       usedLength: Number(drum.usedLength),
-      drumWeight: drum.drumWeight ? Number(drum.drumWeight) : undefined,
-      cableWeight: drum.cableWeight ? Number(drum.cableWeight) : undefined,
-      drumDiameter: drum.drumDiameter ? Number(drum.drumDiameter) : undefined,
-      currentLocation: drum.currentLocation || undefined,
       drumCondition: drum.drumCondition,
       installationStatus: drum.installationStatus,
-      lastMeterReading: drum.lastMeterReading ? Number(drum.lastMeterReading) : undefined,
-      lastReadingDate: drum.lastReadingDate || undefined,
-      lastUsedDate: drum.lastUsedDate || undefined,
-      testCertificate: drum.testCertificate || undefined,
-      installationNotes: drum.installationNotes || undefined,
       createdAt: drum.createdAt,
       updatedAt: drum.updatedAt,
     };
+
+    // Only add optional properties if they have values
+    if (drum.stockPositionId) result.stockPositionId = drum.stockPositionId;
+    if (drum.serialNumber) result.serialNumber = drum.serialNumber;
+    if (drum.supplierDrumId) result.supplierDrumId = drum.supplierDrumId;
+    if (drum.cableSpecification) result.cableSpecification = drum.cableSpecification;
+    if (drum.manufacturerName) result.manufacturerName = drum.manufacturerName;
+    if (drum.partNumber) result.partNumber = drum.partNumber;
+    if (drum.drumWeight) result.drumWeight = Number(drum.drumWeight);
+    if (drum.cableWeight) result.cableWeight = Number(drum.cableWeight);
+    if (drum.drumDiameter) result.drumDiameter = Number(drum.drumDiameter);
+    if (drum.currentLocation) result.currentLocation = drum.currentLocation;
+    if (drum.lastMeterReading) result.lastMeterReading = Number(drum.lastMeterReading);
+    if (drum.lastReadingDate) result.lastReadingDate = drum.lastReadingDate;
+    if (drum.lastUsedDate) result.lastUsedDate = drum.lastUsedDate;
+    if (drum.testCertificate) result.testCertificate = drum.testCertificate;
+    if (drum.installationNotes) result.installationNotes = drum.installationNotes;
+
+    return result;
   }
 }
 

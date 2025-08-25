@@ -68,7 +68,6 @@ export function FieldAppPortal() {
   };
 
   const handleTechnicianSelect = (technician: FieldTechnician) => {
-    console.log('Selected technician:', technician);
   };
 
   const handleRefresh = () => {
@@ -76,7 +75,6 @@ export function FieldAppPortal() {
   };
 
   const handleExport = () => {
-    console.log('Export field data');
   };
 
   const getTodayStats = () => {

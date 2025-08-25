@@ -12,7 +12,12 @@ const connectionString = process.env.DATABASE_URL || (() => {
 })();
 
 export default {
-  schema: ['./src/lib/neon/schema/*.schema.ts'],
+  schema: [
+    './src/lib/neon/schema/*.schema.ts',
+    './src/lib/neon/schema/procurement/*.schema.ts',
+    './src/lib/neon/schema/procurement/rfq/*.schema.ts',
+    './src/lib/neon/schema/analytics/*.schema.ts'
+  ],
   out: './drizzle/migrations',
   dialect: 'postgresql',
   dbCredentials: {

@@ -19,9 +19,7 @@ export async function createStaff(data: StaffFormData): Promise<StaffMember> {
     
     // Process reportsTo field
     const processedReportsTo = processReportsToField(data.reportsTo);
-    
-    console.log('Pre-SQL final value:', processedReportsTo);
-    
+
     const result = await sql`
       INSERT INTO staff (
         employee_id, name, email, phone, department, position, 
@@ -33,8 +31,7 @@ export async function createStaff(data: StaffFormData): Promise<StaffMember> {
         NOW(), NOW()
       ) RETURNING *
     `;
-    
-    console.log('✅ CREATE SUCCESS - Staff member created:', result[0]);
+
     return result[0] as StaffMember;
   } catch (error) {
     logError('CREATE', error, data);
@@ -54,9 +51,7 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
     
     // Process reportsTo field
     const processedReportsTo = processReportsToField(data.reportsTo);
-    
-    console.log('Pre-SQL final value:', processedReportsTo);
-    
+
     // Check if staff member exists by employee_id
     const existing = await sql`
       SELECT id FROM staff WHERE employee_id = ${data.employeeId}
@@ -64,9 +59,8 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
     
     if (existing.length > 0) {
       // Update existing staff member
-      console.log(`✏️ UPDATING existing staff member with employee ID: ${data.employeeId}`);
-      console.log('Pre-UPDATE SQL final value:', processedReportsTo);
-      
+
+
       const result = await sql`
         UPDATE staff SET
           name = ${data.name},
@@ -80,14 +74,12 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
         WHERE employee_id = ${data.employeeId}
         RETURNING *
       `;
-      
-      console.log('✅ UPDATE SUCCESS - Staff member updated:', result[0]);
+
       return result[0] as StaffMember;
     } else {
       // Create new staff member
-      console.log(`➕ CREATING new staff member with employee ID: ${data.employeeId}`);
-      console.log('Pre-INSERT SQL final value:', processedReportsTo);
-      
+
+
       const result = await sql`
         INSERT INTO staff (
           employee_id, name, email, phone, department, position, 
@@ -99,8 +91,7 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
           NOW(), NOW()
         ) RETURNING *
       `;
-      
-      console.log('✅ INSERT SUCCESS - Staff member created:', result[0]);
+
       return result[0] as StaffMember;
     }
   } catch (error) {

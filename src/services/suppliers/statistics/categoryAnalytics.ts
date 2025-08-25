@@ -28,7 +28,6 @@ export class CategoryAnalyticsService {
       // Sort by total suppliers descending
       analytics.sort((a, b) => b.totalSuppliers - a.totalSuppliers);
 
-      console.log(`[CategoryAnalytics] Generated analytics for ${analytics.length} categories`);
       return analytics;
     } catch (error) {
       console.error('Error generating category analytics:', error);

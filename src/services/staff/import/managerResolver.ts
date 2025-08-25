@@ -30,7 +30,7 @@ export async function findManagerByName(managerName: string): Promise<string | n
     );
     
     if (partialMatch && partialMatch.id) {
-      console.log(`📝 Using partial match: "${partialMatch.name}" for manager "${managerName}"`);
+
       return partialMatch.id;
     }
     

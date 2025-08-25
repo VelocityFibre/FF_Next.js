@@ -239,8 +239,7 @@ export class ErrorRecoveryService {
     error?: string;
   }> {
     try {
-      console.log(`Executing recovery: ${recoveryOption.type}`, recoveryOption.data);
-      
+
       // This would typically interface with actual recovery systems
       // For now, return a mock successful execution
       return {
@@ -270,8 +269,7 @@ export class ErrorRecoveryService {
     shouldRetry?: boolean;
   }> {
     try {
-      console.log(`Executing retry attempt ${attemptNumber}: ${retryStrategy.type}`, retryStrategy.data);
-      
+
       // Check if we've exceeded max attempts
       if (retryStrategy.maxAttempts && attemptNumber > retryStrategy.maxAttempts) {
         return {

@@ -34,7 +34,6 @@ export class BasicStatsCalculator {
         complianceStats: this.calculateComplianceStats(suppliers)
       };
 
-      console.log(`[BasicStats] Generated statistics for ${stats.total} suppliers`);
       return stats;
     } catch (error) {
       console.error('Error generating supplier statistics:', error);

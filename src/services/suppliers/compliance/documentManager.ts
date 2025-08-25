@@ -31,7 +31,6 @@ export class DocumentManager {
         updatedAt: new Date()
       });
 
-      console.log(`[DocumentManager] Document added to supplier ${supplierId}: ${document.name}`);
     } catch (error) {
       console.error('Error adding document:', error);
       throw new Error(`Failed to add document: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -62,7 +61,6 @@ export class DocumentManager {
         updatedAt: new Date()
       });
 
-      console.log(`[DocumentManager] Document removed from supplier ${supplierId}: ${documentId}`);
     } catch (error) {
       console.error('Error removing document:', error);
       throw new Error(`Failed to remove document: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -114,7 +112,6 @@ export class DocumentManager {
         ...(issues && issues.length > 0 && { issues })
       };
 
-      console.log(`[DocumentManager] Document verification completed: ${documentId}`);
       return result;
     } catch (error) {
       console.error('Error verifying document:', error);

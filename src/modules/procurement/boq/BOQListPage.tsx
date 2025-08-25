@@ -43,12 +43,12 @@ export function BOQListPage() {
 
   const handleImport = () => {
     // TODO: Implement Excel import
-    console.log('Import BOQ from Excel');
+
   };
 
   const handleExportAll = () => {
     // TODO: Implement bulk export
-    console.log('Export all BOQs');
+
   };
 
   // Calculate summary statistics

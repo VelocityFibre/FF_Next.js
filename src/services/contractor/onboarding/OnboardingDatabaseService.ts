@@ -132,7 +132,7 @@ export class OnboardingDatabaseService {
   ): Promise<void> {
     try {
       // In production, this would log to an events table
-      console.log(`Onboarding event for ${contractorId}: ${event}`, details);
+
     } catch (error) {
       console.error('Failed to log onboarding event:', error);
     }

@@ -308,12 +308,12 @@ export default function StockManagementPage() {
   };
 
   const handleStockAction = (itemId: string, action: 'issue' | 'receive' | 'adjust' | 'transfer') => {
-    console.log(`${action} stock item:`, itemId);
+
   };
 
   const handleBulkAction = (action: string) => {
     if (selectedItems.length === 0) return;
-    console.log(`Bulk ${action}:`, selectedItems);
+
   };
 
   if (!selectedProject) {

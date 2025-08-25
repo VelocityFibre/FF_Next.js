@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { contractors, contractorTeams, teamMembers, projectAssignments, contractorDocuments, boqs, boqItems, boqExceptions, purchaseRequisitions, requisitionItems, purchaseOrders, poItems, clients, projects, staff } from "./schema";
+import { contractors, contractorTeams, teamMembers, projectAssignments, contractorDocuments, boqs, boqItems, boqExceptions, purchaseRequisitions, requisitionItems, purchaseOrders, poItems, rfqs, rfqItems, supplierInvitations, quotes, clients, projects, staff } from "./schema";
 
 export const contractorTeamsRelations = relations(contractorTeams, ({one, many}) => ({
 	contractor: one(contractors, {
@@ -109,6 +109,33 @@ export const poItemsRelations = relations(poItems, ({one}) => ({
 	requisitionItem: one(requisitionItems, {
 		fields: [poItems.prItemId],
 		references: [requisitionItems.id]
+	}),
+}));
+
+export const rfqItemsRelations = relations(rfqItems, ({one}) => ({
+	rfq: one(rfqs, {
+		fields: [rfqItems.rfqId],
+		references: [rfqs.id]
+	}),
+}));
+
+export const rfqsRelations = relations(rfqs, ({many}) => ({
+	rfqItems: many(rfqItems),
+	supplierInvitations: many(supplierInvitations),
+	quotes: many(quotes),
+}));
+
+export const supplierInvitationsRelations = relations(supplierInvitations, ({one}) => ({
+	rfq: one(rfqs, {
+		fields: [supplierInvitations.rfqId],
+		references: [rfqs.id]
+	}),
+}));
+
+export const quotesRelations = relations(quotes, ({one}) => ({
+	rfq: one(rfqs, {
+		fields: [quotes.rfqId],
+		references: [rfqs.id]
 	}),
 }));
 

@@ -12,6 +12,7 @@ import { StaffImport } from '@/components/staff/StaffImport';
 import { StaffFilter, Department, StaffStatus, StaffLevel, StaffMember } from '@/types/staff.types';
 import { format } from 'date-fns';
 import { Timestamp } from 'firebase/firestore';
+import { safeToDate } from '@/utils/dateHelpers';
 import {
   StandardModuleHeader,
   StandardSummaryCards,
@@ -41,7 +42,7 @@ export function StaffList() {
   const handleExport = async () => {
     try {
       // TODO: Implement export functionality
-      console.log('Exporting staff data...', staff);
+
       alert('Export functionality not yet implemented');
     } catch (error) {
       alert('Failed to export staff data');
@@ -129,7 +130,7 @@ export function StaffList() {
       header: 'Start Date',
       render: (staff: StaffMember) => {
         if (!staff.startDate) return '-';
-        const d = staff.startDate instanceof Timestamp ? staff.startDate.toDate() : staff.startDate;
+        const d = safeToDate(staff.startDate);
         return format(d, 'dd MMM yyyy');
       }
     }

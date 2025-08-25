@@ -191,14 +191,14 @@ export class NotificationHandler {
     };
 
     // Mock email sending - would integrate with actual email service
-    console.log('Sending email notification:', emailContent);
+
   }
 
   private static async sendSMSNotification(error: any, _severity: string): Promise<void> {
     const message = `CRITICAL STOCK ERROR: ${error.constructor.name} - Item: ${error.itemCode || 'N/A'} - Immediate attention required`;
     
     // Mock SMS sending - would integrate with SMS service
-    console.log('Sending SMS notification:', message);
+
   }
 
   private static async sendWebhookNotification(
@@ -225,7 +225,7 @@ export class NotificationHandler {
     };
 
     // Mock webhook - would make actual HTTP request
-    console.log('Sending webhook notification:', payload);
+
   }
 
   private static formatEmailBody(

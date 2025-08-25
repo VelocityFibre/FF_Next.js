@@ -19,8 +19,7 @@ export async function importFromCSV(file: File, overwriteExisting: boolean = tru
         const text = e.target?.result as string;
         const lines = text.split('\n').filter(line => line.trim());
         const headers = lines[0].split(',').map(h => h.trim());
-        
-        console.log('CSV Headers found:', headers);
+
         console.log('Header mapping will be:', headers.map(h => `${h} -> ${DEFAULT_HEADER_MAPPING[h] || 'unmapped'}`));
         
         const rows: StaffImportRow[] = [];
@@ -37,11 +36,11 @@ export async function importFromCSV(file: File, overwriteExisting: boolean = tru
           
           // Debug logging for first few rows
           if (i <= 3) {
-            console.log(`Row ${i + 1} headers:`, headers);
-            console.log(`Row ${i + 1} values:`, values);
-            console.log(`Row ${i + 1} data:`, row);
-            console.log(`Row ${i + 1} employeeId:`, row.employeeId);
-            console.log(`Row ${i + 1} name:`, row.name);
+
+
+
+
+
           }
           
           rows.push(row as StaffImportRow);

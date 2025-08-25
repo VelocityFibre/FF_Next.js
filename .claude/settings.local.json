@@ -105,7 +105,10 @@
       "Bash(/dev/null)",
       "Bash(echo:*)",
       "Bash(gh issue close:*)",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(ff2 create-task:*)",
+      "Bash(exit)",
+      "Bash(del fix_rfq_columns.sql fix-rfq-schema.js test-rfq-operations.js fix-json-columns.sql fix-json.js check-schema.js)"
     ],
     "deny": [],
     "ask": [],

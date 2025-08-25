@@ -46,12 +46,12 @@ export const auditLogger = new AuditLogger();
 // Graceful shutdown handlers to flush pending logs
 if (typeof process !== 'undefined') {
   process.on('SIGTERM', async () => {
-    console.log('Flushing audit logs before shutdown...');
+
     await auditLogger.flush();
   });
 
   process.on('SIGINT', async () => {
-    console.log('Flushing audit logs before shutdown...');
+
     await auditLogger.flush();
   });
 }

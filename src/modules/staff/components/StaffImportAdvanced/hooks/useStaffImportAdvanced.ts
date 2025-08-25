@@ -63,10 +63,10 @@ export function useStaffImportAdvanced() {
       let result;
 
       if (fileType === 'csv') {
-        console.log('📄 Importing CSV file:', state.selectedFile.name);
+
         result = await staffImportService.importFromCSV(state.selectedFile, state.overwriteExisting);
       } else if (fileType === 'excel') {
-        console.log('📊 Importing Excel file:', state.selectedFile.name);
+
         result = await staffImportService.importFromExcel(state.selectedFile, state.overwriteExisting);
       } else {
         throw new Error('Unsupported file type. Please use CSV or Excel files.');

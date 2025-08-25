@@ -105,8 +105,6 @@ export class ScorecardService {
         lastUpdated: new Date()
       };
 
-      console.log(`[ScorecardService] Generated scorecard for supplier ${supplierName}: ${overallScore}/100`);
-      
       return {
         scorecard,
         warnings,

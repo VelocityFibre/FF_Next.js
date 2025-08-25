@@ -257,8 +257,7 @@ export class InventoryHandlers {
     error?: string;
   }> {
     try {
-      console.log(`Executing inventory recovery: ${recoveryOption.type}`, recoveryOption.data);
-      
+
       switch (recoveryOption.action) {
         case 'process_partial_fulfillment':
           return {

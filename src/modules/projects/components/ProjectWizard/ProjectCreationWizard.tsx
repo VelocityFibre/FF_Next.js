@@ -51,8 +51,6 @@ export function ProjectCreationWizard() {
   const handleSubmit = async () => {
     try {
       const formData = form.getValues();
-      console.log('Form data:', formData);
-      
       // TODO: Implement project creation when Neon integration is ready
       // const project = await createProject.mutateAsync(formData);
       // console.log('Project created successfully:', project);

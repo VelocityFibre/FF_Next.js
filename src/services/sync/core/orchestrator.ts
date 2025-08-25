@@ -49,7 +49,6 @@ export class SyncCoreOrchestrator {
       return;
     }
 
-    console.log('[SyncCore] Starting sync services...');
     this.isRunning = true;
     this.syncStatus.isRunning = true;
 
@@ -57,7 +56,7 @@ export class SyncCoreOrchestrator {
       // Start real-time sync
       if (this.config.enableRealtimeSync) {
         this.realtimeSyncManager.setupRealtimeSync();
-        console.log('[SyncCore] Real-time sync started');
+
       }
 
       // Start periodic sync
@@ -65,11 +64,10 @@ export class SyncCoreOrchestrator {
       this.updateNextSyncTime();
 
       // Perform initial full sync
-      console.log('[SyncCore] Performing initial full sync...');
+
       const initialSyncResult = await this.fullSyncOrchestrator.performFullSync();
       this.handleSyncComplete(initialSyncResult);
 
-      console.log('[SyncCore] All sync services started successfully');
     } catch (error) {
       console.error('[SyncCore] Failed to start sync services:', error);
       await this.stopSync();
@@ -86,8 +84,6 @@ export class SyncCoreOrchestrator {
       return;
     }
 
-    console.log('[SyncCore] Stopping sync services...');
-    
     // Stop real-time sync
     this.realtimeSyncManager.stopRealtimeSync();
     
@@ -98,14 +94,13 @@ export class SyncCoreOrchestrator {
     this.syncStatus.isRunning = false;
     this.syncStatus.nextSyncTime = null;
 
-    console.log('[SyncCore] All sync services stopped');
   }
 
   /**
    * Perform manual full synchronization
    */
   async performFullSync(): Promise<FullSyncResult> {
-    console.log('[SyncCore] Manual full sync requested...');
+
     const result = await this.fullSyncOrchestrator.performFullSync();
     this.handleSyncComplete(result);
     return result;
@@ -170,7 +165,7 @@ export class SyncCoreOrchestrator {
    * Handle real-time sync events
    */
   private handleRealtimeSyncEvent(event: RealtimeSyncEvent): void {
-    console.log(`[SyncCore] Real-time sync: ${event.type} ${event.entityType} ${event.entityId}`);
+
   }
 
   /**

@@ -161,7 +161,7 @@ export function SpendAnalysisReport({ data, loading }: SpendAnalysisReportProps)
                   cy="50%"
                   outerRadius={100}
                   fill="#8884d8"
-                  label={({ category, actual }) => `${category}: ${formatCurrency(actual)}`}
+                  label={({ category, actual }: { category: string; actual: number }) => `${category}: ${formatCurrency(actual)}`}
                 >
                   {data.categoryBreakdown.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -183,7 +183,7 @@ export function SpendAnalysisReport({ data, loading }: SpendAnalysisReportProps)
               <LineChart data={data.monthlyTrends}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                <YAxis tickFormatter={(value: number) => formatCurrency(value)} />
                 <Tooltip 
                   formatter={(value: number, name: string) => [formatCurrency(value), name]}
                   labelFormatter={(month: string) => `Month: ${month}`}
@@ -224,7 +224,7 @@ export function SpendAnalysisReport({ data, loading }: SpendAnalysisReportProps)
                 textAnchor="end"
                 height={100}
               />
-              <YAxis tickFormatter={(value) => formatCurrency(value)} />
+              <YAxis tickFormatter={(value: number) => formatCurrency(value)} />
               <Tooltip 
                 formatter={(value: number, name: string) => [formatCurrency(value), name]}
               />

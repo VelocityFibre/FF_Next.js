@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStaffMember, useCreateStaff, useUpdateStaff } from '@/hooks/useStaff';
+import { safeToDate } from '@/utils/dateHelpers';
 import { 
   StaffFormData, 
   Department, 
@@ -69,9 +70,7 @@ export function useStaffForm(id?: string) {
         postalCode: staff.postalCode,
         emergencyContactName: staff.emergencyContactName || '',
         emergencyContactPhone: staff.emergencyContactPhone || '',
-        startDate: typeof staff.startDate === 'object' && 'toDate' in staff.startDate 
-          ? (staff.startDate as any).toDate() 
-          : new Date(staff.startDate),
+        startDate: safeToDate(staff.startDate),
         contractType: staff.contractType,
         workingHours: staff.workingHours,
         availableWeekends: staff.availableWeekends,
@@ -83,9 +82,7 @@ export function useStaffForm(id?: string) {
 
       // Add optional fields only if they exist
       if (staff.endDate) {
-        formDataUpdate.endDate = typeof staff.endDate === 'object' && 'toDate' in staff.endDate 
-          ? (staff.endDate as any).toDate() 
-          : new Date(staff.endDate);
+        formDataUpdate.endDate = safeToDate(staff.endDate);
       }
       if (staff.hourlyRate !== undefined) {
         formDataUpdate.hourlyRate = staff.hourlyRate;

@@ -149,7 +149,7 @@ describe('Response Time Performance', () => {
       expect(maxLatency).toBeLessThan(3000); // All endpoints under 3 seconds
 
       // Log performance for analysis
-      console.log('Endpoint Performance:', results);
+
     });
   });
 
@@ -232,7 +232,6 @@ describe('Response Time Performance', () => {
 
       expect(scalingFactor).toBeLessThan(5); // Complex queries shouldn't be > 5x slower than simple ones
 
-      console.log('Scaling Results:', results);
     });
   });
 

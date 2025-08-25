@@ -68,7 +68,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
    */
   logLow(error: unknown, context: ErrorLogContext): void {
     const logData = this.createLogData(error, context, 'low');
-    console.log('[ProcurementError:LOW]', logData);
+
   }
 
   /**
@@ -189,7 +189,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
     if (duration > 5000) { // Log slow operations (>5s)
       console.warn('[ProcurementPerformance:SLOW]', logData);
     } else if (duration > 1000) { // Log medium operations (>1s)
-      console.log('[ProcurementPerformance:MEDIUM]', logData);
+
     }
   }
 
@@ -211,6 +211,5 @@ export class ProcurementErrorLogger implements IErrorLogger {
       context: this.sanitizeErrorContext(context)
     };
 
-    console.log('[ProcurementAudit]', logData);
   }
 }

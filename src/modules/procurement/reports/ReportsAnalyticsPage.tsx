@@ -297,7 +297,7 @@ const ReportsAnalyticsPage: React.FC = () => {
                 <LineChart data={costSavingsData?.monthlyTrends || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                  <YAxis tickFormatter={(value: number) => formatCurrency(value)} />
                   <Tooltip formatter={(value: number) => formatCurrency(value)} />
                   <Line
                     type="monotone"
@@ -322,7 +322,7 @@ const ReportsAnalyticsPage: React.FC = () => {
                     cy="50%"
                     outerRadius={100}
                     fill="#8884d8"
-                    label={({ category, actual }) => `${category}: ${formatCurrency(actual)}`}
+                    label={({ category, actual }: { category: string; actual: number }) => `${category}: ${formatCurrency(actual)}`}
                   >
                     {(spendAnalysisData?.categoryBreakdown || []).map((_: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -413,7 +413,7 @@ const ReportsAnalyticsPage: React.FC = () => {
                 <LineChart data={costSavingsData?.monthlyTrends || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                  <YAxis tickFormatter={(value: number) => formatCurrency(value)} />
                   <Tooltip formatter={(value: number) => formatCurrency(value)} />
                   <Legend />
                   <Line
@@ -447,7 +447,7 @@ const ReportsAnalyticsPage: React.FC = () => {
                 <BarChart data={costSavingsData?.categoryBreakdown || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
-                  <YAxis tickFormatter={(value) => formatCurrency(value)} />
+                  <YAxis tickFormatter={(value: number) => formatCurrency(value)} />
                   <Tooltip formatter={(value: number) => formatCurrency(value)} />
                   <Legend />
                   <Bar dataKey="budgeted" fill="#8884d8" name="Budgeted" />

@@ -72,14 +72,7 @@ export class RFQEmailSender {
       };
       
       // Mock implementation - replace with actual email service
-      console.log('Sending email notification:', {
-        ...emailOptions,
-        subject: emailContent.subject,
-        content: emailContent.content,
-        rfqId: rfq.id,
-        event
-      });
-      
+
       // Example with SendGrid or similar:
       // await emailService.send({
       //   to: emailOptions.to,

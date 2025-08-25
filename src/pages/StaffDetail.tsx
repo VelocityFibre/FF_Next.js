@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Edit, Mail, Phone, Calendar, Briefcase, Award } from 'lucide-react';
 import { useStaffMember, useDeleteStaff } from '@/hooks/useStaff';
 import { format } from 'date-fns';
+import { safeToDate } from '@/utils/dateHelpers';
 
 export function StaffDetail() {
   const navigate = useNavigate();
@@ -179,9 +180,19 @@ export function StaffDetail() {
                 <div>
                   <p className="text-sm text-gray-500">Start Date</p>
                   <p className="font-medium">
-                    {staff.startDate.toDate 
-                      ? format(staff.startDate.toDate(), 'dd MMM yyyy')
-                      : 'N/A'}
+                    {(() => {
+                      const startDate = staff.startDate;
+                      if (startDate) {
+                        try {
+                          const date = safeToDate(startDate);
+                          return format(date, 'dd MMM yyyy');
+                        } catch (error) {
+                          console.warn('Error formatting start date:', error);
+                          return 'Invalid Date';
+                        }
+                      }
+                      return 'N/A';
+                    })()}
                   </p>
                 </div>
               </div>
@@ -192,9 +203,19 @@ export function StaffDetail() {
                   <div>
                     <p className="text-sm text-gray-500">End Date</p>
                     <p className="font-medium">
-                      {staff.endDate.toDate 
-                        ? format(staff.endDate.toDate(), 'dd MMM yyyy')
-                        : 'N/A'}
+                      {(() => {
+                        const endDate = staff.endDate;
+                        if (endDate) {
+                          try {
+                            const date = safeToDate(endDate);
+                            return format(date, 'dd MMM yyyy');
+                          } catch (error) {
+                            console.warn('Error formatting end date:', error);
+                            return 'Invalid Date';
+                          }
+                        }
+                        return 'N/A';
+                      })()}
                     </p>
                   </div>
                 </div>

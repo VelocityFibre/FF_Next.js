@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Edit, Mail, Phone, Calendar, Briefcase, Award } from 'lucide-react';
 import { useStaffMember, useDeleteStaff } from '@/hooks/useStaff';
 import { format } from 'date-fns';
+import { safeToDate } from '@/utils/dateHelpers';
 
 export function StaffDetail() {
   const navigate = useNavigate();
@@ -182,8 +183,13 @@ export function StaffDetail() {
                     {(() => {
                       const startDate = staff.startDate;
                       if (startDate) {
-                        const date = startDate instanceof Date ? startDate : startDate.toDate();
-                        return format(date, 'dd MMM yyyy');
+                        try {
+                          const date = safeToDate(startDate);
+                          return format(date, 'dd MMM yyyy');
+                        } catch (error) {
+                          console.warn('Error formatting start date:', error);
+                          return 'Invalid Date';
+                        }
                       }
                       return 'N/A';
                     })()}
@@ -200,8 +206,13 @@ export function StaffDetail() {
                       {(() => {
                         const endDate = staff.endDate;
                         if (endDate) {
-                          const date = endDate instanceof Date ? endDate : endDate.toDate();
-                          return format(date, 'dd MMM yyyy');
+                          try {
+                            const date = safeToDate(endDate);
+                            return format(date, 'dd MMM yyyy');
+                          } catch (error) {
+                            console.warn('Error formatting end date:', error);
+                            return 'Invalid Date';
+                          }
                         }
                         return 'N/A';
                       })()}

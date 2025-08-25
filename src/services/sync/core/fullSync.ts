@@ -30,8 +30,6 @@ export class FullSyncOrchestrator {
       byType: {}
     };
 
-    console.log('[SyncCore] Starting full sync...');
-
     // Sync projects
     if (this.config.enabledSyncTypes.includes('projects')) {
       try {
@@ -103,8 +101,6 @@ export class FullSyncOrchestrator {
     // Determine overall success
     result.success = result.success && result.errors.length === 0;
 
-    console.log(`[SyncCore] Full sync completed in ${result.duration}ms - ${result.syncedRecords}/${result.totalRecords} records synced`);
-    
     if (result.errors.length > 0) {
       console.warn(`[SyncCore] Full sync had ${result.errors.length} errors`);
     }
@@ -121,8 +117,7 @@ export class FullSyncOrchestrator {
     failed: number;
     errors: SyncError[];
   }> {
-    console.log('[SyncCore] Syncing projects...');
-    
+
     const result = {
       total: 0,
       synced: 0,
@@ -142,7 +137,6 @@ export class FullSyncOrchestrator {
         entityType: 'project'
       })) : [];
 
-      console.log(`[SyncCore] Projects sync: ${result.synced}/${result.total} synced, ${result.failed} failed`);
     } catch (error) {
       result.errors.push({
         timestamp: new Date(),
@@ -166,8 +160,7 @@ export class FullSyncOrchestrator {
     failed: number;
     errors: SyncError[];
   }> {
-    console.log('[SyncCore] Syncing clients...');
-    
+
     const result = {
       total: 0,
       synced: 0,
@@ -187,7 +180,6 @@ export class FullSyncOrchestrator {
         entityType: 'client'
       })) : [];
 
-      console.log(`[SyncCore] Clients sync: ${result.synced}/${result.total} synced, ${result.failed} failed`);
     } catch (error) {
       result.errors.push({
         timestamp: new Date(),
@@ -211,8 +203,7 @@ export class FullSyncOrchestrator {
     failed: number;
     errors: SyncError[];
   }> {
-    console.log('[SyncCore] Syncing staff...');
-    
+
     const result = {
       total: 0,
       synced: 0,
@@ -232,7 +223,6 @@ export class FullSyncOrchestrator {
         entityType: 'staff'
       })) : [];
 
-      console.log(`[SyncCore] Staff sync: ${result.synced}/${result.total} synced, ${result.failed} failed`);
     } catch (error) {
       result.errors.push({
         timestamp: new Date(),

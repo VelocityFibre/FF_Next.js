@@ -19,8 +19,7 @@ export class MovementExecutor {
     shouldRetry: boolean | undefined;
   }> {
     try {
-      console.log(`Executing movement retry: ${retryStrategy.type}`, retryStrategy.data);
-      
+
       switch (retryStrategy.action) {
         case 'retry_with_enhanced_validation':
           return this.executeValidationRetry(retryStrategy);

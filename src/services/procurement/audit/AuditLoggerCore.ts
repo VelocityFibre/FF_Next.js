@@ -227,7 +227,7 @@ export class AuditLoggerCore {
 
     try {
       await db.insert(auditLog).values(logsToProcess);
-      console.log(`[AuditLogger] Processed batch of ${logsToProcess.length} audit logs`);
+
     } catch (error) {
       console.error('[AuditLogger] Failed to process audit log batch:', error);
       

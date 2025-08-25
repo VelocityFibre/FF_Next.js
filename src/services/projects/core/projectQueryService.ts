@@ -16,11 +16,9 @@ export class ProjectQueryService {
    */
   static async getAllProjects(filter?: ProjectFilter): Promise<Project[]> {
     try {
-      console.log('Fetching projects from Neon with filter:', filter);
-      
+
       const result = await this.buildFilteredQuery(filter);
-      
-      console.log(`Found ${result.length} projects in Neon`);
+
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
       console.error('Error fetching projects from Neon:', error);

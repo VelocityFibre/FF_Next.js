@@ -282,7 +282,7 @@ export function AssignmentManagement({ contractorId, contractorName }: Assignmen
           teams={teams}
           onSubmit={async (data) => {
             // Handle assignment creation
-            console.log('Creating assignment:', data);
+
             setShowAssignmentForm(false);
             loadData();
           }}

@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
 import { StaffMember } from '@/types/staff.types';
 import { staffNeonService } from './staffNeonService';
+import { safeToDate } from '@/utils/dateHelpers';
 
 /**
  * Export and template generation for staff
@@ -33,7 +34,7 @@ export const staffExportService = {
       'Postal Code': s.postalCode,
       'Emergency Contact Name': s.emergencyContactName || '',
       'Emergency Contact Phone': s.emergencyContactPhone || '',
-      'Start Date': s.startDate.toDate ? s.startDate.toDate().toLocaleDateString('en-GB') : '',
+      'Start Date': s.startDate ? safeToDate(s.startDate).toLocaleDateString('en-GB') : '',
       'Contract Type': s.contractType,
       'Working Hours': s.workingHours,
       'Available Weekends': s.availableWeekends ? 'Yes' : 'No',

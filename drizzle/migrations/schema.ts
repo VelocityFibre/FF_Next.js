@@ -596,29 +596,6 @@ export const poItems = pgTable("po_items", {
 		}),
 ]);
 
-export const rfqs = pgTable("rfqs", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	rfqNumber: varchar("rfq_number", { length: 100 }).notNull(),
-	projectId: varchar("project_id", { length: 255 }).notNull(),
-	title: text().notNull(),
-	description: text(),
-	issueDate: timestamp("issue_date", { mode: 'string' }).notNull(),
-	closingDate: timestamp("closing_date", { mode: 'string' }).notNull(),
-	status: varchar({ length: 20 }).default('draft').notNull(),
-	evaluationCriteria: json("evaluation_criteria"),
-	termsConditions: text("terms_conditions"),
-	deliveryRequirements: text("delivery_requirements"),
-	paymentTerms: varchar("payment_terms", { length: 100 }),
-	totalItems: integer("total_items").default(0),
-	invitedSuppliers: integer("invited_suppliers").default(0),
-	responsesReceived: integer("responses_received").default(0),
-	createdBy: varchar("created_by", { length: 255 }),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-}, (table) => [
-	unique("rfqs_rfq_number_key").on(table.rfqNumber),
-]);
-
 export const suppliers = pgTable("suppliers", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	supplierCode: varchar("supplier_code", { length: 100 }).notNull(),
@@ -645,6 +622,129 @@ export const suppliers = pgTable("suppliers", {
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 }, (table) => [
 	unique("suppliers_supplier_code_key").on(table.supplierCode),
+]);
+
+export const rfqItems = pgTable("rfq_items", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	rfqId: uuid("rfq_id").notNull(),
+	boqItemId: uuid("boq_item_id"),
+	projectId: varchar("project_id", { length: 255 }).notNull(),
+	lineNumber: integer("line_number").notNull(),
+	itemCode: varchar("item_code", { length: 100 }),
+	description: text().notNull(),
+	category: varchar({ length: 100 }),
+	quantity: numeric({ precision: 15, scale:  4 }).notNull(),
+	uom: varchar({ length: 20 }).notNull(),
+	budgetPrice: numeric("budget_price", { precision: 15, scale:  2 }),
+	specifications: json(),
+	technicalRequirements: text("technical_requirements"),
+	acceptableAlternatives: json("acceptable_alternatives"),
+	evaluationWeight: numeric("evaluation_weight", { precision: 5, scale:  2 }).default('1.0'),
+	isCriticalItem: boolean("is_critical_item").default(false),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+			columns: [table.rfqId],
+			foreignColumns: [rfqs.id],
+			name: "rfq_items_rfq_id_fkey"
+		}).onDelete("cascade"),
+]);
+
+export const supplierInvitations = pgTable("supplier_invitations", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	rfqId: uuid("rfq_id").notNull(),
+	supplierId: varchar("supplier_id", { length: 255 }).notNull(),
+	projectId: varchar("project_id", { length: 255 }).notNull(),
+	supplierName: varchar("supplier_name", { length: 255 }).notNull(),
+	supplierEmail: varchar("supplier_email", { length: 255 }).notNull(),
+	contactPerson: varchar("contact_person", { length: 255 }),
+	invitationStatus: varchar("invitation_status", { length: 20 }).default('sent'),
+	invitedAt: timestamp("invited_at", { mode: 'string' }).defaultNow(),
+	viewedAt: timestamp("viewed_at", { mode: 'string' }),
+	respondedAt: timestamp("responded_at", { mode: 'string' }),
+	declinedAt: timestamp("declined_at", { mode: 'string' }),
+	accessToken: varchar("access_token", { length: 500 }),
+	tokenExpiresAt: timestamp("token_expires_at", { mode: 'string' }),
+	magicLinkToken: varchar("magic_link_token", { length: 500 }),
+	lastLoginAt: timestamp("last_login_at", { mode: 'string' }),
+	invitationMessage: text("invitation_message"),
+	declineReason: text("decline_reason"),
+	remindersSent: integer("reminders_sent").default(0),
+	lastReminderAt: timestamp("last_reminder_at", { mode: 'string' }),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+			columns: [table.rfqId],
+			foreignColumns: [rfqs.id],
+			name: "supplier_invitations_rfq_id_fkey"
+		}).onDelete("cascade"),
+]);
+
+export const quotes = pgTable("quotes", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	rfqId: uuid("rfq_id").notNull(),
+	supplierId: varchar("supplier_id", { length: 255 }).notNull(),
+	supplierInvitationId: uuid("supplier_invitation_id"),
+	projectId: varchar("project_id", { length: 255 }).notNull(),
+	quoteNumber: varchar("quote_number", { length: 100 }),
+	quoteReference: varchar("quote_reference", { length: 100 }),
+	status: varchar({ length: 20 }).default('draft'),
+	submissionDate: timestamp("submission_date", { mode: 'string' }).defaultNow(),
+	validUntil: timestamp("valid_until", { mode: 'string' }).notNull(),
+	totalValue: numeric("total_value", { precision: 15, scale:  2 }).notNull(),
+	subtotal: numeric({ precision: 15, scale:  2 }),
+	taxAmount: numeric("tax_amount", { precision: 15, scale:  2 }),
+	discountAmount: numeric("discount_amount", { precision: 15, scale:  2 }),
+	currency: varchar({ length: 3 }).default('ZAR'),
+	leadTime: integer("lead_time"),
+	paymentTerms: text("payment_terms"),
+	deliveryTerms: text("delivery_terms"),
+	warrantyTerms: text("warranty_terms"),
+	validityPeriod: integer("validity_period"),
+	notes: text(),
+	terms: text(),
+	conditions: text(),
+	evaluationScore: numeric("evaluation_score", { precision: 5, scale:  2 }),
+	technicalScore: numeric("technical_score", { precision: 5, scale:  2 }),
+	commercialScore: numeric("commercial_score", { precision: 5, scale:  2 }),
+	evaluationNotes: text("evaluation_notes"),
+	isWinner: boolean("is_winner").default(false),
+	awardedAt: timestamp("awarded_at", { mode: 'string' }),
+	rejectedAt: timestamp("rejected_at", { mode: 'string' }),
+	rejectionReason: text("rejection_reason"),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+			columns: [table.rfqId],
+			foreignColumns: [rfqs.id],
+			name: "quotes_rfq_id_fkey"
+		}).onDelete("cascade"),
+]);
+
+export const rfqs = pgTable("rfqs", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	rfqNumber: varchar("rfq_number", { length: 100 }).notNull(),
+	projectId: varchar("project_id", { length: 255 }).notNull(),
+	title: text().notNull(),
+	description: text(),
+	issueDate: timestamp("issue_date", { mode: 'string' }).notNull(),
+	status: varchar({ length: 20 }).default('draft').notNull(),
+	evaluationCriteria: json("evaluation_criteria"),
+	termsConditions: text("terms_conditions"),
+	deliveryRequirements: text("delivery_requirements"),
+	paymentTerms: varchar("payment_terms", { length: 100 }),
+	totalItems: integer("total_items").default(0),
+	invitedSuppliers: integer("invited_suppliers").default(0),
+	responsesReceived: integer("responses_received").default(0),
+	createdBy: varchar("created_by", { length: 255 }),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+	responseDeadline: timestamp("response_deadline", { mode: 'string' }),
+}, (table) => [
+	unique("rfqs_rfq_number_key").on(table.rfqNumber),
 ]);
 
 export const clients = pgTable("clients", {

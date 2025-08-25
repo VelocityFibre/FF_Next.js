@@ -36,7 +36,6 @@ export class ComplianceCore {
         updatedAt: new Date()
       });
 
-      console.log(`[ComplianceCore] Updated compliance for supplier ${supplierId}`);
     } catch (error) {
       console.error('Error updating compliance:', error);
       throw new Error(`Failed to update compliance: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -115,7 +114,6 @@ export class ComplianceCore {
       // Update in database
       await this.updateCompliance(supplierId, updatedCompliance);
 
-      console.log(`[ComplianceCore] Auto-updated compliance after document change: ${supplierId}`);
     } catch (error) {
       console.error('Error updating compliance after document change:', error);
       // Don't throw here to avoid breaking the main operation
@@ -149,7 +147,6 @@ export class ComplianceCore {
       }
     }
 
-    console.log(`[ComplianceCore] Bulk compliance update: ${results.success} success, ${results.failed} failed`);
     return results;
   }
 

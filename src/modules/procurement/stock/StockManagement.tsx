@@ -140,7 +140,7 @@ export default function StockManagement() {
             variant="outline"
             onClick={() => {
               // TODO: Integrate with barcode scanning library
-              console.log('Launch barcode scanner');
+
             }}
             className="hidden sm:flex"
           >

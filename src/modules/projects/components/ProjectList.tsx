@@ -40,7 +40,7 @@ export function ProjectList() {
     
     try {
       // TODO: Implement delete functionality
-      console.log('Delete project:', id);
+
     } catch (error: any) {
       alert(error.message || 'Failed to delete project');
     }

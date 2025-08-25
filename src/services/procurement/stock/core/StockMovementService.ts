@@ -15,10 +15,8 @@ import {
 import { eq, and, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import type {
-  StockPosition,
   StockMovement,
   StockMovementItem,
-  CableDrum,
   DrumUsageHistory,
   MovementTypeType
 } from '@/types/procurement/stock';
@@ -32,7 +30,7 @@ import {
 
 export interface GRNData {
   referenceNumber: string;
-  poNumber?: string;
+  poNumber: string;
   supplierName: string;
   receivedBy: string;
   receivedDate: Date;
@@ -51,7 +49,7 @@ export interface GRNData {
 
 export interface IssueData {
   referenceNumber: string;
-  workOrderNumber?: string;
+  workOrderNumber: string;
   issuedTo: string;
   issuedBy: string;
   issueDate: Date;
@@ -150,7 +148,9 @@ export class StockMovementService extends BaseService {
       if (!movementData.projectId || !movementData.movementType || !movementData.referenceNumber) {
         throw new StockMovementError(
           'Missing required fields: projectId, movementType, referenceNumber',
-          'VALIDATION_FAILED'
+          'adjustment',
+          movementData.referenceNumber || '',
+          0
         );
       }
 
@@ -169,7 +169,9 @@ export class StockMovementService extends BaseService {
       if (existingMovement) {
         throw new StockMovementError(
           `Movement with reference number ${movementData.referenceNumber} already exists`,
-          'DUPLICATE_ENTRY'
+          'adjustment',
+          movementData.referenceNumber,
+          0
         );
       }
 
@@ -237,7 +239,7 @@ export class StockMovementService extends BaseService {
           const movementItem = {
             id: itemId,
             stockMovementId: movementId,
-            stockPositionId: null, // Will be set after creating/updating position
+            stockPositionId: '', // Will be set after creating/updating position
             projectId: projectId,
             itemCode: item.itemCode,
             description: item.itemName,
@@ -290,10 +292,10 @@ export class StockMovementService extends BaseService {
             await tx
               .update(stockPositions)
               .set({
-                onHandQuantity: newOnHand,
-                availableQuantity: newAvailable,
-                averageUnitCost: newAverageCost,
-                totalValue: newTotalValue,
+                onHandQuantity: newOnHand.toString(),
+                availableQuantity: newAvailable.toString(),
+                averageUnitCost: newAverageCost.toString(),
+                totalValue: newTotalValue.toString(),
                 lastMovementDate: grnData.receivedDate,
                 updatedAt: new Date(),
               })
@@ -307,22 +309,15 @@ export class StockMovementService extends BaseService {
               itemCode: item.itemCode,
               itemName: item.itemName,
               description: item.itemName,
-              category: null,
               uom: 'EA', // Default UOM
-              onHandQuantity: item.receivedQuantity,
-              reservedQuantity: 0,
-              availableQuantity: item.receivedQuantity,
-              inTransitQuantity: 0,
-              averageUnitCost: item.unitCost,
-              totalValue: item.receivedQuantity * item.unitCost,
+              onHandQuantity: item.receivedQuantity.toString(),
+              reservedQuantity: '0',
+              availableQuantity: item.receivedQuantity.toString(),
+              inTransitQuantity: '0',
+              averageUnitCost: item.unitCost.toString(),
+              totalValue: (item.receivedQuantity * item.unitCost).toString(),
               warehouseLocation: 'WAREHOUSE',
-              binLocation: null,
-              reorderLevel: null,
-              maxStockLevel: null,
-              economicOrderQuantity: null,
               lastMovementDate: grnData.receivedDate,
-              lastCountDate: null,
-              nextCountDue: null,
               isActive: true,
               stockStatus: 'normal',
               createdAt: new Date(),
@@ -723,7 +718,7 @@ export class StockMovementService extends BaseService {
         case 'GRN':
           const grnData: GRNData = {
             referenceNumber: bulkData.referenceNumber,
-            poNumber: bulkData.referenceId,
+            poNumber: bulkData.referenceId || 'N/A',
             supplierName: bulkData.fromLocation || 'Unknown Supplier',
             receivedBy: userId,
             receivedDate: new Date(),
@@ -742,7 +737,7 @@ export class StockMovementService extends BaseService {
         case 'ISSUE':
           const issueData: IssueData = {
             referenceNumber: bulkData.referenceNumber,
-            workOrderNumber: bulkData.referenceId,
+            workOrderNumber: bulkData.referenceId || 'N/A',
             issuedTo: bulkData.toLocation || 'Field Operations',
             issuedBy: userId,
             issueDate: new Date(),
@@ -760,7 +755,7 @@ export class StockMovementService extends BaseService {
 
         case 'TRANSFER':
           if (!bulkData.fromProjectId || !bulkData.toProjectId) {
-            throw new StockMovementError('Transfer requires fromProjectId and toProjectId', MovementType.TRANSFER, '', 0);
+            throw new StockMovementError('Transfer requires fromProjectId and toProjectId', 'transfer', '', 0);
           }
           
           const transferData: TransferData = {
@@ -783,7 +778,7 @@ export class StockMovementService extends BaseService {
         default:
           throw new StockMovementError(
             `Bulk processing not supported for movement type: ${bulkData.movementType}`,
-            bulkData.movementType,
+            'adjustment', // Map to the closest valid MovementType
             '',
             0
           );

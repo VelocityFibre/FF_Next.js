@@ -96,7 +96,7 @@ export function isModuleAvailable(moduleName: string): Promise<boolean> {
  */
 export function preloadCriticalModules(): void {
   // Placeholder for preloading logic
-  console.log('Preloading critical modules...');
+
 }
 
 // Initialize preloading for critical modules

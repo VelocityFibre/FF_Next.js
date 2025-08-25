@@ -37,7 +37,7 @@ export class PeriodicSyncManager {
         this.onSyncComplete(result);
         
         if (result.success) {
-          console.log(`[SyncCore] Scheduled sync completed successfully - ${result.syncedRecords}/${result.totalRecords} records synced`);
+
         } else {
           console.error(`[SyncCore] Scheduled sync completed with errors - ${result.failedRecords} failures`);
         }
@@ -64,7 +64,6 @@ export class PeriodicSyncManager {
       }
     }, intervalMs);
 
-    console.log(`[SyncCore] Periodic sync started with ${this.config.intervalMinutes}m interval`);
   }
 
   /**
@@ -74,7 +73,7 @@ export class PeriodicSyncManager {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      console.log('[SyncCore] Periodic sync stopped');
+
     }
   }
 

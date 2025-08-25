@@ -162,7 +162,7 @@ export class RealtimeSyncManager {
       case 'removed':
         // Note: Delete functionality would need to be implemented
         // For now, we can mark it as deleted in the analytics
-        console.log(`Project ${change.doc.id} was removed from Firebase`);
+
         break;
     }
   }
@@ -190,7 +190,7 @@ export class RealtimeSyncManager {
       case 'removed':
         // Note: Delete functionality would need to be implemented
         // For now, we can mark it as deleted in the analytics
-        console.log(`Client ${change.doc.id} was removed from Firebase`);
+
         break;
     }
   }
@@ -218,7 +218,7 @@ export class RealtimeSyncManager {
       case 'removed':
         // Note: Delete functionality would need to be implemented
         // For now, we can mark it as deleted in the analytics
-        console.log(`Staff member ${change.doc.id} was removed from Firebase`);
+
         break;
     }
   }

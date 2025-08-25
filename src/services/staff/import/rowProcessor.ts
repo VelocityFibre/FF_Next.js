@@ -32,8 +32,7 @@ export async function processImportRows(
   
   // Sort rows to process managers first
   const sortedRows = sortByManagerHierarchy(rows, managerNames);
-  console.log('📊 Processing order: Managers first, then reports');
-  
+
   for (let i = 0; i < sortedRows.length; i++) {
     const row = sortedRows[i];
     const originalIndex = rows.indexOf(row);
@@ -42,12 +41,12 @@ export async function processImportRows(
     try {
       // Debug: Show what we're validating
       if (rowNumber <= 5) { // Only log first few rows
-        console.log(`Validating row ${rowNumber}:`, { name: row.name, email: row.email, phone: row.phone });
+
       }
       
       // Validate required fields
       if (!row.name || row.name.trim() === '') {
-        console.log(`Row ${rowNumber} missing name. Row object:`, row);
+
         errors.push({
           row: rowNumber,
           field: 'name',
@@ -80,7 +79,7 @@ export async function processImportRows(
       // Validate employeeId - this is critical for database constraint
       if (!row.employeeId || row.employeeId.trim() === '') {
         console.log(`Row ${rowNumber} missing employeeId. Available fields:`, Object.keys(row));
-        console.log(`Row ${rowNumber} full data:`, row);
+
         errors.push({
           row: rowNumber,
           field: 'employeeId',
@@ -94,34 +93,32 @@ export async function processImportRows(
       let reportsTo: string | undefined = undefined;
       if (row.managerName && row.managerName.trim() && row.managerName.trim() !== '') {
         const managerName = row.managerName.trim();
-        console.log(`🔍 Looking up manager "${managerName}" for staff member "${row.name}"...`);
+
         try {
           // Look up manager by name in existing staff
           const managerUuid = await findManagerByName(managerName);
           if (managerUuid) {
             reportsTo = managerUuid;
-            console.log(`✅ Found manager "${managerName}" with UUID: ${managerUuid} for ${row.name}`);
+
           } else {
-            console.log(`⚠️ Manager "${managerName}" not found in database for ${row.name} - will be set to no manager`);
-            console.log(`   Tip: Make sure "${managerName}" is imported first before staff who report to them`);
+
+
           }
         } catch (error) {
-          console.log(`❌ Error looking up manager "${managerName}" for ${row.name}:`, error);
+
         }
       } else {
-        console.log(`ℹ️ No manager specified for ${row.name}`);
+
       }
       
       // Ensure employeeId is never null or empty
       const employeeId = row.employeeId && row.employeeId.trim() !== '' 
         ? row.employeeId.trim() 
         : `AUTO_${Date.now()}_${i}`;
-      
-      console.log(`Processing row ${rowNumber}: employeeId="${employeeId}", name="${row.name}"`);
-      
+
       // COMPREHENSIVE DEBUG LOGGING - IMPORT SERVICE TRACING
-      console.log(`🔍 IMPORT SERVICE - Processing row ${rowNumber}:`);
-      console.log('Raw CSV row data:', row);
+
+
       console.log('Manager lookup result:', {
         managerName: row.managerName,
         resolvedUuid: reportsTo,
@@ -175,7 +172,7 @@ export async function processImportRows(
       if (staffMember) {
         importedStaff.push(staffMember);
         successful++;
-        console.log(`✅ Successfully imported: ${staffMember.name}`);
+
       } else {
         failed++;
         errors.push({

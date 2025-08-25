@@ -508,32 +508,32 @@ export class ProcurementReportsService {
   }
 
   // 🔴 INCOMPLETE: These methods need full implementation
-  private async getRfqCycleData(filters: ReportFilters): Promise<any[]> {
+  private async getRfqCycleData(_filters: ReportFilters): Promise<any[]> {
     // TODO: Implement RFQ cycle data retrieval
     return [];
   }
 
-  private calculateAverageRfqCycleTime(data: any[]): number {
+  private calculateAverageRfqCycleTime(_data: any[]): number {
     // TODO: Calculate average RFQ cycle time
     return 14; // Mock: 14 days
   }
 
-  private calculateAverageProcurementCycleTime(data: any[]): number {
+  private calculateAverageProcurementCycleTime(_data: any[]): number {
     // TODO: Calculate average procurement cycle time
     return 30; // Mock: 30 days
   }
 
-  private generateCycleTimeByCategory(data: any[]): CategoryCycleTime[] {
+  private generateCycleTimeByCategory(_data: any[]): CategoryCycleTime[] {
     // TODO: Generate cycle time by category
     return [];
   }
 
-  private generateTimelineAnalysis(data: any[]): TimelineMetric[] {
+  private generateTimelineAnalysis(_data: any[]): TimelineMetric[] {
     // TODO: Generate timeline analysis
     return [];
   }
 
-  private generateBottleneckAnalysis(data: any[]): BottleneckMetric[] {
+  private generateBottleneckAnalysis(_data: any[]): BottleneckMetric[] {
     // TODO: Generate bottleneck analysis
     return [];
   }
@@ -571,9 +571,9 @@ export class ProcurementReportsService {
   }
 
   // 🟡 PARTIAL: Export functionality
-  async exportReport(reportType: string, data: any, options: ExportOptions): Promise<string> {
+  async exportReport(reportType: string, _data: any, options: ExportOptions): Promise<string> {
     // TODO: Implement actual export functionality
-    console.log(`Exporting ${reportType} report in ${options.format} format`);
+
     return `mock-report-${Date.now()}.${options.format}`;
   }
 }

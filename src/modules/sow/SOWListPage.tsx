@@ -26,12 +26,12 @@ export function SOWListPage() {
   const handleViewDocument = (doc: SOWListItem) => {
     setSelectedDocument(doc);
     // Navigate to detail view or open modal
-    console.log('Viewing document:', doc);
+
   };
 
   const handleEditDocument = (doc: SOWListItem) => {
     // Navigate to edit page
-    console.log('Editing document:', doc);
+
   };
 
   const handleDeleteDocument = async (doc: SOWListItem) => {

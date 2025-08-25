@@ -6,6 +6,7 @@
 import * as XLSX from 'xlsx';
 import { StaffImportRow, StaffImportResult, StaffMember } from '@/types/staff.types';
 import { processImportRows } from './rowProcessor';
+import { safeToDate } from '@/utils/dateHelpers';
 
 /**
  * Import staff from Excel file
@@ -89,7 +90,7 @@ export function exportToExcel(staff: StaffMember[]): void {
     'Position': member.position || '',
     'Department': member.department || '',
     'Status': member.status,
-    'Start Date': member.startDate ? new Date(member.startDate.toDate()).toLocaleDateString() : '',
+    'Start Date': member.startDate ? safeToDate(member.startDate).toLocaleDateString() : '',
     'Manager': member.managerName || '',
     'Alternative Phone': member.alternativePhone || '',
     'Contract Type': member.contractType || ''

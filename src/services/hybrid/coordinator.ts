@@ -152,7 +152,6 @@ export class HybridCoordinator {
       // Wait for all syncs to complete (with error tolerance)
       await Promise.allSettled([...projectSyncPromises, ...clientSyncPromises]);
 
-      console.log('Bulk sync completed');
     } catch (error) {
       console.error('Error during bulk sync:', error);
       throw new Error('Bulk sync failed');

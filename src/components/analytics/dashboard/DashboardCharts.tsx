@@ -20,11 +20,11 @@ export function DashboardCharts({ projectTrends, kpiDashboard }: DashboardCharts
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="month" 
-                tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short' })}
+                tickFormatter={(value: string | number) => new Date(value).toLocaleDateString('en-US', { month: 'short' })}
               />
               <YAxis />
               <Tooltip 
-                labelFormatter={(value) => new Date(value).toLocaleDateString()}
+                labelFormatter={(value: string | number) => new Date(value).toLocaleDateString()}
               />
               <Line 
                 type="monotone" 

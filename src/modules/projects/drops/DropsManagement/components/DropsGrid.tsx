@@ -8,7 +8,7 @@ interface DropsGridProps {
 
 export function DropsGrid({ drops }: DropsGridProps) {
   const handleDropClick = (drop: Drop) => {
-    console.log('Drop selected:', drop);
+
   };
 
   return (

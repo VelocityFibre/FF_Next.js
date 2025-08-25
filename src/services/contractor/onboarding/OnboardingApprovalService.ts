@@ -84,8 +84,6 @@ export class OnboardingApprovalService {
       // - Send welcome email
       // - Create contractor portal access
       // - Notify relevant teams
-      
-      console.log(`Contractor ${contractorId} approved by ${approvedBy}`, notes ? `Notes: ${notes}` : '');
 
       return progress;
     } catch (error) {
@@ -114,8 +112,6 @@ export class OnboardingApprovalService {
       // - Send rejection notification
       // - Log rejection reason
       // - Schedule follow-up if applicable
-      
-      console.log(`Contractor ${contractorId} rejected by ${rejectedBy}: ${rejectionReason}`, notes ? `Notes: ${notes}` : '');
 
       return progress;
     } catch (error) {

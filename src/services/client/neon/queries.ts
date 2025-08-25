@@ -7,8 +7,7 @@ import { mapDbToClient } from './mappers';
  */
 export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
   try {
-    console.log('Fetching clients from Neon with filter:', filter);
-    
+
     let result;
     
     // Base query - get all clients
@@ -46,8 +45,7 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
         ORDER BY name ASC
       `;
     }
-    
-    console.log(`Found ${result.length} clients in Neon`);
+
     return result.map(mapDbToClient);
     
   } catch (error) {

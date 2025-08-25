@@ -115,7 +115,7 @@ export function useSOWDocuments() {
   };
 
   const downloadDocument = async (doc: SOWListItem) => {
-    console.log('Downloading document:', doc.name);
+
     // Implement actual download logic
   };
 

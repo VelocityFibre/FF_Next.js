@@ -185,7 +185,7 @@ export function SupplierPerformanceReport({ data, loading }: SupplierPerformance
                   cy="50%"
                   outerRadius={100}
                   fill="#8884d8"
-                  label={({ range, percentage }) => `${range}: ${percentage.toFixed(1)}%`}
+                  label={({ range, percentage }: { range: string; percentage: number }) => `${range}: ${percentage.toFixed(1)}%`}
                 >
                   {data.performanceDistribution.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

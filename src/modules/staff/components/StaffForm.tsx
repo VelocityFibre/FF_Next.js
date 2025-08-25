@@ -8,6 +8,7 @@ import {
   ContractType,
   Skill 
 } from '@/types/staff.types';
+import { safeToDate } from '@/utils/dateHelpers';
 import {
   PersonalInfoSection,
   EmploymentSection,
@@ -87,7 +88,7 @@ export function StaffForm() {
       if (staff.specializations) formUpdate.specializations = staff.specializations;
       if (staff.emergencyContactName) formUpdate.emergencyContactName = staff.emergencyContactName;
       if (staff.emergencyContactPhone) formUpdate.emergencyContactPhone = staff.emergencyContactPhone;
-      if (staff.endDate) formUpdate.endDate = staff.endDate instanceof Date ? staff.endDate : staff.endDate.toDate();
+      if (staff.endDate) formUpdate.endDate = safeToDate(staff.endDate);
       if (staff.salaryGrade) formUpdate.salaryGrade = staff.salaryGrade;
       if (staff.hourlyRate !== undefined) formUpdate.hourlyRate = staff.hourlyRate;
       if (staff.notes) formUpdate.notes = staff.notes;

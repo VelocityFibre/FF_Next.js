@@ -89,7 +89,6 @@ export class ComplianceAuditService {
       // Generate recommendations
       result.recommendations = this.generateAuditRecommendations(result);
 
-      console.log(`[ComplianceAudit] Audit completed: ${result.compliantSuppliers}/${result.totalSuppliers} suppliers compliant`);
       return result;
     } catch (error) {
       console.error('Error performing compliance audit:', error);
