@@ -120,7 +120,7 @@ export const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-trac
 export const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.SOWManagement })));
 
 // Workflow Module
-export const WorkflowPortalPage = lazy(() => import('@/modules/workflow/WorkflowPortalPage').then(m => ({ default: m.WorkflowPortalPage })));
+export const WorkflowPortalPage = lazy(() => import('@/modules/workflow/WorkflowPortalPage'));
 
 // Project pages
 export const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
