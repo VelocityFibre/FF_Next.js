@@ -52,30 +52,31 @@ export class ContractorCrudCore {
    */
   async getById(id: string): Promise<Contractor | null> {
     try {
-      return await getContractorByIdFromFirebase(id);
+      // Use Neon as primary database
+      return await contractorNeonService.getById(id);
     } catch (error) {
-      console.error('Error getting contractor:', error);
+      console.error('Error getting contractor from Neon:', error);
       throw new Error('Failed to fetch contractor');
     }
   }
 
   /**
-   * Create new contractor (Firebase + Neon sync)
+   * Create new contractor (Neon primary)
    */
   async create(data: ContractorFormData): Promise<string> {
     try {
-      // Create in Firebase first
-      const contractorId = await createContractorInFirebase(data);
+      // Use Neon as primary database
+      const contractor = await contractorNeonService.create(data);
       
-      // Sync to Neon for analytics (non-blocking)
+      // Sync to Firebase for backward compatibility (non-blocking)
       try {
-        await createContractorInNeon(contractorId, data);
-      } catch (neonError) {
-        console.warn('Failed to sync contractor to Neon:', neonError);
-        // Don't fail the entire operation for analytics sync issues
+        await createContractorInFirebase(data);
+      } catch (firebaseError) {
+        console.warn('Failed to sync contractor to Firebase:', firebaseError);
+        // Don't fail the entire operation for sync issues
       }
       
-      return contractorId;
+      return contractor.id;
     } catch (error) {
       console.error('Error creating contractor:', error);
       throw new Error('Failed to create contractor');
@@ -83,18 +84,18 @@ export class ContractorCrudCore {
   }
 
   /**
-   * Update contractor (Firebase + Neon sync)
+   * Update contractor (Neon primary)
    */
   async update(id: string, data: Partial<ContractorFormData>): Promise<void> {
     try {
-      // Update in Firebase first
-      await updateContractorInFirebase(id, data);
+      // Update in Neon as primary database
+      await contractorNeonService.update(id, data);
       
-      // Sync to Neon for analytics (non-blocking)
+      // Sync to Firebase for backward compatibility (non-blocking)
       try {
-        await updateContractorInNeon(id, data);
-      } catch (neonError) {
-        console.warn('Failed to sync contractor update to Neon:', neonError);
+        await updateContractorInFirebase(id, data);
+      } catch (firebaseError) {
+        console.warn('Failed to sync contractor update to Firebase:', firebaseError);
       }
     } catch (error) {
       console.error('Error updating contractor:', error);
@@ -103,18 +104,18 @@ export class ContractorCrudCore {
   }
 
   /**
-   * Delete contractor (Firebase + Neon cleanup)
+   * Delete contractor (Neon primary)
    */
   async delete(id: string): Promise<void> {
     try {
-      // Delete from Firebase first (includes project assignment check)
-      await deleteContractorFromFirebase(id);
+      // Delete from Neon as primary database
+      await contractorNeonService.delete(id);
       
-      // Delete from Neon
+      // Delete from Firebase for backward compatibility (non-blocking)
       try {
-        await deleteContractorFromNeon(id);
-      } catch (neonError) {
-        console.warn('Failed to delete contractor from Neon:', neonError);
+        await deleteContractorFromFirebase(id);
+      } catch (firebaseError) {
+        console.warn('Failed to delete contractor from Firebase:', firebaseError);
       }
     } catch (error) {
       console.error('Error deleting contractor:', error);
@@ -127,6 +128,7 @@ export class ContractorCrudCore {
    */
   async getAnalytics(): Promise<ContractorAnalytics> {
     try {
+      const { getContractorAnalytics } = await import('../neon/statistics');
       return await getContractorAnalytics();
     } catch (error) {
       console.error('Error getting contractor analytics:', error);
@@ -174,8 +176,8 @@ export class ContractorCrudCore {
    */
   async search(searchTerm: string): Promise<Contractor[]> {
     try {
-      const filter: ContractorFilter = { searchTerm };
-      return await this.getAll(filter);
+      // Use Neon service search functionality
+      return await contractorNeonService.searchByName(searchTerm);
     } catch (error) {
       console.error('Error searching contractors:', error);
       throw new Error('Failed to search contractors');
