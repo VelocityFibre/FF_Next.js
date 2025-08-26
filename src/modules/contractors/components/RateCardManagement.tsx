@@ -18,9 +18,7 @@ import {
   CheckCircle,
   Clock,
   AlertTriangle,
-  Eye,
-  Download,
-  TrendingUp
+  Eye
 } from 'lucide-react';
 
 import { 
@@ -43,7 +41,7 @@ export function RateCardManagement({
   const [rateCards, setRateCards] = useState<ContractorRateCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useState<RateCardSearchParams>({
+  const [searchParams] = useState<RateCardSearchParams>({
     contractorId,
     page: 1,
     limit: 20,
@@ -117,6 +115,7 @@ export function RateCardManagement({
 
     try {
       const updatedCard = await RateCardApiService.updateRateCard(rateCard.id, {
+        ...(rateCard as any),
         status: 'archived'
       });
       

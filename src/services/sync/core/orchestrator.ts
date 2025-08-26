@@ -30,7 +30,7 @@ export class SyncCoreOrchestrator {
     this.realtimeSyncManager = new RealtimeSyncManager(
       this.config,
       (error) => this.addSyncError(error),
-      (_event) => this.handleRealtimeSyncEvent(event)
+      (event) => this.handleRealtimeSyncEvent(event)
     );
     
     this.periodicSyncManager = new PeriodicSyncManager(

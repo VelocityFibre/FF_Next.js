@@ -16,16 +16,14 @@ export const procurementSection: NavSection = {
       icon: ShoppingCart,
       label: 'Procurement Portal',
       shortLabel: 'Procure',
-      permissions: [],
-      description: 'Dashboard, BOQ, RFQ, Quote Evaluation, Stock Movement, Purchase Orders'
+      permissions: []
     },
     {
       to: '/app/suppliers',
       icon: Truck,
       label: 'Suppliers Portal',
       shortLabel: 'Supply',
-      permissions: [],
-      description: 'Dashboard, RFQ Invites, Company Profile, Performance, Documents, Messages'
+      permissions: []
     },
   ]
 };

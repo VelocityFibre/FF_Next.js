@@ -4,36 +4,24 @@
  */
 
 import type { BOQItem, ProcurementContext, BOQItemCreateData } from './types';
-import { mockBOQItems } from './mockData';
+// MOCK DATA REMOVED - This service requires connection to real database
+// Consider using the Firebase-based boqService from '@/services/procurement/boqService'
 
 export class BOQItemOperations {
   /**
    * Get BOQ item by ID
    */
   static async getBOQItem(context: ProcurementContext, itemId: string): Promise<BOQItem> {
-    const item = mockBOQItems.find(item => item.id === itemId && item.projectId === context.projectId);
-    if (!item) {
-      throw new Error('BOQ item not found');
-    }
-    return item;
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('BOQ item operations not implemented - connect to real database service');
   }
 
   /**
    * Update BOQ item
    */
   static async updateBOQItem(context: ProcurementContext, itemId: string, updates: Partial<BOQItem>): Promise<BOQItem> {
-    const itemIndex = mockBOQItems.findIndex(item => item.id === itemId && item.projectId === context.projectId);
-    if (itemIndex === -1) {
-      throw new Error('BOQ item not found');
-    }
-
-    mockBOQItems[itemIndex] = {
-      ...mockBOQItems[itemIndex],
-      ...updates,
-      updatedAt: new Date()
-    };
-
-    return mockBOQItems[itemIndex];
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('BOQ item operations not implemented - connect to real database service');
   }
 
   /**
@@ -68,31 +56,23 @@ export class BOQItemOperations {
     if (itemData.catalogItemName) newItem.catalogItemName = itemData.catalogItemName;
     if (itemData.mappingConfidence !== undefined) newItem.mappingConfidence = itemData.mappingConfidence;
 
-    mockBOQItems.push(newItem);
-    return newItem;
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('BOQ item operations not implemented - connect to real database service');
   }
 
   /**
    * Get all BOQ items for a BOQ
    */
   static async getBOQItems(context: ProcurementContext, boqId: string): Promise<BOQItem[]> {
-    return mockBOQItems.filter(item => 
-      item.boqId === boqId && item.projectId === context.projectId
-    );
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('BOQ item operations not implemented - connect to real database service');
   }
 
   /**
    * Delete BOQ item
    */
   static async deleteBOQItem(context: ProcurementContext, itemId: string): Promise<void> {
-    const itemIndex = mockBOQItems.findIndex(item => 
-      item.id === itemId && item.projectId === context.projectId
-    );
-    
-    if (itemIndex === -1) {
-      throw new Error('BOQ item not found');
-    }
-
-    mockBOQItems.splice(itemIndex, 1);
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('BOQ item operations not implemented - connect to real database service');
   }
 }

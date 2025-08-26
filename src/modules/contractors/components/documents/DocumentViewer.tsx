@@ -4,7 +4,7 @@
  * @module DocumentViewer
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   X, 
   ZoomIn, 
@@ -15,7 +15,6 @@ import {
   ChevronRight,
   Maximize2,
   Minimize2,
-  Eye,
   AlertCircle,
   FileText,
   Image as ImageIcon

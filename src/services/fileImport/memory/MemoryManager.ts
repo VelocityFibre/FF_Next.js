@@ -7,7 +7,7 @@ import type { MemoryStats } from '../types';
 
 export class MemoryManager {
   private memoryCheckInterval: number = 5000; // Check every 5 seconds
-  private intervalId?: NodeJS.Timeout;
+  private intervalId?: NodeJS.Timeout | number;
   private memoryHistory: MemoryStats[] = [];
   private readonly maxHistoryLength = 100;
   private warningThreshold = 0.8; // 80% of heap
@@ -27,16 +27,16 @@ export class MemoryManager {
       const stats = this.getCurrentMemoryStats();
       this.recordMemoryStats(stats);
       this.checkMemoryThresholds(stats);
-    }, this.memoryCheckInterval);
+    }, this.memoryCheckInterval) as NodeJS.Timeout | number;
   }
 
   /**
    * Stop memory monitoring
    */
   public stopMonitoring(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = undefined;
+    if (this.intervalId !== undefined) {
+      clearInterval(this.intervalId as NodeJS.Timeout);
+      this.intervalId = undefined as any;
     }
   }
 
@@ -168,8 +168,9 @@ export class MemoryManager {
   private createMemoryPressure(): void {
     // Create and immediately discard large arrays to trigger GC
     for (let i = 0; i < 10; i++) {
-      const pressure = new Array(100000).fill(0);
+      const _pressure = new Array(100000).fill(0);
       // Let it be garbage collected
+      void _pressure;
     }
   }
 

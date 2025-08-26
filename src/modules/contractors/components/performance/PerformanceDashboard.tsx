@@ -63,7 +63,7 @@ export function PerformanceDashboard({
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [showFiltersPanel, setShowFiltersPanel] = useState(false);
-  const [filters, setFilters] = useState<PerformanceFilters | null>(defaultFilters || null);
+  const [filters] = useState<Partial<PerformanceFilters> | null>(defaultFilters || null);
 
   // 🟢 WORKING: Load performance analytics data
   const loadPerformanceData = async (isRefresh = false) => {
@@ -158,7 +158,7 @@ export function PerformanceDashboard({
   };
 
   // 🟢 WORKING: Handle contractor selection
-  const handleContractorSelect = (contractorId: string) => {
+  const handleContractorSelect = (contractorId: string): void => {
     onContractorSelect?.(contractorId);
   };
 
@@ -173,6 +173,9 @@ export function PerformanceDashboard({
 
       return () => clearInterval(interval);
     }
+    
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshInterval, filters]);
 
   // 🟢 WORKING: Loading state

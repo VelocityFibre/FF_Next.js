@@ -111,6 +111,21 @@ export function PendingApplicationsList({
 
       setApplications(applicationSummaries);
       
+      // DEBUG: Log application statuses
+      console.log('🔍 DEBUG - Application statuses:', {
+        totalApplications: applicationSummaries.length,
+        statusBreakdown: applicationSummaries.reduce((acc, app) => {
+          acc[app.status] = (acc[app.status] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>),
+        sampleStatuses: applicationSummaries.slice(0, 3).map(app => ({
+          company: app.companyName,
+          status: app.status,
+          statusType: typeof app.status,
+          statusLength: app.status?.length
+        }))
+      });
+      
       // Calculate quick stats
       const stats: QuickStats = {
         total: applicationSummaries.length,
@@ -120,6 +135,7 @@ export function PendingApplicationsList({
         averageProcessingDays: applicationSummaries.reduce((sum, app) => sum + app.daysInReview, 0) / applicationSummaries.length || 0
       };
       
+      console.log('📊 DEBUG - Calculated stats:', stats);
       setQuickStats(stats);
       
     } catch (err) {
@@ -405,17 +421,19 @@ export function PendingApplicationsList({
 
       {/* Applications Table */}
       <ApplicationTable
-        applications={applications}
-        isLoading={isLoading}
-        error={error}
-        selectedIds={selectedIds}
-        onSelectionChange={setSelectedIds}
-        onAction={handleApplicationAction}
-        onView={handleViewApplication}
-        onEdit={handleEditApplication}
-        sortBy={filters.sortBy}
-        sortOrder={filters.sortOrder}
-        onSort={handleSort}
+        {...{
+          applications,
+          isLoading,
+          error,
+          selectedIds,
+          onSelectionChange: setSelectedIds,
+          onAction: handleApplicationAction,
+          onView: handleViewApplication,
+          onEdit: handleEditApplication,
+          onSort: handleSort,
+          ...(filters.sortBy && { sortBy: filters.sortBy }),
+          ...(filters.sortOrder && { sortOrder: filters.sortOrder })
+        }}
         emptyMessage={
           filters.status?.length === 0 || Object.keys(filters).filter(key => 
             filters[key as keyof IApplicationFilters] !== undefined

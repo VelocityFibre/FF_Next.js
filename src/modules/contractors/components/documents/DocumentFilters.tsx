@@ -4,7 +4,7 @@
  * @module DocumentFilters
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { 
   Search, 
   Filter, 
@@ -18,8 +18,6 @@ import {
   RotateCcw,
   ChevronDown,
   Tag,
-  User,
-  Building
 } from 'lucide-react';
 import { DocumentType } from '@/types/contractor.types';
 
@@ -484,8 +482,8 @@ export function DocumentFilters({
           ) : (
             <span>
               Showing {filteredCount} of {totalCount} documents
-              {getFilterSummary() && (
-                <span className="text-gray-500"> • {getFilterSummary()}</span>
+              {getFilterSummary && (
+                <span className="text-gray-500"> • {getFilterSummary}</span>
               )}
             </span>
           )}

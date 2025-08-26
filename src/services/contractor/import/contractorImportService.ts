@@ -9,8 +9,10 @@ import type {
   ContractorImportResult,
   ContractorImportRow 
 } from '@/types/contractor/import.types';
+import type { ContractorFormData } from '@/types/contractor/form.types';
 import { ContractorImportValidator } from './contractorImportValidator';
 import { CSV_HEADER_MAPPING } from '@/constants/contractor/validation';
+import { contractorService } from '@/services/contractorService';
 
 class ContractorImportService {
   private validator = new ContractorImportValidator();
@@ -62,8 +64,21 @@ class ContractorImportService {
       };
       
     } catch (error) {
-      // Fallback to mock data if processing fails
-      console.error('File processing failed, using mock data:', error);
+      // Enhanced error logging to debug CSV parsing issues
+      console.error('🐛 CSV Processing Error Details:', {
+        error: error,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorStack: error instanceof Error ? error.stack : 'No stack trace',
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type
+      });
+      
+      // Re-throw error instead of falling back to mock data
+      throw error;
+      
+      // Fallback to mock data if processing fails - DISABLED FOR DEBUGGING
+      // console.error('File processing failed, using mock data:', error);
       
       const mockContractors: ContractorImportRow[] = [
         {
@@ -142,8 +157,13 @@ class ContractorImportService {
    * Parse CSV file
    */
   private async parseCsvFile(file: File, options: ContractorImportOptions): Promise<Partial<ContractorImportRow>[]> {
+    console.log('🔍 CSV Parsing Debug - Starting:', { fileName: file.name, fileSize: file.size });
+    
     const text = await file.text();
+    console.log('📄 CSV Content Preview:', text.substring(0, 200) + '...');
+    
     const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    console.log('📊 CSV Lines Found:', lines.length);
     
     if (lines.length === 0) {
       throw new Error('The CSV file is empty.');
@@ -151,6 +171,7 @@ class ContractorImportService {
     
     // Skip comment lines (starting with #)
     const dataLines = lines.filter(line => !line.startsWith('#'));
+    console.log('🗂️ Data Lines (after filtering comments):', dataLines.length);
     
     if (dataLines.length === 0) {
       throw new Error('No data found in CSV file.');
@@ -183,6 +204,8 @@ class ContractorImportService {
               rowData[mappedField] = this.parseServicesField(value);
             } else if (mappedField === 'regionOfOperations') {
               rowData[mappedField] = this.parseRegionsField(value);
+            } else if (mappedField === 'phone') {
+              rowData[mappedField] = this.normalizePhoneNumber(value);
             } else {
               rowData[mappedField as keyof ContractorImportRow] = value;
             }
@@ -195,16 +218,134 @@ class ContractorImportService {
       }
     }
     
+    console.log('✅ CSV Parsing Complete:', { 
+      totalDataLines: dataLines.length - dataStartIndex, 
+      recordsParsed: results.length,
+      sampleRecord: results[0]
+    });
+    
     return results;
   }
 
   /**
-   * Parse Excel file (basic implementation)
+   * Parse Excel file using XLSX library
    */
   private async parseExcelFile(file: File, options: ContractorImportOptions): Promise<Partial<ContractorImportRow>[]> {
-    // For now, we'll implement a basic text-based parsing
-    // In a production environment, you'd use a library like xlsx
-    throw new Error('Excel file parsing not yet implemented. Please use CSV format for now.');
+    console.log('📊 Excel Parsing Debug - Starting:', { fileName: file.name, fileSize: file.size });
+    
+    try {
+      // Dynamically import XLSX to avoid bundle issues
+      const XLSX = await import('xlsx');
+      
+      // Read file as array buffer
+      const buffer = await file.arrayBuffer();
+      
+      // Parse workbook
+      const workbook = XLSX.read(buffer, { type: 'array' });
+      console.log('📋 Excel Workbook:', { sheetNames: workbook.SheetNames });
+      
+      // Get first sheet
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      
+      // Convert to JSON
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+        header: 1,  // Use array format to preserve headers
+        defval: '',  // Default value for empty cells
+        blankrows: false // Skip blank rows
+      }) as string[][];
+      
+      console.log('📄 Excel Data Preview:', {
+        totalRows: jsonData.length,
+        firstRow: jsonData[0],
+        sampleData: jsonData.slice(0, 3)
+      });
+      
+      if (jsonData.length === 0) {
+        throw new Error('The Excel file appears to be empty.');
+      }
+      
+      let headers: string[] = [];
+      let dataStartIndex = 0;
+      
+      if (options.hasHeaders && jsonData.length > 0) {
+        headers = jsonData[0].map(cell => String(cell || '').trim());
+        dataStartIndex = 1;
+      } else {
+        // Use default headers if no headers in file
+        headers = Object.keys(CSV_HEADER_MAPPING);
+      }
+      
+      console.log('📝 Excel Headers:', headers);
+      console.log('🗂️ Header Mapping Test:', headers.map(h => ({ 
+        original: h, 
+        cleaned: h.replace('*', '').trim(),
+        mapped: this.mapCsvHeader(h) 
+      })));
+      
+      const results: Partial<ContractorImportRow>[] = [];
+      
+      for (let i = dataStartIndex; i < jsonData.length; i++) {
+        const values = jsonData[i] || [];
+        const rowData: Partial<ContractorImportRow> = {};
+        
+        // Debug first row mapping
+        if (i === dataStartIndex) {
+          console.log('🔍 First Row Mapping Debug:');
+          console.log('Raw values:', values);
+        }
+        
+        headers.forEach((header, index) => {
+          if (index < values.length) {
+            const value = String(values[index] || '').trim();
+            const mappedField = this.mapCsvHeader(header);
+            
+            // Debug first row field mapping
+            if (i === dataStartIndex) {
+              if (mappedField === 'phone') {
+                const normalized = this.normalizePhoneNumber(value);
+                console.log(`  "${header}" -> "${mappedField}" = "${value}" -> "${normalized}"`);
+              } else {
+                console.log(`  "${header}" -> "${mappedField}" = "${value}"`);
+              }
+            }
+            
+            if (mappedField && value) {
+              if (mappedField === 'services') {
+                rowData[mappedField] = this.parseServicesField(value);
+              } else if (mappedField === 'regionOfOperations') {
+                rowData[mappedField] = this.parseRegionsField(value);
+              } else if (mappedField === 'phone') {
+                rowData[mappedField] = this.normalizePhoneNumber(value);
+              } else {
+                rowData[mappedField as keyof ContractorImportRow] = value;
+              }
+            }
+          }
+        });
+        
+        // Debug first row result
+        if (i === dataStartIndex) {
+          console.log('📊 First Row Result:', rowData);
+        }
+        
+        if (Object.keys(rowData).length > 0) {
+          results.push(rowData);
+        }
+      }
+      
+      console.log('✅ Excel Parsing Complete:', { 
+        totalDataRows: jsonData.length - dataStartIndex, 
+        recordsParsed: results.length,
+        sampleRecord: results[0]
+      });
+      
+      return results;
+      
+    } catch (error) {
+      console.error('❌ Excel parsing failed:', error);
+      throw new Error(`Failed to parse Excel file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   /**
@@ -236,9 +377,77 @@ class ContractorImportService {
    * Map CSV header to database field
    */
   private mapCsvHeader(header: string): string | null {
-    // Remove asterisks from required field headers
+    // Try exact match first
+    const exactMatch = CSV_HEADER_MAPPING[header as keyof typeof CSV_HEADER_MAPPING];
+    if (exactMatch) {
+      return exactMatch;
+    }
+    
+    // Try with asterisk added for required fields
+    const withAsterisk = `${header}*`;
+    const asteriskMatch = CSV_HEADER_MAPPING[withAsterisk as keyof typeof CSV_HEADER_MAPPING];
+    if (asteriskMatch) {
+      return asteriskMatch;
+    }
+    
+    // Try with asterisk removed
     const cleanHeader = header.replace('*', '').trim();
-    return CSV_HEADER_MAPPING[cleanHeader as keyof typeof CSV_HEADER_MAPPING] || null;
+    const cleanMatch = CSV_HEADER_MAPPING[cleanHeader as keyof typeof CSV_HEADER_MAPPING];
+    if (cleanMatch) {
+      return cleanMatch;
+    }
+    
+    // Try case-insensitive matching for common variations
+    const normalizedHeader = header.toLowerCase().trim();
+    
+    const fieldMappings: Record<string, string> = {
+      'company name': 'companyName',
+      'company': 'companyName',
+      'name': 'companyName',
+      'trading name': 'tradingName',
+      'trading': 'tradingName',
+      'contact person': 'contactPerson',
+      'contact': 'contactPerson',
+      'person': 'contactPerson',
+      'email': 'email',
+      'email address': 'email',
+      'registration number': 'registrationNumber',
+      'registration': 'registrationNumber',
+      'reg number': 'registrationNumber',
+      'reg no': 'registrationNumber',
+      'phone': 'phone',
+      'telephone': 'phone',
+      'cell': 'phone',
+      'mobile': 'phone',
+      'business type': 'businessType',
+      'type': 'businessType',
+      'services': 'services',
+      'website': 'website',
+      'web': 'website',
+      'url': 'website',
+      'address 1': 'address1',
+      'address1': 'address1',
+      'address line 1': 'address1',
+      'street address': 'address1',
+      'address 2': 'address2',
+      'address2': 'address2',
+      'address line 2': 'address2',
+      'suburb': 'suburb',
+      'city': 'city',
+      'town': 'city',
+      'province': 'province',
+      'state': 'province',
+      'postal code': 'postalCode',
+      'postcode': 'postalCode',
+      'zip': 'postalCode',
+      'zip code': 'postalCode',
+      'country': 'country',
+      'region of operations': 'regionOfOperations',
+      'regions': 'regionOfOperations',
+      'operations': 'regionOfOperations'
+    };
+    
+    return fieldMappings[normalizedHeader] || null;
   }
 
   /**
@@ -256,6 +465,43 @@ class ContractorImportService {
   }
 
   /**
+   * Normalize phone number to South African format
+   * Converts various formats to +27xxxxxxxxx or 0xxxxxxxxx
+   */
+  private normalizePhoneNumber(value: string): string {
+    if (!value || !value.trim()) {
+      return value;
+    }
+
+    // Remove all non-digit characters except +
+    let cleaned = value.replace(/[^\d+]/g, '');
+    
+    // Handle different input formats
+    if (cleaned.startsWith('+27')) {
+      // Already in international format (+27xxxxxxxxx)
+      return cleaned;
+    } else if (cleaned.startsWith('27') && cleaned.length === 11) {
+      // International format without + (27xxxxxxxxx) 
+      return '+' + cleaned;
+    } else if (cleaned.startsWith('0') && cleaned.length === 10) {
+      // Local format (0xxxxxxxxx) - keep as is, it's valid
+      return cleaned;
+    } else if (cleaned.length === 9) {
+      // 9 digits - assume missing leading 0
+      return '0' + cleaned;
+    } else if (cleaned.length === 10 && !cleaned.startsWith('0')) {
+      // 10 digits but doesn't start with 0 - assume mobile number, add 0
+      return '0' + cleaned;
+    }
+    
+    // For debugging - log unrecognized formats
+    console.log(`📞 Phone normalization: "${value}" -> "${cleaned}" (unrecognized format, keeping original)`);
+    
+    // Return original if we can't recognize the format
+    return value;
+  }
+
+  /**
    * Import validated contractor data to database
    */
   async importContractors(
@@ -263,31 +509,162 @@ class ContractorImportService {
     options: ContractorImportOptions
   ): Promise<ContractorImportResult> {
     const startTime = Date.now();
-    
-    // Simulate import process
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    console.log('🚀 Starting real database import of contractors...');
     
     const validContractors = data.contractors.filter(c => c.isValid);
+    const invalidContractors = data.contractors.filter(c => !c.isValid);
     const duplicates = data.contractors.filter(c => c.isDuplicate);
     
-    // Mock successful import
-    const successCount = options.mode === 'skipDuplicates' 
-      ? validContractors.filter(c => !c.isDuplicate).length
-      : validContractors.length;
+    console.log('📊 Import Summary:', {
+      total: data.contractors.length,
+      valid: validContractors.length,
+      invalid: invalidContractors.length,
+      duplicates: duplicates.length
+    });
     
-    return {
+    const importedIds: string[] = [];
+    const errors: Array<{row: number; message: string; data: any}> = [];
+    
+    // Add invalid contractors to errors
+    invalidContractors.forEach(contractor => {
+      errors.push({
+        row: contractor.rowNumber,
+        message: contractor.errors.join(', '),
+        data: { companyName: contractor.companyName }
+      });
+    });
+    
+    // Process valid contractors
+    let successCount = 0;
+    let duplicatesSkipped = 0;
+    
+    for (const contractor of validContractors) {
+      try {
+        // Skip duplicates if mode is set to skip
+        if (contractor.isDuplicate && options.mode === 'skipDuplicates') {
+          duplicatesSkipped++;
+          console.log(`⏭️ Skipping duplicate: ${contractor.companyName}`);
+          continue;
+        }
+        
+        // Convert import format to ContractorFormData
+        const contractorData: ContractorFormData = this.convertToFormData(contractor);
+        
+        console.log(`💾 Creating contractor: ${contractorData.companyName}`);
+        
+        // Create contractor in database
+        const contractorId = await contractorService.create(contractorData);
+        importedIds.push(contractorId);
+        successCount++;
+        
+        console.log(`✅ Successfully created contractor with ID: ${contractorId}`);
+        
+      } catch (error) {
+        console.error(`❌ Failed to create contractor ${contractor.companyName}:`, error);
+        errors.push({
+          row: contractor.rowNumber,
+          message: error instanceof Error ? error.message : 'Unknown error during creation',
+          data: { companyName: contractor.companyName }
+        });
+      }
+    }
+    
+    const result = {
       totalProcessed: data.contractors.length,
       successCount,
-      duplicatesSkipped: duplicates.length,
-      errors: data.contractors
-        .filter(c => !c.isValid)
-        .map(c => ({
-          row: c.rowNumber,
-          message: c.errors.join(', '),
-          data: { companyName: c.companyName }
-        })),
-      importedIds: Array.from({ length: successCount }, (_, i) => `contractor-${i + 1}`),
+      duplicatesSkipped,
+      errors,
+      importedIds,
       duration: Date.now() - startTime
+    };
+    
+    console.log('🎉 Import completed:', result);
+    return result;
+  }
+
+  /**
+   * Convert import row format to ContractorFormData format
+   */
+  private convertToFormData(contractor: ContractorImportRow): ContractorFormData {
+    // Map business type from import format to form format
+    const businessTypeMapping: Record<string, ContractorFormData['businessType']> = {
+      'Pty Ltd': 'pty_ltd',
+      'CC': 'cc', 
+      'Trust': 'cc', // Map Trust to cc for now
+      'Sole Proprietor': 'sole_proprietor'
+    };
+    
+    // Generate unique registration number if missing or is placeholder
+    let registrationNumber = contractor.registrationNumber || '';
+    if (!registrationNumber || registrationNumber === '0000/000000/00' || registrationNumber.trim() === '') {
+      // Generate unique registration number using timestamp and random number
+      const timestamp = Date.now().toString().slice(-8); // Last 8 digits
+      const random = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+      registrationNumber = `TEMP/${timestamp}/${random}`;
+    }
+    
+    return {
+      // Company Information
+      companyName: contractor.companyName || '',
+      registrationNumber: registrationNumber,
+      businessType: businessTypeMapping[contractor.businessType || ''] || 'pty_ltd',
+      industryCategory: 'Telecommunications', // Default category
+      yearsInBusiness: undefined,
+      employeeCount: undefined,
+      
+      // Contact Information
+      contactPerson: contractor.contactPerson || '',
+      email: contractor.email || '',
+      phone: contractor.phone || '',
+      alternatePhone: '',
+      
+      // Address - map from import format
+      physicalAddress: [contractor.address1, contractor.address2, contractor.suburb]
+        .filter(Boolean)
+        .join(', '),
+      postalAddress: [contractor.address1, contractor.address2, contractor.suburb]
+        .filter(Boolean)
+        .join(', '),
+      city: contractor.city || '',
+      province: contractor.province || '',
+      postalCode: contractor.postalCode || '',
+      
+      // Service Information
+      serviceCategory: 'Installation', // Default
+      capabilities: contractor.services || [],
+      equipmentOwned: [],
+      certifications: [],
+      
+      // Business Details
+      website: contractor.website || '',
+      socialMediaProfiles: {},
+      
+      // Financial Information
+      annualRevenue: 0,
+      creditRating: 'Not Rated',
+      taxClearance: false,
+      
+      // Compliance & Certifications
+      beeLevel: 'Not Specified',
+      insuranceCoverage: {},
+      healthSafetyCertification: false,
+      
+      // Performance & Rating
+      performanceRating: 0,
+      reliabilityScore: 0,
+      qualityScore: 0,
+      
+      // Operational Information
+      operationalRegions: contractor.regionOfOperations || [],
+      teamSize: 1,
+      projectCapacity: 1,
+      
+      // Status & Metadata
+      status: 'pending' as const, // Use lowercase to match the expected status values
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      tags: [],
+      notes: 'Imported via Excel/CSV import'
     };
   }
 
@@ -412,4 +789,4 @@ class ContractorImportService {
   }
 }
 
-export const contractorImportService = new ContractorImportService();
+export const contractorImportService = new ContractorImportService();// Force HMR reload

@@ -24,7 +24,9 @@ export function ContractorList() {
   const [showFilters] = useState(false);
   
   const [filter, setFilter] = useState<ContractorFilter>({
-    searchTerm: ''
+    searchTerm: '',
+    // Only show non-pending contractors in Active tab
+    status: ['approved', 'suspended', 'blacklisted'] // Exclude pending and under_review
   });
 
   useEffect(() => {

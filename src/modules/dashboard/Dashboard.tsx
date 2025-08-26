@@ -1,4 +1,4 @@
-import { Calendar, FolderOpen, Users, CheckCircle, AlertTriangle, MapPin, Package, TrendingUp } from 'lucide-react';
+import { Calendar, FolderOpen, Users, CheckCircle, AlertTriangle, MapPin, TrendingUp } from 'lucide-react';
 import { ProjectOverviewCard } from './components/ProjectOverviewCard';
 import { RecentActivityFeed } from './components/RecentActivityFeed';
 import { QuickActions } from './components/QuickActions';
@@ -43,7 +43,7 @@ export function Dashboard() {
       title: 'Active Projects',
       value: stats.activeProjects,
       icon: FolderOpen,
-      description: `${stats.totalProjects || 0} total projects`,
+      description: 'Total projects data not available',
       trend: trends?.activeProjects ? {
         value: trends.activeProjects.percentage,
         isPositive: trends.activeProjects.direction === 'up',

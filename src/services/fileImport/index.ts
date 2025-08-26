@@ -39,12 +39,12 @@ export const FileImportUtils = {
     return fileImportEngine.processFile<T>(file, {
       maxFileSize: options.maxFileSize || 100 * 1024 * 1024, // 100MB
       streaming: options.useStreaming || false,
-      progressCallback: options.onProgress ? (progress) => {
+      ...(options.onProgress ? { progressCallback: (progress: any) => {
         options.onProgress!(progress.percentage);
-      } : undefined,
-      onError: options.onError ? (error) => {
+      } } : {}),
+      ...(options.onError ? { onError: (error: any) => {
         options.onError!(error.message);
-      } : undefined,
+      } } : {}),
       validationRules: [],
       chunkSize: 1000,
       useWebWorker: false
@@ -213,7 +213,7 @@ export const FileImportBenchmark = {
     };
   },
 
-  private getMemoryUsage(): number {
+  getMemoryUsage(): number {
     if (typeof window !== 'undefined' && 'performance' in window && 'memory' in performance) {
       const memory = (performance as any).memory;
       return memory.usedJSHeapSize;
@@ -221,7 +221,7 @@ export const FileImportBenchmark = {
     return 0;
   },
 
-  private getBenchmarkRecommendation(results: Array<any>): string {
+  getBenchmarkRecommendation(results: Array<any>): string {
     const successful = results.filter(r => r.success);
     if (successful.length === 0) return 'No successful strategies';
 

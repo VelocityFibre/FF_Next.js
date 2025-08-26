@@ -323,6 +323,9 @@ export function ApprovalActions({
       window.document.addEventListener('mousedown', handleClickOutside);
       return () => window.document.removeEventListener('mousedown', handleClickOutside);
     }
+    
+    // Return cleanup function even when condition is false (no cleanup needed)
+    return () => {};
   }, [showApprovalForm, showRejectionForm]);
 
   // Focus textarea when forms open

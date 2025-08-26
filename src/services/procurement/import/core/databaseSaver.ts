@@ -42,7 +42,7 @@ export class BOQImportDatabaseSaver {
   /**
    * Create BOQ record in database
    */
-  private async createBOQRecord(context: ProcurementContext): Promise<string> {
+  private async createBOQRecord(_context: ProcurementContext): Promise<string> {
     // TODO: Implement Neon database BOQ creation
     const boqId = `boq_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
@@ -121,7 +121,8 @@ export class BOQImportDatabaseSaver {
     // Mock implementation
     await new Promise(resolve => setTimeout(resolve, 20));
     
-    const itemRecord = {
+    // TODO: Save item record to database
+    void {
       boq_id: boqId,
       item_code: item.itemCode,
       description: item.description,
@@ -144,7 +145,8 @@ export class BOQImportDatabaseSaver {
     // Mock implementation
     await new Promise(resolve => setTimeout(resolve, 15));
     
-    const exceptionRecord = {
+    // TODO: Save exception record to database
+    void {
       boq_id: boqId,
       exception_id: exception.exception.id,
       item_description: exception.description,
@@ -163,8 +165,8 @@ export class BOQImportDatabaseSaver {
    * Update BOQ status after save completion
    */
   async updateBOQStatus(
-    boqId: string, 
-    status: 'draft' | 'processing' | 'completed' | 'failed'
+    _boqId: string, 
+    _status: 'draft' | 'processing' | 'completed' | 'failed'
   ): Promise<void> {
     // TODO: Implement Neon database status update
     await new Promise(resolve => setTimeout(resolve, 50));

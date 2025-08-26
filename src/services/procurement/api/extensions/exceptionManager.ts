@@ -4,29 +4,24 @@
  */
 
 import { BOQException, ProcurementContext, CreateBOQExceptionData } from './types';
-import { mockExceptions } from './mockData';
+// MOCK DATA REMOVED - This service requires connection to real database
+// Consider using the Firebase-based boqService from '@/services/procurement/boqService'
 
 export class ExceptionManager {
   /**
    * Get BOQ exceptions
    */
   static async getBOQExceptions(context: ProcurementContext, boqId: string): Promise<BOQException[]> {
-    return mockExceptions.filter(exc => exc.boqId === boqId && exc.projectId === context.projectId);
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
    * Get BOQ exception by ID
    */
   static async getBOQException(context: ProcurementContext, exceptionId: string): Promise<BOQException> {
-    const exception = mockExceptions.find(
-      exc => exc.id === exceptionId && exc.projectId === context.projectId
-    );
-    
-    if (!exception) {
-      throw new Error('BOQ exception not found');
-    }
-    
-    return exception;
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
@@ -37,21 +32,8 @@ export class ExceptionManager {
     exceptionId: string, 
     updates: Partial<BOQException>
   ): Promise<BOQException> {
-    const excIndex = mockExceptions.findIndex(
-      exc => exc.id === exceptionId && exc.projectId === context.projectId
-    );
-    
-    if (excIndex === -1) {
-      throw new Error('BOQ exception not found');
-    }
-
-    mockExceptions[excIndex] = {
-      ...mockExceptions[excIndex],
-      ...updates,
-      updatedAt: new Date()
-    };
-
-    return mockExceptions[excIndex];
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
@@ -77,23 +59,16 @@ export class ExceptionManager {
       updatedAt: new Date()
     };
 
-    mockExceptions.push(newException);
-    return newException;
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
    * Delete BOQ exception
    */
   static async deleteBOQException(context: ProcurementContext, exceptionId: string): Promise<void> {
-    const excIndex = mockExceptions.findIndex(
-      exc => exc.id === exceptionId && exc.projectId === context.projectId
-    );
-    
-    if (excIndex === -1) {
-      throw new Error('BOQ exception not found');
-    }
-
-    mockExceptions.splice(excIndex, 1);
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
@@ -104,11 +79,8 @@ export class ExceptionManager {
     boqId: string,
     status: string
   ): Promise<BOQException[]> {
-    return mockExceptions.filter(exc =>
-      exc.boqId === boqId &&
-      exc.projectId === context.projectId &&
-      exc.status === status
-    );
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
@@ -119,11 +91,8 @@ export class ExceptionManager {
     boqId: string,
     severity: string
   ): Promise<BOQException[]> {
-    return mockExceptions.filter(exc =>
-      exc.boqId === boqId &&
-      exc.projectId === context.projectId &&
-      exc.severity === severity
-    );
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**
@@ -134,11 +103,8 @@ export class ExceptionManager {
     boqId: string,
     priority: string
   ): Promise<BOQException[]> {
-    return mockExceptions.filter(exc =>
-      exc.boqId === boqId &&
-      exc.projectId === context.projectId &&
-      exc.priority === priority
-    );
+    // MOCK DATA REMOVED - Real database connection required
+    throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
 
   /**

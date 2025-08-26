@@ -61,17 +61,16 @@ export class RFQEmailSender {
     options?: Partial<EmailNotificationOptions>
   ): Promise<void> {
     try {
-      const emailContent = this.generateEmailContent(event, rfq, additionalData);
+      // Mock implementation - replace with actual email service
+      void this.generateEmailContent(event, rfq, additionalData);
       
-      const emailOptions: EmailNotificationOptions = {
+      void {
         to: supplierEmails,
         from: options?.from || this.DEFAULT_FROM,
         ...(options?.replyTo && { replyTo: options.replyTo }),
         ...(options?.attachments && { attachments: options.attachments }),
         ...options
       };
-      
-      // Mock implementation - replace with actual email service
 
       // Example with SendGrid or similar:
       // await emailService.send({

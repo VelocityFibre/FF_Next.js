@@ -38,11 +38,43 @@ export interface ContractorDocument {
 }
 
 export type DocumentType = 
+  // Company Registration & Legal
+  | 'cipc_registration'
+  | 'directors_ids'
+  
+  // Tax & Revenue Compliance
+  | 'vat_certificate'
   | 'tax_clearance'
+  
+  // B-BBEE & Transformation
+  | 'bee_certificate'
+  
+  // Banking & Financial Verification
+  | 'bank_account_proof'
+  | 'bank_confirmation_letter'
+  
+  // Labour & Workers Compensation
+  | 'coid_registration'
+  
+  // Insurance Coverage
+  | 'public_liability_insurance'
+  
+  // Safety, Health, Environment & Quality
+  | 'sheq_documentation'
+  
+  // Technical Competency & Staffing
+  | 'key_staff_credentials'
+  
+  // Past Project Experience
+  | 'past_project_experience'
+  
+  // Legal Agreements & Contracts
+  | 'signed_msa'
+  | 'ncnda'
+  
+  // Legacy document types (for backward compatibility)
   | 'insurance'
   | 'company_registration'
-  | 'vat_certificate'
-  | 'bee_certificate'
   | 'safety_certificate'
   | 'technical_certification'
   | 'bank_statement'

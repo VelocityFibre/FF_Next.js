@@ -26,7 +26,7 @@ export const db = neonDb;
 // Connection test utility
 export async function testNeonConnection(): Promise<boolean> {
   try {
-    const _result = await sql`SELECT NOW() as current_time`;
+    await sql`SELECT NOW() as current_time`;
 
     return true;
   } catch (error) {

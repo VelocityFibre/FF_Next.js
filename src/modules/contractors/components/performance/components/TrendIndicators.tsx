@@ -22,7 +22,7 @@ import {
   ArrowUp,
   ArrowDown 
 } from 'lucide-react';
-import { TrendIndicatorsProps, PerformanceTrendPoint } from '../types';
+import { TrendIndicatorsProps } from '../types';
 
 // 🟢 WORKING: Custom tooltip for trend chart
 const TrendTooltip = ({ active, payload, label }: any) => {
@@ -47,7 +47,7 @@ const TrendTooltip = ({ active, payload, label }: any) => {
 };
 
 // 🟢 WORKING: Trend direction indicator
-const TrendDirectionIcon = ({ direction, change }: { direction: string; change: number }) => {
+const TrendDirectionIcon = ({ direction }: { direction: string; change: number }) => {
   const iconProps = { className: "w-4 h-4" };
   
   switch (direction) {
@@ -149,7 +149,7 @@ export function TrendIndicators({
               dataKey="date" 
               stroke="#6b7280"
               fontSize={12}
-              tickFormatter={(value) => {
+              tickFormatter={(value: any) => {
                 // Format date for display (e.g., "Jan 15")
                 return new Date(value).toLocaleDateString('en-US', { 
                   month: 'short', 

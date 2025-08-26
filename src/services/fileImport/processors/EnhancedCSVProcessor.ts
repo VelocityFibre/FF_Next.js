@@ -12,11 +12,12 @@ import type {
   FileMetadata,
   ProcessingError,
   ProcessingWarning,
-  MemoryStats
+  MemoryStats,
+  DetectedFormat
 } from '../types';
 
 export class EnhancedCSVProcessor {
-  private readonly CHUNK_SIZE = 8192; // 8KB chunks for streaming
+  // private readonly CHUNK_SIZE = 8192; // 8KB chunks for streaming
   private readonly MAX_DIRECT_SIZE = 5 * 1024 * 1024; // 5MB
 
   /**
@@ -54,7 +55,6 @@ export class EnhancedCSVProcessor {
       
       Papa.parse(file, {
         header: true,
-        encoding: options.encoding || 'UTF-8',
         delimiter: options.delimiter || '',
         quoteChar: options.quote || '"',
         escapeChar: options.escape || '"',
@@ -72,9 +72,9 @@ export class EnhancedCSVProcessor {
           }
           return chunk;
         },
-        step: (results: Papa.ParseResult<T>, parser: Papa.Parser) => {
+        step: (results: Papa.ParseResult<T>) => {
           // Progress callback
-          if (options.progressCallback && parser.streamer) {
+          if (options.progressCallback) {
             const progress = {
               processedRows: results.meta.cursor || 0,
               totalRows: Math.ceil(file.size / 50), // Rough estimate
@@ -97,8 +97,8 @@ export class EnhancedCSVProcessor {
                 severity: error.type === 'Quotes' ? 'high' : 'medium',
                 message: error.message,
                 details: `Code: ${error.code}`,
-                row: error.row,
-                column: error.code === 'UndetectableDelimiter' ? undefined : String(error.row),
+                row: error.row || 0,
+                ...(error.code === 'UndetectableDelimiter' ? {} : { column: String(error.row) }),
                 code: error.code,
                 timestamp: new Date(),
                 recoverable: error.type !== 'Quotes'
@@ -125,9 +125,8 @@ export class EnhancedCSVProcessor {
             detectedFormat: {
               delimiter: results.meta.delimiter,
               hasHeaders: true,
-              encoding: options.encoding,
               lineTerminator: results.meta.linebreak
-            },
+            } as DetectedFormat,
             processingEndTime: new Date()
           };
 
@@ -174,18 +173,17 @@ export class EnhancedCSVProcessor {
 
       const stream = Papa.parse(Papa.NODE_STREAM_INPUT, {
         header: true,
-        encoding: options.encoding || 'UTF-8',
         delimiter: options.delimiter || '',
         quoteChar: options.quote || '"',
         escapeChar: options.escape || '"',
         skipEmptyLines: options.skipEmptyLines ?? true,
         dynamicTyping: options.dynamicTyping ?? true,
-        chunkSize: options.chunkSize || this.CHUNK_SIZE,
+        // chunkSize: options.chunkSize || this.CHUNK_SIZE, // Not available in this config
         transform: options.transform,
         transformHeader: (header: string) => {
           return options.trimWhitespace ? header.trim() : header;
         },
-        step: (results: Papa.ParseResult<T>, parser: Papa.Parser) => {
+        step: (results: Papa.ParseResult<T>) => {
           if (isFirstChunk && results.meta.fields) {
             headers = results.meta.fields;
             isFirstChunk = false;
@@ -205,8 +203,8 @@ export class EnhancedCSVProcessor {
                 severity: error.type === 'Quotes' ? 'high' : 'medium',
                 message: error.message,
                 details: `Code: ${error.code}`,
-                row: error.row,
-                column: String(error.row),
+                row: error.row ?? processedRows,
+                column: String(error.row ?? processedRows),
                 code: error.code,
                 timestamp: new Date(),
                 recoverable: true
@@ -257,9 +255,8 @@ export class EnhancedCSVProcessor {
             headers,
             detectedFormat: {
               delimiter: options.delimiter || ',',
-              hasHeaders: true,
-              encoding: options.encoding
-            },
+              hasHeaders: true
+            } as DetectedFormat,
             processingEndTime: new Date()
           };
 
@@ -292,12 +289,15 @@ export class EnhancedCSVProcessor {
         const { done, value } = await reader.read();
         
         if (done) {
-          stream.pause();
+          // Stream processing complete
           return;
         }
 
         const chunk = decoder.decode(value, { stream: true });
-        stream.write(chunk);
+        // Process chunk through Papa.parse
+        if (typeof (stream as any).write === 'function') {
+          (stream as any).write(chunk);
+        }
         
         return pump();
       };
@@ -331,7 +331,7 @@ export class EnhancedCSVProcessor {
             type: 'validation',
             severity: rule.severity === 'error' ? 'high' : 'medium',
             message: result.message || rule.message || `Validation failed for field: ${rule.field}`,
-            details: result.suggestion,
+            details: result.suggestion || 'No suggestion provided',
             row: i + 1,
             column: rule.field,
             timestamp: new Date(),
@@ -344,10 +344,10 @@ export class EnhancedCSVProcessor {
             warnings.push({
               type: 'data',
               message: error.message,
-              suggestion: error.details,
-              row: error.row,
-              column: error.column,
-              timestamp: error.timestamp
+              timestamp: error.timestamp,
+              ...(error.details && { suggestion: error.details }),
+              ...(error.row && { row: error.row }),
+              ...(error.column && { column: error.column })
             });
           }
         }

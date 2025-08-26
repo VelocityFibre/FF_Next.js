@@ -227,29 +227,21 @@ class PerformanceMonitor {
   /**
    * Measure component render time
    */
-  measureRender<T>(componentName: string, renderFn: () => T): T {
-    const startTime = performance.now();
+  measureRender<T>(_componentName: string, renderFn: () => T): T {
+    // Performance measurement disabled in production
     const result = renderFn();
-    const endTime = performance.now();
-    
-    // console.debug(`${componentName} render time: ${(endTime - startTime).toFixed(2)}ms`);
-    
     return result;
   }
 
   /**
    * Measure async operation time
    */
-  async measureAsync<T>(operationName: string, asyncFn: () => Promise<T>): Promise<T> {
-    const startTime = performance.now();
+  async measureAsync<T>(_operationName: string, asyncFn: () => Promise<T>): Promise<T> {
+    // Performance measurement disabled in production
     try {
       const result = await asyncFn();
-      const endTime = performance.now();
-      // console.debug(`${operationName} execution time: ${(endTime - startTime).toFixed(2)}ms`);
       return result;
     } catch (error) {
-      const endTime = performance.now();
-      // console.error(`${operationName} failed after ${(endTime - startTime).toFixed(2)}ms:`, error);
       throw error;
     }
   }
@@ -381,12 +373,13 @@ export const performanceMonitor = new PerformanceMonitor();
  * React hook for component performance monitoring
  */
 export function usePerformanceMonitor(componentName: string) {
-  const startTime = performance.now();
+  const _startTime = performance.now();
 
   React.useEffect(() => {
-    const endTime = performance.now();
+    // Performance measurement disabled in production
+    // const endTime = performance.now();
     // console.debug(`${componentName} mount time: ${(endTime - startTime).toFixed(2)}ms`);
-  }, [componentName, startTime]);
+  }, [componentName, _startTime]);
 
   const measureRender = React.useCallback((renderFn: () => any) => {
     return performanceMonitor.measureRender(componentName, renderFn);
@@ -405,11 +398,10 @@ export function withPerformanceMonitoring<P extends Record<string, unknown>>(
   const displayName = componentName || WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
   const EnhancedComponent = React.memo((props: P) => {
-    const renderStart = performance.now();
+    // Performance measurement disabled in production
     
     React.useEffect(() => {
-      const renderEnd = performance.now();
-      // console.debug(`${displayName} render time: ${(renderEnd - renderStart).toFixed(2)}ms`);
+      // console.debug(`${displayName} rendered`);
     });
 
     return React.createElement(WrappedComponent, props);

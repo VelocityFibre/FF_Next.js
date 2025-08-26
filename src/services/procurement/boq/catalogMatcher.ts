@@ -8,10 +8,11 @@ import type { CatalogMatchResult } from './types';
 
 /**
  * Perform AI-powered catalog matching for a BOQ item
+ * PLACEHOLDER IMPLEMENTATION: Uses mock catalog data until real catalog service is connected
  * TODO: Integrate with actual catalog service or ML model
  */
 export async function performCatalogMatching(item: BOQItem): Promise<CatalogMatchResult> {
-  // Mock catalog items for testing
+  // MOCK CATALOG DATA - Replace with real catalog service connection
   const mockCatalogItems = [
     { id: 'cat-001', code: 'FIBER-SM-4C', name: 'Single Mode Fiber Cable 4 Core' },
     { id: 'cat-002', code: 'POLE-STEEL-9M', name: 'Steel Pole 9 Meters' },

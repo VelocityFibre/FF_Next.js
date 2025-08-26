@@ -44,30 +44,65 @@ export const contractorDocumentService = {
    */
   async getByContractor(contractorId: string): Promise<ContractorDocument[]> {
     try {
-      const q = query(
+      // Try the optimized query first (requires composite index)
+      let q = query(
         collection(db, 'contractor_documents'),
         where('contractorId', '==', contractorId),
         orderBy('documentType', 'asc'),
         orderBy('createdAt', 'desc')
       );
-      const snapshot = await getDocs(q);
       
-      return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          issueDate: data.issueDate?.toDate(),
-          expiryDate: data.expiryDate?.toDate(),
-          verifiedAt: data.verifiedAt?.toDate(),
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date(),
-        } as ContractorDocument;
-      });
+      try {
+        const snapshot = await getDocs(q);
+        return this.mapDocuments(snapshot);
+      } catch (indexError: any) {
+        // If index error, fall back to simpler query and sort in memory
+        if (indexError?.code === 'failed-precondition' || 
+            indexError?.message?.includes('index')) {
+          console.warn('Composite index not available, using fallback query with client-side sorting');
+          
+          // Fallback: Simple query with client-side sorting
+          const fallbackQuery = query(
+            collection(db, 'contractor_documents'),
+            where('contractorId', '==', contractorId),
+            orderBy('createdAt', 'desc')
+          );
+          
+          const fallbackSnapshot = await getDocs(fallbackQuery);
+          const documents = this.mapDocuments(fallbackSnapshot);
+          
+          // Sort by documentType client-side
+          return documents.sort((a, b) => {
+            const typeCompare = a.documentType.localeCompare(b.documentType);
+            if (typeCompare !== 0) return typeCompare;
+            // If same type, maintain createdAt desc order
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          });
+        }
+        throw indexError;
+      }
     } catch (error) {
       console.error('Error getting contractor documents:', error);
       throw new Error('Failed to fetch contractor documents');
     }
+  },
+
+  /**
+   * Helper method to map Firestore documents to ContractorDocument objects
+   */
+  mapDocuments(snapshot: any): ContractorDocument[] {
+    return snapshot.docs.map((doc: any) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        issueDate: data.issueDate?.toDate(),
+        expiryDate: data.expiryDate?.toDate(),
+        verifiedAt: data.verifiedAt?.toDate(),
+        createdAt: data.createdAt?.toDate() || new Date(),
+        updatedAt: data.updatedAt?.toDate() || new Date(),
+      } as ContractorDocument;
+    });
   },
 
   /**
@@ -225,26 +260,38 @@ export const contractorDocumentService = {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() + daysAhead);
       
-      const q = query(
-        collection(db, 'contractor_documents'),
-        where('expiryDate', '<=', Timestamp.fromDate(cutoffDate)),
-        where('expiryDate', '>', Timestamp.now()),
-        orderBy('expiryDate', 'asc')
-      );
-      const snapshot = await getDocs(q);
-      
-      return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          issueDate: data.issueDate?.toDate(),
-          expiryDate: data.expiryDate?.toDate(),
-          verifiedAt: data.verifiedAt?.toDate(),
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date(),
-        } as ContractorDocument;
-      });
+      try {
+        // Try optimized query with multiple where clauses and orderBy
+        const q = query(
+          collection(db, 'contractor_documents'),
+          where('expiryDate', '<=', Timestamp.fromDate(cutoffDate)),
+          where('expiryDate', '>', Timestamp.now()),
+          orderBy('expiryDate', 'asc')
+        );
+        const snapshot = await getDocs(q);
+        return this.mapDocuments(snapshot);
+      } catch (indexError: any) {
+        // Fallback: Use single where clause and filter client-side
+        if (indexError?.code === 'failed-precondition' || 
+            indexError?.message?.includes('index')) {
+          console.warn('Expiring documents query index not available, using fallback with client-side filtering');
+          
+          const fallbackQuery = query(
+            collection(db, 'contractor_documents'),
+            where('expiryDate', '>', Timestamp.now()),
+            orderBy('expiryDate', 'asc')
+          );
+          
+          const fallbackSnapshot = await getDocs(fallbackQuery);
+          const documents = this.mapDocuments(fallbackSnapshot);
+          
+          // Filter client-side for cutoff date
+          return documents.filter(doc => 
+            doc.expiryDate && doc.expiryDate <= cutoffDate
+          );
+        }
+        throw indexError;
+      }
     } catch (error) {
       console.error('Error getting expiring documents:', error);
       throw new Error('Failed to fetch expiring documents');

@@ -571,7 +571,7 @@ export class ProcurementReportsService {
   }
 
   // 🟡 PARTIAL: Export functionality
-  async exportReport(reportType: string, _data: any, options: ExportOptions): Promise<string> {
+  async exportReport(_reportType: string, _data: any, options: ExportOptions): Promise<string> {
     // TODO: Implement actual export functionality
 
     return `mock-report-${Date.now()}.${options.format}`;

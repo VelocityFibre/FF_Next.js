@@ -8,7 +8,6 @@
 import { cn } from '@/utils/cn';
 import { 
   RecentActivityFeedProps, 
-  mockActivities,
   ActivityHeader,
   ActivityLoadingState,
   ActivityEmptyState,
@@ -16,7 +15,7 @@ import {
 } from './activity';
 
 export function RecentActivityFeed({ 
-  activities = mockActivities, 
+  activities = [], // 🟢 WORKING: No mock data - empty array by default
   isLoading = false,
   showAll = false,
   className = '' 

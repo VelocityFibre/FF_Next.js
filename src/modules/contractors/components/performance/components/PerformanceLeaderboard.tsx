@@ -220,7 +220,7 @@ export function PerformanceLeaderboard({
                 key={contractor.contractorId}
                 contractor={contractor}
                 position={index + 1}
-                onClick={onContractorClick || undefined}
+                {...(onContractorClick ? { onClick: onContractorClick } : {})}
                 showTrends={showTrends}
               />
             ))}
@@ -243,7 +243,7 @@ export function PerformanceLeaderboard({
                 key={contractor.contractorId}
                 contractor={contractor}
                 position={index + 1}
-                onClick={onContractorClick || undefined}
+                {...(onContractorClick ? { onClick: onContractorClick } : {})}
                 showTrends={showTrends}
                 isBottomPerformer
               />

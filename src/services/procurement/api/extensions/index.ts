@@ -11,8 +11,8 @@ export { ExceptionManager } from './exceptionManager';
 // Main service class
 export { BOQApiExtensions } from './apiService';
 
-// Mock data
-export { mockBOQs, mockBOQItems, mockExceptions } from './mockData';
+// MOCK DATA REMOVED - No longer available
+// Use the Firebase-based boqService from '@/services/procurement/boqService' instead
 
 // Types
 export type {

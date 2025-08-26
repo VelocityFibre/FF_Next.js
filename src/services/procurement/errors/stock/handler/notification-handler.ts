@@ -184,20 +184,18 @@ export class NotificationHandler {
       ? this.config.email.escalationRecipients
       : this.config.email.recipients;
 
-    const emailContent = {
+    // Mock email sending - would integrate with actual email service
+    void {
       to: recipients,
       subject: `Stock Error Alert - ${severity.toUpperCase()} - ${error.constructor.name}`,
       body: this.formatEmailBody(error, severity, recoveryOptions, attemptCount)
     };
 
-    // Mock email sending - would integrate with actual email service
-
   }
 
   private static async sendSMSNotification(error: any, _severity: string): Promise<void> {
-    const message = `CRITICAL STOCK ERROR: ${error.constructor.name} - Item: ${error.itemCode || 'N/A'} - Immediate attention required`;
-    
     // Mock SMS sending - would integrate with SMS service
+    void `CRITICAL STOCK ERROR: ${error.constructor.name} - Item: ${error.itemCode || 'N/A'} - Immediate attention required`;
 
   }
 
@@ -206,7 +204,8 @@ export class NotificationHandler {
     severity: string,
     recoveryOptions: RecoveryOption[]
   ): Promise<void> {
-    const payload = {
+    // Mock webhook sending - would integrate with webhook service
+    void {
       type: 'stock_error',
       timestamp: new Date().toISOString(),
       severity,

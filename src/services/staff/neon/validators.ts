@@ -61,7 +61,7 @@ export function processReportsToField(reportsTo: string | undefined | null): str
 /**
  * Log debug information for staff data
  */
-export function logDebugInfo(operation: string, data: any, reportsTo?: any): void {
+export function logDebugInfo(_operation: string, data: any, reportsTo?: any): void {
 
   console.log('1. Raw input data:', JSON.stringify(data, null, 2));
   

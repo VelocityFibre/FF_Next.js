@@ -7,6 +7,7 @@
 import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
 import { staffQueryService } from '@/services/staff/staffQueryService';
 import { clientQueryService } from '@/services/client/clientQueryService';
+import { ProjectStatus } from '@/types/project.types';
 import { sql } from '@/lib/neon';
 
 // 🟢 WORKING: Core dashboard data types
@@ -119,7 +120,7 @@ export class DashboardStatsService {
       
       // Get completed projects
       const completedProjects = allProjects.filter(p => 
-        p.status === 'COMPLETED' || p.status === 'FINISHED'
+        p.status === ProjectStatus.COMPLETED
       );
 
       // Calculate performance metrics from actual data
@@ -128,8 +129,15 @@ export class DashboardStatsService {
       
       // Calculate on-time delivery from project dates
       const onTimeProjects = completedProjects.filter(p => {
-        if (!p.endDate || !p.plannedEndDate) return false;
-        return new Date(p.endDate) <= new Date(p.plannedEndDate);
+        if (!p.endDate || !p.actualEndDate) return false;
+        // Compare actual end date with planned end date (using endDate as planned)
+        const actualEnd = p.actualEndDate instanceof Date ? p.actualEndDate : 
+          typeof p.actualEndDate === 'string' ? new Date(p.actualEndDate) : 
+          (p.actualEndDate as any)?.toDate?.() || new Date();
+        const plannedEnd = p.endDate instanceof Date ? p.endDate : 
+          typeof p.endDate === 'string' ? new Date(p.endDate) : 
+          (p.endDate as any)?.toDate?.() || new Date();
+        return actualEnd <= plannedEnd;
       });
       
       const onTimeDelivery = completedProjects.length > 0 
@@ -314,8 +322,8 @@ export class DashboardStatsService {
     if (completedProjects.length === 0) return 0;
     
     // This would need to be connected to quality metrics/ratings
-    // For now, return a basic score based on completion
-    return completedProjects.length > 0 ? 85 : 0; // Base quality score
+    // Return 0 to show honest empty state until real quality metrics are implemented
+    return 0;
   }
 
   /**

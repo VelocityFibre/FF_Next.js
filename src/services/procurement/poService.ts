@@ -547,8 +547,8 @@ class POService {
   // ============= Integration Methods =============
 
   async createPOFromQuote(quoteId: string, projectId: string): Promise<PurchaseOrder> {
-    // This would integrate with the RFQ/Quote system
-    // For now, return a mock PO
+    // PLACEHOLDER IMPLEMENTATION: This would integrate with the RFQ/Quote system
+    // TODO: Replace with real data from quote/RFQ system
     const mockRequest: CreatePORequest = {
       projectId,
       quoteId,

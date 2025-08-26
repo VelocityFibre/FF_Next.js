@@ -67,8 +67,8 @@ export class ProcurementErrorLogger implements IErrorLogger {
    * Log low severity error
    */
   logLow(error: unknown, context: ErrorLogContext): void {
-    const logData = this.createLogData(error, context, 'low');
-
+    // TODO: Implement low severity logging
+    void this.createLogData(error, context, 'low');
   }
 
   /**
@@ -202,7 +202,8 @@ export class ProcurementErrorLogger implements IErrorLogger {
     userId: string,
     context: ErrorLogContext
   ): void {
-    const logData = {
+    // TODO: Implement audit logging
+    void {
       timestamp: new Date().toISOString(),
       type: 'audit',
       action,
@@ -210,6 +211,5 @@ export class ProcurementErrorLogger implements IErrorLogger {
       userId,
       context: this.sanitizeErrorContext(context)
     };
-
   }
 }

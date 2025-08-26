@@ -9,7 +9,6 @@ import type {
   FileType,
   ProcessingStrategy,
   ProcessorConfig,
-  FileMetadata,
   ProcessingContext,
   PerformanceMetrics
 } from '../types';
@@ -17,23 +16,23 @@ import type {
 import { ProcessorRouter } from './ProcessorRouter';
 import { WorkerManager } from '../workers/WorkerManager';
 import { MemoryManager } from '../memory/MemoryManager';
-import { ProgressTracker } from '../progress/ProgressTracker';
+// import { ProgressTracker } from '../progress/ProgressTracker';
 import { FileValidator } from '../validation/FileValidator';
 
 export class FileImportEngine {
   private static instance: FileImportEngine;
   private router: ProcessorRouter;
   private workerManager: WorkerManager;
-  private memoryManager: MemoryManager;
-  private progressTracker: ProgressTracker;
+  // private memoryManager: MemoryManager;
+  // private progressTracker: ProgressTracker;
   private validator: FileValidator;
   private activeProcessing: Map<string, ProcessingContext> = new Map();
 
   private constructor() {
     this.router = new ProcessorRouter();
     this.workerManager = new WorkerManager();
-    this.memoryManager = new MemoryManager();
-    this.progressTracker = new ProgressTracker();
+    // this.memoryManager = new MemoryManager();
+    // this.progressTracker = new ProgressTracker();
     this.validator = new FileValidator();
   }
 
@@ -80,7 +79,7 @@ export class FileImportEngine {
         type: fileType,
         strategy,
         options: this.mergeDefaultOptions(options),
-        timeoutMs: options.timeoutMs || 300000 // 5 minutes default
+        timeoutMs: 300000 // 5 minutes default
       };
 
       let result: FileProcessingResult<T>;
@@ -101,7 +100,7 @@ export class FileImportEngine {
 
       // Calculate performance metrics
       const endTime = performance.now();
-      const metrics = this.calculateMetrics(startTime, endTime, result);
+      // const metrics = this.calculateMetrics(startTime, endTime, result);
       
       // Update context
       context.endTime = new Date();
@@ -217,8 +216,8 @@ export class FileImportEngine {
     config: ProcessorConfig,
     context: ProcessingContext
   ): Promise<FileProcessingResult<T>> {
-    const processor = this.router.getStreamingProcessor(config.type);
-    return processor.processStream<T>(file, config.options, context);
+    const processor = this.router.getProcessor(config.type);
+    return processor.process<T>(file, config.options, context);
   }
 
   private detectFileType(file: File): FileType {
@@ -242,7 +241,7 @@ export class FileImportEngine {
 
   private determineStrategy(
     file: File,
-    fileType: FileType,
+    _fileType: FileType,
     options: Partial<FileProcessingOptions>
   ): ProcessingStrategy {
     // Force strategy if specified
@@ -301,29 +300,29 @@ export class FileImportEngine {
     };
   }
 
-  private calculateMetrics(
-    startTime: number,
-    endTime: number,
-    result: FileProcessingResult
-  ): PerformanceMetrics {
-    const totalTime = endTime - startTime;
-    
-    return {
-      parseTime: totalTime * 0.6, // Rough estimate
-      validationTime: totalTime * 0.2,
-      transformTime: totalTime * 0.2,
-      totalTime,
-      memoryPeak: result.memoryUsage.peakUsage,
-      memoryAverage: result.memoryUsage.heapUsed,
-      gcEvents: result.memoryUsage.gcCount || 0,
-      rowsPerSecond: result.rowsProcessed / (totalTime / 1000),
-      bytesPerSecond: result.metadata.size / (totalTime / 1000)
-    };
-  }
+  // private calculateMetrics(
+  //   startTime: number,
+  //   endTime: number,
+  //   result: FileProcessingResult
+  // ): PerformanceMetrics {
+  //   const totalTime = endTime - startTime;
+  //   
+  //   return {
+  //     parseTime: totalTime * 0.6, // Rough estimate
+  //     validationTime: totalTime * 0.2,
+  //     transformTime: totalTime * 0.2,
+  //     totalTime,
+  //     memoryPeak: result.memoryUsage.peakUsage,
+  //     memoryAverage: result.memoryUsage.heapUsed,
+  //     gcEvents: result.memoryUsage.gcCount || 0,
+  //     rowsPerSecond: result.rowsProcessed / (totalTime / 1000),
+  //     bytesPerSecond: result.metadata.size / (totalTime / 1000)
+  //   };
+  // }
 
   private cleanup(processingId: string): void {
     this.activeProcessing.delete(processingId);
-    this.memoryManager.cleanup();
+    // this.memoryManager.cleanup();
   }
 
   private generateProcessingId(): string {
@@ -339,7 +338,7 @@ export class FileImportEngine {
    */
   public async shutdown(): Promise<void> {
     // Cancel all active processing
-    for (const [id, context] of this.activeProcessing.entries()) {
+    for (const [_id, context] of this.activeProcessing.entries()) {
       if (context.cancellationToken) {
         context.cancellationToken.abort();
       }
@@ -351,7 +350,7 @@ export class FileImportEngine {
     await this.workerManager.shutdown();
     
     // Final memory cleanup
-    this.memoryManager.forceCleanup();
+    // this.memoryManager.forceCleanup();
   }
 }
 

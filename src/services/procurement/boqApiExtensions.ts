@@ -5,7 +5,7 @@
  * 
  * New modular structure:
  * - types.ts: Type definitions and interfaces
- * - mockData.ts: Mock data for development and testing
+ * - mockData.ts: REMOVED - Mock data no longer available
  * - boqOperations.ts: Core CRUD operations for BOQs
  * - itemOperations.ts: CRUD operations for BOQ items
  * - exceptionOperations.ts: CRUD operations for BOQ exceptions

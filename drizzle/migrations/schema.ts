@@ -325,6 +325,7 @@ export const projectAssignments = pgTable("project_assignments", {
 	qualityScore: numeric("quality_score", { precision: 5, scale:  2 }),
 	timelinessScore: numeric("timeliness_score", { precision: 5, scale:  2 }),
 	assignmentNotes: text("assignment_notes"),
+	completionNotes: text("completion_notes"),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 }, (table) => [

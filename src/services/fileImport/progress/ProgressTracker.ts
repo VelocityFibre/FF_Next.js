@@ -154,7 +154,8 @@ export class ProgressTracker {
     }
 
     const currentTime = Date.now();
-    const recentHistory = history.slice(-10); // Use last 10 data points
+    // Use last 10 data points for analysis
+    void history.slice(-10);
     
     // Calculate processing rate
     const startTime = this.getStartTime(fileId);
@@ -167,7 +168,8 @@ export class ProgressTracker {
     if (currentPercentage === 0) return 0;
 
     // Estimate based on current progress rate
-    const remainingPercentage = 100 - currentPercentage;
+    const _remainingPercentage = 100 - currentPercentage;
+    void _remainingPercentage; // Mark as used
     const estimatedTotal = (elapsedTime / currentPercentage) * 100;
     const estimatedRemaining = estimatedTotal - elapsedTime;
 

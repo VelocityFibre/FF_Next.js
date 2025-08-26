@@ -60,7 +60,7 @@ export class ProcessorRouter {
   public getRecommendedStrategy(
     file: File,
     fileType: FileType,
-    config: ProcessorConfig
+    _config: ProcessorConfig
   ): 'direct' | 'worker' | 'streaming' {
     const fileSizeInMB = file.size / (1024 * 1024);
 

@@ -12,7 +12,6 @@ import type {
   ExcelProcessingOptions,
   ExcelMetadata,
   ExcelSheetInfo,
-  FileMetadata,
   ProcessingError,
   ProcessingWarning,
   MemoryStats
@@ -61,7 +60,7 @@ export class EnhancedExcelProcessor {
       // Parse with XLSX
       const workbook = XLSX.read(arrayBuffer, {
         type: 'array',
-        dateNF: options.dateFormat,
+        ...(options.dateFormat && { dateNF: options.dateFormat }),
         cellDates: true,
         cellNF: false,
         cellText: false
@@ -76,13 +75,13 @@ export class EnhancedExcelProcessor {
         throw new Error('No valid sheet found in Excel file');
       }
 
-      // Convert sheet to JSON
-      const sheetData = XLSX.utils.sheet_to_json<T>(targetSheet, {
+      // Convert sheet to JSON (raw array format for header processing)
+      const sheetData = XLSX.utils.sheet_to_json(targetSheet, {
         header: 1,
         defval: null,
         blankrows: !options.skipEmptyLines,
         raw: !options.evaluateFormulas
-      });
+      }) as unknown[][];
 
       // Process headers and data
       const { headers, data } = this.processSheetData<T>(sheetData, options);
@@ -308,7 +307,7 @@ export class EnhancedExcelProcessor {
         rowCount: range.e.r + 1,
         columnCount: range.e.c + 1,
         hasData: !!sheet['!ref'],
-        range: sheet['!ref']
+        ...(sheet['!ref'] && { range: sheet['!ref'] })
       };
     });
   }
@@ -480,7 +479,7 @@ export class EnhancedExcelProcessor {
     return formulaCount;
   }
 
-  private countCharts(worksheet: ExcelJS.Worksheet): number {
+  private countCharts(_worksheet: ExcelJS.Worksheet): number {
     // ExcelJS doesn't provide direct chart access
     // This would require more complex implementation
     return 0;
@@ -519,11 +518,11 @@ export class EnhancedExcelProcessor {
             type: 'validation',
             severity: rule.severity === 'error' ? 'high' : 'medium',
             message: result.message || rule.message || `Validation failed for field: ${rule.field}`,
-            details: result.suggestion,
             row: i + 2, // +2 because Excel rows are 1-indexed and we skip header
             column: rule.field,
             timestamp: new Date(),
-            recoverable: rule.severity !== 'error'
+            recoverable: rule.severity !== 'error',
+            ...(result.suggestion && { details: result.suggestion })
           };
 
           if (rule.severity === 'error') {
@@ -532,10 +531,10 @@ export class EnhancedExcelProcessor {
             warnings.push({
               type: 'data',
               message: error.message,
-              suggestion: error.details,
-              row: error.row,
-              column: error.column,
-              timestamp: error.timestamp
+              timestamp: error.timestamp,
+              ...(error.details && { suggestion: error.details }),
+              ...(error.row && { row: error.row }),
+              ...(error.column && { column: error.column })
             });
           }
         }

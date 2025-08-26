@@ -85,8 +85,8 @@ export class FileValidator {
     return {
       isValid,
       message,
-      suggestion,
-      errors
+      errors,
+      ...(suggestion && { suggestion })
     };
   }
 

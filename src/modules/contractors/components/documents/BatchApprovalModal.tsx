@@ -50,6 +50,8 @@ interface BatchApprovalModalProps {
 /**
  * Batch processing progress tracking
  */
+// Interface for batch progress tracking (unused - planned feature)
+/*
 interface BatchProgress {
   total: number;
   processed: number;
@@ -58,6 +60,7 @@ interface BatchProgress {
   currentDocument?: string;
   errors: { documentId: string; error: string }[];
 }
+*/
 
 /**
  * Document preview data for batch processing
@@ -270,10 +273,10 @@ export function BatchApprovalModal({
     const request: BulkApprovalRequest = {
       documentIds: Array.from(selectedDocuments),
       action: selectedAction,
-      reasonCode: selectedAction === 'reject' ? rejectionReason : undefined,
-      notes: notes.trim() || undefined,
       processedBy: 'current_user', // 🟡 PARTIAL: Would get from auth context
-      skipValidation
+      skipValidation,
+      ...(selectedAction === 'reject' && rejectionReason && { reasonCode: rejectionReason }),
+      ...(notes.trim() && { notes: notes.trim() })
     };
     
     try {

@@ -4,17 +4,13 @@
  * @module DocumentApprovalQueue
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   Clock, 
   CheckCircle2, 
   XCircle, 
-  AlertTriangle, 
-  Filter, 
-  Search, 
   RefreshCw, 
   FileText,
-  MoreHorizontal,
   Eye,
   Download,
   CheckCheck,
@@ -23,12 +19,9 @@ import {
 import { contractorService } from '@/services/contractorService';
 import { ContractorDocument } from '@/types/contractor.types';
 import { 
-  DocumentApprovalAction, 
   DocumentQueueStats, 
   DocumentSortOptions,
-  BulkApprovalRequest,
-  DocumentRejectionReason,
-  ComplianceStatus
+  BulkApprovalRequest
 } from './types/documentApproval.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { DocumentViewer } from './DocumentViewer';
@@ -90,7 +83,7 @@ export function DocumentApprovalQueue({
   const [statusFilter, setStatusFilter] = useState(initialFilter);
   const [documentTypeFilter, setDocumentTypeFilter] = useState('all');
   const [expiryFilter, setExpiryFilter] = useState('all');
-  const [sortOptions, setSortOptions] = useState<DocumentSortOptions>({
+  const [sortOptions] = useState<DocumentSortOptions>({
     field: 'createdAt',
     direction: 'desc'
   });
@@ -240,10 +233,31 @@ export function DocumentApprovalQueue({
       );
     }
     
-    // Apply sorting
+    // Apply sorting with proper type handling
     filtered.sort((a, b) => {
-      const aValue = a[sortOptions.field] as any;
-      const bValue = b[sortOptions.field] as any;
+      const getSortValue = (doc: ContractorDocument, field: string) => {
+        switch (field) {
+          case 'priority':
+            // Calculate priority based on expiry date
+            if (doc.expiryDate) {
+              const daysUntilExpiry = Math.ceil(
+                (new Date(doc.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+              );
+              if (daysUntilExpiry < 0) return 0; // Expired (highest priority)
+              if (daysUntilExpiry <= 7) return 1; // Urgent
+              if (daysUntilExpiry <= 30) return 2; // Warning
+              return 3; // Normal
+            }
+            return 3; // Normal priority for docs without expiry
+          case 'contractorName':
+            return doc.contractorId; // Use contractorId as proxy
+          default:
+            return (doc as any)[field];
+        }
+      };
+      
+      const aValue = getSortValue(a, sortOptions.field);
+      const bValue = getSortValue(b, sortOptions.field);
       
       if (aValue == null && bValue == null) return 0;
       if (aValue == null) return 1;
@@ -262,7 +276,7 @@ export function DocumentApprovalQueue({
   /**
    * Handle document approval
    */
-  const handleApproval = async (documentId: string, action: 'approve' | 'reject', notes?: string, reasonCode?: DocumentRejectionReason) => {
+  const handleApproval = async (documentId: string, action: 'approve' | 'reject', notes?: string) => {
     try {
       setProcessingDocuments(prev => new Set([...prev, documentId]));
       
@@ -276,7 +290,7 @@ export function DocumentApprovalQueue({
         notes
       );
       
-      // Update local state
+      // Update local state with proper type handling
       setDocuments(prev => prev.map(doc => 
         doc.id === documentId 
           ? { 
@@ -284,8 +298,8 @@ export function DocumentApprovalQueue({
               verificationStatus: status,
               verifiedBy: currentUser,
               verifiedAt: new Date(),
-              rejectionReason: action === 'reject' ? notes : undefined
-            }
+              ...(action === 'reject' && notes ? { rejectionReason: notes } : {})
+            } as ContractorDocument
           : doc
       ));
       
@@ -320,7 +334,7 @@ export function DocumentApprovalQueue({
       setIsProcessing(true);
       
       const promises = request.documentIds.map(id => 
-        handleApproval(id, request.action, request.notes, request.reasonCode)
+        handleApproval(id, request.action, request.notes)
       );
       
       await Promise.all(promises);
@@ -396,6 +410,8 @@ export function DocumentApprovalQueue({
       
       return () => clearInterval(interval);
     }
+    // Return undefined explicitly for no cleanup needed
+    return undefined;
   }, [loadDocuments, autoRefreshInterval]);
 
   // Initial load
@@ -489,7 +505,7 @@ export function DocumentApprovalQueue({
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
+        onStatusFilterChange={(status: string) => setStatusFilter(status as 'all' | 'expired' | 'approved' | 'rejected' | 'pending')}
         documentTypeFilter={documentTypeFilter}
         onDocumentTypeFilterChange={setDocumentTypeFilter}
         expiryFilter={expiryFilter}
@@ -658,7 +674,7 @@ export function DocumentApprovalQueue({
                         <ApprovalActions
                           document={document}
                           onApprove={(notes) => handleApproval(document.id, 'approve', notes)}
-                          onReject={(notes, reason) => handleApproval(document.id, 'reject', notes, reason)}
+                          onReject={(notes) => handleApproval(document.id, 'reject', notes)}
                           isProcessing={isProcessingDoc}
                         />
                       )}

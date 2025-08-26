@@ -151,6 +151,10 @@ export function useMainDashboardData() {
     openIssues: dashboardData.stats.openIssues,
     polesInstalled: dashboardData.stats.polesInstalled,
     totalRevenue: dashboardData.stats.totalRevenue,
+    // 🟢 WORKING: Include performance metrics for KPI display
+    qualityScore: dashboardData.stats.qualityScore,
+    onTimeDelivery: dashboardData.stats.onTimeDelivery,
+    performanceScore: dashboardData.stats.performanceScore,
   };
 
   return {

@@ -15,22 +15,17 @@ import {
   Package, 
   Settings, 
   Search,
-  Filter,
-  TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  MoreHorizontal
+  AlertTriangle
 } from 'lucide-react';
 
 import { 
-  ContractorRateCard,
   ContractorRateItem,
   ServiceTemplate,
   RateItemsGridProps,
   ContractorRateItemFormData
 } from '@/types/contractor';
 import { RateItemApiService, ServiceTemplateApiService } from '@/services/contractor';
-import { formatCurrency } from '@/utils/dateHelpers';
+import { formatCurrency } from '@/lib/utils';
 
 // 🟢 WORKING: Rate Items Grid Component
 export function RateItemsGrid({ 
@@ -132,8 +127,8 @@ export function RateItemsGrid({
       const itemData: ContractorRateItemFormData = {
         ...newItemData,
         // Auto-populate from template if not provided
-        minimumQuantity: newItemData.minimumQuantity || undefined,
-        maximumQuantity: newItemData.maximumQuantity || undefined,
+        ...(newItemData.minimumQuantity !== undefined ? { minimumQuantity: newItemData.minimumQuantity } : {}),
+        ...(newItemData.maximumQuantity !== undefined ? { maximumQuantity: newItemData.maximumQuantity } : {}),
       };
 
       const newItem = await RateItemApiService.addRateItem(rateCard.id, itemData);
@@ -158,12 +153,12 @@ export function RateItemsGrid({
     setEditingItemId(item.id);
     setEditingData({
       rate: item.rate,
-      minimumQuantity: item.minimumQuantity,
-      maximumQuantity: item.maximumQuantity,
-      overheadPercentage: item.overheadPercentage,
-      profitMargin: item.profitMargin,
+      ...(item.minimumQuantity !== undefined ? { minimumQuantity: item.minimumQuantity } : {}),
+      ...(item.maximumQuantity !== undefined ? { maximumQuantity: item.maximumQuantity } : {}),
+      ...(item.overheadPercentage !== undefined ? { overheadPercentage: item.overheadPercentage } : {}),
+      ...(item.profitMargin !== undefined ? { profitMargin: item.profitMargin } : {}),
       isNegotiable: item.isNegotiable,
-      notes: item.notes
+      ...(item.notes !== undefined ? { notes: item.notes } : {})
     });
   };
 

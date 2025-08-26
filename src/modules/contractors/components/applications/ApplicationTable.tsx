@@ -330,7 +330,17 @@ export function ApplicationTable({
               return (
                 <React.Fragment key={application.id}>
                   {/* Main Row */}
-                  <tr className={`hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}`}>
+                  <tr 
+                    className={`hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''} cursor-pointer`}
+                    onClick={(e) => {
+                      // Only trigger if not clicking on interactive elements
+                      const target = e.target as HTMLElement;
+                      const isInteractiveElement = target.closest('input, button, a, .no-row-click');
+                      if (!isInteractiveElement && onView) {
+                        onView(application.id);
+                      }
+                    }}
+                  >
                     {/* Selection Checkbox */}
                     <td className="px-4 py-4 text-center">
                       <input
@@ -476,20 +486,22 @@ export function ApplicationTable({
                     </td>
 
                     {/* Actions */}
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 no-row-click">
                       <ApplicationActions
-                        contractorId={application.id}
-                        status={application.status as any}
-                        progress={application.progress}
-                        onAction={onAction}
-                        onView={onView}
-                        onEdit={onEdit}
-                        compact={true}
+                        {...{
+                          contractorId: application.id,
+                          status: application.status as any,
+                          progress: application.progress,
+                          compact: true,
+                          ...(onAction && { onAction }),
+                          ...(onView && { onView }),
+                          ...(onEdit && { onEdit })
+                        }}
                       />
                     </td>
 
                     {/* Expand Toggle */}
-                    <td className="px-4 py-4 text-center">
+                    <td className="px-4 py-4 text-center no-row-click">
                       <button
                         onClick={() => toggleRowExpansion(application.id)}
                         className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
@@ -523,11 +535,11 @@ export function ApplicationTable({
                                 documentsUploaded: application.documentsComplete ? 5 : 3,
                                 documentsRequired: 5,
                                 stages: [], // TODO: Add actual stages data
-                                lastActivity: application.lastActivity || undefined
+                                ...(application.lastActivity && { lastActivity: application.lastActivity })
                               }}
                               companyName={application.companyName}
                               contactPerson={application.contactPerson}
-                              estimatedCompletion={application.estimatedCompletion}
+                              {...(application.estimatedCompletion && { estimatedCompletion: application.estimatedCompletion })}
                               showStages={true}
                               compact={false}
                             />

@@ -11,8 +11,8 @@ export { BOQOperations } from './boqOperations';
 export { BOQItemOperations } from './itemOperations';
 export { BOQExceptionOperations } from './exceptionOperations';
 
-// Export mock data for development
-export * from './mockData';
+// MOCK DATA REMOVED - No longer available
+// Use the Firebase-based boqService from '@/services/procurement/boqService' instead
 
 // Export main service
 export { BOQApiExtensions, procurementApiService } from './apiService';

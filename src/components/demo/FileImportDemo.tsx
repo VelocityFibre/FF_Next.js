@@ -4,9 +4,9 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { Upload, FileText, BarChart3, Clock, Memory } from 'lucide-react';
+import { Upload, FileText, BarChart3, Clock, Cpu } from 'lucide-react';
 import { FileImportUtils, FileImportBenchmark } from '@/services/fileImport';
-import type { FileProcessingResult, FileProcessingProgress } from '@/services/fileImport';
+import type { FileProcessingResult } from '@/services/fileImport';
 
 interface DemoState {
   file: File | null;
@@ -312,7 +312,7 @@ export function FileImportDemo() {
             disabled={state.processing}
             className="flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
           >
-            <Memory className="w-4 h-4 mr-2" />
+            <Cpu className="w-4 h-4 mr-2" />
             {state.processing ? 'Benchmarking...' : 'Benchmark'}
           </button>
         </div>

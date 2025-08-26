@@ -4,28 +4,20 @@
  * @module ComplianceTracker
  */
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { 
   X, 
   Shield, 
   AlertTriangle, 
   CheckCircle2, 
-  Clock, 
-  FileX, 
   TrendingUp,
   TrendingDown,
-  Calendar,
   BarChart3,
   Download,
-  RefreshCw,
-  Filter,
-  Eye,
-  Users,
-  Building,
-  Percent
+  RefreshCw
 } from 'lucide-react';
 import { ContractorDocument } from '@/types/contractor.types';
-import { ComplianceStatus, ComplianceIssue } from './types/documentApproval.types';
+import { ComplianceIssue } from './types/documentApproval.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 
@@ -95,8 +87,8 @@ export function ComplianceTracker({
   // 🟢 WORKING: Component state
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedTimeframe, setSelectedTimeframe] = useState<'7d' | '30d' | '90d'>('30d');
-  const [showDetailedView, setShowDetailedView] = useState(false);
+  const [_selectedTimeframe, _setSelectedTimeframe] = useState<'7d' | '30d' | '90d'>('30d');
+  const [_showDetailedView, _setShowDetailedView] = useState(false);
   const [complianceData, setComplianceData] = useState<ComplianceMetrics | null>(null);
 
   /**
@@ -368,8 +360,8 @@ export function ComplianceTracker({
       return Object.values(complianceData.categories)
         .flatMap((cat: any) => cat.issues)
         .sort((a, b) => {
-          const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-          return severityOrder[a.severity] - severityOrder[b.severity];
+          const severityOrder: { [key: string]: number } = { critical: 0, high: 1, medium: 2, low: 3 };
+          return (severityOrder[a.severity] || 999) - (severityOrder[b.severity] || 999);
         });
     }
     
@@ -396,6 +388,7 @@ export function ComplianceTracker({
       
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [autoRefreshInterval, calculateComplianceMetrics]);
 
   if (!complianceData) {
