@@ -841,3 +841,202 @@ export const staff = pgTable("staff", {
 	unique("staff_employee_id_key").on(table.employeeId),
 	unique("staff_email_key").on(table.email),
 ]);
+
+// Workflow Templates - Core templates for project workflows
+export const workflowTemplates = pgTable("workflow_templates", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	description: text(),
+	category: varchar({ length: 100 }).default('project'),
+	type: varchar({ length: 50 }).default('custom'), // 'default', 'custom', 'system'
+	status: varchar({ length: 20 }).default('active'), // 'active', 'archived', 'draft'
+	version: varchar({ length: 20 }).default('1.0'),
+	isDefault: boolean("is_default").default(false),
+	isSystem: boolean("is_system").default(false),
+	tags: json(),
+	metadata: jsonb().default({}),
+	createdBy: varchar("created_by", { length: 255 }),
+	updatedBy: varchar("updated_by", { length: 255 }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_workflow_templates_category").using("btree", table.category.asc().nullsLast().op("text_ops")),
+	index("idx_workflow_templates_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
+	index("idx_workflow_templates_type").using("btree", table.type.asc().nullsLast().op("text_ops")),
+	unique("workflow_templates_name_version_key").on(table.name, table.version),
+]);
+
+// Workflow Phases - Logical groupings within a workflow
+export const workflowPhases = pgTable("workflow_phases", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	workflowTemplateId: uuid("workflow_template_id").notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	description: text(),
+	orderIndex: integer("order_index").notNull(),
+	color: varchar({ length: 20 }).default('#3B82F6'), // Hex color for UI
+	icon: varchar({ length: 50 }), // Icon identifier
+	estimatedDuration: integer("estimated_duration"), // Duration in days
+	requiredRoles: json("required_roles"), // Array of required roles
+	dependencies: json(), // Array of dependent phase IDs
+	completionCriteria: json("completion_criteria"), // Array of criteria
+	isOptional: boolean("is_optional").default(false),
+	isParallel: boolean("is_parallel").default(false), // Can run parallel to other phases
+	metadata: jsonb().default({}),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_workflow_phases_template").using("btree", table.workflowTemplateId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_phases_order").using("btree", table.workflowTemplateId.asc().nullsLast().op("uuid_ops"), table.orderIndex.asc().nullsLast().op("int4_ops")),
+	foreignKey({
+		columns: [table.workflowTemplateId],
+		foreignColumns: [workflowTemplates.id],
+		name: "workflow_phases_template_id_fkey"
+	}).onDelete("cascade"),
+]);
+
+// Workflow Steps - Individual actions within phases
+export const workflowSteps = pgTable("workflow_steps", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	workflowPhaseId: uuid("workflow_phase_id").notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	description: text(),
+	orderIndex: integer("order_index").notNull(),
+	stepType: varchar("step_type", { length: 50 }).default('task'), // 'task', 'approval', 'review', 'milestone'
+	estimatedDuration: integer("estimated_duration"), // Duration in hours
+	assigneeRole: varchar("assignee_role", { length: 100 }), // Role responsible for step
+	assigneeId: uuid("assignee_id"), // Specific user assignment (optional)
+	dependencies: json(), // Array of dependent step IDs
+	preconditions: json(), // Array of conditions that must be met
+	postconditions: json(), // Array of outcomes/deliverables
+	instructions: text(), // Detailed instructions
+	resources: json(), // Required resources/tools
+	validation: json(), // Validation criteria
+	isRequired: boolean("is_required").default(true),
+	isAutomated: boolean("is_automated").default(false),
+	automationConfig: json("automation_config"), // Configuration for automated steps
+	metadata: jsonb().default({}),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_workflow_steps_phase").using("btree", table.workflowPhaseId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_steps_order").using("btree", table.workflowPhaseId.asc().nullsLast().op("uuid_ops"), table.orderIndex.asc().nullsLast().op("int4_ops")),
+	index("idx_workflow_steps_type").using("btree", table.stepType.asc().nullsLast().op("text_ops")),
+	foreignKey({
+		columns: [table.workflowPhaseId],
+		foreignColumns: [workflowPhases.id],
+		name: "workflow_steps_phase_id_fkey"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.assigneeId],
+		foreignColumns: [staff.id],
+		name: "workflow_steps_assignee_id_fkey"
+	}),
+]);
+
+// Workflow Tasks - Granular tasks within steps
+export const workflowTasks = pgTable("workflow_tasks", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	workflowStepId: uuid("workflow_step_id").notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	description: text(),
+	orderIndex: integer("order_index").notNull(),
+	priority: varchar({ length: 20 }).default('medium'), // 'low', 'medium', 'high', 'critical'
+	estimatedHours: numeric("estimated_hours", { precision: 5, scale: 2 }),
+	skillsRequired: json("skills_required"), // Array of required skills
+	tools: json(), // Required tools/software
+	deliverables: json(), // Expected outputs
+	acceptanceCriteria: json("acceptance_criteria"), // Array of acceptance criteria
+	isOptional: boolean("is_optional").default(false),
+	canBeParallel: boolean("can_be_parallel").default(true),
+	tags: json(),
+	metadata: jsonb().default({}),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_workflow_tasks_step").using("btree", table.workflowStepId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_tasks_order").using("btree", table.workflowStepId.asc().nullsLast().op("uuid_ops"), table.orderIndex.asc().nullsLast().op("int4_ops")),
+	index("idx_workflow_tasks_priority").using("btree", table.priority.asc().nullsLast().op("text_ops")),
+	foreignKey({
+		columns: [table.workflowStepId],
+		foreignColumns: [workflowSteps.id],
+		name: "workflow_tasks_step_id_fkey"
+	}).onDelete("cascade"),
+]);
+
+// Project Workflows - Instances of workflow templates applied to projects
+export const projectWorkflows = pgTable("project_workflows", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	projectId: uuid("project_id").notNull(),
+	workflowTemplateId: uuid("workflow_template_id").notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	status: varchar({ length: 20 }).default('active'), // 'active', 'paused', 'completed', 'cancelled'
+	currentPhaseId: uuid("current_phase_id"),
+	progressPercentage: numeric("progress_percentage", { precision: 5, scale: 2 }).default('0'),
+	startDate: timestamp("start_date", { withTimezone: true, mode: 'string' }),
+	plannedEndDate: timestamp("planned_end_date", { withTimezone: true, mode: 'string' }),
+	actualEndDate: timestamp("actual_end_date", { withTimezone: true, mode: 'string' }),
+	assignedTo: uuid("assigned_to"), // Primary project manager
+	teamMembers: json("team_members"), // Array of team member IDs
+	metrics: jsonb().default({}), // Performance metrics
+	notes: text(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_project_workflows_project").using("btree", table.projectId.asc().nullsLast().op("uuid_ops")),
+	index("idx_project_workflows_template").using("btree", table.workflowTemplateId.asc().nullsLast().op("uuid_ops")),
+	index("idx_project_workflows_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
+	foreignKey({
+		columns: [table.projectId],
+		foreignColumns: [projects.id],
+		name: "project_workflows_project_id_fkey"
+	}),
+	foreignKey({
+		columns: [table.workflowTemplateId],
+		foreignColumns: [workflowTemplates.id],
+		name: "project_workflows_template_id_fkey"
+	}),
+	foreignKey({
+		columns: [table.assignedTo],
+		foreignColumns: [staff.id],
+		name: "project_workflows_assigned_to_fkey"
+	}),
+	foreignKey({
+		columns: [table.currentPhaseId],
+		foreignColumns: [workflowPhases.id],
+		name: "project_workflows_current_phase_fkey"
+	}),
+]);
+
+// Workflow Execution Log - Track workflow execution history
+export const workflowExecutionLog = pgTable("workflow_execution_log", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	projectWorkflowId: uuid("project_workflow_id").notNull(),
+	phaseId: uuid("phase_id"),
+	stepId: uuid("step_id"),
+	taskId: uuid("task_id"),
+	action: varchar({ length: 100 }).notNull(), // 'started', 'completed', 'paused', 'cancelled', 'assigned'
+	actorId: uuid("actor_id").notNull(), // User who performed the action
+	actorName: varchar("actor_name", { length: 255 }),
+	previousStatus: varchar("previous_status", { length: 50 }),
+	newStatus: varchar("new_status", { length: 50 }),
+	duration: integer(), // Duration in minutes
+	notes: text(),
+	attachments: json(), // Array of file attachments
+	metadata: jsonb().default({}),
+	timestamp: timestamp({ withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	index("idx_workflow_log_project").using("btree", table.projectWorkflowId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_log_actor").using("btree", table.actorId.asc().nullsLast().op("uuid_ops")),
+	index("idx_workflow_log_timestamp").using("btree", table.timestamp.asc().nullsLast().op("timestamp_ops")),
+	index("idx_workflow_log_action").using("btree", table.action.asc().nullsLast().op("text_ops")),
+	foreignKey({
+		columns: [table.projectWorkflowId],
+		foreignColumns: [projectWorkflows.id],
+		name: "workflow_log_project_workflow_fkey"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.actorId],
+		foreignColumns: [staff.id],
+		name: "workflow_log_actor_fkey"
+	}),
+]);

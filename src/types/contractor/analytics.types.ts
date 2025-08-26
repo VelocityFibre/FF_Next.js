@@ -11,10 +11,17 @@ export interface ContractorAnalytics {
   blacklisted: number;
   
   // RAG Distribution
-  ragDistribution: {
+  ragDistribution?: {
     green: number;
     amber: number;
     red: number;
+  };
+  
+  // Enhanced RAG Distribution for performance dashboard
+  riskDistribution?: {
+    low: number;
+    medium: number;
+    high: number;
   };
   
   // Performance Metrics
@@ -22,6 +29,50 @@ export interface ContractorAnalytics {
   averageSafetyScore: number;
   averageQualityScore: number;
   averageTimelinessScore: number;
+  
+  // Enhanced performance metrics
+  averageRAGScore?: number;
+  performanceBreakdown?: {
+    excellent: number; // 90-100
+    good: number;      // 70-89
+    fair: number;      // 50-69
+    poor: number;      // 0-49
+  };
+  
+  // Score distribution for charts
+  scoreDistribution?: Array<{
+    range: string;
+    count: number;
+    percentage: number;
+  }>;
+  
+  // Performance trends
+  performanceTrends?: Array<{
+    date: string;
+    averageScore: number;
+    contractorCount: number;
+    improvements: number;
+    deteriorations: number;
+  }>;
+  
+  // Trend direction and improvement metrics
+  trendsDirection?: 'up' | 'down' | 'stable';
+  averageImprovement?: number;
+  
+  // Peer comparison data
+  peerComparison?: {
+    above: number;
+    below: number;
+    at: number;
+  };
+  
+  // Performance segments
+  segments?: Array<{
+    segmentName: string;
+    averageScore: number;
+    contractorCount: number;
+    improvement: number;
+  }>;
   
   // Project Statistics
   totalActiveProjects: number;

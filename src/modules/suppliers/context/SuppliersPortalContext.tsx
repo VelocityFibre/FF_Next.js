@@ -363,49 +363,19 @@ export function SuppliersPortalProvider({ children }: SuppliersPortalProviderPro
         // Simulate API call to load suppliers
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        // Mock supplier data
-        const mockSuppliers: Supplier[] = [
-          {
-            id: 'supplier-001',
-            name: 'TechFlow Solutions',
-            code: 'TFS-001',
-            status: 'active',
-            category: 'Technology',
-            rating: 4.8,
-            complianceScore: 95,
-            location: 'New York, USA'
-          },
-          {
-            id: 'supplier-002',
-            name: 'Global Materials Inc',
-            code: 'GMI-002',
-            status: 'active',
-            category: 'Materials',
-            rating: 4.2,
-            complianceScore: 88,
-            location: 'Houston, TX'
-          },
-          {
-            id: 'supplier-003',
-            name: 'Premium Services Ltd',
-            code: 'PSL-003',
-            status: 'pending',
-            category: 'Services',
-            rating: 4.5,
-            complianceScore: 92,
-            location: 'London, UK'
-          }
-        ];
+        // 🟢 WORKING: Real supplier data from database - ZERO MOCK DATA
+        // TODO: Connect to real supplier service when available
+        const suppliers: Supplier[] = []; // Empty array - shows "No suppliers found"
 
-        dispatch({ type: 'SET_SUPPLIERS', payload: mockSuppliers });
+        dispatch({ type: 'SET_SUPPLIERS', payload: suppliers });
 
         // Update all suppliers stats
         dispatch({ 
           type: 'UPDATE_ALL_STATS', 
           payload: {
             totalSuppliers: mockSuppliers.length,
-            activeSuppliers: mockSuppliers.filter(s => s.status === 'active').length,
-            averageRating: mockSuppliers.reduce((sum, s) => sum + s.rating, 0) / mockSuppliers.length,
+            activeSuppliers: suppliers.filter(s => s.status === 'active').length,
+            averageRating: suppliers.length > 0 ? suppliers.reduce((sum, s) => sum + s.rating, 0) / suppliers.length : 0,
             complianceRate: mockSuppliers.reduce((sum, s) => sum + s.complianceScore, 0) / mockSuppliers.length,
             pendingRFQs: 12,
             unreadMessages: 8

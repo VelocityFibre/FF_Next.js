@@ -137,7 +137,7 @@ export class ProjectQueryService {
           c.contact_person as client_contact
         FROM projects p
         LEFT JOIN clients c ON p.client_id = c.id
-        WHERE p.is_active = true AND p.status IN ('ACTIVE', 'IN_PROGRESS')
+        WHERE p.status IN ('ACTIVE', 'IN_PROGRESS', 'active', 'in_progress')
         ORDER BY p.updated_at DESC NULLS LAST, p.created_at DESC
       `;
       
@@ -161,7 +161,7 @@ export class ProjectQueryService {
       const countResult = await sql`
         SELECT COUNT(*) as total
         FROM projects p
-        WHERE p.is_active = true
+        WHERE p.status NOT IN ('archived', 'cancelled', 'deleted')
       `;
       
       const total = parseInt(countResult[0].total);
@@ -174,7 +174,7 @@ export class ProjectQueryService {
           c.contact_person as client_contact
         FROM projects p
         LEFT JOIN clients c ON p.client_id = c.id
-        WHERE p.is_active = true
+        WHERE p.status NOT IN ('archived', 'cancelled', 'deleted')
         ORDER BY p.updated_at DESC NULLS LAST, p.created_at DESC
         LIMIT ${limit}
         OFFSET ${offset}

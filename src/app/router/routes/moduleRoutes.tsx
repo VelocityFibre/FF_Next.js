@@ -30,7 +30,8 @@ import {
   KPIDashboard,
   ReportsDashboard,
   Settings,
-  SuppliersPortalPage
+  SuppliersPortalPage,
+  WorkflowPortalPage
 } from '../lazyImports';
 
 export const moduleRoutes = [
@@ -279,6 +280,15 @@ export const moduleRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <SuppliersPortalPage />
+      </Suspense>
+    ),
+  },
+  // Workflow Portal
+  {
+    path: 'workflow-portal',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <WorkflowPortalPage />
       </Suspense>
     ),
   },

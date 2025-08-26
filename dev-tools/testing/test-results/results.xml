@@ -1,0 +1,755 @@
+<testsuites id="" name="" tests="54" failures="30" skipped="0" errors="0" time="3654.42394">
+<testsuite name="security-audit.spec.ts" timestamp="2025-08-25T18:40:11.467Z" hostname="chromium" tests="9" failures="3" skipped="0" time="158.383" errors="0">
+<testcase name="Security Audit Tests › XSS Protection - Input Sanitization" classname="security-audit.spec.ts" time="6.432">
+<failure message="security-audit.spec.ts:10:3 XSS Protection - Input Sanitization" type="FAILURE">
+<![CDATA[  [chromium] › security-audit.spec.ts:10:3 › Security Audit Tests › XSS Protection - Input Sanitization 
+
+    Error: expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "<script>"
+    Received string:        "<script>alert(\"XSS\")</script>"
+
+      38 |             // Check that dangerous content is escaped
+      39 |             const value = await input.inputValue();
+    > 40 |             expect(value).not.toContain('<script>');
+         |                               ^
+      41 |           }
+      42 |         }
+      43 |       }
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:40:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\..\test-results\security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\error-context.md
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\test-failed-1.png is missing
+Warning: attachment security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\video.webm is missing
+Warning: attachment security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\error-context.md is missing]]>
+</system-err>
+</testcase>
+<testcase name="Security Audit Tests › Authentication State Management" classname="security-audit.spec.ts" time="30.569">
+<failure message="security-audit.spec.ts:47:3 Authentication State Management" type="FAILURE">
+<![CDATA[  [chromium] › security-audit.spec.ts:47:3 › Security Audit Tests › Authentication State Management 
+
+    Error: page.goto: net::ERR_ABORTED at http://localhost:5176/
+    Call log:
+      - navigating to "http://localhost:5176/", waiting until "load"
+
+
+      4 |   test.beforeEach(async ({ page }) => {
+      5 |     // Navigate to the application
+    > 6 |     await page.goto('http://localhost:5176');
+        |                ^
+      7 |     await page.waitForLoadState('networkidle');
+      8 |   });
+      9 |
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:6:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-d7194-entication-State-Management-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-d7194-entication-State-Management-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment security-audit-Security-Au-d7194-entication-State-Management-chromium\test-failed-1.png is missing
+Warning: attachment security-audit-Security-Au-d7194-entication-State-Management-chromium\video.webm is missing]]>
+</system-err>
+</testcase>
+<testcase name="Security Audit Tests › Session Security - Token Storage" classname="security-audit.spec.ts" time="5.115">
+<system-out>
+<![CDATA[Storage Security Check: {
+  localStorageKeys: [ [32m'fibreflow-theme-preference'[39m, [32m'fibreflow-sidebar-collapsed'[39m ],
+  sessionStorageKeys: [],
+  cookieCount: [33m0[39m,
+  hasPasswordInStorage: [33mfalse[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › HTTPS Enforcement Check" classname="security-audit.spec.ts" time="9.263">
+<system-out>
+<![CDATA[Current URL Protocol: http:
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Error Message Information Disclosure" classname="security-audit.spec.ts" time="27.156">
+<failure message="security-audit.spec.ts:107:3 Error Message Information Disclosure" type="FAILURE">
+<![CDATA[  [chromium] › security-audit.spec.ts:107:3 › Security Audit Tests › Error Message Information Disclosure 
+
+    Error: page.goto: net::ERR_ABORTED at http://localhost:5176/
+    Call log:
+      - navigating to "http://localhost:5176/", waiting until "load"
+
+
+      4 |   test.beforeEach(async ({ page }) => {
+      5 |     // Navigate to the application
+    > 6 |     await page.goto('http://localhost:5176');
+        |                ^
+      7 |     await page.waitForLoadState('networkidle');
+      8 |   });
+      9 |
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:6:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-6cc6b-sage-Information-Disclosure-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-6cc6b-sage-Information-Disclosure-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment security-audit-Security-Au-6cc6b-sage-Information-Disclosure-chromium\test-failed-1.png is missing
+Warning: attachment security-audit-Security-Au-6cc6b-sage-Information-Disclosure-chromium\video.webm is missing]]>
+</system-err>
+</testcase>
+<testcase name="Security Audit Tests › Content Security Policy Headers" classname="security-audit.spec.ts" time="24.219">
+<system-out>
+<![CDATA[Security Headers: {
+  csp: [90mundefined[39m,
+  xframe: [90mundefined[39m,
+  xss: [90mundefined[39m,
+  contentType: [90mundefined[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Firebase Security Rules Test" classname="security-audit.spec.ts" time="15.63">
+<system-out>
+<![CDATA[Firebase Access Test: { accessible: [33mfalse[39m, error: [32m'Firebase not initialized'[39m }
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Authentication Bypass Attempts" classname="security-audit.spec.ts" time="25.148">
+<system-out>
+<![CDATA[Route /app/admin -> http://localhost:5176/app/admin
+Route /app/settings -> http://localhost:5176/app/settings
+Route /app/staff/create -> http://localhost:5176/app/staff/create
+Route /app/projects/create -> http://localhost:5176/app/projects/create
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Input Validation - SQL Injection Patterns" classname="security-audit.spec.ts" time="14.851">
+</testcase>
+</testsuite>
+<testsuite name="security-audit.spec.ts" timestamp="2025-08-25T18:40:11.467Z" hostname="firefox" tests="9" failures="8" skipped="0" time="253.299" errors="0">
+<testcase name="Security Audit Tests › XSS Protection - Input Sanitization" classname="security-audit.spec.ts" time="30.086">
+<failure message="security-audit.spec.ts:10:3 XSS Protection - Input Sanitization" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:10:3 › Security Audit Tests › XSS Protection - Input Sanitization 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Security Audit Tests', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Navigate to the application
+      6 |     await page.goto('http://localhost:5176');
+      7 |     await page.waitForLoadState('networkidle');
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:4:8
+
+    Error: browserContext.newPage: Test timeout of 30000ms exceeded.
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication State Management" classname="security-audit.spec.ts" time="30.231">
+<failure message="security-audit.spec.ts:47:3 Authentication State Management" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:47:3 › Security Audit Tests › Authentication State Management ─
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Security Audit Tests', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Navigate to the application
+      6 |     await page.goto('http://localhost:5176');
+      7 |     await page.waitForLoadState('networkidle');
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:4:8
+
+    Error: browserContext.newPage: Test timeout of 30000ms exceeded.
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Session Security - Token Storage" classname="security-audit.spec.ts" time="17.337">
+<system-out>
+<![CDATA[Storage Security Check: {
+  localStorageKeys: [ [32m'fibreflow-sidebar-collapsed'[39m, [32m'fibreflow-theme-preference'[39m ],
+  sessionStorageKeys: [],
+  cookieCount: [33m0[39m,
+  hasPasswordInStorage: [33mfalse[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › HTTPS Enforcement Check" classname="security-audit.spec.ts" time="43.799">
+<failure message="security-audit.spec.ts:88:3 HTTPS Enforcement Check" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:88:3 › Security Audit Tests › HTTPS Enforcement Check ─────────
+
+    Tearing down "context" exceeded the test timeout of 30000ms.
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\firefox-1490\firefox\firefox.exe -no-remote -wait-for-browser -foreground -profile C:\Users\HEINVA~1\AppData\Local\Temp\playwright_firefoxdev_profile-YEdZTm -juggler-pipe -silent
+    <launched> pid=50240
+    [pid=50240][err] JavaScript warning: resource://services-settings/Utils.sys.mjs, line 116: unreachable code after return statement
+    [pid=50240][out] console.warn: services.settings: Ignoring preference override of remote settings server
+    [pid=50240][out] console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+    [pid=50240][out] 
+    [pid=50240][out] Juggler listening to the pipe
+    [pid=50240][out] console.error: "Warning: unrecognized command line flag" "-foreground"
+    [pid=50240][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]
+    [pid=50240][out] console.error: services.settings: 
+    [pid=50240][out]   Message: EmptyDatabaseError: "main/nimbus-desktop-experiments" has not been synced yet
+    [pid=50240][out]   Stack:
+    [pid=50240][out]     EmptyDatabaseError@resource://services-settings/Database.sys.mjs:19:5
+    [pid=50240][out] list@resource://services-settings/Database.sys.mjs:96:13
+    [pid=50240][out] 
+    [pid=50240][out] console.error: services.settings: 
+    [pid=50240][out]   Message: EmptyDatabaseError: "main/nimbus-secure-experiments" has not been synced yet
+    [pid=50240][out]   Stack:
+    [pid=50240][out]     EmptyDatabaseError@resource://services-settings/Database.sys.mjs:19:5
+    [pid=50240][out] list@resource://services-settings/Database.sys.mjs:96:13
+    [pid=50240][out] 
+    [pid=50240][out] console.warn: services.settings: #fetchAttachment: Forcing fallbackToDump to false due to Utils.LOAD_DUMPS being false
+    [pid=50240][out] console.error: (new NotFoundError("Could not find fa0fc42c-d91d-fca7-34eb-806ff46062dc in cache or dump", "resource://services-settings/Attachments.sys.mjs", 48))
+    [pid=50240][out] console.warn: "Unable to find the attachment for" "fa0fc42c-d91d-fca7-34eb-806ff46062dc"
+    [pid=50240][err] JavaScript warning: http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c, line 3751: Script terminated by timeout at:
+    [pid=50240][err] persistAppliedTransitions@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:3751:1
+    [pid=50240][err] _saveAppliedTransitions@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:1241:68
+    [pid=50240][err] EventListener.handleEvent*initialize@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:1242:20
+    [pid=50240][err] createBrowserRouter@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:4961:6
+    [pid=50240][err] @http://localhost:5176/src/app/router/index.tsx:31:35
+    [pid=50240][err] 
+    [pid=50240][err] JavaScript error: chrome://juggler/content/content/Runtime.js, line 135: NS_ERROR_XPC_BAD_CONVERT_NATIVE: Could not convert Native argument arg 1 [nsIWindowMediator.getOuterWindowWithId]
+    [pid=50240][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]
+    [pid=50240][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]
+    [pid=50240] <gracefully close start>
+    [pid=50240] <kill>
+    [pid=50240] <will force kill>
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Audit-Tests-HTTPS-Enforcement-Check-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[Current URL Protocol: http:
+]]>
+</system-out>
+<system-err>
+<![CDATA[
+Warning: attachment security-audit-Security-Audit-Tests-HTTPS-Enforcement-Check-firefox\test-failed-1.png is missing]]>
+</system-err>
+</testcase>
+<testcase name="Security Audit Tests › Error Message Information Disclosure" classname="security-audit.spec.ts" time="30.083">
+<failure message="security-audit.spec.ts:107:3 Error Message Information Disclosure" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:107:3 › Security Audit Tests › Error Message Information Disclosure 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Security Audit Tests', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Navigate to the application
+      6 |     await page.goto('http://localhost:5176');
+      7 |     await page.waitForLoadState('networkidle');
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:4:8
+
+    Error: browserContext.newPage: Test timeout of 30000ms exceeded.
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Content Security Policy Headers" classname="security-audit.spec.ts" time="30.093">
+<failure message="security-audit.spec.ts:132:3 Content Security Policy Headers" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:132:3 › Security Audit Tests › Content Security Policy Headers 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Security Audit Tests', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Navigate to the application
+      6 |     await page.goto('http://localhost:5176');
+      7 |     await page.waitForLoadState('networkidle');
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:4:8
+
+    Error: browserContext.newPage: Test timeout of 30000ms exceeded.
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Firebase Security Rules Test" classname="security-audit.spec.ts" time="30.078">
+<failure message="security-audit.spec.ts:144:3 Firebase Security Rules Test" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:144:3 › Security Audit Tests › Firebase Security Rules Test ───
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Security Audit Tests', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Navigate to the application
+      6 |     await page.goto('http://localhost:5176');
+      7 |     await page.waitForLoadState('networkidle');
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:4:8
+
+    Error: browserContext.newPage: Test timeout of 30000ms exceeded.
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication Bypass Attempts" classname="security-audit.spec.ts" time="0">
+<failure message="security-audit.spec.ts:163:3 Authentication Bypass Attempts" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:163:3 › Security Audit Tests › Authentication Bypass Attempts ─
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Input Validation - SQL Injection Patterns" classname="security-audit.spec.ts" time="41.592">
+<failure message="security-audit.spec.ts:184:3 Input Validation - SQL Injection Patterns" type="FAILURE">
+<![CDATA[  [firefox] › security-audit.spec.ts:184:3 › Security Audit Tests › Input Validation - SQL Injection Patterns 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Security Audit Tests', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Navigate to the application
+      6 |     await page.goto('http://localhost:5176');
+      7 |     await page.waitForLoadState('networkidle');
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:4:8
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://localhost:5176/", waiting until "load"
+
+
+      4 |   test.beforeEach(async ({ page }) => {
+      5 |     // Navigate to the application
+    > 6 |     await page.goto('http://localhost:5176');
+        |                ^
+      7 |     await page.waitForLoadState('networkidle');
+      8 |   });
+      9 |
+        at C:\Jarvis\AI Workspace\FibreFlow_React\dev-tools\testing\tests\e2e\security-audit.spec.ts:6:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\..\test-results\security-audit-Security-Au-b77e1-on---SQL-Injection-Patterns-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-err>
+<![CDATA[
+Warning: attachment security-audit-Security-Au-b77e1-on---SQL-Injection-Patterns-firefox\video.webm is missing]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="security-audit.spec.ts" timestamp="2025-08-25T18:40:11.467Z" hostname="webkit" tests="9" failures="9" skipped="0" time="0.114" errors="0">
+<testcase name="Security Audit Tests › XSS Protection - Input Sanitization" classname="security-audit.spec.ts" time="0.018">
+<failure message="security-audit.spec.ts:10:3 XSS Protection - Input Sanitization" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:10:3 › Security Audit Tests › XSS Protection - Input Sanitization 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication State Management" classname="security-audit.spec.ts" time="0.009">
+<failure message="security-audit.spec.ts:47:3 Authentication State Management" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:47:3 › Security Audit Tests › Authentication State Management ──
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Session Security - Token Storage" classname="security-audit.spec.ts" time="0.01">
+<failure message="security-audit.spec.ts:64:3 Session Security - Token Storage" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:64:3 › Security Audit Tests › Session Security - Token Storage ─
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › HTTPS Enforcement Check" classname="security-audit.spec.ts" time="0.016">
+<failure message="security-audit.spec.ts:88:3 HTTPS Enforcement Check" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:88:3 › Security Audit Tests › HTTPS Enforcement Check ──────────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Error Message Information Disclosure" classname="security-audit.spec.ts" time="0.012">
+<failure message="security-audit.spec.ts:107:3 Error Message Information Disclosure" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:107:3 › Security Audit Tests › Error Message Information Disclosure 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Content Security Policy Headers" classname="security-audit.spec.ts" time="0.013">
+<failure message="security-audit.spec.ts:132:3 Content Security Policy Headers" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:132:3 › Security Audit Tests › Content Security Policy Headers ─
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Firebase Security Rules Test" classname="security-audit.spec.ts" time="0.009">
+<failure message="security-audit.spec.ts:144:3 Firebase Security Rules Test" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:144:3 › Security Audit Tests › Firebase Security Rules Test ────
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication Bypass Attempts" classname="security-audit.spec.ts" time="0.011">
+<failure message="security-audit.spec.ts:163:3 Authentication Bypass Attempts" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:163:3 › Security Audit Tests › Authentication Bypass Attempts ──
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Input Validation - SQL Injection Patterns" classname="security-audit.spec.ts" time="0.016">
+<failure message="security-audit.spec.ts:184:3 Input Validation - SQL Injection Patterns" type="FAILURE">
+<![CDATA[  [webkit] › security-audit.spec.ts:184:3 › Security Audit Tests › Input Validation - SQL Injection Patterns 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+</testsuite>
+<testsuite name="security-audit.spec.ts" timestamp="2025-08-25T18:40:11.467Z" hostname="Mobile Chrome" tests="9" failures="0" skipped="0" time="67.291" errors="0">
+<testcase name="Security Audit Tests › XSS Protection - Input Sanitization" classname="security-audit.spec.ts" time="7.559">
+</testcase>
+<testcase name="Security Audit Tests › Authentication State Management" classname="security-audit.spec.ts" time="6.692">
+<system-out>
+<![CDATA[Auth State: { isAuthenticated: [33mfalse[39m, userVisible: [33mfalse[39m }
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Session Security - Token Storage" classname="security-audit.spec.ts" time="6.065">
+<system-out>
+<![CDATA[Storage Security Check: {
+  localStorageKeys: [ [32m'fibreflow-theme-preference'[39m, [32m'fibreflow-sidebar-collapsed'[39m ],
+  sessionStorageKeys: [],
+  cookieCount: [33m0[39m,
+  hasPasswordInStorage: [33mfalse[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › HTTPS Enforcement Check" classname="security-audit.spec.ts" time="7.346">
+<system-out>
+<![CDATA[Current URL Protocol: http:
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Error Message Information Disclosure" classname="security-audit.spec.ts" time="8.09">
+</testcase>
+<testcase name="Security Audit Tests › Content Security Policy Headers" classname="security-audit.spec.ts" time="6.32">
+<system-out>
+<![CDATA[Security Headers: {
+  csp: [90mundefined[39m,
+  xframe: [90mundefined[39m,
+  xss: [90mundefined[39m,
+  contentType: [90mundefined[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Firebase Security Rules Test" classname="security-audit.spec.ts" time="6.488">
+<system-out>
+<![CDATA[Firebase Access Test: { accessible: [33mfalse[39m, error: [32m'Firebase not initialized'[39m }
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Authentication Bypass Attempts" classname="security-audit.spec.ts" time="14.474">
+<system-out>
+<![CDATA[Route /app/admin -> http://localhost:5176/app/admin
+Route /app/settings -> http://localhost:5176/app/settings
+Route /app/staff/create -> http://localhost:5176/app/staff/create
+Route /app/projects/create -> http://localhost:5176/app/projects/create
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Input Validation - SQL Injection Patterns" classname="security-audit.spec.ts" time="4.257">
+</testcase>
+</testsuite>
+<testsuite name="security-audit.spec.ts" timestamp="2025-08-25T18:40:11.467Z" hostname="Mobile Safari" tests="9" failures="9" skipped="0" time="0.057" errors="0">
+<testcase name="Security Audit Tests › XSS Protection - Input Sanitization" classname="security-audit.spec.ts" time="0">
+<failure message="security-audit.spec.ts:10:3 XSS Protection - Input Sanitization" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:10:3 › Security Audit Tests › XSS Protection - Input Sanitization 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication State Management" classname="security-audit.spec.ts" time="0">
+<failure message="security-audit.spec.ts:47:3 Authentication State Management" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:47:3 › Security Audit Tests › Authentication State Management 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Session Security - Token Storage" classname="security-audit.spec.ts" time="0.01">
+<failure message="security-audit.spec.ts:64:3 Session Security - Token Storage" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:64:3 › Security Audit Tests › Session Security - Token Storage 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › HTTPS Enforcement Check" classname="security-audit.spec.ts" time="0">
+<failure message="security-audit.spec.ts:88:3 HTTPS Enforcement Check" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:88:3 › Security Audit Tests › HTTPS Enforcement Check ───
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Error Message Information Disclosure" classname="security-audit.spec.ts" time="0.011">
+<failure message="security-audit.spec.ts:107:3 Error Message Information Disclosure" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:107:3 › Security Audit Tests › Error Message Information Disclosure 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Content Security Policy Headers" classname="security-audit.spec.ts" time="0.008">
+<failure message="security-audit.spec.ts:132:3 Content Security Policy Headers" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:132:3 › Security Audit Tests › Content Security Policy Headers 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Firebase Security Rules Test" classname="security-audit.spec.ts" time="0.01">
+<failure message="security-audit.spec.ts:144:3 Firebase Security Rules Test" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:144:3 › Security Audit Tests › Firebase Security Rules Test 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication Bypass Attempts" classname="security-audit.spec.ts" time="0.008">
+<failure message="security-audit.spec.ts:163:3 Authentication Bypass Attempts" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:163:3 › Security Audit Tests › Authentication Bypass Attempts 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Input Validation - SQL Injection Patterns" classname="security-audit.spec.ts" time="0.01">
+<failure message="security-audit.spec.ts:184:3 Input Validation - SQL Injection Patterns" type="FAILURE">
+<![CDATA[  [Mobile Safari] › security-audit.spec.ts:184:3 › Security Audit Tests › Input Validation - SQL Injection Patterns 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\HeinvanVuuren\AppData\Local\ms-playwright\webkit-2203\Playwright.exe
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+</testsuite>
+<testsuite name="security-audit.spec.ts" timestamp="2025-08-25T18:40:11.467Z" hostname="Tablet" tests="9" failures="1" skipped="0" time="48.157" errors="0">
+<testcase name="Security Audit Tests › XSS Protection - Input Sanitization" classname="security-audit.spec.ts" time="0">
+<failure message="security-audit.spec.ts:10:3 XSS Protection - Input Sanitization" type="FAILURE">
+<![CDATA[  [Tablet] › security-audit.spec.ts:10:3 › Security Audit Tests › XSS Protection - Input Sanitization 
+
+    Error: worker process exited unexpectedly (code=3221225794, signal=null)
+]]>
+</failure>
+</testcase>
+<testcase name="Security Audit Tests › Authentication State Management" classname="security-audit.spec.ts" time="5.155">
+<system-out>
+<![CDATA[Auth State: { isAuthenticated: [33mfalse[39m, userVisible: [33mfalse[39m }
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Session Security - Token Storage" classname="security-audit.spec.ts" time="3.289">
+<system-out>
+<![CDATA[Storage Security Check: {
+  localStorageKeys: [ [32m'fibreflow-theme-preference'[39m, [32m'fibreflow-sidebar-collapsed'[39m ],
+  sessionStorageKeys: [],
+  cookieCount: [33m0[39m,
+  hasPasswordInStorage: [33mfalse[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › HTTPS Enforcement Check" classname="security-audit.spec.ts" time="9.132">
+<system-out>
+<![CDATA[Current URL Protocol: http:
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Error Message Information Disclosure" classname="security-audit.spec.ts" time="6.699">
+</testcase>
+<testcase name="Security Audit Tests › Content Security Policy Headers" classname="security-audit.spec.ts" time="2.723">
+<system-out>
+<![CDATA[Security Headers: {
+  csp: [90mundefined[39m,
+  xframe: [90mundefined[39m,
+  xss: [90mundefined[39m,
+  contentType: [90mundefined[39m
+}
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Firebase Security Rules Test" classname="security-audit.spec.ts" time="2.655">
+<system-out>
+<![CDATA[Firebase Access Test: { accessible: [33mfalse[39m, error: [32m'Firebase not initialized'[39m }
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Authentication Bypass Attempts" classname="security-audit.spec.ts" time="7.514">
+<system-out>
+<![CDATA[Route /app/admin -> http://localhost:5176/app/admin
+Route /app/settings -> http://localhost:5176/app/settings
+Route /app/staff/create -> http://localhost:5176/app/staff/create
+Route /app/projects/create -> http://localhost:5176/app/projects/create
+]]>
+</system-out>
+</testcase>
+<testcase name="Security Audit Tests › Input Validation - SQL Injection Patterns" classname="security-audit.spec.ts" time="10.99">
+</testcase>
+</testsuite>
+</testsuites>

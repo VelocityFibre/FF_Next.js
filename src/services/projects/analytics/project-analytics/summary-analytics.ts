@@ -18,7 +18,7 @@ export class ProjectSummaryAnalytics {
   static async getProjectSummary(query?: AnalyticsQuery): Promise<ProjectSummary> {
     try {
       // Build dynamic conditions using proper SQL fragments
-      let conditions = sql`is_active = true`;
+      let conditions = sql`status NOT IN ('archived', 'cancelled', 'deleted')`;
       
       if (query?.startDate) {
         conditions = sql`${conditions} AND created_at >= ${query.startDate.toISOString()}`;
@@ -72,7 +72,7 @@ export class ProjectSummaryAnalytics {
   static async getProjectsByStatus(query?: AnalyticsQuery): Promise<ProjectStatusStats[]> {
     try {
       // Build dynamic conditions using proper SQL fragments
-      let conditions = sql`is_active = true`;
+      let conditions = sql`status NOT IN ('archived', 'cancelled', 'deleted')`;
       
       if (query?.startDate) {
         conditions = sql`${conditions} AND created_at >= ${query.startDate.toISOString()}`;
@@ -114,7 +114,7 @@ export class ProjectSummaryAnalytics {
   static async getProjectsByClient(query?: AnalyticsQuery): Promise<ClientProjectStats[]> {
     try {
       // Build dynamic conditions for the project filter
-      let projectConditions = sql`p.is_active = true`;
+      let projectConditions = sql`p.status NOT IN ('archived', 'cancelled', 'deleted')`;
       
       if (query?.startDate) {
         projectConditions = sql`${projectConditions} AND p.created_at >= ${query.startDate.toISOString()}`;
@@ -184,7 +184,7 @@ export class ProjectSummaryAnalytics {
             0
           ) as completion_rate
         FROM clients c
-        LEFT JOIN projects p ON c.id = p.client_id AND p.is_active = true
+        LEFT JOIN projects p ON c.id = p.client_id AND p.status NOT IN ('archived', 'cancelled', 'deleted')
         GROUP BY c.id, c.name
         HAVING COUNT(p.id) > 0
         ORDER BY total_budget DESC
@@ -223,7 +223,7 @@ export class ProjectSummaryAnalytics {
             COALESCE(type, 'Unknown') as type, 
             COUNT(*) as count
           FROM projects
-          WHERE is_active = true
+          WHERE status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY type
           ORDER BY count DESC
         `,
@@ -232,7 +232,7 @@ export class ProjectSummaryAnalytics {
             COALESCE(priority, 'Medium') as priority, 
             COUNT(*) as count
           FROM projects
-          WHERE is_active = true
+          WHERE status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY priority
           ORDER BY count DESC
         `

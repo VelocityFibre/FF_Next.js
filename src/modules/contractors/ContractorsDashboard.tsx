@@ -4,14 +4,21 @@
  */
 
 import { useState } from 'react';
-import { UserPlus, Download, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { UserPlus, Download, RefreshCw, Upload } from 'lucide-react';
 import { ContractorList } from './components/ContractorList';
+import { PendingApplicationsList } from './components/applications';
+import { PerformanceDashboard } from './components/performance';
+import { DocumentApprovalQueue } from './components/documents';
 import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { useContractorsDashboardData } from '@/hooks/useDashboardData';
 import { getContractorsDashboardCards } from '@/config/dashboards/dashboardConfigs';
+import { ContractorImport } from '@/components/contractor/ContractorImport';
 export function ContractorsDashboard() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [showImportModal, setShowImportModal] = useState(false);
   
   const { 
     stats, 
@@ -34,7 +41,8 @@ export function ContractorsDashboard() {
     { id: 'overview', label: 'Overview' },
     { id: 'active', label: 'Active Contractors' },
     { id: 'pending', label: 'Pending Applications' },
-    { id: 'performance', label: 'Performance' },
+    { id: 'documents', label: 'Document Approval' },
+    { id: 'performance', label: 'Performance Analytics' },
   ];
 
   return (
@@ -46,8 +54,14 @@ export function ContractorsDashboard() {
           {
             label: 'Add Contractor',
             icon: UserPlus as React.ComponentType<{ className?: string; }>,
-            onClick: () => window.location.href = '/app/contractors/create',
+            onClick: () => navigate('/app/contractors/new'),
             variant: 'primary'
+          },
+          {
+            label: 'Import Contractors',
+            icon: Upload as React.ComponentType<{ className?: string; }>,
+            onClick: () => setShowImportModal(true),
+            variant: 'secondary'
           },
           {
             label: 'Export Report',
@@ -150,10 +164,45 @@ export function ContractorsDashboard() {
         </>
       )}
 
-      {/* Contractor List View */}
-      {(activeTab === 'active' || activeTab === 'pending' || activeTab === 'performance') && (
+      {/* Contractor List Views */}
+      {activeTab === 'active' && (
         <ContractorList />
       )}
+      
+      {activeTab === 'pending' && (
+        <PendingApplicationsList 
+          initialFilter={{
+            status: ['pending', 'under_review', 'documentation_incomplete']
+          }}
+        />
+      )}
+      
+      {activeTab === 'documents' && (
+        <DocumentApprovalQueue 
+          initialFilter="pending"
+          enableBatchOperations={true}
+          autoRefreshInterval={30}
+        />
+      )}
+      
+      {activeTab === 'performance' && (
+        <PerformanceDashboard 
+          showFilters={true}
+          onContractorSelect={(contractorId) => navigate(`/app/contractors/${contractorId}`)}
+          className="mt-0"
+        />
+      )}
+
+      {/* Import Modal */}
+      <ContractorImport
+        isOpen={showImportModal}
+        onClose={() => setShowImportModal(false)}
+        onComplete={(result) => {
+          console.log('Import completed:', result);
+          setShowImportModal(false);
+          loadDashboardData(); // Refresh dashboard data
+        }}
+      />
     </div>
   );
 }

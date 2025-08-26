@@ -119,6 +119,9 @@ export const DropsManagement = lazy(() => import('@/modules/projects/drops/Drops
 export const PoleCaptureMobile = lazy(() => import('@/modules/projects/pole-tracker/mobile/PoleCaptureMobile').then(m => ({ default: m.PoleCaptureMobile })));
 export const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManagement').then(m => ({ default: m.SOWManagement })));
 
+// Workflow Module
+export const WorkflowPortalPage = lazy(() => import('@/modules/workflow/WorkflowPortalPage').then(m => ({ default: m.WorkflowPortalPage })));
+
 // Project pages
 export const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));
 export const ProjectForm = lazy(() => import('@/pages/ProjectForm').then(m => ({ default: m.ProjectForm })));

@@ -8,12 +8,15 @@ import {
   DollarSign,
   User,
   Package,
-  RefreshCw
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 import {
   VelocityButton,
   GlassCard
 } from '../../../../components/ui';
+import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
+import { StatusQueries } from '@/services/suppliers/status/statusQueries';
 import type { 
   POFilters,
   POStatus,
@@ -21,6 +24,8 @@ import type {
   PODeliveryStatus,
   POInvoiceStatus
 } from '../../../../types/procurement/po.types';
+import type { Project } from '@/types/project.types';
+import type { Supplier } from '@/services/suppliers/status/types';
 
 interface POFiltersPanelProps {
   filters: POFilters;
@@ -35,18 +40,36 @@ export const POFiltersPanel: React.FC<POFiltersPanelProps> = ({
 }) => {
   const [localFilters, setLocalFilters] = useState<POFilters>(filters);
 
-  // Mock data - in real app, these would come from services
-  const mockSuppliers = [
-    { id: 'supplier-001', name: 'FiberTech Solutions' },
-    { id: 'supplier-002', name: 'Network Install Pro' },
-    { id: 'supplier-003', name: 'Cable Systems Ltd' }
-  ];
+  // 🟢 WORKING: Load real data from services - zero mock data
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
-  const mockProjects = [
-    { id: 'proj-001', name: 'Cape Town Fiber Network' },
-    { id: 'proj-002', name: 'Johannesburg Metro Expansion' },
-    { id: 'proj-003', name: 'Durban Coastal Installation' }
-  ];
+  // Load real data from services
+  useEffect(() => {
+    const loadFilterData = async () => {
+      setIsLoadingData(true);
+      try {
+        // Load data in parallel
+        const [activeSuppliers, activeProjects] = await Promise.all([
+          StatusQueries.getActiveSuppliers(),
+          ProjectQueryService.getActiveProjects()
+        ]);
+        
+        setSuppliers(activeSuppliers);
+        setProjects(activeProjects);
+      } catch (error) {
+        console.error('Error loading filter data:', error);
+        // Set empty arrays instead of mock data on error
+        setSuppliers([]);
+        setProjects([]);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    loadFilterData();
+  }, []);
 
   useEffect(() => {
     setLocalFilters(filters);
@@ -111,13 +134,21 @@ export const POFiltersPanel: React.FC<POFiltersPanelProps> = ({
                     value={localFilters.projectId || ''}
                     onChange={(e) => updateFilter('projectId', e.target.value || undefined)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={isLoadingData}
                   >
-                    <option value="">All Projects</option>
-                    {mockProjects.map(project => (
+                    <option value="">
+                      {isLoadingData ? 'Loading projects...' : 'All Projects'}
+                    </option>
+                    {!isLoadingData && projects.map(project => (
                       <option key={project.id} value={project.id}>
                         {project.name}
                       </option>
                     ))}
+                    {!isLoadingData && projects.length === 0 && (
+                      <option value="" disabled>
+                        No projects available
+                      </option>
+                    )}
                   </select>
                 </div>
 
@@ -129,13 +160,21 @@ export const POFiltersPanel: React.FC<POFiltersPanelProps> = ({
                     value={localFilters.supplierId || ''}
                     onChange={(e) => updateFilter('supplierId', e.target.value || undefined)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={isLoadingData}
                   >
-                    <option value="">All Suppliers</option>
-                    {mockSuppliers.map(supplier => (
+                    <option value="">
+                      {isLoadingData ? 'Loading suppliers...' : 'All Suppliers'}
+                    </option>
+                    {!isLoadingData && suppliers.map(supplier => (
                       <option key={supplier.id} value={supplier.id}>
                         {supplier.name}
                       </option>
                     ))}
+                    {!isLoadingData && suppliers.length === 0 && (
+                      <option value="" disabled>
+                        No suppliers available
+                      </option>
+                    )}
                   </select>
                 </div>
               </div>

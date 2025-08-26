@@ -1,13 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Search, Building2, X, Globe } from 'lucide-react';
+import { ChevronDown, Search, Building2, X, Globe, Loader2 } from 'lucide-react';
 import { Button } from '@/shared/components/ui/Button';
+import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
 import type { ProcurementViewMode } from '@/types/procurement/portal.types';
+import type { Project } from '@/types/project.types';
 
-interface Project {
-  id: string;
-  name: string;
-  code: string;
-}
+// Using Project type from types/project.types instead of local interface
 
 interface ProcurementProjectSelectorProps {
   selectedProject?: Project | undefined;
@@ -28,14 +26,27 @@ export function ProcurementProjectSelector({
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Mock projects - would be replaced with real data
-  const allProjects: Project[] = [
-    { id: '1', name: 'Johannesburg Fiber Rollout', code: 'JHB-2024-001' },
-    { id: '2', name: 'Cape Town Metro Network', code: 'CPT-2024-002' },
-    { id: '3', name: 'Durban Coastal Installation', code: 'DBN-2024-003' },
-    { id: '4', name: 'Pretoria Business District', code: 'PTA-2024-004' },
-    { id: '5', name: 'Port Elizabeth Expansion', code: 'PE-2024-005' },
-  ];
+  // 🟢 WORKING: Load real projects from database - zero mock data
+  const [allProjects, setAllProjects] = useState<Project[]>([]);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+
+  // Load projects from database
+  useEffect(() => {
+    const loadProjects = async () => {
+      setIsLoadingProjects(true);
+      try {
+        const projects = await ProjectQueryService.getActiveProjects();
+        setAllProjects(projects);
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        setAllProjects([]); // Empty array instead of mock data
+      } finally {
+        setIsLoadingProjects(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
 
   // Filter projects based on search
   const filteredProjects = allProjects.filter(project =>
@@ -183,7 +194,14 @@ export function ProcurementProjectSelector({
             )}
             
             {/* Individual Projects */}
-            {filteredProjects.length > 0 ? (
+            {isLoadingProjects ? (
+              <div className="px-4 py-6 text-center text-gray-500 text-sm">
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading projects...
+                </div>
+              </div>
+            ) : filteredProjects.length > 0 ? (
               <div className="py-1">
                 {filteredProjects.map((project) => (
                   <button
@@ -199,7 +217,7 @@ export function ProcurementProjectSelector({
                       <Building2 className="h-4 w-4 text-gray-500" />
                       <div>
                         <div className="font-medium">{project.name}</div>
-                        <div className="text-sm text-gray-500">{project.code}</div>
+                        <div className="text-sm text-gray-500">{project.code || 'No code'}</div>
                       </div>
                     </div>
                   </button>
@@ -211,7 +229,7 @@ export function ProcurementProjectSelector({
               </div>
             ) : (
               <div className="px-4 py-6 text-center text-gray-500 text-sm">
-                No projects available
+                No projects available - add projects first
               </div>
             )}
           </div>

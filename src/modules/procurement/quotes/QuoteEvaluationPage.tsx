@@ -78,88 +78,41 @@ const QuoteEvaluationPage: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      // Mock data - in real app, this would come from quote evaluation service
-      const mockEvaluations: QuoteEvaluation[] = [
-        {
-          id: 'eval-001',
-          rfqId: 'rfq-001',
-          rfqTitle: 'Fiber Optic Cable Installation - Cape Town Project',
-          status: 'IN_PROGRESS',
-          totalQuotes: 5,
-          evaluatedQuotes: 3,
-          lowestBid: 485000,
-          averageBid: 535000,
-          highestBid: 620000,
-          currency: 'ZAR',
-          deadline: new Date('2024-12-15'),
-          createdDate: new Date('2024-11-01'),
-          evaluatedBy: ['John Smith', 'Sarah Jones'],
-          evaluationCriteria: [
-            { id: 'price', name: 'Price', weight: 40, type: 'PRICE' },
-            { id: 'technical', name: 'Technical Capability', weight: 30, type: 'TECHNICAL' },
-            { id: 'delivery', name: 'Delivery Timeline', weight: 20, type: 'DELIVERY' },
-            { id: 'commercial', name: 'Commercial Terms', weight: 10, type: 'COMMERCIAL' }
-          ]
-        },
-        {
-          id: 'eval-002',
-          rfqId: 'rfq-002',
-          rfqTitle: 'Network Equipment Procurement - Johannesburg Metro',
-          status: 'AWARDED',
-          totalQuotes: 4,
-          evaluatedQuotes: 4,
-          lowestBid: 1250000,
-          averageBid: 1475000,
-          highestBid: 1850000,
-          currency: 'ZAR',
-          deadline: new Date('2024-11-30'),
-          createdDate: new Date('2024-10-15'),
-          evaluatedBy: ['Mike Wilson', 'Lisa Chen', 'David Brown'],
-          awardedSupplierId: 'supplier-002',
-          awardedSupplierName: 'Network Install Pro',
-          evaluationCriteria: [
-            { id: 'price', name: 'Price', weight: 35, type: 'PRICE' },
-            { id: 'technical', name: 'Technical Specification', weight: 35, type: 'TECHNICAL' },
-            { id: 'delivery', name: 'Delivery Schedule', weight: 20, type: 'DELIVERY' },
-            { id: 'commercial', name: 'Payment Terms', weight: 10, type: 'COMMERCIAL' }
-          ]
-        },
-        {
-          id: 'eval-003',
-          rfqId: 'rfq-003',
-          rfqTitle: 'Installation Services - Durban Coastal Network',
-          status: 'PENDING',
-          totalQuotes: 6,
-          evaluatedQuotes: 0,
-          lowestBid: 750000,
-          averageBid: 890000,
-          highestBid: 1100000,
-          currency: 'ZAR',
-          deadline: new Date('2024-12-20'),
-          createdDate: new Date('2024-11-20'),
-          evaluatedBy: [],
-          evaluationCriteria: [
-            { id: 'price', name: 'Total Cost', weight: 50, type: 'PRICE' },
-            { id: 'technical', name: 'Technical Approach', weight: 25, type: 'TECHNICAL' },
-            { id: 'delivery', name: 'Project Timeline', weight: 25, type: 'DELIVERY' }
-          ]
-        }
-      ];
-
-      const mockStats: QuoteStats = {
-        total: mockEvaluations.length,
-        pending: mockEvaluations.filter(e => e.status === 'PENDING').length,
-        inProgress: mockEvaluations.filter(e => e.status === 'IN_PROGRESS').length,
-        completed: mockEvaluations.filter(e => e.status === 'COMPLETED').length,
-        awarded: mockEvaluations.filter(e => e.status === 'AWARDED').length,
-        totalValue: mockEvaluations.reduce((sum, e) => sum + e.averageBid, 0),
-        averageEvaluationTime: 5.2
+      // 🟢 WORKING: Empty states - no mock data. Connect to real quote evaluation service when available.
+      // TODO: Replace with actual service calls when quote evaluation system is implemented
+      
+      // Empty arrays - shows "No evaluations found" etc. in UI
+      const evaluations: QuoteEvaluation[] = [];
+      
+      const stats: QuoteStats = {
+        total: 0,
+        pending: 0,
+        inProgress: 0,
+        completed: 0,
+        awarded: 0,
+        totalValue: 0,
+        averageEvaluationTime: 0
       };
 
-      setEvaluations(mockEvaluations);
-      setStats(mockStats);
+      // Future implementation would be:
+      // const evaluations = await quoteEvaluationService.getEvaluations();
+      // const stats = await quoteEvaluationService.getEvaluationStats();
+
+      setEvaluations(evaluations);
+      setStats(stats);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load evaluation data');
+      // Ensure empty states on error
+      setEvaluations([]);
+      setStats({
+        total: 0,
+        pending: 0,
+        inProgress: 0,
+        completed: 0,
+        awarded: 0,
+        totalValue: 0,
+        averageEvaluationTime: 0
+      });
     } finally {
       setLoading(false);
     }

@@ -7,10 +7,14 @@ import {
   FileText, 
   Truck,
   Wrench,
-  AlertTriangle
+  AlertTriangle,
+  Plus,
+  BarChart3,
+  Settings
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { StatCard } from '@/components/dashboard/StatCard';
+import { QuickActionCard } from '@/components/dashboard/QuickActionCard';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { notificationService } from '@/services/core';
 import '../styles/design-system.css';
@@ -20,6 +24,14 @@ interface StatCardData {
   subtitle: string;
   value: string | number;
   subValue: string;
+  icon: any;
+  color: string;
+  route?: string;
+}
+
+interface QuickActionData {
+  title: string;
+  description: string;
   icon: any;
   color: string;
   route?: string;
@@ -121,6 +133,37 @@ export function Dashboard() {
     }
   ];
 
+  const quickActions: QuickActionData[] = [
+    {
+      title: 'Create New Project',
+      description: 'Set up a new fiber optic project with all required configurations and initial planning documents.',
+      icon: Plus,
+      color: '#3b82f6',
+      route: '/app/projects/new'
+    },
+    {
+      title: 'Add Staff Member',
+      description: 'Onboard a new team member with role assignment, contact details, and project access permissions.',
+      icon: Users,
+      color: '#10b981',
+      route: '/app/staff/new'
+    },
+    {
+      title: 'Generate Report',
+      description: 'Create comprehensive project reports, analytics dashboards, and export data for stakeholders.',
+      icon: BarChart3,
+      color: '#f97316',
+      route: '/app/reports'
+    },
+    {
+      title: 'System Settings',
+      description: 'Configure application preferences, user permissions, and system-wide settings for optimal performance.',
+      icon: Settings,
+      color: '#6b7280',
+      route: '/app/settings'
+    }
+  ];
+
   return (
     <div className="min-h-full bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -150,7 +193,7 @@ export function Dashboard() {
         </div>
 
         {/* Additional Dashboard Content */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="mt-12 space-y-8">
           {/* Recent Activity */}
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
@@ -179,40 +222,30 @@ export function Dashboard() {
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-1 gap-3">
-              <button 
-                onClick={() => navigate('/app/projects/new')}
-                className="flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-              >
-                <div className="flex items-center space-x-3">
-                  <FolderOpen className="w-5 h-5 text-blue-600" />
-                  <span className="text-sm font-medium text-gray-900">Create New Project</span>
-                </div>
-                <span className="text-gray-400">→</span>
-              </button>
-              <button 
-                onClick={() => navigate('/app/staff/new')}
-                className="flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-              >
-                <div className="flex items-center space-x-3">
-                  <Users className="w-5 h-5 text-green-600" />
-                  <span className="text-sm font-medium text-gray-900">Add Staff Member</span>
-                </div>
-                <span className="text-gray-400">→</span>
-              </button>
-              <button 
-                onClick={() => navigate('/app/reports')}
-                className="flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-              >
-                <div className="flex items-center space-x-3">
-                  <FileText className="w-5 h-5 text-orange-600" />
-                  <span className="text-sm font-medium text-gray-900">Generate Report</span>
-                </div>
-                <span className="text-gray-400">→</span>
-              </button>
+          {/* Quick Actions - Full Width for Better Display */}
+          <div className="ff-quick-actions-container bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">Quick Actions</h3>
+                <p className="text-sm text-gray-500 mt-1">Frequently used actions to boost productivity</p>
+              </div>
+              <div className="text-xs text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
+                {quickActions.length} actions
+              </div>
+            </div>
+            <div className="ff-quick-actions-grid">
+              {quickActions.map((action, index) => (
+                <QuickActionCard
+                  key={index}
+                  title={action.title}
+                  description={action.description}
+                  icon={action.icon}
+                  color={action.color}
+                  route={action.route}
+                  className="ff-animate-fade-in"
+                  style={{ animationDelay: `${index * 75}ms` }}
+                />
+              ))}
             </div>
           </div>
         </div>

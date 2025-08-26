@@ -196,6 +196,43 @@ export class ContractorCrudCore {
       throw new Error('Failed to search contractors');
     }
   }
+
+  /**
+   * Find contractor by email or registration number
+   * Used for duplicate detection during import
+   */
+  async findByEmailOrRegistration(email: string, registrationNumber?: string): Promise<Contractor | null> {
+    try {
+      const contractors = await this.getAll();
+      
+      // First, try to find by email (exact match, case insensitive)
+      const byEmail = contractors.find(c => 
+        c.email.toLowerCase() === email.toLowerCase()
+      );
+      
+      if (byEmail) {
+        return byEmail;
+      }
+      
+      // If no email match and registration number provided, try registration number
+      if (registrationNumber?.trim()) {
+        const byRegistration = contractors.find(c => 
+          c.registrationNumber && 
+          c.registrationNumber.toLowerCase() === registrationNumber.toLowerCase()
+        );
+        
+        if (byRegistration) {
+          return byRegistration;
+        }
+      }
+      
+      return null;
+      
+    } catch (error) {
+      console.error('Error finding contractor by email or registration:', error);
+      throw new Error('Failed to search for existing contractor');
+    }
+  }
 }
 
 // Export singleton instance

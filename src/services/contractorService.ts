@@ -19,6 +19,7 @@ export const contractorService = {
   delete: contractorCrudService.delete.bind(contractorCrudService),
   getAnalytics: contractorCrudService.getAnalytics.bind(contractorCrudService),
   search: contractorCrudService.search.bind(contractorCrudService),
+  findByEmailOrRegistration: contractorCrudService.findByEmailOrRegistration.bind(contractorCrudService),
   
   // Team management
   teams: contractorTeamService,

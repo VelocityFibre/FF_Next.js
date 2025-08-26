@@ -118,7 +118,7 @@ test.describe('FibreFlow Comprehensive Functional Review', () => {
   });
 
   test('1. Authentication Flow', async ({ page }) => {
-    const result = await testPage(page, 'Authentication', 'http://localhost:5174/');
+    const result = await testPage(page, 'Authentication', 'http://localhost:5173/');
     testResults.push(result);
     
     // Test login form functionality if present
@@ -139,7 +139,7 @@ test.describe('FibreFlow Comprehensive Functional Review', () => {
   });
 
   test('2. Dashboard', async ({ page }) => {
-    const result = await testPage(page, 'Dashboard', 'http://localhost:5174/app/dashboard');
+    const result = await testPage(page, 'Dashboard', 'http://localhost:5173/app/dashboard');
     testResults.push(result);
     
     // Check for dashboard cards and metrics
@@ -155,7 +155,7 @@ test.describe('FibreFlow Comprehensive Functional Review', () => {
   });
 
   test('3. Projects Module - List View', async ({ page }) => {
-    const result = await testPage(page, 'Projects List', 'http://localhost:5174/app/projects');
+    const result = await testPage(page, 'Projects List', 'http://localhost:5173/app/projects');
     testResults.push(result);
     
     // Check for project list elements
@@ -173,7 +173,7 @@ test.describe('FibreFlow Comprehensive Functional Review', () => {
   });
 
   test('4. Projects Module - Create Form', async ({ page }) => {
-    const result = await testPage(page, 'Projects Create', 'http://localhost:5174/app/projects/create');
+    const result = await testPage(page, 'Projects Create', 'http://localhost:5173/app/projects/create');
     testResults.push(result);
     
     // Check for form elements
@@ -194,72 +194,72 @@ test.describe('FibreFlow Comprehensive Functional Review', () => {
   });
 
   test('5. Clients Module - List View', async ({ page }) => {
-    const result = await testPage(page, 'Clients List', 'http://localhost:5174/app/clients');
+    const result = await testPage(page, 'Clients List', 'http://localhost:5173/app/clients');
     testResults.push(result);
   });
 
   test('6. Clients Module - Create Form', async ({ page }) => {
-    const result = await testPage(page, 'Clients Create', 'http://localhost:5174/app/clients/new');
+    const result = await testPage(page, 'Clients Create', 'http://localhost:5173/app/clients/new');
     testResults.push(result);
   });
 
   test('7. Staff Module - List View', async ({ page }) => {
-    const result = await testPage(page, 'Staff List', 'http://localhost:5174/app/staff');
+    const result = await testPage(page, 'Staff List', 'http://localhost:5173/app/staff');
     testResults.push(result);
   });
 
   test('8. Staff Module - Create Form', async ({ page }) => {
-    const result = await testPage(page, 'Staff Create', 'http://localhost:5174/app/staff/new');
+    const result = await testPage(page, 'Staff Create', 'http://localhost:5173/app/staff/new');
     testResults.push(result);
   });
 
   test('9. Staff Module - Import Functionality', async ({ page }) => {
-    const result = await testPage(page, 'Staff Import', 'http://localhost:5174/app/staff/import');
+    const result = await testPage(page, 'Staff Import', 'http://localhost:5173/app/staff/import');
     testResults.push(result);
   });
 
   test('10. Contractors Module - Dashboard', async ({ page }) => {
-    const result = await testPage(page, 'Contractors Dashboard', 'http://localhost:5174/app/contractors');
+    const result = await testPage(page, 'Contractors Dashboard', 'http://localhost:5173/app/contractors');
     testResults.push(result);
   });
 
   test('11. Procurement Module - Main Dashboard', async ({ page }) => {
-    const result = await testPage(page, 'Procurement Dashboard', 'http://localhost:5174/app/procurement');
+    const result = await testPage(page, 'Procurement Dashboard', 'http://localhost:5173/app/procurement');
     testResults.push(result);
   });
 
   test('12. Field Operations - Pole Capture', async ({ page }) => {
-    const result = await testPage(page, 'Pole Capture', 'http://localhost:5174/app/pole-capture');
+    const result = await testPage(page, 'Pole Capture', 'http://localhost:5173/app/pole-capture');
     testResults.push(result);
   });
 
   test('13. Field Operations - Fiber Stringing', async ({ page }) => {
-    const result = await testPage(page, 'Fiber Stringing', 'http://localhost:5174/app/fiber-stringing');
+    const result = await testPage(page, 'Fiber Stringing', 'http://localhost:5173/app/fiber-stringing');
     testResults.push(result);
   });
 
   test('14. Field Operations - Drops', async ({ page }) => {
-    const result = await testPage(page, 'Drops Management', 'http://localhost:5174/app/drops');
+    const result = await testPage(page, 'Drops Management', 'http://localhost:5173/app/drops');
     testResults.push(result);
   });
 
   test('15. Field Operations - Installations', async ({ page }) => {
-    const result = await testPage(page, 'Home Installations', 'http://localhost:5174/app/installations');
+    const result = await testPage(page, 'Home Installations', 'http://localhost:5173/app/installations');
     testResults.push(result);
   });
 
   test('16. Analytics Dashboard', async ({ page }) => {
-    const result = await testPage(page, 'Analytics', 'http://localhost:5174/app/analytics');
+    const result = await testPage(page, 'Analytics', 'http://localhost:5173/app/analytics');
     testResults.push(result);
   });
 
   test('17. Reports Dashboard', async ({ page }) => {
-    const result = await testPage(page, 'Reports', 'http://localhost:5174/app/reports');
+    const result = await testPage(page, 'Reports', 'http://localhost:5173/app/reports');
     testResults.push(result);
   });
 
   test('18. KPI Dashboard', async ({ page }) => {
-    const result = await testPage(page, 'KPI Dashboard', 'http://localhost:5174/app/kpi-dashboard');
+    const result = await testPage(page, 'KPI Dashboard', 'http://localhost:5173/app/kpi-dashboard');
     testResults.push(result);
   });
 

@@ -949,6 +949,50 @@
   .ff-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* Quick Action Cards - Mobile responsive */
+  .ff-quick-actions-container {
+    padding: 1rem !important;
+  }
+  
+  .ff-quick-action-card {
+    min-height: 90px;
+  }
+  
+  .ff-quick-action-card .p-6 {
+    padding: 1.25rem !important;
+  }
+  
+  .ff-quick-action-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .ff-quick-action-card p {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  
+  .ff-quick-action-card .w-14 {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+  
+  .ff-quick-action-card .w-7 {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet responsive adjustments */
+  .ff-quick-action-card {
+    min-height: 100px;
+  }
+  
+  .ff-quick-action-card .flex.items-center.space-x-4 {
+    align-items: flex-start;
+  }
 }
 
 .ff-grid--4 {
@@ -1067,6 +1111,75 @@
 @keyframes ff-skeleton-loading {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* ================================
+   QUICK ACTION CARDS
+   ================================ */
+
+.ff-quick-action-card {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(0);
+}
+
+.ff-quick-action-card:hover {
+  box-shadow: var(--ff-shadow-xl);
+  transform: translateY(-2px);
+  border-color: var(--ff-border-medium);
+  backdrop-filter: blur(1px);
+}
+
+.ff-quick-action-card:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--action-color, var(--ff-primary-500))33;
+  border-color: var(--action-color, var(--ff-primary-500));
+}
+
+.ff-quick-action-card:active {
+  transform: translateY(-1px);
+  transition-duration: 0.1s;
+}
+
+/* Quick Actions Container Spacing */
+.ff-quick-actions-container {
+  max-width: 100%;
+  width: 100%;
+}
+
+.ff-quick-actions-container .ff-quick-action-card {
+  margin-bottom: 0;
+}
+
+/* Enhanced spacing for quick action cards */
+.ff-quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .ff-quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ff-quick-actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Line clamp utility for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ================================

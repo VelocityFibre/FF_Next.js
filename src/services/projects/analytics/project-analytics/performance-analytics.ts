@@ -17,7 +17,7 @@ export class ProjectPerformanceAnalytics {
    */
   static async getOverdueProjects(query?: AnalyticsQuery): Promise<OverdueProject[]> {
     try {
-      const whereClause = query ? this.buildWhereClause(query) : 'p.is_active = true';
+      const whereClause = query ? this.buildWhereClause(query) : "p.status NOT IN ('archived', 'cancelled', 'deleted')";
       
       const result = await sql`
         SELECT 
@@ -53,7 +53,7 @@ export class ProjectPerformanceAnalytics {
    */
   static async getProjectPerformanceMetrics(query?: AnalyticsQuery): Promise<ProjectPerformanceMetrics> {
     try {
-      const whereClause = query ? this.buildWhereClause(query) : 'is_active = true';
+      const whereClause = query ? this.buildWhereClause(query) : "status NOT IN ('archived', 'cancelled', 'deleted')";
       
       const onTimeResult = await sql`
         SELECT 
@@ -80,7 +80,7 @@ export class ProjectPerformanceAnalytics {
             END
           ) as avg_budget_utilization
         FROM projects
-        WHERE is_active = true AND budget > 0
+        WHERE status NOT IN ('archived', 'cancelled', 'deleted') AND budget > 0
       `;
       
       const onTimeRate = onTimeResult[0].total_completed > 0 
@@ -116,7 +116,7 @@ export class ProjectPerformanceAnalytics {
       const overdueCount = (await this.getOverdueProjects()).length;
       
       const totalProjectsResult = await sql`
-        SELECT COUNT(*) as total FROM projects WHERE is_active = true
+        SELECT COUNT(*) as total FROM projects WHERE status NOT IN ('archived', 'cancelled', 'deleted')
       `;
       const totalProjects = parseInt(totalProjectsResult[0].total);
 
@@ -249,7 +249,7 @@ export class ProjectPerformanceAnalytics {
           END) as medium_risk,
           COUNT(*) as total_active
         FROM projects
-        WHERE status IN ('ACTIVE', 'IN_PROGRESS') AND is_active = true
+        WHERE status IN ('ACTIVE', 'IN_PROGRESS', 'active', 'in_progress')
       `;
 
       const stats = result[0];
@@ -295,7 +295,7 @@ export class ProjectPerformanceAnalytics {
    * Build WHERE clause for filtering
    */
   private static buildWhereClause(query: AnalyticsQuery): string {
-    const conditions = ['is_active = true'];
+    const conditions = ["status NOT IN ('archived', 'cancelled', 'deleted')"];
 
     if (query.startDate) {
       conditions.push(`created_at >= '${query.startDate.toISOString()}'`);
@@ -311,7 +311,7 @@ export class ProjectPerformanceAnalytics {
       conditions.push(`status IN (${statusList})`);
     }
     if (query.includeInactive) {
-      conditions[0] = 'TRUE'; // Remove is_active filter
+      conditions[0] = 'TRUE'; // Remove status filter
     }
 
     return conditions.join(' AND ');

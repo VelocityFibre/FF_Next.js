@@ -51,7 +51,8 @@ export class KPIAnalyticsService {
       }));
     } catch (error) {
       console.error('Failed to get KPI dashboard:', error);
-      throw error;
+      // Return empty array instead of throwing
+      return [];
     }
   }
 
@@ -94,7 +95,8 @@ export class KPIAnalyticsService {
       }));
     } catch (error) {
       console.error('Failed to get KPI trends:', error);
-      throw error;
+      // Return empty array instead of throwing
+      return [];
     }
   }
 }

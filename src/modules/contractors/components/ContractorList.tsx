@@ -110,7 +110,7 @@ export function ContractorList() {
     },
     {
       label: 'Green Rating',
-      value: analytics.ragDistribution.green,
+      value: analytics.ragDistribution?.green || 0,
       icon: UserCheck,
       iconColor: 'text-emerald-600',
       iconBgColor: 'bg-emerald-100',

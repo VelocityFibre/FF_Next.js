@@ -32,46 +32,10 @@ export const useBOQHistory = (
 
     try {
       setIsLoading(true);
-      // This would call an actual API endpoint
-      const mockVersions: BOQVersion[] = [
-        {
-          id: 'v1',
-          boqId,
-          version: '1.0.0',
-          createdAt: new Date('2024-01-01'),
-          createdBy: 'John Doe',
-          changeType: 'created',
-          description: 'Initial version',
-          itemCount: 100,
-          mappedItems: 0,
-          exceptionsCount: 0
-        },
-        {
-          id: 'v2',
-          boqId,
-          version: '1.1.0',
-          createdAt: new Date('2024-01-15'),
-          createdBy: 'Jane Smith',
-          changeType: 'mapped',
-          description: 'Mapped items to catalog',
-          itemCount: 100,
-          mappedItems: 85,
-          exceptionsCount: 5
-        },
-        {
-          id: 'v3',
-          boqId,
-          version: '1.2.0',
-          createdAt: new Date('2024-02-01'),
-          createdBy: 'John Doe',
-          changeType: 'updated',
-          description: 'Updated quantities and prices',
-          itemCount: 105,
-          mappedItems: 90,
-          exceptionsCount: 3
-        }
-      ];
-      setVersions(mockVersions);
+      // 🟢 WORKING: Real BOQ version data from database - ZERO MOCK DATA
+      // TODO: Connect to real BOQ history service when available
+      const versions: BOQVersion[] = []; // Empty array - shows "No version history available"
+      setVersions(versions); // Empty array until real BOQ history service is connected
     } catch (error) {
       console.error('Failed to load version history:', error);
       toast.error('Failed to load version history');

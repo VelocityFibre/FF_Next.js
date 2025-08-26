@@ -33,7 +33,7 @@ export class ProjectTrendAnalytics {
             DATE_TRUNC('month', updated_at) as month,
             COUNT(*) as count
           FROM projects
-          WHERE status = 'COMPLETED' AND is_active = true
+          WHERE status = 'COMPLETED' AND status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY DATE_TRUNC('month', updated_at)
         ) completed ON m.month = completed.month
         LEFT JOIN (
@@ -41,7 +41,7 @@ export class ProjectTrendAnalytics {
             DATE_TRUNC('month', start_date) as month,
             COUNT(*) as count
           FROM projects
-          WHERE start_date IS NOT NULL AND is_active = true
+          WHERE start_date IS NOT NULL AND status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY DATE_TRUNC('month', start_date)
         ) started ON m.month = started.month
         ORDER BY m.month
@@ -63,7 +63,7 @@ export class ProjectTrendAnalytics {
    */
   static async getBudgetAnalysis(query?: AnalyticsQuery): Promise<BudgetAnalysis> {
     try {
-      const whereClause = query ? this.buildWhereClause(query) : 'is_active = true';
+      const whereClause = query ? this.buildWhereClause(query) : "status NOT IN ('archived', 'cancelled', 'deleted')";
       
       const summaryResult = await sql`
         SELECT 
@@ -123,20 +123,20 @@ export class ProjectTrendAnalytics {
         LEFT JOIN (
           SELECT start_date::date as date, COUNT(*) as count
           FROM projects
-          WHERE start_date IS NOT NULL AND is_active = true
+          WHERE start_date IS NOT NULL AND status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY start_date::date
         ) starting ON d.date = starting.date
         LEFT JOIN (
           SELECT end_date::date as date, COUNT(*) as count
           FROM projects
-          WHERE end_date IS NOT NULL AND is_active = true
+          WHERE end_date IS NOT NULL AND status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY end_date::date
         ) ending ON d.date = ending.date
         LEFT JOIN (
           SELECT milestone_date::date as date, COUNT(*) as count
           FROM project_milestones pm
           JOIN projects p ON pm.project_id = p.id
-          WHERE milestone_date IS NOT NULL AND p.is_active = true
+          WHERE milestone_date IS NOT NULL AND p.status NOT IN ('archived', 'cancelled', 'deleted')
           GROUP BY milestone_date::date
         ) milestones ON d.date = milestones.date
         ORDER BY d.date
@@ -182,7 +182,7 @@ export class ProjectTrendAnalytics {
         FROM quarters q
         LEFT JOIN projects p ON p.created_at >= q.quarter_start 
           AND p.created_at <= q.quarter_end 
-          AND p.is_active = true
+          AND p.status NOT IN ('archived', 'cancelled', 'deleted')
         GROUP BY q.quarter_start
         ORDER BY q.quarter_start
       `;
@@ -231,7 +231,7 @@ export class ProjectTrendAnalytics {
             COALESCE(SUM(budget), 0) as budget,
             COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END) as completed
           FROM projects
-          WHERE EXTRACT(year FROM created_at) = ${currentYear} AND is_active = true
+          WHERE EXTRACT(year FROM created_at) = ${currentYear} AND status NOT IN ('archived', 'cancelled', 'deleted')
         `,
         sql`
           SELECT 
@@ -239,7 +239,7 @@ export class ProjectTrendAnalytics {
             COALESCE(SUM(budget), 0) as budget,
             COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END) as completed
           FROM projects
-          WHERE EXTRACT(year FROM created_at) = ${previousYear} AND is_active = true
+          WHERE EXTRACT(year FROM created_at) = ${previousYear} AND status NOT IN ('archived', 'cancelled', 'deleted')
         `
       ]);
 
@@ -296,7 +296,7 @@ export class ProjectTrendAnalytics {
           COALESCE(AVG(budget), 0) as avg_budget,
           (COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::float / COUNT(*)) * 100 as completion_rate
         FROM projects
-        WHERE is_active = true AND created_at >= CURRENT_DATE - INTERVAL '3 years'
+        WHERE status NOT IN ('archived', 'cancelled', 'deleted') AND created_at >= CURRENT_DATE - INTERVAL '3 years'
         GROUP BY 
           CASE 
             WHEN EXTRACT(month FROM created_at) IN (12, 1, 2) THEN 'Winter'
@@ -352,7 +352,7 @@ export class ProjectTrendAnalytics {
    * Build WHERE clause for filtering
    */
   private static buildWhereClause(query: AnalyticsQuery): string {
-    const conditions = ['is_active = true'];
+    const conditions = ["status NOT IN ('archived', 'cancelled', 'deleted')"];
 
     if (query.startDate) {
       conditions.push(`created_at >= '${query.startDate.toISOString()}'`);
@@ -368,7 +368,7 @@ export class ProjectTrendAnalytics {
       conditions.push(`status IN (${statusList})`);
     }
     if (query.includeInactive) {
-      conditions[0] = 'TRUE'; // Remove is_active filter
+      conditions[0] = 'TRUE'; // Remove status filter
     }
 
     return conditions.join(' AND ');

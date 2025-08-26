@@ -1,33 +1,15 @@
 /**
  * Dashboard Data Hook - Centralized data management for all dashboards
  * Provides consistent data loading, error handling, and loading states
+ * ZERO MOCK DATA - All statistics from real database sources
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { DashboardStatsService } from '@/services/dashboard/dashboardStatsService';
+import type { DashboardStats } from '@/services/dashboard/dashboardStatsService';
 
-// 🟢 WORKING: Core dashboard data types
-export interface DashboardStats {
-  totalProjects: number;
-  activeProjects: number;
-  completedProjects: number;
-  completedTasks: number;
-  teamMembers: number;
-  openIssues: number;
-  polesInstalled: number;
-  dropsCompleted: number;
-  fiberInstalled: number;
-  totalRevenue: number;
-  contractorsActive: number;
-  contractorsPending: number;
-  boqsActive: number;
-  rfqsActive: number;
-  supplierActive: number;
-  reportsGenerated: number;
-  performanceScore: number;
-  qualityScore: number;
-  onTimeDelivery: number;
-  budgetUtilization: number;
-}
+// 🟢 WORKING: Re-export dashboard stats interface from service
+export type { DashboardStats } from '@/services/dashboard/dashboardStatsService';
 
 export interface DashboardMetrics {
   stats: DashboardStats;
@@ -77,55 +59,15 @@ export function useDashboardData() {
     try {
       setMetrics(prev => ({ ...prev, isLoading: true, error: null }));
 
-      // TODO: Replace with real API calls when backend is ready
-      // For now, using realistic mock data based on the codebase
-      const mockStats: DashboardStats = {
-        totalProjects: 24,
-        activeProjects: 15,
-        completedProjects: 9,
-        completedTasks: 342,
-        teamMembers: 67,
-        openIssues: 12,
-        polesInstalled: 2847,
-        dropsCompleted: 8934,
-        fiberInstalled: 125600,
-        totalRevenue: 3840000,
-        contractorsActive: 23,
-        contractorsPending: 7,
-        boqsActive: 18,
-        rfqsActive: 11,
-        supplierActive: 34,
-        reportsGenerated: 89,
-        performanceScore: 87.4,
-        qualityScore: 92.1,
-        onTimeDelivery: 78.3,
-        budgetUtilization: 84.7,
-      };
-
-      const mockTrends = {
-        totalProjects: { value: 24, direction: 'up' as const, percentage: 12.5 },
-        activeProjects: { value: 15, direction: 'up' as const, percentage: 8.3 },
-        completedTasks: { value: 342, direction: 'up' as const, percentage: 15.2 },
-        teamMembers: { value: 67, direction: 'up' as const, percentage: 5.8 },
-        openIssues: { value: 12, direction: 'down' as const, percentage: 3.4 },
-        polesInstalled: { value: 2847, direction: 'up' as const, percentage: 18.7 },
-        dropsCompleted: { value: 8934, direction: 'up' as const, percentage: 22.1 },
-        fiberInstalled: { value: 125600, direction: 'up' as const, percentage: 16.8 },
-        totalRevenue: { value: 3840000, direction: 'up' as const, percentage: 24.3 },
-        contractorsActive: { value: 23, direction: 'stable' as const, percentage: 0 },
-        contractorsPending: { value: 7, direction: 'down' as const, percentage: 2.1 },
-        performanceScore: { value: 87.4, direction: 'up' as const, percentage: 4.2 },
-        qualityScore: { value: 92.1, direction: 'up' as const, percentage: 2.8 },
-        onTimeDelivery: { value: 78.3, direction: 'down' as const, percentage: 1.7 },
-        budgetUtilization: { value: 84.7, direction: 'stable' as const, percentage: 0.3 },
-      };
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // 🟢 WORKING: Get real statistics from database sources - ZERO MOCK DATA
+      const [stats, trends] = await Promise.all([
+        DashboardStatsService.getDashboardStats(),
+        DashboardStatsService.getDashboardTrends()
+      ]);
 
       setMetrics({
-        stats: mockStats,
-        trends: mockTrends,
+        stats,
+        trends,
         isLoading: false,
         error: null,
         lastUpdated: new Date(),

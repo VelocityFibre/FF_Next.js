@@ -4,8 +4,8 @@
  */
 
 import { neonDb } from '@/lib/neon/connection';
-import { clientAnalytics } from '@/lib/neon/schema';
-import { eq, desc } from 'drizzle-orm';
+import { clients, projects, sow } from '@/lib/neon/schema';
+import { eq, desc, sql, count, sum } from 'drizzle-orm';
 import type { ClientAnalyticsData } from './types';
 
 export class ClientAnalyticsService {
@@ -14,21 +14,30 @@ export class ClientAnalyticsService {
    */
   async getClientAnalytics(clientId?: string): Promise<ClientAnalyticsData | ClientAnalyticsData[]> {
     try {
+      // Calculate real metrics from clients, projects, and SOW tables
       const baseQuery = neonDb
         .select({
-          clientId: clientAnalytics.clientId,
-          clientName: clientAnalytics.clientName,
-          totalRevenue: clientAnalytics.totalRevenue,
-          totalProjects: clientAnalytics.totalProjects,
-          lifetimeValue: clientAnalytics.lifetimeValue,
-          paymentScore: clientAnalytics.paymentScore,
+          clientId: clients.id,
+          clientName: clients.companyName,
+          totalRevenue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          totalProjects: count(projects.id),
+          lifetimeValue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          paymentScore: sql<number>`
+            CASE 
+              WHEN COUNT(${sow.id}) = 0 THEN 0
+              WHEN SUM(${sow.totalValue}) = 0 THEN 0
+              ELSE ROUND((SUM(${sow.paidAmount}) / SUM(${sow.totalValue})) * 100)
+            END
+          `,
         })
-        .from(clientAnalytics)
-        .orderBy(desc(clientAnalytics.lifetimeValue));
+        .from(clients)
+        .leftJoin(projects, eq(clients.id, projects.clientId))
+        .leftJoin(sow, eq(projects.id, sow.projectId))
+        .groupBy(clients.id, clients.companyName)
+        .orderBy(desc(sql`COALESCE(SUM(${sow.totalValue}), 0)`));
 
       if (clientId) {
-        const result = await baseQuery.where(eq(clientAnalytics.clientId, clientId));
-        // Map to ensure types match
+        const result = await baseQuery.where(eq(clients.id, clientId));
         if (result[0]) {
           return {
             clientId: result[0].clientId,
@@ -39,7 +48,15 @@ export class ClientAnalyticsService {
             paymentScore: Number(result[0].paymentScore || 0)
           };
         }
-        throw new Error('Client not found');
+        // Return zero values instead of throwing
+        return {
+          clientId: clientId,
+          clientName: 'Unknown Client',
+          totalRevenue: 0,
+          totalProjects: 0,
+          lifetimeValue: 0,
+          paymentScore: 0
+        };
       }
 
       const results = await baseQuery;
@@ -53,7 +70,8 @@ export class ClientAnalyticsService {
       }));
     } catch (error) {
       console.error('Failed to get client analytics:', error);
-      throw error;
+      // Return empty array or default structure instead of throwing
+      return [];
     }
   }
 
@@ -62,17 +80,27 @@ export class ClientAnalyticsService {
    */
   async getTopClients(limit: number = 10): Promise<ClientAnalyticsData[]> {
     try {
+      // Calculate real metrics and get top clients by revenue
       const results = await neonDb
         .select({
-          clientId: clientAnalytics.clientId,
-          clientName: clientAnalytics.clientName,
-          totalRevenue: clientAnalytics.totalRevenue,
-          totalProjects: clientAnalytics.totalProjects,
-          lifetimeValue: clientAnalytics.lifetimeValue,
-          paymentScore: clientAnalytics.paymentScore,
+          clientId: clients.id,
+          clientName: clients.companyName,
+          totalRevenue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          totalProjects: count(projects.id),
+          lifetimeValue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          paymentScore: sql<number>`
+            CASE 
+              WHEN COUNT(${sow.id}) = 0 THEN 0
+              WHEN SUM(${sow.totalValue}) = 0 THEN 0
+              ELSE ROUND((SUM(${sow.paidAmount}) / SUM(${sow.totalValue})) * 100)
+            END
+          `,
         })
-        .from(clientAnalytics)
-        .orderBy(desc(clientAnalytics.totalRevenue))
+        .from(clients)
+        .leftJoin(projects, eq(clients.id, projects.clientId))
+        .leftJoin(sow, eq(projects.id, sow.projectId))
+        .groupBy(clients.id, clients.companyName)
+        .orderBy(desc(sql`COALESCE(SUM(${sow.totalValue}), 0)`))
         .limit(limit);
       
       return results.map(row => ({
@@ -85,7 +113,8 @@ export class ClientAnalyticsService {
       }));
     } catch (error) {
       console.error('Failed to get top clients:', error);
-      throw error;
+      // Return empty array instead of throwing
+      return [];
     }
   }
 }

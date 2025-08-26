@@ -119,3 +119,40 @@ export function safeFormatDate(date: any, fallback: string = 'N/A'): string {
     return fallback;
   }
 }
+
+/**
+ * Format date for workflow components
+ */
+export function formatDate(date: any, fallback: string = 'N/A'): string {
+  return safeFormatDate(date, fallback);
+}
+
+/**
+ * Format duration in a human-readable format
+ */
+export function formatDuration(durationInDays: number): string {
+  if (durationInDays < 1) {
+    return '< 1 day';
+  }
+  
+  if (durationInDays === 1) {
+    return '1 day';
+  }
+  
+  if (durationInDays < 7) {
+    return `${Math.round(durationInDays)} days`;
+  }
+  
+  if (durationInDays < 30) {
+    const weeks = Math.round(durationInDays / 7);
+    return `${weeks} week${weeks !== 1 ? 's' : ''}`;
+  }
+  
+  if (durationInDays < 365) {
+    const months = Math.round(durationInDays / 30);
+    return `${months} month${months !== 1 ? 's' : ''}`;
+  }
+  
+  const years = Math.round(durationInDays / 365);
+  return `${years} year${years !== 1 ? 's' : ''}`;
+}

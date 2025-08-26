@@ -1,0 +1,2572 @@
+{
+  "config": {
+    "configFile": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\playwright.config.ts",
+    "rootDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\global-setup.ts",
+    "globalTeardown": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 11
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "dev-tools/testing/test-results/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "dev-tools/testing/test-results/results.xml"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 11
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 11
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 11
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 11
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 11
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 11
+        },
+        "id": "Tablet",
+        "name": "Tablet",
+        "testDir": "C:/Jarvis/AI Workspace/FibreFlow_React/dev-tools/testing/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 11,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:5174",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "security-audit.spec.ts",
+      "file": "security-audit.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Security Audit Tests",
+          "file": "security-audit.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "XSS Protection - Input Sanitization",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6432,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"<script>\"\u001b[39m\nReceived string:        \u001b[31m\"\u001b[7m<script>\u001b[27malert(\\\"XSS\\\")</script>\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"<script>\"\u001b[39m\nReceived string:        \u001b[31m\"\u001b[7m<script>\u001b[27malert(\\\"XSS\\\")</script>\"\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:40:31",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 31,
+                          "line": 40
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 38 |\u001b[39m             \u001b[90m// Check that dangerous content is escaped\u001b[39m\n \u001b[90m 39 |\u001b[39m             \u001b[36mconst\u001b[39m value \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m input\u001b[33m.\u001b[39minputValue()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 40 |\u001b[39m             expect(value)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContain(\u001b[32m'<script>'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 41 |\u001b[39m           }\n \u001b[90m 42 |\u001b[39m         }\n \u001b[90m 43 |\u001b[39m       }\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 31,
+                            "line": 40
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: not \u001b[32m\"<script>\"\u001b[39m\nReceived string:        \u001b[31m\"\u001b[7m<script>\u001b[27malert(\\\"XSS\\\")</script>\"\u001b[39m\n\n  38 |             // Check that dangerous content is escaped\n  39 |             const value = await input.inputValue();\n> 40 |             expect(value).not.toContain('<script>');\n     |                               ^\n  41 |           }\n  42 |         }\n  43 |       }\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:40:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:15.610Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-5f168-ection---Input-Sanitization-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 31,
+                        "line": 40
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-cacb075516e8870d4a13",
+              "file": "security-audit.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "Authentication State Management",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 30569,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_ABORTED at http://localhost:5176/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_ABORTED at http://localhost:5176/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:6:16",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 16,
+                          "line": 6
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 8 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 16,
+                            "line": 6
+                          },
+                          "message": "Error: page.goto: net::ERR_ABORTED at http://localhost:5176/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n\n\n  4 |   test.beforeEach(async ({ page }) => {\n  5 |     // Navigate to the application\n> 6 |     await page.goto('http://localhost:5176');\n    |                ^\n  7 |     await page.waitForLoadState('networkidle');\n  8 |   });\n  9 |\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:6:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:15.618Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-d7194-entication-State-Management-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-d7194-entication-State-Management-chromium\\video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 16,
+                        "line": 6
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-6cf07062a0467700808f",
+              "file": "security-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "Session Security - Token Storage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 5115,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Storage Security Check: {\n  localStorageKeys: [ \u001b[32m'fibreflow-theme-preference'\u001b[39m, \u001b[32m'fibreflow-sidebar-collapsed'\u001b[39m ],\n  sessionStorageKeys: [],\n  cookieCount: \u001b[33m0\u001b[39m,\n  hasPasswordInStorage: \u001b[33mfalse\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:15.639Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-2edaa3049e0f7d2f3e11",
+              "file": "security-audit.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "HTTPS Enforcement Check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 9263,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Current URL Protocol: http:\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:15.579Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-3137a560372f46700266",
+              "file": "security-audit.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Error Message Information Disclosure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 27156,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_ABORTED at http://localhost:5176/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_ABORTED at http://localhost:5176/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:6:16",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 16,
+                          "line": 6
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m   |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 8 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 9 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 16,
+                            "line": 6
+                          },
+                          "message": "Error: page.goto: net::ERR_ABORTED at http://localhost:5176/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n\n\n  4 |   test.beforeEach(async ({ page }) => {\n  5 |     // Navigate to the application\n> 6 |     await page.goto('http://localhost:5176');\n    |                ^\n  7 |     await page.waitForLoadState('networkidle');\n  8 |   });\n  9 |\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:6:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:15.686Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-6cc6b-sage-Information-Disclosure-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-6cc6b-sage-Information-Disclosure-chromium\\video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 16,
+                        "line": 6
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-5adbba15f6fa28a3b26e",
+              "file": "security-audit.spec.ts",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "Content Security Policy Headers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 24219,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Security Headers: {\n  csp: \u001b[90mundefined\u001b[39m,\n  xframe: \u001b[90mundefined\u001b[39m,\n  xss: \u001b[90mundefined\u001b[39m,\n  contentType: \u001b[90mundefined\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:16.182Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-f338e81b93fae93759f9",
+              "file": "security-audit.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "Firebase Security Rules Test",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 15630,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Firebase Access Test: { accessible: \u001b[33mfalse\u001b[39m, error: \u001b[32m'Firebase not initialized'\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:16.214Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-e3ff116ecfb4dfa09305",
+              "file": "security-audit.spec.ts",
+              "line": 144,
+              "column": 3
+            },
+            {
+              "title": "Authentication Bypass Attempts",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 25148,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Route /app/admin -> http://localhost:5176/app/admin\n"
+                        },
+                        {
+                          "text": "Route /app/settings -> http://localhost:5176/app/settings\n"
+                        },
+                        {
+                          "text": "Route /app/staff/create -> http://localhost:5176/app/staff/create\n"
+                        },
+                        {
+                          "text": "Route /app/projects/create -> http://localhost:5176/app/projects/create\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:16.002Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-0d05caa01448b0d042f1",
+              "file": "security-audit.spec.ts",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "Input Validation - SQL Injection Patterns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 8,
+                      "status": "passed",
+                      "duration": 14851,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:16.010Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-0d2ac5c11f034e856648",
+              "file": "security-audit.spec.ts",
+              "line": 184,
+              "column": 3
+            },
+            {
+              "title": "XSS Protection - Input Sanitization",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 9,
+                      "status": "timedOut",
+                      "duration": 30086,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Security Audit Tests'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Security Audit Tests', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     // Navigate to the application\n  6 |     await page.goto('http://localhost:5176');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: browserContext.newPage: Test timeout of 30000ms exceeded."
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:16.206Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-c7062c261fca700301d1",
+              "file": "security-audit.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "Authentication State Management",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 10,
+                      "status": "timedOut",
+                      "duration": 30231,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Security Audit Tests'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Security Audit Tests', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     // Navigate to the application\n  6 |     await page.goto('http://localhost:5176');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: browserContext.newPage: Test timeout of 30000ms exceeded."
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:16.054Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-2ba5b4bd052610259c47",
+              "file": "security-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "Session Security - Token Storage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 17337,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Storage Security Check: {\n  localStorageKeys: [ \u001b[32m'fibreflow-sidebar-collapsed'\u001b[39m, \u001b[32m'fibreflow-theme-preference'\u001b[39m ],\n  sessionStorageKeys: [],\n  cookieCount: \u001b[33m0\u001b[39m,\n  hasPasswordInStorage: \u001b[33mfalse\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:48.336Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-1bdf6cd5b27278383bba",
+              "file": "security-audit.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "HTTPS Enforcement Check",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 3,
+                      "status": "timedOut",
+                      "duration": 43799,
+                      "error": {
+                        "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 30000ms.\u001b[39m",
+                        "stack": "\u001b[31mTearing down \"context\" exceeded the test timeout of 30000ms.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTearing down \"context\" exceeded the test timeout of 30000ms.\u001b[39m"
+                        },
+                        {
+                          "message": "Error: browserContext.close: Test ended.\nBrowser logs:\n\n<launching> C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\firefox-1490\\firefox\\firefox.exe -no-remote -wait-for-browser -foreground -profile C:\\Users\\HEINVA~1\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-YEdZTm -juggler-pipe -silent\n<launched> pid=50240\n[pid=50240][err] JavaScript warning: resource://services-settings/Utils.sys.mjs, line 116: unreachable code after return statement\n[pid=50240][out] console.warn: services.settings: Ignoring preference override of remote settings server\n[pid=50240][out] console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment\n[pid=50240][out] \n[pid=50240][out] Juggler listening to the pipe\n[pid=50240][out] console.error: \"Warning: unrecognized command line flag\" \"-foreground\"\n[pid=50240][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]\n[pid=50240][out] console.error: services.settings: \n[pid=50240][out]   Message: EmptyDatabaseError: \"main/nimbus-desktop-experiments\" has not been synced yet\n[pid=50240][out]   Stack:\n[pid=50240][out]     EmptyDatabaseError@resource://services-settings/Database.sys.mjs:19:5\n[pid=50240][out] list@resource://services-settings/Database.sys.mjs:96:13\n[pid=50240][out] \n[pid=50240][out] console.error: services.settings: \n[pid=50240][out]   Message: EmptyDatabaseError: \"main/nimbus-secure-experiments\" has not been synced yet\n[pid=50240][out]   Stack:\n[pid=50240][out]     EmptyDatabaseError@resource://services-settings/Database.sys.mjs:19:5\n[pid=50240][out] list@resource://services-settings/Database.sys.mjs:96:13\n[pid=50240][out] \n[pid=50240][out] console.warn: services.settings: #fetchAttachment: Forcing fallbackToDump to false due to Utils.LOAD_DUMPS being false\n[pid=50240][out] console.error: (new NotFoundError(\"Could not find fa0fc42c-d91d-fca7-34eb-806ff46062dc in cache or dump\", \"resource://services-settings/Attachments.sys.mjs\", 48))\n[pid=50240][out] console.warn: \"Unable to find the attachment for\" \"fa0fc42c-d91d-fca7-34eb-806ff46062dc\"\n[pid=50240][err] JavaScript warning: http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c, line 3751: Script terminated by timeout at:\n[pid=50240][err] persistAppliedTransitions@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:3751:1\n[pid=50240][err] _saveAppliedTransitions@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:1241:68\n[pid=50240][err] EventListener.handleEvent*initialize@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:1242:20\n[pid=50240][err] createBrowserRouter@http://localhost:5176/node_modules/.vite/deps/react-router-dom.js?v=a21c786c:4961:6\n[pid=50240][err] @http://localhost:5176/src/app/router/index.tsx:31:35\n[pid=50240][err] \n[pid=50240][err] JavaScript error: chrome://juggler/content/content/Runtime.js, line 135: NS_ERROR_XPC_BAD_CONVERT_NATIVE: Could not convert Native argument arg 1 [nsIWindowMediator.getOuterWindowWithId]\n[pid=50240][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]\n[pid=50240][err] JavaScript error: chrome://juggler/content/Helper.js, line 82: NS_ERROR_FAILURE: Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIWebProgress.removeProgressListener]\n[pid=50240] <gracefully close start>\n[pid=50240] <kill>\n[pid=50240] <will force kill>"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "Current URL Protocol: http:\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:48.258Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Audit-Tests-HTTPS-Enforcement-Check-firefox\\test-failed-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-e08da644f6aff78ccf7a",
+              "file": "security-audit.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Error Message Information Disclosure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 8,
+                      "status": "timedOut",
+                      "duration": 30083,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Security Audit Tests'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Security Audit Tests', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     // Navigate to the application\n  6 |     await page.goto('http://localhost:5176');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: browserContext.newPage: Test timeout of 30000ms exceeded."
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:12.901Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-a1908ae065b88cd89e14",
+              "file": "security-audit.spec.ts",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "Content Security Policy Headers",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 6,
+                      "status": "timedOut",
+                      "duration": 30093,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Security Audit Tests'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Security Audit Tests', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     // Navigate to the application\n  6 |     await page.goto('http://localhost:5176');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: browserContext.newPage: Test timeout of 30000ms exceeded."
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:12.918Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-18f13181e90d008f25d0",
+              "file": "security-audit.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "Firebase Security Rules Test",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 5,
+                      "status": "timedOut",
+                      "duration": 30078,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Security Audit Tests'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Security Audit Tests', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     // Navigate to the application\n  6 |     await page.goto('http://localhost:5176');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8"
+                        },
+                        {
+                          "message": "Error: browserContext.newPage: Test timeout of 30000ms exceeded."
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:13.342Z",
+                      "annotations": [],
+                      "attachments": [],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-a459740d3d6accb159b6",
+              "file": "security-audit.spec.ts",
+              "line": 144,
+              "column": 3
+            },
+            {
+              "title": "Authentication Bypass Attempts",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:42:06.768Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-f1ea78d98a7c0a5f1860",
+              "file": "security-audit.spec.ts",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "Input Validation - SQL Injection Patterns",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 41592,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8",
+                        "location": {
+                          "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                          "column": 8,
+                          "line": 4
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 2 |\u001b[39m\n \u001b[90m 3 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Security Audit Tests'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 4 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m   |\u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 5 |\u001b[39m     \u001b[90m// Navigate to the application\u001b[39m\n \u001b[90m 6 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5176'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 7 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 8,
+                            "line": 4
+                          },
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded while running \"beforeEach\" hook.\u001b[39m\n\n  2 |\n  3 | test.describe('Security Audit Tests', () => {\n> 4 |   test.beforeEach(async ({ page }) => {\n    |        ^\n  5 |     // Navigate to the application\n  6 |     await page.goto('http://localhost:5176');\n  7 |     await page.waitForLoadState('networkidle');\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:4:8"
+                        },
+                        {
+                          "location": {
+                            "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                            "column": 16,
+                            "line": 6
+                          },
+                          "message": "Error: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5176/\", waiting until \"load\"\u001b[22m\n\n\n  4 |   test.beforeEach(async ({ page }) => {\n  5 |     // Navigate to the application\n> 6 |     await page.goto('http://localhost:5176');\n    |                ^\n  7 |     await page.waitForLoadState('networkidle');\n  8 |   });\n  9 |\n    at C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts:6:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:40:47.979Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\test-results\\security-audit-Security-Au-b77e1-on---SQL-Injection-Patterns-firefox\\video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Jarvis\\AI Workspace\\FibreFlow_React\\dev-tools\\testing\\tests\\e2e\\security-audit.spec.ts",
+                        "column": 8,
+                        "line": 4
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-d99ed51ece0f330c9a93",
+              "file": "security-audit.spec.ts",
+              "line": 184,
+              "column": 3
+            },
+            {
+              "title": "XSS Protection - Input Sanitization",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 10,
+                      "status": "failed",
+                      "duration": 18,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:12.667Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-80735fbd313bcd3ff019",
+              "file": "security-audit.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "Authentication State Management",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 9,
+                      "status": "failed",
+                      "duration": 9,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:12.853Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-e35931e02f7658ddd0b5",
+              "file": "security-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "Session Security - Token Storage",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 10,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:13.390Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-bfbda1f4d7dd02577bb5",
+              "file": "security-audit.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "HTTPS Enforcement Check",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 10,
+                      "status": "failed",
+                      "duration": 16,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:16.505Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-b660927e567be853d626",
+              "file": "security-audit.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Error Message Information Disclosure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 21,
+                      "parallelIndex": 9,
+                      "status": "failed",
+                      "duration": 12,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:16.229Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-634e32acdadfebeec90c",
+              "file": "security-audit.spec.ts",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "Content Security Policy Headers",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 13,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:16.817Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-b644ed8d4b08cf7b791e",
+              "file": "security-audit.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "Firebase Security Rules Test",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 9,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:19.038Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-82a0145d306129d5fe81",
+              "file": "security-audit.spec.ts",
+              "line": 144,
+              "column": 3
+            },
+            {
+              "title": "Authentication Bypass Attempts",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 9,
+                      "status": "failed",
+                      "duration": 11,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:19.824Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-7aaa5041f99346a4105d",
+              "file": "security-audit.spec.ts",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "Input Validation - SQL Injection Patterns",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 25,
+                      "parallelIndex": 10,
+                      "status": "failed",
+                      "duration": 16,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:20.378Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-d419af6f609613606d16",
+              "file": "security-audit.spec.ts",
+              "line": 184,
+              "column": 3
+            },
+            {
+              "title": "XSS Protection - Input Sanitization",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 7559,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:20.667Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-d3217cc4c1e44617bde2",
+              "file": "security-audit.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "Authentication State Management",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 6692,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Auth State: { isAuthenticated: \u001b[33mfalse\u001b[39m, userVisible: \u001b[33mfalse\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:22.502Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-edfb0f7382759789e7f3",
+              "file": "security-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "Session Security - Token Storage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 9,
+                      "status": "passed",
+                      "duration": 6065,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Storage Security Check: {\n  localStorageKeys: [ \u001b[32m'fibreflow-theme-preference'\u001b[39m, \u001b[32m'fibreflow-sidebar-collapsed'\u001b[39m ],\n  sessionStorageKeys: [],\n  cookieCount: \u001b[33m0\u001b[39m,\n  hasPasswordInStorage: \u001b[33mfalse\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:23.249Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-6bddd8e08bc6bdd272e5",
+              "file": "security-audit.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "HTTPS Enforcement Check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 10,
+                      "status": "passed",
+                      "duration": 7346,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Current URL Protocol: http:\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:24.042Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-c1d6b4588413160a5fc4",
+              "file": "security-audit.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Error Message Information Disclosure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 8090,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:29.063Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-315baa8c26e96093cdd2",
+              "file": "security-audit.spec.ts",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "Content Security Policy Headers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 6320,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Security Headers: {\n  csp: \u001b[90mundefined\u001b[39m,\n  xframe: \u001b[90mundefined\u001b[39m,\n  xss: \u001b[90mundefined\u001b[39m,\n  contentType: \u001b[90mundefined\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:30.175Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-a1e0b7a348070bf09a16",
+              "file": "security-audit.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "Firebase Security Rules Test",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 9,
+                      "status": "passed",
+                      "duration": 6488,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Firebase Access Test: { accessible: \u001b[33mfalse\u001b[39m, error: \u001b[32m'Firebase not initialized'\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:32.297Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-fb91334016364aad61b0",
+              "file": "security-audit.spec.ts",
+              "line": 144,
+              "column": 3
+            },
+            {
+              "title": "Authentication Bypass Attempts",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 10,
+                      "status": "passed",
+                      "duration": 14474,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Route /app/admin -> http://localhost:5176/app/admin\n"
+                        },
+                        {
+                          "text": "Route /app/settings -> http://localhost:5176/app/settings\n"
+                        },
+                        {
+                          "text": "Route /app/staff/create -> http://localhost:5176/app/staff/create\n"
+                        },
+                        {
+                          "text": "Route /app/projects/create -> http://localhost:5176/app/projects/create\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:33.079Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-047e8277945c821a605c",
+              "file": "security-audit.spec.ts",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "Input Validation - SQL Injection Patterns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 4257,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:36.535Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-e64a40d592c75003170b",
+              "file": "security-audit.spec.ts",
+              "line": 184,
+              "column": 3
+            },
+            {
+              "title": "XSS Protection - Input Sanitization",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:42:08.054Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-9d5ee37ad6543fc3167d",
+              "file": "security-audit.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "Authentication State Management",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:42:07.721Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-266189ad9c7a636c6f71",
+              "file": "security-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "Session Security - Token Storage",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 10,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:41.454Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-24199fc5ba5f2b9ef5e5",
+              "file": "security-audit.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "HTTPS Enforcement Check",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:42:07.068Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-712ba1d824b389230f2c",
+              "file": "security-audit.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Error Message Information Disclosure",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 31,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 11,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:43.964Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-c44cb085dc7f55bcf6b8",
+              "file": "security-audit.spec.ts",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "Content Security Policy Headers",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 32,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 8,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:46.346Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-7f6ccfef39403837897c",
+              "file": "security-audit.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "Firebase Security Rules Test",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 33,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 10,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:46.719Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-cc5d54858a05d68b9935",
+              "file": "security-audit.spec.ts",
+              "line": 144,
+              "column": 3
+            },
+            {
+              "title": "Authentication Bypass Attempts",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 34,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 8,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:48.809Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-07fbf360d97d09df7e55",
+              "file": "security-audit.spec.ts",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "Input Validation - SQL Injection Patterns",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 35,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 10,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at C:\\Users\\HeinvanVuuren\\AppData\\Local\\ms-playwright\\webkit-2203\\Playwright.exe\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:49.223Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-ef454f0ee759f04b5103",
+              "file": "security-audit.spec.ts",
+              "line": 184,
+              "column": 3
+            },
+            {
+              "title": "XSS Protection - Input Sanitization",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:42:08.497Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-985414e6b533401b931e",
+              "file": "security-audit.spec.ts",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "Authentication State Management",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 36,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5155,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Auth State: { isAuthenticated: \u001b[33mfalse\u001b[39m, userVisible: \u001b[33mfalse\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:51.592Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-c4572b75096f7ba14ef6",
+              "file": "security-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "Session Security - Token Storage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 37,
+                      "parallelIndex": 8,
+                      "status": "passed",
+                      "duration": 3289,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Storage Security Check: {\n  localStorageKeys: [ \u001b[32m'fibreflow-theme-preference'\u001b[39m, \u001b[32m'fibreflow-sidebar-collapsed'\u001b[39m ],\n  sessionStorageKeys: [],\n  cookieCount: \u001b[33m0\u001b[39m,\n  hasPasswordInStorage: \u001b[33mfalse\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:52.037Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-aeb1f9dcea0de428df18",
+              "file": "security-audit.spec.ts",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "HTTPS Enforcement Check",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 38,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 9132,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Current URL Protocol: http:\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:52.148Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-732526863839d0f17ca2",
+              "file": "security-audit.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Error Message Information Disclosure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 39,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 6699,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:52.313Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-0f7578ee4b14a4c8553f",
+              "file": "security-audit.spec.ts",
+              "line": 107,
+              "column": 3
+            },
+            {
+              "title": "Content Security Policy Headers",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 37,
+                      "parallelIndex": 8,
+                      "status": "passed",
+                      "duration": 2723,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Security Headers: {\n  csp: \u001b[90mundefined\u001b[39m,\n  xframe: \u001b[90mundefined\u001b[39m,\n  xss: \u001b[90mundefined\u001b[39m,\n  contentType: \u001b[90mundefined\u001b[39m\n}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:56.502Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-430230ddb72a31cfb4b3",
+              "file": "security-audit.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "Firebase Security Rules Test",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 36,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2655,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Firebase Access Test: { accessible: \u001b[33mfalse\u001b[39m, error: \u001b[32m'Firebase not initialized'\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:57.587Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-bf7cb4bfa10425c40323",
+              "file": "security-audit.spec.ts",
+              "line": 144,
+              "column": 3
+            },
+            {
+              "title": "Authentication Bypass Attempts",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 37,
+                      "parallelIndex": 8,
+                      "status": "passed",
+                      "duration": 7514,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Route /app/admin -> http://localhost:5176/app/admin\n"
+                        },
+                        {
+                          "text": "Route /app/settings -> http://localhost:5176/app/settings\n"
+                        },
+                        {
+                          "text": "Route /app/staff/create -> http://localhost:5176/app/staff/create\n"
+                        },
+                        {
+                          "text": "Route /app/projects/create -> http://localhost:5176/app/projects/create\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:41:59.252Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-ad6e7a6c080be46afc22",
+              "file": "security-audit.spec.ts",
+              "line": 163,
+              "column": 3
+            },
+            {
+              "title": "Input Validation - SQL Injection Patterns",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Tablet",
+                  "projectName": "Tablet",
+                  "results": [
+                    {
+                      "workerIndex": 39,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 10990,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-25T18:42:00.010Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "23b3bf561920a839d2d5-71aef962249b5ddd8ed1",
+              "file": "security-audit.spec.ts",
+              "line": 184,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-08-25T18:40:10.770Z",
+    "duration": 3654423.94,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 30,
+    "flaky": 0
+  }
+}

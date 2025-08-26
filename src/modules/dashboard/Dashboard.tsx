@@ -8,17 +8,7 @@ import { getMainDashboardCards } from '@/config/dashboards/dashboardConfigs';
 import { useAuth } from '@/contexts/AuthContext';
 import { Permission } from '@/types/auth.types';
 
-// Mock data for development - will be replaced with real data services
-const mockStats = {
-  totalProjects: 12,
-  activeProjects: 7,
-  completedTasks: 234,
-  teamMembers: 45,
-  completionRate: 67.5,
-  issuesOpen: 8,
-  deliveriesThisMonth: 156,
-  polesInstalled: 1247,
-};
+// 🟢 WORKING: All data from real database sources - zero mock data
 
 export function Dashboard() {
   const { currentUser, hasPermission } = useAuth();
@@ -47,84 +37,72 @@ export function Dashboard() {
     { formatNumber, formatCurrency, formatPercentage }
   );
 
+  // 🟢 WORKING: Use real data from database hook (dashboardCards already uses real data)
   const statsCards = [
     {
       title: 'Active Projects',
-      value: mockStats.activeProjects,
+      value: stats.activeProjects,
       icon: FolderOpen,
-      description: `${mockStats.totalProjects} total projects`,
-      trend: {
-        value: 12.5,
-        isPositive: true,
+      description: `${stats.totalProjects || 0} total projects`,
+      trend: trends?.activeProjects ? {
+        value: trends.activeProjects.percentage,
+        isPositive: trends.activeProjects.direction === 'up',
         label: 'vs last month',
-      },
+      } : { value: 0, isPositive: true, label: 'no trend data' },
       variant: 'primary' as const,
       requiredPermissions: [Permission.PROJECTS_READ],
     },
     {
       title: 'Team Members',
-      value: mockStats.teamMembers,
+      value: stats.teamMembers,
       icon: Users,
-      description: 'Across all projects',
-      trend: {
-        value: 8.3,
-        isPositive: true,
-        label: 'new this month',
-      },
+      description: 'Active staff members',
+      trend: trends?.teamMembers ? {
+        value: trends.teamMembers.percentage,
+        isPositive: trends.teamMembers.direction === 'up',
+        label: 'change this month',
+      } : { value: 0, isPositive: true, label: 'no trend data' },
       variant: 'success' as const,
       requiredPermissions: [Permission.STAFF_READ],
     },
     {
       title: 'Tasks Completed',
-      value: mockStats.completedTasks,
+      value: stats.completedTasks,
       icon: CheckCircle,
-      description: `${mockStats.completionRate}% completion rate`,
-      trend: {
-        value: 5.2,
-        isPositive: true,
+      description: stats.completedTasks > 0 ? 'From all projects' : 'No tasks tracked yet',
+      trend: trends?.completedTasks ? {
+        value: trends.completedTasks.percentage,
+        isPositive: trends.completedTasks.direction === 'up',
         label: 'vs last week',
-      },
+      } : { value: 0, isPositive: true, label: 'no trend data' },
       variant: 'success' as const,
       requiredPermissions: [Permission.PROJECTS_READ],
     },
     {
       title: 'Open Issues',
-      value: mockStats.issuesOpen,
+      value: stats.openIssues,
       icon: AlertTriangle,
-      description: '3 high priority',
-      trend: {
-        value: 2.1,
-        isPositive: false,
+      description: stats.openIssues === 0 ? 'No issues found' : 'Issues tracked',
+      trend: trends?.openIssues ? {
+        value: trends.openIssues.percentage,
+        isPositive: trends.openIssues.direction === 'down', // Down is good for issues
         label: 'requires attention',
-      },
-      variant: 'warning' as const,
+      } : { value: 0, isPositive: true, label: 'no trend data' },
+      variant: stats.openIssues > 0 ? 'warning' : 'success',
       requiredPermissions: [Permission.VIEW_COMMUNICATIONS],
     },
     {
       title: 'Poles Installed',
-      value: mockStats.polesInstalled,
+      value: stats.polesInstalled,
       icon: MapPin,
-      description: 'This quarter',
-      trend: {
-        value: 15.7,
-        isPositive: true,
-        label: 'ahead of target',
-      },
+      description: stats.polesInstalled === 0 ? 'No installations tracked' : 'Infrastructure deployed',
+      trend: trends?.polesInstalled ? {
+        value: trends.polesInstalled.percentage,
+        isPositive: trends.polesInstalled.direction === 'up',
+        label: 'infrastructure growth',
+      } : { value: 0, isPositive: true, label: 'no trend data' },
       variant: 'primary' as const,
       requiredPermissions: [Permission.PROJECTS_READ],
-    },
-    {
-      title: 'Material Deliveries',
-      value: mockStats.deliveriesThisMonth,
-      icon: Package,
-      description: 'This month',
-      trend: {
-        value: 4.2,
-        isPositive: true,
-        label: 'vs last month',
-      },
-      variant: 'default' as const,
-      requiredPermissions: [Permission.VIEW_PROCUREMENT],
     },
   ];
 
@@ -215,20 +193,28 @@ export function Dashboard() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-surface-secondary rounded-lg p-4">
-              <div className="text-2xl font-bold text-success-600">94.2%</div>
+              <div className="text-2xl font-bold text-success-600">
+                {stats.qualityScore > 0 ? formatPercentage(stats.qualityScore) : '0%'}
+              </div>
               <div className="text-sm text-text-secondary">Quality Score</div>
             </div>
             <div className="bg-surface-secondary rounded-lg p-4">
-              <div className="text-2xl font-bold text-primary-600">87%</div>
+              <div className="text-2xl font-bold text-primary-600">
+                {stats.onTimeDelivery > 0 ? formatPercentage(stats.onTimeDelivery) : '0%'}
+              </div>
               <div className="text-sm text-text-secondary">On-Time Delivery</div>
             </div>
             <div className="bg-surface-secondary rounded-lg p-4">
-              <div className="text-2xl font-bold text-warning-600">15.3</div>
-              <div className="text-sm text-text-secondary">Avg. Task Time (hrs)</div>
+              <div className="text-2xl font-bold text-warning-600">
+                {stats.performanceScore > 0 ? formatPercentage(stats.performanceScore) : '0%'}
+              </div>
+              <div className="text-sm text-text-secondary">Performance Score</div>
             </div>
             <div className="bg-surface-secondary rounded-lg p-4">
-              <div className="text-2xl font-bold text-info-600">R2.4M</div>
-              <div className="text-sm text-text-secondary">Revenue This Month</div>
+              <div className="text-2xl font-bold text-info-600">
+                {stats.totalRevenue > 0 ? formatCurrency(stats.totalRevenue) : 'R0'}
+              </div>
+              <div className="text-sm text-text-secondary">Total Revenue</div>
             </div>
           </div>
         </div>
