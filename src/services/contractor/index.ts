@@ -10,6 +10,7 @@ export * from './contractorDocumentService';
 export * from './contractorOnboardingService';
 export * from './contractorTeamService';
 export * from './ragScoringService';
+export * from './rateCardApiService';
 
 // Export sub-modules
 export * from './compliance';

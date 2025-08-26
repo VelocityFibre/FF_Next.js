@@ -1040,3 +1040,155 @@ export const workflowExecutionLog = pgTable("workflow_execution_log", {
 		name: "workflow_log_actor_fkey"
 	}),
 ]);
+
+// Service Templates - Hierarchical structure for services and deliverables
+export const serviceTemplates = pgTable("service_templates", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	description: text(),
+	category: varchar({ length: 100 }).notNull(), // 'deliverable', 'service'
+	parentId: uuid("parent_id"), // For hierarchical structure (deliverable -> services)
+	level: integer().default(0), // 0 = deliverable, 1 = service
+	code: varchar({ length: 50 }), // Unique service/deliverable code
+	unit: varchar({ length: 50 }), // Unit of measurement
+	baseRate: numeric("base_rate", { precision: 15, scale: 2 }), // Default/template rate
+	currency: varchar({ length: 3 }).default('ZAR'),
+	isActive: boolean("is_active").default(true),
+	orderIndex: integer("order_index").default(0),
+	kpiMetrics: json("kpi_metrics"), // Associated KPI metrics
+	specifications: json(), // Service specifications
+	qualityStandards: json("quality_standards"), // Quality requirements
+	createdBy: varchar("created_by", { length: 255 }),
+	updatedBy: varchar("updated_by", { length: 255 }),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_service_templates_category").using("btree", table.category.asc().nullsLast().op("text_ops")),
+	index("idx_service_templates_parent").using("btree", table.parentId.asc().nullsLast().op("uuid_ops")),
+	index("idx_service_templates_level").using("btree", table.level.asc().nullsLast().op("int4_ops")),
+	foreignKey({
+		columns: [table.parentId],
+		foreignColumns: [table.id],
+		name: "service_templates_parent_id_fkey"
+	}),
+	unique("service_templates_code_key").on(table.code),
+]);
+
+// Contractor Rate Cards - Rate card headers for contractors
+export const contractorRateCards = pgTable("contractor_rate_cards", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	contractorId: uuid("contractor_id").notNull(),
+	name: varchar({ length: 255 }).notNull(),
+	description: text(),
+	status: varchar({ length: 20 }).default('draft'), // 'draft', 'active', 'archived'
+	effectiveDate: timestamp("effective_date", { mode: 'string' }).notNull(),
+	expiryDate: timestamp("expiry_date", { mode: 'string' }),
+	isDefault: boolean("is_default").default(false),
+	approvalStatus: varchar("approval_status", { length: 20 }).default('pending'), // 'pending', 'approved', 'rejected'
+	approvedBy: varchar("approved_by", { length: 255 }),
+	approvedAt: timestamp("approved_at", { mode: 'string' }),
+	rejectedBy: varchar("rejected_by", { length: 255 }),
+	rejectedAt: timestamp("rejected_at", { mode: 'string' }),
+	rejectionReason: text("rejection_reason"),
+	totalServices: integer("total_services").default(0),
+	totalValue: numeric("total_value", { precision: 15, scale: 2 }),
+	currency: varchar({ length: 3 }).default('ZAR'),
+	notes: text(),
+	metadata: json(),
+	createdBy: varchar("created_by", { length: 255 }),
+	updatedBy: varchar("updated_by", { length: 255 }),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_rate_cards_contractor").using("btree", table.contractorId.asc().nullsLast().op("uuid_ops")),
+	index("idx_rate_cards_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
+	index("idx_rate_cards_effective_date").using("btree", table.effectiveDate.asc().nullsLast().op("timestamp_ops")),
+	foreignKey({
+		columns: [table.contractorId],
+		foreignColumns: [contractors.id],
+		name: "contractor_rate_cards_contractor_id_fkey"
+	}).onDelete("cascade"),
+]);
+
+// Contractor Rate Items - Individual service rates within rate cards
+export const contractorRateItems = pgTable("contractor_rate_items", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	rateCardId: uuid("rate_card_id").notNull(),
+	contractorId: uuid("contractor_id").notNull(),
+	serviceTemplateId: uuid("service_template_id").notNull(),
+	serviceCode: varchar("service_code", { length: 50 }),
+	serviceName: varchar("service_name", { length: 255 }).notNull(),
+	category: varchar({ length: 100 }), // 'deliverable', 'service'
+	unit: varchar({ length: 50 }).notNull(),
+	rate: numeric({ precision: 15, scale: 2 }).notNull(),
+	minimumQuantity: numeric("minimum_quantity", { precision: 15, scale: 4 }),
+	maximumQuantity: numeric("maximum_quantity", { precision: 15, scale: 4 }),
+	overheadPercentage: numeric("overhead_percentage", { precision: 5, scale: 2 }),
+	profitMargin: numeric("profit_margin", { precision: 5, scale: 2 }),
+	discountTiers: json("discount_tiers"), // Volume discount tiers
+	specialConditions: text("special_conditions"),
+	isNegotiable: boolean("is_negotiable").default(false),
+	competitorRates: json("competitor_rates"), // Benchmark rates for comparison
+	lastReviewedAt: timestamp("last_reviewed_at", { mode: 'string' }),
+	notes: text(),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+	index("idx_rate_items_card").using("btree", table.rateCardId.asc().nullsLast().op("uuid_ops")),
+	index("idx_rate_items_contractor").using("btree", table.contractorId.asc().nullsLast().op("uuid_ops")),
+	index("idx_rate_items_service").using("btree", table.serviceTemplateId.asc().nullsLast().op("uuid_ops")),
+	foreignKey({
+		columns: [table.rateCardId],
+		foreignColumns: [contractorRateCards.id],
+		name: "contractor_rate_items_rate_card_id_fkey"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.contractorId],
+		foreignColumns: [contractors.id],
+		name: "contractor_rate_items_contractor_id_fkey"
+	}),
+	foreignKey({
+		columns: [table.serviceTemplateId],
+		foreignColumns: [serviceTemplates.id],
+		name: "contractor_rate_items_service_template_id_fkey"
+	}),
+	unique("contractor_rate_items_unique").on(table.rateCardId, table.serviceTemplateId),
+]);
+
+// Contractor Rate History - Track rate changes over time
+export const contractorRateHistory = pgTable("contractor_rate_history", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	rateItemId: uuid("rate_item_id").notNull(),
+	contractorId: uuid("contractor_id").notNull(),
+	serviceTemplateId: uuid("service_template_id").notNull(),
+	changeType: varchar("change_type", { length: 50 }).notNull(), // 'created', 'updated', 'deleted'
+	oldRate: numeric("old_rate", { precision: 15, scale: 2 }),
+	newRate: numeric("new_rate", { precision: 15, scale: 2 }),
+	changeReason: varchar("change_reason", { length: 100 }),
+	changeDescription: text("change_description"),
+	approvedBy: varchar("approved_by", { length: 255 }),
+	changedBy: varchar("changed_by", { length: 255 }).notNull(),
+	changedAt: timestamp("changed_at", { mode: 'string' }).defaultNow().notNull(),
+	effectiveFrom: timestamp("effective_from", { mode: 'string' }).notNull(),
+	effectiveUntil: timestamp("effective_until", { mode: 'string' }),
+	metadata: json(), // Additional change metadata
+}, (table) => [
+	index("idx_rate_history_item").using("btree", table.rateItemId.asc().nullsLast().op("uuid_ops")),
+	index("idx_rate_history_contractor").using("btree", table.contractorId.asc().nullsLast().op("uuid_ops")),
+	index("idx_rate_history_changed_at").using("btree", table.changedAt.asc().nullsLast().op("timestamp_ops")),
+	foreignKey({
+		columns: [table.rateItemId],
+		foreignColumns: [contractorRateItems.id],
+		name: "contractor_rate_history_rate_item_id_fkey"
+	}).onDelete("cascade"),
+	foreignKey({
+		columns: [table.contractorId],
+		foreignColumns: [contractors.id],
+		name: "contractor_rate_history_contractor_id_fkey"
+	}),
+	foreignKey({
+		columns: [table.serviceTemplateId],
+		foreignColumns: [serviceTemplates.id],
+		name: "contractor_rate_history_service_template_id_fkey"
+	}),
+]);

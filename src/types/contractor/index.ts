@@ -37,3 +37,6 @@ export * from './applications.types';
 
 // Import types
 export * from './import.types';
+
+// Rate card types
+export * from './ratecard.types';

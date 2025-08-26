@@ -9,7 +9,7 @@ import { contractorService } from '@/services/contractorService';
 import { Contractor } from '@/types/contractor.types';
 import toast from 'react-hot-toast';
 
-export type TabType = 'overview' | 'teams' | 'assignments' | 'documents' | 'onboarding' | 'compliance';
+export type TabType = 'overview' | 'teams' | 'assignments' | 'documents' | 'onboarding' | 'compliance' | 'ratecards';
 
 export function useContractorView() {
   const navigate = useNavigate();

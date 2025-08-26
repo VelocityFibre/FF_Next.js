@@ -11,6 +11,7 @@ import { AssignmentManagement } from '../assignments/AssignmentManagement';
 import { DocumentManagement } from '../documents/DocumentManagement';
 import { EnhancedOnboardingWorkflow } from '../onboarding/EnhancedOnboardingWorkflow';
 import { ComplianceDashboard } from '../compliance/ComplianceDashboard';
+import { RateCardManagement } from '../RateCardManagement';
 
 interface TabContentProps {
   activeTab: TabType;
@@ -59,6 +60,13 @@ export function TabContent({ activeTab, contractor }: TabContentProps) {
         <ComplianceDashboard 
           contractorId={contractor.id} 
           contractorName={contractor.companyName} 
+        />
+      );
+    
+    case 'ratecards':
+      return (
+        <RateCardManagement 
+          contractorId={contractor.id} 
         />
       );
     

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import { VFLogoUpload } from '@/components/settings/VFLogoUpload';
-import { Palette, Moon, Sun, Settings2, GitBranch } from 'lucide-react';
+import { ServiceTemplatesTab } from '@/components/settings/ServiceTemplatesTab';
+import { Palette, Moon, Sun, Settings2, GitBranch, FileText } from 'lucide-react';
 
-type SettingsTab = 'general' | 'workflow';
+type SettingsTab = 'general' | 'workflow' | 'templates';
 
 export function Settings() {
   const { themeConfig, setTheme, availableThemes } = useTheme();
@@ -13,7 +14,8 @@ export function Settings() {
 
   const tabs = [
     { id: 'general', label: 'General', icon: Settings2 },
-    { id: 'workflow', label: 'Workflow Management', icon: GitBranch }
+    { id: 'workflow', label: 'Workflow Management', icon: GitBranch },
+    { id: 'templates', label: 'Service Templates', icon: FileText }
   ] as const;
 
   const handleWorkflowManagement = () => {
@@ -147,6 +149,9 @@ export function Settings() {
             </div>
           </div>
         );
+
+      case 'templates':
+        return <ServiceTemplatesTab />;
 
       default:
         return null;
