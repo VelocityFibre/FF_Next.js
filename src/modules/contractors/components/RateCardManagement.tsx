@@ -29,7 +29,8 @@ import {
   RateCardManagementProps 
 } from '@/types/contractor';
 import { RateCardApiService } from '@/services/contractor';
-import { formatDate, formatCurrency } from '@/utils/dateHelpers';
+import { formatDate } from '@/utils/dateHelpers';
+import { formatCurrency } from '@/lib/utils';
 
 // 🟢 WORKING: Main Rate Card Management Component
 export function RateCardManagement({ 
