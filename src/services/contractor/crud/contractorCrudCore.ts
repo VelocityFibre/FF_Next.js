@@ -10,6 +10,9 @@ import {
   ContractorFilter,
   ContractorAnalytics
 } from '@/types/contractor.types';
+// Import Neon service as primary database
+import { contractorNeonService } from '../contractorNeonService';
+// Keep Firebase operations for backward compatibility/migration
 import {
   getAllContractorsFromFirebase,
   getContractorByIdFromFirebase,
@@ -17,12 +20,6 @@ import {
   updateContractorInFirebase,
   deleteContractorFromFirebase
 } from './firebaseOperations';
-import {
-  createContractorInNeon,
-  updateContractorInNeon,
-  deleteContractorFromNeon,
-  getContractorAnalytics
-} from './neonOperations';
 import {
   subscribeToContractors,
   subscribeToContractor
@@ -41,23 +38,11 @@ export class ContractorCrudCore {
    */
   async getAll(filter?: ContractorFilter): Promise<Contractor[]> {
     try {
-      let contractors = await getAllContractorsFromFirebase(filter);
-      
-      // Apply client-side filters
-      contractors = applyClientSideFilters(contractors, filter);
-      
-      // Apply sorting if specified
-      if (filter?.sortBy) {
-        contractors = sortContractors(
-          contractors, 
-          filter.sortBy as keyof Contractor, 
-          filter.sortOrder || 'asc'
-        );
-      }
-      
+      // Use Neon as primary database
+      const contractors = await contractorNeonService.getAll(filter);
       return contractors;
     } catch (error) {
-      console.error('Error getting contractors:', error);
+      console.error('Error getting contractors from Neon:', error);
       throw new Error('Failed to fetch contractors');
     }
   }

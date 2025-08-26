@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Contractor Upload</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; background: #f0f0f0; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        textarea { width: 100%; height: 100px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Contractor Upload Test</h1>
+    
+    <div>
+        <h3>Step 1: Create Test CSV Content</h3>
+        <textarea id="csvContent" placeholder="CSV content will be generated here..."></textarea>
+        <br>
+        <button onclick="generateTestCSV()">Generate Test CSV</button>
+        <button onclick="downloadTestCSV()">Download Test CSV</button>
+    </div>
+    
+    <div>
+        <h3>Step 2: Test CSV Parsing</h3>
+        <button onclick="testCSVParsing()">Test CSV Parsing Logic</button>
+    </div>
+    
+    <div>
+        <h3>Step 3: Manual Upload Test</h3>
+        <p>1. Download the test CSV above</p>
+        <p>2. Open <a href="http://localhost:5175/app/contractors" target="_blank">Contractors Page</a></p>
+        <p>3. Click "Import" button and upload the test CSV</p>
+        <p>4. Verify that records are parsed correctly</p>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        const csvTextarea = document.getElementById('csvContent');
+        
+        function addResult(message, isSuccess = true) {
+            const div = document.createElement('div');
+            div.className = `result ${isSuccess ? 'success' : 'error'}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+        }
+        
+        function generateTestCSV() {
+            const csvContent = `Company Name*,Trading Name,Contact Person*,Email*,Registration Number*,Phone,Business Type*,Services,Website,Address 1,Address 2,Suburb,City,Province*,Postal Code,Country,Region of Operations
+Alpha Construction Ltd,Alpha Contractors,John Smith,john@alphaconstruction.com,2021/123456/07,0123456789,Pty Ltd,"Fibre Installation, Network Maintenance",https://www.alphaconstruction.com,123 Main Street,Unit 5A,Sandton,Johannesburg,Gauteng,2196,South Africa,"Gauteng, Western Cape"
+Beta Networks CC,,Jane Doe,jane@betanetworks.co.za,2020/987654/23,0987654321,CC,"Fibre Splicing, Network Testing",https://betanetworks.co.za,456 Oak Avenue,,Claremont,Cape Town,Western Cape,7708,South Africa,"Western Cape, Eastern Cape"
+Gamma Trust,GT Solutions,Mike Johnson,mike@gammatrust.org.za,2019/555444/08,+27116667777,Trust,"Trenching, Civil Construction",https://gammatrust.org.za,789 Pine Road,Suite 12B,Durban North,Durban,KwaZulu-Natal,4051,South Africa,KwaZulu-Natal`;
+            
+            csvTextarea.value = csvContent;
+            addResult('✅ Test CSV content generated');
+        }
+        
+        function downloadTestCSV() {
+            const content = csvTextarea.value || generateTestCSVContent();
+            const blob = new Blob([content], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'test-contractors.csv';
+            link.click();
+            window.URL.revokeObjectURL(url);
+            addResult('✅ Test CSV file downloaded');
+        }
+        
+        function generateTestCSVContent() {
+            return `Company Name*,Trading Name,Contact Person*,Email*,Registration Number*,Phone,Business Type*,Services,Website,Address 1,Address 2,Suburb,City,Province*,Postal Code,Country,Region of Operations
+Alpha Construction Ltd,Alpha Contractors,John Smith,john@alphaconstruction.com,2021/123456/07,0123456789,Pty Ltd,"Fibre Installation, Network Maintenance",https://www.alphaconstruction.com,123 Main Street,Unit 5A,Sandton,Johannesburg,Gauteng,2196,South Africa,"Gauteng, Western Cape"
+Beta Networks CC,,Jane Doe,jane@betanetworks.co.za,2020/987654/23,0987654321,CC,"Fibre Splicing, Network Testing",https://betanetworks.co.za,456 Oak Avenue,,Claremont,Cape Town,Western Cape,7708,South Africa,"Western Cape, Eastern Cape"
+Gamma Trust,GT Solutions,Mike Johnson,mike@gammatrust.org.za,2019/555444/08,+27116667777,Trust,"Trenching, Civil Construction",https://gammatrust.org.za,789 Pine Road,Suite 12B,Durban North,Durban,KwaZulu-Natal,4051,South Africa,KwaZulu-Natal`;
+        }
+        
+        function testCSVParsing() {
+            try {
+                const csvContent = csvTextarea.value || generateTestCSVContent();
+                const lines = csvContent.split('\\n').map(line => line.trim()).filter(line => line.length > 0);
+                
+                addResult(`📄 Total lines in CSV: ${lines.length}`);
+                
+                // Parse headers
+                const headers = parseCsvLine(lines[0]);
+                addResult(`📋 Headers found: ${headers.length} columns`);
+                addResult(`🔍 First 5 headers: ${headers.slice(0, 5).join(', ')}`);
+                
+                // Parse data rows
+                const dataRows = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = parseCsvLine(lines[i]);
+                    dataRows.push({
+                        companyName: values[0],
+                        contactPerson: values[2],
+                        email: values[3],
+                        businessType: values[6],
+                        services: values[7]
+                    });
+                }
+                
+                addResult(`✅ Successfully parsed ${dataRows.length} contractor records`);
+                
+                dataRows.forEach((row, index) => {
+                    addResult(`📊 Row ${index + 1}: ${row.companyName} | ${row.contactPerson} | ${row.businessType}`);
+                });
+                
+                addResult('🎉 CSV parsing test completed successfully!');
+                
+            } catch (error) {
+                addResult(`❌ CSV parsing failed: ${error.message}`, false);
+            }
+        }
+        
+        function parseCsvLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            values.push(current.trim());
+            return values;
+        }
+        
+        // Auto-generate CSV on load
+        document.addEventListener('DOMContentLoaded', () => {
+            addResult('Test page loaded - ready to test contractor upload');
+            generateTestCSV();
+        });
+    </script>
+</body>
+</html>

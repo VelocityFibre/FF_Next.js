@@ -1,0 +1,375 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - navigation [ref=e6]:
+        - img "Logo" [ref=e11]
+        - generic [ref=e13]:
+          - generic [ref=e15]: DU
+          - generic [ref=e16]:
+            - generic [ref=e17]: Development User
+            - generic [ref=e18]: SUPER ADMIN
+        - generic [ref=e19]:
+          - generic [ref=e20]: MAIN
+          - generic [ref=e21]:
+            - link "Dashboard" [ref=e22] [cursor=pointer]:
+              - /url: /app/dashboard
+              - img [ref=e23] [cursor=pointer]
+              - generic [ref=e28] [cursor=pointer]: Dashboard
+            - link "Meetings" [ref=e29] [cursor=pointer]:
+              - /url: /app/meetings
+              - img [ref=e30] [cursor=pointer]
+              - generic [ref=e35] [cursor=pointer]: Meetings
+            - link "Action Items" [ref=e36] [cursor=pointer]:
+              - /url: /app/action-items
+              - img [ref=e37] [cursor=pointer]
+              - generic [ref=e40] [cursor=pointer]: Action Items
+        - generic [ref=e41]:
+          - generic [ref=e42]: PROJECT MANAGEMENT
+          - generic [ref=e43]:
+            - link "Projects" [ref=e44] [cursor=pointer]:
+              - /url: /app/projects
+              - img [ref=e45] [cursor=pointer]
+              - generic [ref=e47] [cursor=pointer]: Projects
+            - link "Pole Capture" [ref=e48] [cursor=pointer]:
+              - /url: /app/pole-capture
+              - img [ref=e49] [cursor=pointer]
+              - generic [ref=e52] [cursor=pointer]: Pole Capture
+            - link "Fiber Stringing" [ref=e53] [cursor=pointer]:
+              - /url: /app/fiber-stringing
+              - img [ref=e54] [cursor=pointer]
+              - generic [ref=e58] [cursor=pointer]: Fiber Stringing
+            - link "Drops Management" [ref=e59] [cursor=pointer]:
+              - /url: /app/drops
+              - img [ref=e60] [cursor=pointer]
+              - generic [ref=e63] [cursor=pointer]: Drops Management
+            - link "SOW Management" [ref=e64] [cursor=pointer]:
+              - /url: /app/sow-management
+              - img [ref=e65] [cursor=pointer]
+              - generic [ref=e68] [cursor=pointer]: SOW Management
+            - link "Home Installations" [ref=e69] [cursor=pointer]:
+              - /url: /app/installations
+              - img [ref=e70] [cursor=pointer]
+              - generic [ref=e73] [cursor=pointer]: Home Installations
+            - link "Task Management" [ref=e74] [cursor=pointer]:
+              - /url: /app/tasks
+              - img [ref=e75] [cursor=pointer]
+              - generic [ref=e78] [cursor=pointer]: Task Management
+            - link "Daily Progress" [ref=e79] [cursor=pointer]:
+              - /url: /app/daily-progress
+              - img [ref=e80] [cursor=pointer]
+              - generic [ref=e82] [cursor=pointer]: Daily Progress
+        - generic [ref=e83]:
+          - generic [ref=e84]: PEOPLE & MANAGEMENT
+          - generic [ref=e85]:
+            - link "Clients" [ref=e86] [cursor=pointer]:
+              - /url: /app/clients
+              - img [ref=e87] [cursor=pointer]
+              - generic [ref=e92] [cursor=pointer]: Clients
+            - link "Staff" [ref=e93] [cursor=pointer]:
+              - /url: /app/staff
+              - img [ref=e94] [cursor=pointer]
+              - generic [ref=e99] [cursor=pointer]: Staff
+        - generic [ref=e100]:
+          - generic [ref=e101]: PROCUREMENT
+          - generic [ref=e102]:
+            - link "Procurement Portal" [ref=e103] [cursor=pointer]:
+              - /url: /app/procurement
+              - img [ref=e104] [cursor=pointer]
+              - generic [ref=e108] [cursor=pointer]: Procurement Portal
+            - link "Suppliers Portal" [ref=e109] [cursor=pointer]:
+              - /url: /app/suppliers
+              - img [ref=e110] [cursor=pointer]
+              - generic [ref=e115] [cursor=pointer]: Suppliers Portal
+        - generic [ref=e116]:
+          - generic [ref=e117]: CONTRACTORS
+          - link "Contractors Portal" [ref=e119] [cursor=pointer]:
+            - /url: /app/contractors
+            - img [ref=e120] [cursor=pointer]
+            - generic [ref=e123] [cursor=pointer]: Contractors Portal
+        - generic [ref=e124]:
+          - generic [ref=e125]: ANALYTICS
+          - generic [ref=e126]:
+            - link "Analytics Dashboard" [ref=e127] [cursor=pointer]:
+              - /url: /app/analytics
+              - img [ref=e128] [cursor=pointer]
+              - generic [ref=e130] [cursor=pointer]: Analytics Dashboard
+            - link "Enhanced KPIs" [ref=e131] [cursor=pointer]:
+              - /url: /app/enhanced-kpis
+              - img [ref=e132] [cursor=pointer]
+              - generic [ref=e135] [cursor=pointer]: Enhanced KPIs
+            - link "KPI Dashboard" [ref=e136] [cursor=pointer]:
+              - /url: /app/kpi-dashboard
+              - img [ref=e137] [cursor=pointer]
+              - generic [ref=e139] [cursor=pointer]: KPI Dashboard
+            - link "Reports" [ref=e140] [cursor=pointer]:
+              - /url: /app/reports
+              - img [ref=e141] [cursor=pointer]
+              - generic [ref=e144] [cursor=pointer]: Reports
+        - generic [ref=e145]:
+          - generic [ref=e146]: COMMUNICATIONS
+          - generic [ref=e147]:
+            - link "Communications Portal" [ref=e148] [cursor=pointer]:
+              - /url: /app/communications
+              - img [ref=e149] [cursor=pointer]
+              - generic [ref=e151] [cursor=pointer]: Communications Portal
+            - link "Meetings" [ref=e152] [cursor=pointer]:
+              - /url: /app/meetings
+              - img [ref=e153] [cursor=pointer]
+              - generic [ref=e158] [cursor=pointer]: Meetings
+            - link "Action Items" [ref=e159] [cursor=pointer]:
+              - /url: /app/action-items
+              - img [ref=e160] [cursor=pointer]
+              - generic [ref=e163] [cursor=pointer]: Action Items
+        - generic [ref=e164]:
+          - generic [ref=e165]: FIELD OPERATIONS
+          - generic [ref=e166]:
+            - link "Field App Portal" [ref=e167] [cursor=pointer]:
+              - /url: /app/field
+              - img [ref=e168] [cursor=pointer]
+              - generic [ref=e170] [cursor=pointer]: Field App Portal
+            - link "OneMap Data Grid" [ref=e171] [cursor=pointer]:
+              - /url: /app/onemap
+              - img [ref=e172] [cursor=pointer]
+              - generic [ref=e175] [cursor=pointer]: OneMap Data Grid
+            - link "Nokia Equipment" [ref=e176] [cursor=pointer]:
+              - /url: /app/nokia-equipment
+              - img [ref=e177] [cursor=pointer]
+              - generic [ref=e179] [cursor=pointer]: Nokia Equipment
+        - generic [ref=e180]:
+          - generic [ref=e181]: SYSTEM
+          - link "Settings" [ref=e183] [cursor=pointer]:
+            - /url: /app/settings
+            - img [ref=e184] [cursor=pointer]
+            - generic [ref=e187] [cursor=pointer]: Settings
+      - button "Collapse" [ref=e189] [cursor=pointer]:
+        - img [ref=e190] [cursor=pointer]
+        - generic [ref=e192] [cursor=pointer]: Collapse
+  - generic [ref=e193]:
+    - banner [ref=e194]:
+      - generic [ref=e196]:
+        - generic [ref=e198]:
+          - navigation [ref=e199]:
+            - link "Home" [ref=e201] [cursor=pointer]:
+              - /url: /app/dashboard
+            - generic [ref=e202]:
+              - img [ref=e203]
+              - generic [ref=e205]: Contractors
+          - heading "Contractors" [level=1] [ref=e206]
+        - generic [ref=e207]:
+          - generic [ref=e208]:
+            - textbox "Search projects, clients..." [ref=e209]
+            - img [ref=e210]
+          - 'button "Current theme: Light" [ref=e214] [cursor=pointer]':
+            - img [ref=e215] [cursor=pointer]
+          - button "Sync data" [ref=e221] [cursor=pointer]:
+            - img [ref=e222] [cursor=pointer]
+          - button "2" [ref=e228] [cursor=pointer]:
+            - img [ref=e229] [cursor=pointer]
+            - generic [ref=e232] [cursor=pointer]: "2"
+          - button "DU Development User SUPER ADMIN" [ref=e234] [cursor=pointer]:
+            - generic [ref=e236] [cursor=pointer]: DU
+            - generic [ref=e237] [cursor=pointer]:
+              - paragraph [ref=e238] [cursor=pointer]: Development User
+              - paragraph [ref=e239] [cursor=pointer]: SUPER ADMIN
+    - main [ref=e240]:
+      - generic [ref=e242]:
+        - generic [ref=e244]:
+          - generic [ref=e245]:
+            - heading "Contractors Dashboard" [level=1] [ref=e246]
+            - paragraph [ref=e247]: Manage contractor relationships and performance
+          - generic [ref=e248]:
+            - button "Add Contractor" [ref=e249] [cursor=pointer]:
+              - img [ref=e250] [cursor=pointer]
+              - text: Add Contractor
+            - button "Import Contractors" [active] [ref=e253] [cursor=pointer]:
+              - img [ref=e254] [cursor=pointer]
+              - text: Import Contractors
+            - button "Export Report" [ref=e257] [cursor=pointer]:
+              - img [ref=e258] [cursor=pointer]
+              - text: Export Report
+            - button "Refresh Data" [ref=e261] [cursor=pointer]:
+              - img [ref=e262] [cursor=pointer]
+              - text: Refresh Data
+        - navigation [ref=e268]:
+          - button "Overview" [ref=e269] [cursor=pointer]
+          - button "Active Contractors" [ref=e270] [cursor=pointer]
+          - button "Pending Applications" [ref=e271] [cursor=pointer]
+          - button "Document Approval" [ref=e272] [cursor=pointer]
+          - button "Performance Analytics" [ref=e273] [cursor=pointer]
+        - generic [ref=e274]:
+          - generic [ref=e277] [cursor=pointer]:
+            - generic [ref=e278] [cursor=pointer]:
+              - generic [ref=e279] [cursor=pointer]:
+                - heading "Active Contractors" [level=3] [ref=e280] [cursor=pointer]
+                - paragraph [ref=e281] [cursor=pointer]: Currently working
+              - img [ref=e283] [cursor=pointer]
+            - generic [ref=e287] [cursor=pointer]:
+              - generic [ref=e289] [cursor=pointer]: "0"
+              - paragraph [ref=e291] [cursor=pointer]: Contractors actively on projects
+          - generic [ref=e294] [cursor=pointer]:
+            - generic [ref=e295] [cursor=pointer]:
+              - generic [ref=e296] [cursor=pointer]:
+                - heading "Pending Applications" [level=3] [ref=e297] [cursor=pointer]
+                - paragraph [ref=e298] [cursor=pointer]: Awaiting approval
+              - img [ref=e300] [cursor=pointer]
+            - generic [ref=e303] [cursor=pointer]:
+              - generic [ref=e305] [cursor=pointer]: "0"
+              - paragraph [ref=e307] [cursor=pointer]: New contractor applications
+          - generic [ref=e310] [cursor=pointer]:
+            - generic [ref=e311] [cursor=pointer]:
+              - generic [ref=e312] [cursor=pointer]:
+                - heading "Performance Score" [level=3] [ref=e313] [cursor=pointer]
+                - paragraph [ref=e314] [cursor=pointer]: Average rating
+              - img [ref=e316] [cursor=pointer]
+            - generic [ref=e319] [cursor=pointer]:
+              - generic [ref=e321] [cursor=pointer]: 0.0%
+              - paragraph [ref=e323] [cursor=pointer]: Overall contractor performance
+          - generic [ref=e326] [cursor=pointer]:
+            - generic [ref=e327] [cursor=pointer]:
+              - generic [ref=e328] [cursor=pointer]:
+                - heading "Quality Score" [level=3] [ref=e329] [cursor=pointer]
+                - paragraph [ref=e330] [cursor=pointer]: Quality metrics
+              - img [ref=e332] [cursor=pointer]
+            - generic [ref=e335] [cursor=pointer]:
+              - generic [ref=e337] [cursor=pointer]: 0.0%
+              - paragraph [ref=e339] [cursor=pointer]: Work quality assessment
+          - generic [ref=e342] [cursor=pointer]:
+            - generic [ref=e343] [cursor=pointer]:
+              - generic [ref=e344] [cursor=pointer]:
+                - heading "On-Time Delivery" [level=3] [ref=e345] [cursor=pointer]
+                - paragraph [ref=e346] [cursor=pointer]: Schedule adherence
+              - img [ref=e348] [cursor=pointer]
+            - generic [ref=e350] [cursor=pointer]:
+              - generic [ref=e352] [cursor=pointer]: 0.0%
+              - paragraph [ref=e354] [cursor=pointer]: Projects completed on time
+          - generic [ref=e357] [cursor=pointer]:
+            - generic [ref=e358] [cursor=pointer]:
+              - generic [ref=e359] [cursor=pointer]:
+                - heading "Total Projects" [level=3] [ref=e360] [cursor=pointer]
+                - paragraph [ref=e361] [cursor=pointer]: All assignments
+              - img [ref=e363] [cursor=pointer]
+            - generic [ref=e365] [cursor=pointer]:
+              - generic [ref=e367] [cursor=pointer]: "0"
+              - paragraph [ref=e369] [cursor=pointer]: Total project assignments
+        - generic [ref=e370]:
+          - generic [ref=e372]:
+            - heading "Top Performers" [level=3] [ref=e373]
+            - generic [ref=e374]:
+              - generic [ref=e375]:
+                - generic [ref=e376]:
+                  - paragraph [ref=e377]: Alpha Construction
+                  - paragraph [ref=e378]: 12 active projects
+                - generic [ref=e379]:
+                  - paragraph [ref=e380]: 96%
+                  - paragraph [ref=e381]: Performance
+              - generic [ref=e382]:
+                - generic [ref=e383]:
+                  - paragraph [ref=e384]: Beta Networks
+                  - paragraph [ref=e385]: 8 active projects
+                - generic [ref=e386]:
+                  - paragraph [ref=e387]: 92%
+                  - paragraph [ref=e388]: Performance
+              - generic [ref=e389]:
+                - generic [ref=e390]:
+                  - paragraph [ref=e391]: Gamma Solutions
+                  - paragraph [ref=e392]: 15 active projects
+                - generic [ref=e393]:
+                  - paragraph [ref=e394]: 89%
+                  - paragraph [ref=e395]: Performance
+          - generic [ref=e397]:
+            - heading "Recent Activities" [level=3] [ref=e398]
+            - generic [ref=e399]:
+              - generic [ref=e402]:
+                - paragraph [ref=e403]: New contractor application
+                - paragraph [ref=e404]: 2 hours ago
+              - generic [ref=e407]:
+                - paragraph [ref=e408]: Performance review completed
+                - paragraph [ref=e409]: 5 hours ago
+              - generic [ref=e412]:
+                - paragraph [ref=e413]: Contract renewal approved
+                - paragraph [ref=e414]: 1 day ago
+        - generic [ref=e418]:
+          - generic [ref=e419]:
+            - generic [ref=e420]:
+              - heading "Import Contractors" [level=3] [ref=e421]
+              - paragraph [ref=e422]: Upload CSV or Excel files to bulk import contractor data
+            - button [ref=e423] [cursor=pointer]:
+              - img [ref=e424] [cursor=pointer]
+          - generic [ref=e427]:
+            - generic [ref=e428]:
+              - generic [ref=e429]:
+                - generic [ref=e430]:
+                  - button "Choose File" [ref=e431] [cursor=pointer]
+                  - generic [ref=e432]:
+                    - img [ref=e433]
+                    - generic [ref=e436]:
+                      - paragraph [ref=e437]: Drop files here or click to browse
+                      - paragraph [ref=e438]: CSV, Excel (.xlsx, .xls) files up to 50MB
+                - generic [ref=e439]:
+                  - paragraph [ref=e440]: "Supported formats:"
+                  - list [ref=e441]:
+                    - listitem [ref=e442]: • CSV files (.csv)
+                    - listitem [ref=e443]: • Excel files (.xlsx, .xls)
+                    - listitem [ref=e444]: "• Maximum file size: 50MB"
+              - button "Download CSV Template" [ref=e446] [cursor=pointer]
+            - generic [ref=e448]:
+              - generic [ref=e450]:
+                - img [ref=e451]
+                - generic [ref=e453]:
+                  - heading "Import Requirements" [level=4] [ref=e454]
+                  - paragraph [ref=e456]: "Your file should contain contractor information with the following required fields:"
+              - generic [ref=e457]:
+                - generic [ref=e458]:
+                  - heading "Required Fields" [level=5] [ref=e459]
+                  - list [ref=e460]:
+                    - listitem [ref=e461]:
+                      - img [ref=e462]
+                      - text: Company Name
+                    - listitem [ref=e465]:
+                      - img [ref=e466]
+                      - text: Contact Person
+                    - listitem [ref=e469]:
+                      - img [ref=e470]
+                      - text: Email Address
+                    - listitem [ref=e473]:
+                      - img [ref=e474]
+                      - text: Registration Number
+                - generic [ref=e477]:
+                  - heading "Optional Fields" [level=5] [ref=e478]
+                  - generic [ref=e479]:
+                    - generic [ref=e480]: • Phone Number
+                    - generic [ref=e481]: • Business Type
+                    - generic [ref=e482]: • Industry
+                    - generic [ref=e483]: • Website
+                    - generic [ref=e484]: • Address
+                    - generic [ref=e485]: • City, State
+                    - generic [ref=e486]: • License Number
+                    - generic [ref=e487]: • Years in Business
+                - generic [ref=e488]:
+                  - heading "Tips for Success" [level=5] [ref=e489]
+                  - list [ref=e490]:
+                    - listitem [ref=e491]: • Use the first row for column headers
+                    - listitem [ref=e492]: • Ensure required fields are not empty
+                    - listitem [ref=e493]: • Valid email addresses are required
+                    - listitem [ref=e494]: • Registration numbers should be unique
+                    - listitem [ref=e495]: • Remove any merged cells in Excel files
+          - button "Cancel" [ref=e497] [cursor=pointer]
+    - contentinfo [ref=e498]:
+      - generic [ref=e499]:
+        - generic [ref=e501]: © 2025 FibreFlow. All rights reserved.
+        - generic [ref=e502]:
+          - generic [ref=e505]: System Online
+          - generic [ref=e506]:
+            - img [ref=e507]
+            - generic [ref=e509]: Secure Connection
+          - generic [ref=e510]:
+            - img [ref=e511]
+            - generic [ref=e513]: React v18.3+
+        - generic [ref=e515]:
+          - generic [ref=e516]: Migrated to React with
+          - img [ref=e517]
+          - generic [ref=e519]: by VF Team
+```

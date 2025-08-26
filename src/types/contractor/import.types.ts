@@ -14,45 +14,49 @@ export interface ContractorImportData {
   };
 }
 
+// Business type options (South African legal entities)
+export type BusinessType = 'Pty Ltd' | 'CC' | 'Trust' | 'Sole Proprietor';
+
+// South African provinces
+export type SAProvince = 
+  | 'Eastern Cape'
+  | 'Free State'
+  | 'Gauteng'
+  | 'KwaZulu-Natal'
+  | 'Limpopo'
+  | 'Mpumalanga'
+  | 'Northern Cape'
+  | 'North West'
+  | 'Western Cape';
+
 // Individual contractor row in import
 export interface ContractorImportRow {
-  // Core identification
-  companyName: string;
-  contactPerson: string;
-  email: string;
-  registrationNumber: string;
+  // Core identification (required fields marked with *)
+  companyName: string; // Company Name*
+  tradingName?: string; // Trading Name
+  contactPerson: string; // Contact Person*
+  email: string; // Email*
+  registrationNumber: string; // Registration Number*
   
   // Contact information
-  phone?: string;
-  alternatePhone?: string;
-  website?: string;
+  phone?: string; // Phone
   
   // Business details
-  businessType?: string;
-  industry?: string;
-  specializations?: string;
-  yearsInBusiness?: number;
-  employeeCount?: number;
+  businessType?: BusinessType; // Business Type (dropdown)
+  services?: string[]; // Services (multi-select, linked to service templates)
+  website?: string; // Website
   
-  // Address information
-  address?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
+  // Address information (from CSV columns)
+  address1?: string; // Address 1
+  address2?: string; // Address 2
+  suburb?: string; // Suburb
+  city?: string; // City
+  province?: SAProvince; // Province (dropdown)
+  postalCode?: string; // Postal Code
+  country?: string; // Country (defaults to South Africa)
   
-  // Financial & legal
-  annualTurnover?: number;
-  creditRating?: string;
-  paymentTerms?: string;
-  licenseNumber?: string;
-  insuranceDetails?: string;
-  bankDetails?: string;
-  
-  // Additional data
-  certifications?: string;
-  notes?: string;
-  tags?: string;
+  // Region of operations (multi-select provinces)
+  regionOfOperations?: SAProvince[]; // Region of Operations
   
   // Import metadata
   rowNumber: number;
