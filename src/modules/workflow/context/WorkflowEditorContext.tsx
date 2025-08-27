@@ -12,8 +12,7 @@ import type {
   UpdateWorkflowPhaseRequest,
   UpdateWorkflowStepRequest,
   UpdateWorkflowTaskRequest,
-  WorkflowValidationResult,
-  BulkUpdateOrderRequest
+  WorkflowValidationResult
 } from '../types/workflow.types';
 
 // Editor-specific types
@@ -50,9 +49,9 @@ export interface EditorSettings {
 }
 
 export interface EditorHistory {
-  past: EditorState[];
-  present: EditorState;
-  future: EditorState[];
+  past: WorkflowEditorState[];
+  present: WorkflowEditorState;
+  future: WorkflowEditorState[];
   canUndo: boolean;
   canRedo: boolean;
 }
@@ -183,8 +182,10 @@ function workflowEditorReducer(
   action: WorkflowEditorAction
 ): WorkflowEditorState {
   switch (action.type) {
-    case 'LOAD_TEMPLATE_START':
-      return { ...state, isLoading: true, error: undefined };
+    case 'LOAD_TEMPLATE_START': {
+      const { error: _error, ...stateWithoutError } = state;
+      return { ...stateWithoutError, isLoading: true };
+    }
     
     case 'LOAD_TEMPLATE_SUCCESS':
       return {
@@ -300,19 +301,21 @@ function workflowEditorReducer(
       };
     
     case 'UPDATE_DRAG':
+      if (!state.dragState) {
+        return state;
+      }
       return {
         ...state,
-        dragState: state.dragState
-          ? { ...state.dragState, currentPosition: action.payload }
-          : undefined
+        dragState: { ...state.dragState, currentPosition: action.payload }
       };
     
-    case 'END_DRAG':
+    case 'END_DRAG': {
+      const { dragState: _dragState, ...stateWithoutDragState } = state;
       return {
-        ...state,
-        isDragging: false,
-        dragState: undefined
+        ...stateWithoutDragState,
+        isDragging: false
       };
+    }
     
     case 'ADD_CONNECTION':
       return {
@@ -372,11 +375,10 @@ function workflowEditorReducer(
         editingItem: action.payload
       };
     
-    case 'STOP_EDITING_ITEM':
-      return {
-        ...state,
-        editingItem: undefined
-      };
+    case 'STOP_EDITING_ITEM': {
+      const { editingItem: _editingItem, ...stateWithoutEditingItem } = state;
+      return stateWithoutEditingItem;
+    }
     
     case 'COPY_TO_CLIPBOARD':
       return {
@@ -384,11 +386,10 @@ function workflowEditorReducer(
         clipboard: action.payload
       };
     
-    case 'CLEAR_CLIPBOARD':
-      return {
-        ...state,
-        clipboard: undefined
-      };
+    case 'CLEAR_CLIPBOARD': {
+      const { clipboard: _clipboard, ...stateWithoutClipboard } = state;
+      return stateWithoutClipboard;
+    }
     
     case 'MARK_UNSAVED_CHANGES':
       return {
@@ -604,6 +605,7 @@ export function WorkflowEditorProvider({ children }: WorkflowEditorProviderProps
 
       return () => clearTimeout(autoSaveTimeout);
     }
+    return undefined;
   }, [state.settings.autoSave, state.hasUnsavedChanges, state.currentTemplate, saveTemplate]);
 
   // Create new template
@@ -618,12 +620,13 @@ export function WorkflowEditorProvider({ children }: WorkflowEditorProviderProps
       type,
       position,
       data: {} as any, // Will be filled when created
-      parentId,
-      isSelected: true
+      ...(parentId ? { parentId } : {}),
+      isSelected: true,
+      ...(type === 'phase' ? { isExpanded: true } : {})
     };
 
     dispatch({ type: 'ADD_NODE', payload: newNode });
-    dispatch({ type: 'START_EDITING_ITEM', payload: { type, parentId } });
+    dispatch({ type: 'START_EDITING_ITEM', payload: { type, ...(parentId ? { parentId } : {}) } });
   }, []);
 
   const updateNode = useCallback((id: string, updates: Partial<EditorNode>) => {
@@ -716,42 +719,49 @@ export function WorkflowEditorProvider({ children }: WorkflowEditorProviderProps
 
   // CRUD operations
   const startEditingItem = useCallback((type: 'phase' | 'step' | 'task', id?: string, parentId?: string) => {
-    dispatch({ type: 'START_EDITING_ITEM', payload: { type, id, parentId } });
+    dispatch({ 
+      type: 'START_EDITING_ITEM', 
+      payload: { 
+        type, 
+        ...(id ? { id } : {}),
+        ...(parentId ? { parentId } : {})
+      } 
+    });
   }, []);
 
   const stopEditingItem = useCallback(() => {
     dispatch({ type: 'STOP_EDITING_ITEM' });
   }, []);
 
-  const createPhase = useCallback(async (data: CreateWorkflowPhaseRequest) => {
+  const createPhase = useCallback(async (_data: CreateWorkflowPhaseRequest) => {
     // TODO: Implement phase creation and node update
     dispatch({ type: 'MARK_UNSAVED_CHANGES' });
   }, []);
 
-  const createStep = useCallback(async (data: CreateWorkflowStepRequest) => {
+  const createStep = useCallback(async (_data: CreateWorkflowStepRequest) => {
     // TODO: Implement step creation and node update
     dispatch({ type: 'MARK_UNSAVED_CHANGES' });
   }, []);
 
-  const createTask = useCallback(async (data: CreateWorkflowTaskRequest) => {
+  const createTask = useCallback(async (_data: CreateWorkflowTaskRequest) => {
     // TODO: Implement task creation and node update
     dispatch({ type: 'MARK_UNSAVED_CHANGES' });
   }, []);
 
-  const updatePhase = useCallback(async (id: string, data: UpdateWorkflowPhaseRequest) => {
+  const updatePhase = useCallback(async (_id: string, _data: UpdateWorkflowPhaseRequest) => {
     // TODO: Implement phase update and node sync
     dispatch({ type: 'MARK_UNSAVED_CHANGES' });
   }, []);
 
-  const updateStep = useCallback(async (id: string, data: UpdateWorkflowStepRequest) => {
+  const updateStep = useCallback(async (_id: string, _data: UpdateWorkflowStepRequest) => {
     // TODO: Implement step update and node sync
     dispatch({ type: 'MARK_UNSAVED_CHANGES' });
   }, []);
 
-  const updateTask = useCallback(async (id: string, data: UpdateWorkflowTaskRequest) => {
+  const updateTask = useCallback(async (_id: string, _data: UpdateWorkflowTaskRequest) => {
     // TODO: Implement task update and node sync
     dispatch({ type: 'MARK_UNSAVED_CHANGES' });
-  }, []);
+  }, []); 
 
   // Clipboard functions
   const copyToClipboard = useCallback((type: 'phase' | 'step' | 'task', data: any) => {

@@ -97,8 +97,8 @@ Please describe what you were doing when this error occurred:
 
       // Default error UI
       return (
-        <div className="min-h-screen bg-background-secondary flex items-center justify-center p-4">
-          <div className="max-w-lg w-full bg-surface-primary rounded-lg shadow-xl border border-border-primary p-8">
+        <div className="min-h-screen bg-[var(--ff-background-secondary)] flex items-center justify-center p-4">
+          <div className="max-w-lg w-full bg-[var(--ff-surface-primary)] rounded-lg shadow-xl border border-[var(--ff-border-primary)] p-8">
             {/* Error Icon */}
             <div className="flex justify-center mb-6">
               <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center">
@@ -108,30 +108,30 @@ Please describe what you were doing when this error occurred:
 
             {/* Error Message */}
             <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-text-primary mb-2">
+              <h1 className="text-2xl font-bold text-[var(--ff-text-primary)] mb-2">
                 Something went wrong
               </h1>
-              <p className="text-text-secondary mb-4">
+              <p className="text-[var(--ff-text-secondary)] mb-4">
                 We're sorry, but something unexpected happened. The error has been logged and we'll look into it.
               </p>
 
               {/* Error Details (Development only) */}
               {import.meta.env.DEV && this.state.error && (
-                <details className="mt-4 p-4 bg-surface-secondary rounded-lg border border-border-secondary text-left">
-                  <summary className="cursor-pointer font-medium text-text-primary mb-2">
+                <details className="mt-4 p-4 bg-[var(--ff-surface-secondary)] rounded-lg border border-[var(--ff-border-secondary)] text-left">
+                  <summary className="cursor-pointer font-medium text-[var(--ff-text-primary)] mb-2">
                     Error Details (Development)
                   </summary>
-                  <div className="text-sm text-text-secondary space-y-2">
+                  <div className="text-sm text-[var(--ff-text-secondary)] space-y-2">
                     <div>
                       <strong>Message:</strong>
-                      <pre className="mt-1 p-2 bg-background-tertiary rounded text-xs overflow-auto">
+                      <pre className="mt-1 p-2 bg-[var(--ff-background-tertiary)] rounded text-xs overflow-auto">
                         {this.state.error.message}
                       </pre>
                     </div>
                     {this.state.error.stack && (
                       <div>
                         <strong>Stack Trace:</strong>
-                        <pre className="mt-1 p-2 bg-background-tertiary rounded text-xs overflow-auto max-h-32">
+                        <pre className="mt-1 p-2 bg-[var(--ff-background-tertiary)] rounded text-xs overflow-auto max-h-32">
                           {this.state.error.stack}
                         </pre>
                       </div>
@@ -139,7 +139,7 @@ Please describe what you were doing when this error occurred:
                     {this.state.errorInfo?.componentStack && (
                       <div>
                         <strong>Component Stack:</strong>
-                        <pre className="mt-1 p-2 bg-background-tertiary rounded text-xs overflow-auto max-h-32">
+                        <pre className="mt-1 p-2 bg-[var(--ff-background-tertiary)] rounded text-xs overflow-auto max-h-32">
                           {this.state.errorInfo.componentStack}
                         </pre>
                       </div>
@@ -162,7 +162,7 @@ Please describe what you were doing when this error occurred:
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={this.handleGoHome}
-                  className="bg-surface-secondary hover:bg-surface-tertiary text-text-primary font-medium py-2 px-4 rounded-lg border border-border-primary transition-colors duration-200 flex items-center justify-center space-x-2"
+                  className="bg-[var(--ff-surface-secondary)] hover:bg-[var(--ff-surface-tertiary)] text-[var(--ff-text-primary)] font-medium py-2 px-4 rounded-lg border border-[var(--ff-border-primary)] transition-colors duration-200 flex items-center justify-center space-x-2"
                 >
                   <Home className="w-4 h-4" />
                   <span>Go Home</span>
@@ -170,7 +170,7 @@ Please describe what you were doing when this error occurred:
 
                 <button
                   onClick={this.handleReportError}
-                  className="bg-surface-secondary hover:bg-surface-tertiary text-text-primary font-medium py-2 px-4 rounded-lg border border-border-primary transition-colors duration-200 flex items-center justify-center space-x-2"
+                  className="bg-[var(--ff-surface-secondary)] hover:bg-[var(--ff-surface-tertiary)] text-[var(--ff-text-primary)] font-medium py-2 px-4 rounded-lg border border-[var(--ff-border-primary)] transition-colors duration-200 flex items-center justify-center space-x-2"
                 >
                   <Mail className="w-4 h-4" />
                   <span>Report</span>
@@ -179,7 +179,7 @@ Please describe what you were doing when this error occurred:
             </div>
 
             {/* Additional Help */}
-            <div className="mt-6 text-center text-sm text-text-tertiary">
+            <div className="mt-6 text-center text-sm text-[var(--ff-text-tertiary)]">
               <p>If this problem persists, please contact support with the error report.</p>
             </div>
           </div>

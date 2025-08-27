@@ -23,7 +23,6 @@ import BOQOverview from './dashboard/BOQOverview';
 import { DashboardView, RecentActivity, BOQDashboardProps } from './dashboard/BOQDashboardTypes';
 import { getStatusColor, formatRelativeTime } from './dashboard/BOQDashboardUtils';
 import { BOQDataLoader } from './dashboard/BOQDataLoader';
-import { log } from '@/lib/logger';
 
 export default function BOQDashboard({ className }: BOQDashboardProps) {
   const { context } = useProcurementContext();

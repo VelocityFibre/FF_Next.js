@@ -6,19 +6,28 @@ import { ContractorStatus, RAGScore } from './base.types';
 import { AssignmentStatus } from './assignment.types';
 
 export interface ContractorFilter {
+  // Search and filtering
+  search?: string;
   searchTerm?: string;
-  status?: ContractorStatus[];
-  complianceStatus?: string[];
-  ragOverall?: RAGScore[];
-  businessType?: string[];
-  province?: string[];
+  includeInactive?: boolean;
+  status?: ContractorStatus | ContractorStatus[];
+  complianceStatus?: string | string[];
+  ragOverall?: RAGScore | RAGScore[];
+  businessType?: string | string[];
+  province?: string | string[];
   city?: string[];
   industryCategory?: string[];
   hasActiveProjects?: boolean;
   documentsExpiring?: boolean;
   tags?: string[];
+  
+  // Sorting
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  
+  // Pagination
+  limit?: number;
+  offset?: number;
 }
 
 export interface TeamFilter {

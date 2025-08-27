@@ -6,7 +6,6 @@ import { CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { BOQItem } from '@/types/procurement/boq.types';
 import { VisibleColumns } from './BOQViewerTypes';
 import toast from 'react-hot-toast';
-import { log } from '@/lib/logger';
 
 /**
  * Get status badge styling

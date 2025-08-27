@@ -3,6 +3,7 @@
  * Simple test to verify database connections
  */
 
+import 'dotenv/config';
 import { neonUtils } from '../src/lib/neon/connection';
 
 async function quickTest() {
@@ -59,7 +60,7 @@ async function quickTest() {
   ];
   
   envVars.forEach(varName => {
-    const value = process.env[varName] || import.meta.env?.[varName];
+    const value = process.env[varName];
     const status = value ? '✅' : '❌';
     const display = value ? (value.length > 50 ? value.substring(0, 47) + '...' : value) : 'Not set';
     console.log(`   ${status} ${varName}: ${display}`);

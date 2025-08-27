@@ -17,34 +17,34 @@ interface StatsCardProps {
 
 const variantClasses = {
   default: {
-    card: 'bg-surface-primary border-border-primary',
+    card: 'bg-[var(--ff-surface-primary)] border-[var(--ff-border-primary)]',
     icon: 'bg-neutral-100 text-neutral-600',
-    value: 'text-text-primary',
-    title: 'text-text-secondary',
+    value: 'text-[var(--ff-text-primary)]',
+    title: 'text-[var(--ff-text-secondary)]',
   },
   primary: {
-    card: 'bg-surface-primary border-primary-200',
+    card: 'bg-[var(--ff-surface-primary)] border-primary-200',
     icon: 'bg-primary-100 text-primary-600',
-    value: 'text-text-primary',
-    title: 'text-text-secondary',
+    value: 'text-[var(--ff-text-primary)]',
+    title: 'text-[var(--ff-text-secondary)]',
   },
   success: {
-    card: 'bg-surface-primary border-success-200',
+    card: 'bg-[var(--ff-surface-primary)] border-success-200',
     icon: 'bg-success-100 text-success-600',
-    value: 'text-text-primary',
-    title: 'text-text-secondary',
+    value: 'text-[var(--ff-text-primary)]',
+    title: 'text-[var(--ff-text-secondary)]',
   },
   warning: {
-    card: 'bg-surface-primary border-warning-200',
+    card: 'bg-[var(--ff-surface-primary)] border-warning-200',
     icon: 'bg-warning-100 text-warning-600',
-    value: 'text-text-primary',
-    title: 'text-text-secondary',
+    value: 'text-[var(--ff-text-primary)]',
+    title: 'text-[var(--ff-text-secondary)]',
   },
   error: {
-    card: 'bg-surface-primary border-error-200',
+    card: 'bg-[var(--ff-surface-primary)] border-error-200',
     icon: 'bg-error-100 text-error-600',
-    value: 'text-text-primary',
-    title: 'text-text-secondary',
+    value: 'text-[var(--ff-text-primary)]',
+    title: 'text-[var(--ff-text-secondary)]',
   },
 };
 
@@ -102,7 +102,7 @@ export function StatsCard({
             )}
           </div>
           {(description || trend?.label) && (
-            <p className="text-xs text-text-tertiary">
+            <p className="text-xs text-[var(--ff-text-tertiary)]">
               {trend?.label || description}
             </p>
           )}

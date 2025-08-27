@@ -36,10 +36,11 @@ export function SidebarHeader({ isCollapsed, currentUser, sidebarStyles, themeCo
           /* Collapsed view - centered avatar with tooltip */
           <div className="flex justify-center">
             <div 
-              className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0 relative group cursor-pointer"
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 relative group cursor-pointer"
+              style={{ backgroundColor: 'var(--ff-primary-500)' }}
               title={`${getUserName(currentUser)} - ${getUserRole(currentUser)}`}
             >
-              <span className="text-white font-semibold text-sm">
+              <span className="font-semibold text-sm" style={{ color: 'var(--ff-text-inverse)' }}>
                 {getUserInitials(currentUser)}
               </span>
               
@@ -60,8 +61,11 @@ export function SidebarHeader({ isCollapsed, currentUser, sidebarStyles, themeCo
         ) : (
           /* Expanded view - full user info */
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-semibold text-sm">
+            <div 
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" 
+              style={{ backgroundColor: 'var(--ff-primary-500)' }}
+            >
+              <span className="font-semibold text-sm" style={{ color: 'var(--ff-text-inverse)' }}>
                 {getUserInitials(currentUser)}
               </span>
             </div>

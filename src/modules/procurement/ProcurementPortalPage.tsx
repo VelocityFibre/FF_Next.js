@@ -332,9 +332,29 @@ export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) 
               {/* Project Filter */}
               <div className="flex items-center gap-4">
                 <ProjectFilter
-                  selectedProject={selectedProject}
+                  selectedProject={selectedProject ? { 
+                    id: selectedProject.id, 
+                    name: selectedProject.name, 
+                    code: selectedProject.code, 
+                    status: selectedProject.status 
+                  } : undefined}
                   viewMode={viewMode}
-                  onProjectChange={handleProjectChange}
+                  onProjectChange={(project) => {
+                    if (project) {
+                      // Convert ProjectFilterProject back to Project
+                      const fullProject: Project = {
+                        ...project,
+                        projectType: ProjectType.FIBRE,
+                        startDate: new Date(),
+                        endDate: new Date(),
+                        priority: Priority.MEDIUM,
+                        clientId: ''
+                      };
+                      handleProjectChange(fullProject);
+                    } else {
+                      handleProjectChange(undefined);
+                    }
+                  }}
                   onViewModeChange={handleViewModeChange}
                   disabled={isLoading}
                 />

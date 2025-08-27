@@ -210,9 +210,9 @@ export function normalizeContractorData(row: ContractorImportRow): ContractorImp
   return {
     companyName: normalizeString(row.companyName),
     contactPerson: normalizeString(row.contactPerson),
-    email: normalizeString(row.email)?.toLowerCase(),
+    email: normalizeString(row.email)?.toLowerCase() || '',
     phone: normalizePhoneNumber(row.phone),
-    registrationNumber: normalizeString(row.registrationNumber)?.toUpperCase(),
+    registrationNumber: normalizeString(row.registrationNumber)?.toUpperCase() || '',
     
     businessType: normalizeString(row.businessType),
     industryCategory: normalizeString(row.industryCategory),

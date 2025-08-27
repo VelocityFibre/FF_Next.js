@@ -52,7 +52,7 @@ export function UserMenuDropdown({
     <div className="relative" ref={userMenuRef}>
       <button
         onClick={onToggleUserMenu}
-        className="flex items-center space-x-2 p-2 hover:bg-surface-secondary rounded-lg transition-colors"
+        className="flex items-center space-x-2 p-2 hover:bg-[var(--ff-surface-secondary)] rounded-lg transition-colors"
       >
         <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center">
           <span className="text-white text-sm font-semibold">
@@ -60,17 +60,17 @@ export function UserMenuDropdown({
           </span>
         </div>
         <div className="hidden lg:block text-left">
-          <p className="text-sm font-medium text-text-primary">{getUserName()}</p>
-          <p className="text-xs text-text-tertiary">{getUserRole()}</p>
+          <p className="text-sm font-medium text-[var(--ff-text-primary)]">{getUserName()}</p>
+          <p className="text-xs text-[var(--ff-text-tertiary)]">{getUserRole()}</p>
         </div>
       </button>
 
       {showUserMenu && (
-        <div className="absolute right-0 mt-2 w-56 bg-surface-elevated rounded-lg shadow-xl border border-border-primary py-2 z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-[var(--ff-surface-elevated)] rounded-lg shadow-xl border border-[var(--ff-border-primary)] py-2 z-50">
           {/* User info */}
-          <div className="px-4 py-3 border-b border-border-secondary">
-            <p className="font-medium text-text-primary">{getUserName()}</p>
-            <p className="text-sm text-text-tertiary">{(user || currentUser)?.email}</p>
+          <div className="px-4 py-3 border-b border-[var(--ff-border-secondary)]">
+            <p className="font-medium text-[var(--ff-text-primary)]">{getUserName()}</p>
+            <p className="text-sm text-[var(--ff-text-tertiary)]">{(user || currentUser)?.email}</p>
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary-100 text-primary-800 mt-2">
               <Shield className="h-3 w-3 mr-1" />
               {getUserRole()}
@@ -81,7 +81,7 @@ export function UserMenuDropdown({
           <div className="py-1">
             <button
               onClick={() => handleMenuItemClick('/app/profile')}
-              className="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface-secondary w-full text-left"
+              className="flex items-center px-4 py-2 text-sm text-[var(--ff-text-primary)] hover:bg-[var(--ff-surface-secondary)] w-full text-left"
             >
               <User className="h-4 w-4 mr-3" />
               My Profile
@@ -89,7 +89,7 @@ export function UserMenuDropdown({
             
             <button
               onClick={() => handleMenuItemClick('/app/settings')}
-              className="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface-secondary w-full text-left"
+              className="flex items-center px-4 py-2 text-sm text-[var(--ff-text-primary)] hover:bg-[var(--ff-surface-secondary)] w-full text-left"
             >
               <Settings className="h-4 w-4 mr-3" />
               Settings
@@ -97,14 +97,14 @@ export function UserMenuDropdown({
             
             <button
               onClick={() => handleMenuItemClick('/app/help')}
-              className="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface-secondary w-full text-left"
+              className="flex items-center px-4 py-2 text-sm text-[var(--ff-text-primary)] hover:bg-[var(--ff-surface-secondary)] w-full text-left"
             >
               <HelpCircle className="h-4 w-4 mr-3" />
               Help & Support
             </button>
           </div>
 
-          <hr className="my-1 border-border-secondary" />
+          <hr className="my-1 border-[var(--ff-border-secondary)]" />
           
           <button
             onClick={onLogout}

@@ -239,8 +239,8 @@ export class BenchmarkCalculator {
         .filter(score => score > 0)
         .sort((a, b) => a - b);
       
-      const supplierScore = supplier.overallScore || 0;
-      const regionPercentile = SupplierUtils.calculatePercentile(supplierScore, provinceScores);
+      const regionalSupplierScore = supplier.overallScore || 0;
+      const regionPercentile = SupplierUtils.calculatePercentile(regionalSupplierScore, provinceScores);
 
       return {
         cityRank,

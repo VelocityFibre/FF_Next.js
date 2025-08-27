@@ -73,7 +73,7 @@ class ContractorImportService {
         fileName: file.name,
         fileSize: file.size,
         fileType: file.type
-      }, 'contractorImportService');;
+      } }, 'contractorImportService');
       
       // Re-throw error instead of falling back to mock data;
       throw error;
@@ -158,10 +158,9 @@ class ContractorImportService {
    * Parse CSV file
    */
   private async parseCsvFile(file: File, options: ContractorImportOptions): Promise<Partial<ContractorImportRow>[]> {
-    log.info('🔍 CSV Parsing Debug - Starting:', { data: { fileName: file.name, fileSize: file.size }, 'contractorImportService');;
-    ;
-    const text = await file.text();
-    log.info('📄 CSV Content Preview:', { data: text.substring(0, 200); + '...' }, 'contractorImportService');
+    log.info('🔍 CSV Parsing Debug - Starting:', { data: { fileName: file.name, fileSize: file.size } }, 'contractorImportService');
+const text = await file.text();
+    log.info('📄 CSV Content Preview:', { data: text.substring(0, 200) + '...' }, 'contractorImportService');
     
     const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
     log.info('📊 CSV Lines Found:', { data: lines.length }, 'contractorImportService');
@@ -172,7 +171,7 @@ class ContractorImportService {
     
     // Skip comment lines (starting with #)
     const dataLines = lines.filter(line => !line.startsWith('#'));
-    log.info('🗂️ Data Lines (after filtering comments);:', { data: dataLines.length }, 'contractorImportService');
+    log.info('🗂️ Data Lines (after filtering comments):', { data: dataLines.length }, 'contractorImportService');
     
     if (dataLines.length === 0) {
       throw new Error('No data found in CSV file.');
@@ -223,8 +222,7 @@ class ContractorImportService {
       totalDataLines: dataLines.length - dataStartIndex, 
       recordsParsed: results.length,
       sampleRecord: results[0]
-    }, 'contractorImportService');;
-    ;
+    } }, 'contractorImportService');
     return results;
   }
 
@@ -232,8 +230,7 @@ class ContractorImportService {
    * Parse Excel file using XLSX library
    */
   private async parseExcelFile(file: File, options: ContractorImportOptions): Promise<Partial<ContractorImportRow>[]> {
-    log.info('📊 Excel Parsing Debug - Starting:', { data: { fileName: file.name, fileSize: file.size }, 'contractorImportService');;
-    
+    log.info('📊 Excel Parsing Debug - Starting:', { data: { fileName: file.name, fileSize: file.size } }, 'contractorImportService');
     try {
       // Dynamically import XLSX to avoid bundle issues;
       const XLSX = await import('xlsx');
@@ -243,8 +240,7 @@ class ContractorImportService {
       
       // Parse workbook
       const workbook = XLSX.read(buffer, { type: 'array' });
-      log.info('📋 Excel Workbook:', { data: { sheetNames: workbook.SheetNames }, 'contractorImportService');;
-      
+      log.info('📋 Excel Workbook:', { data: { sheetNames: workbook.SheetNames } }, 'contractorImportService');
       // Get first sheet;
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
@@ -256,11 +252,11 @@ class ContractorImportService {
         blankrows: false // Skip blank rows
       }) as string[][];
       
-      log.info('📄 Excel Data Preview:', {
+      log.info('📄 Excel Data Preview:', { data: {
         totalRows: jsonData.length,
         firstRow: jsonData[0],
-        sampleData: jsonData.slice(0, 3);
-      }, 'contractorImportService');
+        sampleData: jsonData.slice(0, 3)
+      } }, 'contractorImportService');
       
       if (jsonData.length === 0) {
         throw new Error('The Excel file appears to be empty.');
@@ -339,8 +335,8 @@ class ContractorImportService {
         totalDataRows: jsonData.length - dataStartIndex, 
         recordsParsed: results.length,
         sampleRecord: results[0]
-      }, 'contractorImportService');;
-      ;
+      } }, 'contractorImportService');
+      
       return results;
       
     } catch (error) {
@@ -521,8 +517,7 @@ class ContractorImportService {
       valid: validContractors.length,
       invalid: invalidContractors.length,
       duplicates: duplicates.length
-    }, 'contractorImportService');;
-    ;
+    } }, 'contractorImportService');
     const importedIds: string[] = [];
     const errors: Array<{row: number; message: string; data: any}> = [];
     

@@ -4,7 +4,6 @@
  */
 
 import * as React from 'react';
-import { log } from '@/lib/logger';
 
 // Extended performance entry types for Web Vitals
 interface LayoutShift extends PerformanceEntry {

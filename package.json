@@ -38,7 +38,10 @@
     "antihall:find": "node scripts/antihall-validator.cjs find",
     "antihall:stats": "node scripts/antihall-validator.cjs stats",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "build:analyze": "vite build --mode production | tee build-output.log && node scripts/analyze-bundle.js",
+    "bundle:optimize": "vite build --config vite.config.ts",
+    "bundle:size": "vite-bundle-analyzer dist"
   },
   "keywords": [
     "react",

@@ -1,4 +1,4 @@
-import React from 'react';
+import { } from 'react';
 import { Link } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
 import { useSuppliersPortal } from '../context/SuppliersPortalContext';
@@ -42,16 +42,15 @@ interface TabItemProps {
   path: string;
   isActive: boolean;
   isDisabled: boolean;
-  badge?: {
+  badge: {
     count?: number;
     type?: 'info' | 'warning' | 'error' | 'success';
-  };
+  } | undefined;
   supplier?: any;
   onClick: () => void;
 }
 
 function TabItem({
-  id,
   label,
   icon: Icon,
   path,
@@ -121,8 +120,8 @@ export function SuppliersTabsNav() {
     setActiveTab
   } = useSuppliersPortal();
 
-  const handleTabClick = (tabId: any) => {
-    setActiveTab(tabId);
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId as any);
   };
 
   return (

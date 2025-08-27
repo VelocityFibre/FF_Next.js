@@ -46,7 +46,7 @@ export function BreadcrumbNavigation({ breadcrumbs, title, onMenuClick }: Breadc
       {/* Mobile menu button */}
       <button
         onClick={onMenuClick}
-        className="p-2 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-lg lg:hidden mr-2"
+        className="p-2 text-[var(--ff-text-secondary)] hover:text-[var(--ff-text-primary)] hover:bg-[var(--ff-surface-secondary)] rounded-lg lg:hidden mr-2"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -54,7 +54,7 @@ export function BreadcrumbNavigation({ breadcrumbs, title, onMenuClick }: Breadc
       <div className="flex flex-col min-w-0">
         {/* Breadcrumbs */}
         {breadcrumbs && breadcrumbs.length > 1 && (
-          <nav className="flex items-center space-x-1 text-sm text-text-tertiary mb-1">
+          <nav className="flex items-center space-x-1 text-sm text-[var(--ff-text-tertiary)] mb-1">
             {breadcrumbs.map((crumb, index) => {
               const isLast = index === breadcrumbs.length - 1;
               
@@ -62,13 +62,13 @@ export function BreadcrumbNavigation({ breadcrumbs, title, onMenuClick }: Breadc
                 <div key={index} className="flex items-center">
                   {index > 0 && <ChevronRight className="h-3 w-3 mx-1" />}
                   {isLast ? (
-                    <span className="text-text-primary font-medium">
+                    <span className="text-[var(--ff-text-primary)] font-medium">
                       {crumb}
                     </span>
                   ) : (
                     <Link
                       to={getBreadcrumbPath(crumb)}
-                      className="hover:text-text-primary transition-colors"
+                      className="hover:text-[var(--ff-text-primary)] transition-colors"
                     >
                       {crumb}
                     </Link>
@@ -80,7 +80,7 @@ export function BreadcrumbNavigation({ breadcrumbs, title, onMenuClick }: Breadc
         )}
         
         {/* Page title */}
-        <h1 className="text-xl lg:text-2xl font-semibold text-text-primary truncate">
+        <h1 className="text-xl lg:text-2xl font-semibold text-[var(--ff-text-primary)] truncate">
           {title}
         </h1>
       </div>

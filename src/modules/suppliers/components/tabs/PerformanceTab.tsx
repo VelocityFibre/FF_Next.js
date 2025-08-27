@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
   Award, 
   AlertTriangle, 
-  Clock, 
   CheckCircle,
   Star,
   Target,
@@ -322,7 +321,7 @@ function PerformanceTrends({ metrics }: { metrics: PerformanceMetric[] }) {
 }
 
 // Benchmarking component
-function BenchmarkingSection({ metrics }: { metrics: PerformanceMetric[] }) {
+function BenchmarkingSection({ }: { metrics: PerformanceMetric[] }) {
   const benchmarkData = [
     { category: 'Delivery Performance', rank: 2, totalSuppliers: 15, score: 94.5 },
     { category: 'Quality Standards', rank: 1, totalSuppliers: 15, score: 98.2 },

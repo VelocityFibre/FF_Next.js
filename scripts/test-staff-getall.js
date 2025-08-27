@@ -1,6 +1,10 @@
 import { neon } from '@neondatabase/serverless';
 
-const databaseUrl = 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is required. Check your .env file.');
+}
+const databaseUrl = 'process.env.DATABASE_URL';
 
 // Test the getAll functionality
 async function testStaffGetAll() {

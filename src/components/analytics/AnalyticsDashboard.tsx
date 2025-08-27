@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { analyticsService } from '@/services/analytics';
 import { FirebaseToNeonSync } from '@/services/sync';
 import { transformKPIDashboardItemsToMetrics } from '@/types/analytics';
-import { log } from '@/lib/logger';
 import {
   DashboardData,
   DashboardLoadingState,

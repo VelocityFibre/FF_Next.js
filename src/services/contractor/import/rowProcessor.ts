@@ -5,10 +5,10 @@
 
 import { 
   ContractorImportRow, 
-  ContractorImportResult, 
-  ContractorImportError 
+  ContractorImportResult
 } from '@/types/contractor/import.types';
 import { Contractor } from '@/types/contractor/base.types';
+import { ContractorFormData } from '@/types/contractor/form.types';
 import { validateContractorData, normalizeContractorData } from './validators';
 import { contractorService } from '@/services/contractorService';
 import { log } from '@/lib/logger';
@@ -143,8 +143,7 @@ export async function processContractorImportRows(
       failed: result.failed,
       duplicates: result.duplicates,
       errors: result.errors.length
-    }, 'rowProcessor');;
-    ;
+    } }, 'rowProcessor');
     return result;
     
   } catch (error) {
@@ -183,27 +182,27 @@ async function createContractorFromRow(
       // Business information
       businessType: normalizeBusinessType(row.businessType) || 'pty_ltd',
       industryCategory: row.industryCategory || 'General Services',
-      yearsInBusiness: parseNumericValue(row.yearsInBusiness),
-      employeeCount: parseNumericValue(row.employeeCount),
+      yearsInBusiness: parseNumericValue(row.yearsInBusiness) || 0,
+      employeeCount: parseNumericValue(row.employeeCount) || 0,
       
       // Contact details
-      phone: row.phone,
-      alternatePhone: row.alternatePhone,
+      phone: row.phone || '',
+      alternatePhone: row.alternatePhone || '',
       
       // Address
-      physicalAddress: row.physicalAddress,
-      postalAddress: row.postalAddress,
-      city: row.city,
-      province: row.province,
-      postalCode: row.postalCode,
+      physicalAddress: row.physicalAddress || '',
+      postalAddress: row.postalAddress || '',
+      city: row.city || '',
+      province: row.province || '',
+      postalCode: row.postalCode || '',
       
       // Financial information
-      annualTurnover: parseNumericValue(row.annualTurnover),
-      creditRating: row.creditRating,
+      annualTurnover: parseNumericValue(row.annualTurnover) || 0,
+      creditRating: row.creditRating || '',
       paymentTerms: row.paymentTerms || '30 days',
-      bankName: row.bankName,
-      accountNumber: row.accountNumber,
-      branchCode: row.branchCode,
+      bankName: row.bankName || '',
+      accountNumber: row.accountNumber || '',
+      branchCode: row.branchCode || '',
       
       // Status and compliance
       status: 'pending' as const, // All imported contractors start as pending
@@ -224,8 +223,8 @@ async function createContractorFromRow(
       timelinessScore: 0,
       
       // Specializations and certifications
-      specializations: parseArrayField(row.specializations),
-      certifications: parseArrayField(row.certifications),
+      specializations: parseArrayField(row.specializations) || [],
+      certifications: parseArrayField(row.certifications) || [],
       
       // Project statistics (initialize to zero)
       totalProjects: 0,
@@ -241,8 +240,8 @@ async function createContractorFromRow(
       documentsExpiring: 0,
       
       // Additional information
-      notes: row.notes,
-      tags: parseArrayField(row.tags),
+      notes: row.notes || '',
+      tags: parseArrayField(row.tags) || [],
       
       // Audit fields
       createdAt: now,
@@ -282,20 +281,102 @@ async function batchInsertContractors(
           );
           
           if (existing) {
-            // Update existing contractor
-            result = await contractorService.update(existing.id, {
-              ...contractor,
-              id: existing.id,
-              createdAt: existing.createdAt, // Keep original creation date
-              updatedAt: new Date()
-            });
+            // Update existing contractor - create form data from contractor
+            const formData: Partial<ContractorFormData> = {
+              companyName: contractor.companyName,
+              registrationNumber: contractor.registrationNumber,
+              businessType: contractor.businessType,
+              industryCategory: contractor.industryCategory,
+              ...(contractor.yearsInBusiness && contractor.yearsInBusiness > 0 && { yearsInBusiness: contractor.yearsInBusiness }),
+              ...(contractor.employeeCount && contractor.employeeCount > 0 && { employeeCount: contractor.employeeCount }),
+              contactPerson: contractor.contactPerson,
+              email: contractor.email,
+              phone: contractor.phone || '',
+              alternatePhone: contractor.alternatePhone || '',
+              physicalAddress: contractor.physicalAddress || '',
+              postalAddress: contractor.postalAddress || '',
+              city: contractor.city || '',
+              province: contractor.province || '',
+              postalCode: contractor.postalCode || '',
+              ...(contractor.annualTurnover && contractor.annualTurnover > 0 && { annualTurnover: contractor.annualTurnover }),
+              creditRating: contractor.creditRating || '',
+              paymentTerms: contractor.paymentTerms || '',
+              bankName: contractor.bankName || '',
+              accountNumber: contractor.accountNumber || '',
+              branchCode: contractor.branchCode || '',
+              status: contractor.status,
+              complianceStatus: contractor.complianceStatus,
+              notes: contractor.notes || '',
+              tags: contractor.tags || []
+            };
+            
+            await contractorService.update(existing.id, formData);
+            result = { ...existing, ...formData, id: existing.id };
           } else {
-            // Create new contractor
-            result = await contractorService.create(contractor);
+            // Create new contractor - convert to form data
+            const formData: ContractorFormData = {
+              companyName: contractor.companyName,
+              registrationNumber: contractor.registrationNumber,
+              businessType: contractor.businessType,
+              industryCategory: contractor.industryCategory,
+              ...(contractor.yearsInBusiness && contractor.yearsInBusiness > 0 && { yearsInBusiness: contractor.yearsInBusiness }),
+              ...(contractor.employeeCount && contractor.employeeCount > 0 && { employeeCount: contractor.employeeCount }),
+              contactPerson: contractor.contactPerson,
+              email: contractor.email,
+              phone: contractor.phone || '',
+              alternatePhone: contractor.alternatePhone || '',
+              physicalAddress: contractor.physicalAddress || '',
+              postalAddress: contractor.postalAddress || '',
+              city: contractor.city || '',
+              province: contractor.province || '',
+              postalCode: contractor.postalCode || '',
+              ...(contractor.annualTurnover && contractor.annualTurnover > 0 && { annualTurnover: contractor.annualTurnover }),
+              creditRating: contractor.creditRating || '',
+              paymentTerms: contractor.paymentTerms || '',
+              bankName: contractor.bankName || '',
+              accountNumber: contractor.accountNumber || '',
+              branchCode: contractor.branchCode || '',
+              status: contractor.status,
+              complianceStatus: contractor.complianceStatus,
+              notes: contractor.notes || '',
+              tags: contractor.tags || []
+            };
+            
+            const createdId = await contractorService.create(formData);
+            result = { ...contractor, id: createdId };
           }
         } else {
-          // Only create new contractors
-          result = await contractorService.create(contractor);
+          // Only create new contractors - convert to form data
+          const formData: ContractorFormData = {
+            companyName: contractor.companyName,
+            registrationNumber: contractor.registrationNumber,
+            businessType: contractor.businessType,
+            industryCategory: contractor.industryCategory,
+            ...(contractor.yearsInBusiness && contractor.yearsInBusiness > 0 && { yearsInBusiness: contractor.yearsInBusiness }),
+            ...(contractor.employeeCount && contractor.employeeCount > 0 && { employeeCount: contractor.employeeCount }),
+            contactPerson: contractor.contactPerson,
+            email: contractor.email,
+            phone: contractor.phone || '',
+            alternatePhone: contractor.alternatePhone || '',
+            physicalAddress: contractor.physicalAddress || '',
+            postalAddress: contractor.postalAddress || '',
+            city: contractor.city || '',
+            province: contractor.province || '',
+            postalCode: contractor.postalCode || '',
+            ...(contractor.annualTurnover && contractor.annualTurnover > 0 && { annualTurnover: contractor.annualTurnover }),
+            creditRating: contractor.creditRating || '',
+            paymentTerms: contractor.paymentTerms || '',
+            bankName: contractor.bankName || '',
+            accountNumber: contractor.accountNumber || '',
+            branchCode: contractor.branchCode || '',
+            status: contractor.status,
+            complianceStatus: contractor.complianceStatus,
+            notes: contractor.notes || '',
+            tags: contractor.tags || []
+          };
+          
+          const createdId = await contractorService.create(formData);
+          result = { ...contractor, id: createdId };
         }
         
         insertedContractors.push(result);
@@ -346,8 +427,8 @@ function parseNumericValue(value?: string | number): number | undefined {
   return isNaN(parsed) ? undefined : parsed;
 }
 
-function parseArrayField(value?: string): string[] | undefined {
-  if (!value || typeof value !== 'string') return undefined;
+function parseArrayField(value?: string): string[] {
+  if (!value || typeof value !== 'string') return [];
   
   // Split by common delimiters and clean up
   return value

@@ -111,10 +111,10 @@ const variantStyles = {
     description: 'text-primary-700',
   },
   secondary: {
-    card: 'bg-surface-primary border-border-primary hover:bg-surface-secondary',
+    card: 'bg-[var(--ff-surface-primary)] border-[var(--ff-border-primary)] hover:bg-[var(--ff-surface-secondary)]',
     icon: 'bg-neutral-100 text-neutral-700',
-    title: 'text-text-primary',
-    description: 'text-text-secondary',
+    title: 'text-[var(--ff-text-primary)]',
+    description: 'text-[var(--ff-text-secondary)]',
   },
   success: {
     card: 'bg-success-50 border-success-200 hover:bg-success-100',
@@ -146,13 +146,13 @@ export function QuickActions({ className = '' }: QuickActionsProps) {
 
   return (
     <div className={cn(
-      'bg-surface-primary rounded-lg border border-border-primary p-6',
+      'bg-[var(--ff-surface-primary)] rounded-lg border border-[var(--ff-border-primary)] p-6',
       className
     )}>
       {/* Header */}
       <div className="flex items-center space-x-2 mb-6">
         <Plus className="w-5 h-5 text-primary-600" />
-        <h3 className="text-lg font-semibold text-text-primary">
+        <h3 className="text-lg font-semibold text-[var(--ff-text-primary)]">
           Quick Actions
         </h3>
       </div>
@@ -206,9 +206,9 @@ export function QuickActions({ className = '' }: QuickActionsProps) {
       {/* Empty state */}
       {availableActions.length === 0 && (
         <div className="text-center py-8">
-          <Plus className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-          <p className="text-text-secondary">No quick actions available</p>
-          <p className="text-xs text-text-tertiary mt-1">
+          <Plus className="w-12 h-12 text-[var(--ff-text-tertiary)] mx-auto mb-3" />
+          <p className="text-[var(--ff-text-secondary)]">No quick actions available</p>
+          <p className="text-xs text-[var(--ff-text-tertiary)] mt-1">
             Contact your administrator for access permissions
           </p>
         </div>

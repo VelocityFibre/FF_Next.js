@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-08-27T13:13:40.969Z",
+  "summary": {
+    "totalSize": 0,
+    "totalSizeFormatted": "0 B",
+    "chunkCount": 0,
+    "oversizedChunks": [],
+    "largestChunks": [],
+    "optimizationScore": 100
+  },
+  "chunks": [],
+  "recommendations": {
+    "firebase": false,
+    "services": false,
+    "vendor": false,
+    "excel": false,
+    "charts": false
+  }
+}

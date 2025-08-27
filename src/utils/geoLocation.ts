@@ -1,4 +1,3 @@
-import { log } from '@/lib/logger';
 
 /**
  * Geolocation utilities for reverse geocoding in South Africa

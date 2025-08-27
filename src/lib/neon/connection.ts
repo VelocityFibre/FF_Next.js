@@ -3,20 +3,13 @@
  * Drizzle ORM with Neon Serverless PostgreSQL
  */
 
-import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { neonTables } from './schema';
 import { log } from '@/lib/logger';
+import { getNeonConnection, executeQuery } from './connectionPool';
 
-// Get Neon connection string from environment
-const neonUrl = import.meta.env.VITE_NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
-
-if (!neonUrl) {
-  throw new Error('VITE_NEON_DATABASE_URL environment variable is required');
-}
-
-// Create Neon client
-const sql = neon(neonUrl);
+// Use the pooled connection with better error handling
+const sql = getNeonConnection();
 
 // Create Drizzle instance
 export const neonDb = drizzle(sql, { schema: neonTables });
@@ -43,10 +36,13 @@ export const neonUtils = {
    */
   async ping(): Promise<{ success: boolean; timestamp?: string; error?: string }> {
     try {
-      const result = await sql`SELECT NOW() as timestamp`;
+      const result = await executeQuery(sql => sql`SELECT NOW() as timestamp`);
+      const firstRow = Array.isArray(result) && result.length > 0 ? result[0] : null;
       return {
         success: true,
-        timestamp: result[0].timestamp,
+        timestamp: firstRow && typeof firstRow === 'object' && 'timestamp' in firstRow 
+          ? (firstRow as any).timestamp 
+          : new Date().toISOString(),
       };
     } catch (error) {
       return {
@@ -69,9 +65,14 @@ export const neonUtils = {
           current_user as user_name
       `;
       
+      const versionRow = Array.isArray(versionResult) && versionResult.length > 0 ? versionResult[0] : null;
+      const sizeRow = Array.isArray(sizeResult) && sizeResult.length > 0 ? sizeResult[0] : null;
+      
       return {
-        version: versionResult[0].version,
-        ...sizeResult[0],
+        version: versionRow && typeof versionRow === 'object' && 'version' in versionRow
+          ? (versionRow as any).version || 'Unknown'
+          : 'Unknown',
+        ...(sizeRow && typeof sizeRow === 'object' ? sizeRow : {}),
       };
     } catch (error) {
       log.error('Failed to get database info:', { data: error }, 'connection');
@@ -107,11 +108,10 @@ export const neonUtils = {
   /**
    * Execute raw SQL (use with caution)
    */
-  async rawQuery(query: string, params: any[] = []): Promise<any> {
+  async rawQuery(query: string): Promise<any> {
     try {
-      // Note: For Neon, we should use template literals instead of parameterized queries
-      // This is a basic implementation - consider using Drizzle for type safety
-      return await sql([query] as any, ...params);
+      // Use template literal format for Neon
+      return await sql([query] as any as TemplateStringsArray);
     } catch (error) {
       log.error('Raw query failed:', { data: error }, 'connection');
       throw error;

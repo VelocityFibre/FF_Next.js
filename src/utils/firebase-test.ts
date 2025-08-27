@@ -1,6 +1,5 @@
 import { auth, db } from '@/config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { log } from '@/lib/logger';
 
 /**
  * Test Firebase connection

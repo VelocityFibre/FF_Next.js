@@ -5,7 +5,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 // Loading component
 export function Loading() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background-primary">
+    <div className="flex items-center justify-center min-h-screen bg-[var(--ff-background-primary)]">
       <LoadingSpinner size="lg" label="Loading..." />
     </div>
   );

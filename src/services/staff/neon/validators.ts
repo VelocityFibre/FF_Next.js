@@ -64,18 +64,18 @@ export function processReportsToField(reportsTo: string | undefined | null): str
  */
 export function logDebugInfo(_operation: string, data: any, reportsTo?: any): void {
 
-  log.info('1. Raw input data:', { data: JSON.stringify(data, null, 2 }, 'validators'););
+  log.info('1. Raw input data:', { data: JSON.stringify(data, null, 2) }, 'validators');
   
   if (reportsTo !== undefined) {
 
 
 
-    log.info('   - String representation:', { data: String(reportsTo }, 'validators'););
-    log.info('   - JSON stringify:', { data: JSON.stringify(reportsTo }, 'validators'););
+    log.info('   - String representation:', { data: String(reportsTo) }, 'validators');
+    log.info('   - JSON stringify:', { data: JSON.stringify(reportsTo) }, 'validators');
 
 
 
-    log.info('   - Trimmed length:', { data: reportsTo ? String(reportsTo }, 'validators');.length : 'N/A');
+    log.info('   - Trimmed length:', { data: reportsTo ? String(reportsTo).length : 'N/A' }, 'validators');
   }
 }
 

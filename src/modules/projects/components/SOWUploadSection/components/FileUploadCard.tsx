@@ -38,7 +38,7 @@ export function FileUploadCard({
           ? `${fileType.bgColor} ${fileType.borderColor}`
           : uploadedFile?.status === 'error'
           ? "bg-error-50 border-error-200"
-          : "border-border-secondary hover:border-border-primary"
+          : "border-[var(--ff-border-secondary)] hover:border-[var(--ff-border-primary)]"
       )}
     >
       <div className="flex items-start justify-between mb-4">
@@ -49,17 +49,17 @@ export function FileUploadCard({
         {uploadedFile && (
           <button
             onClick={() => onRemoveFile(fileType.type)}
-            className="p-1 hover:bg-surface-secondary rounded"
+            className="p-1 hover:bg-[var(--ff-surface-secondary)] rounded"
           >
-            <Trash2 className="w-4 h-4 text-text-tertiary" />
+            <Trash2 className="w-4 h-4 text-[var(--ff-text-tertiary)]" />
           </button>
         )}
       </div>
 
-      <h3 className="font-medium text-text-primary mb-1">
+      <h3 className="font-medium text-[var(--ff-text-primary)] mb-1">
         {fileType.title}
       </h3>
-      <p className="text-sm text-text-secondary mb-4">
+      <p className="text-sm text-[var(--ff-text-secondary)] mb-4">
         {fileType.description}
       </p>
 
@@ -83,8 +83,8 @@ function FileUploadStatus({ uploadedFile }: { uploadedFile: SOWFile }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <FileSpreadsheet className="w-4 h-4 text-text-tertiary" />
-        <span className="text-sm text-text-primary truncate">
+        <FileSpreadsheet className="w-4 h-4 text-[var(--ff-text-tertiary)]" />
+        <span className="text-sm text-[var(--ff-text-primary)] truncate">
           {uploadedFile.file.name}
         </span>
       </div>
@@ -92,7 +92,7 @@ function FileUploadStatus({ uploadedFile }: { uploadedFile: SOWFile }) {
       {uploadedFile.status === 'processing' && (
         <div className="flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin text-primary-500" />
-          <span className="text-sm text-text-secondary">Processing...</span>
+          <span className="text-sm text-[var(--ff-text-secondary)]">Processing...</span>
         </div>
       )}
 
@@ -170,7 +170,7 @@ function FileUploadActions({
         <div className={cn(
           "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer",
           isProcessing
-            ? "bg-surface-secondary text-text-tertiary cursor-not-allowed"
+            ? "bg-[var(--ff-surface-secondary)] text-[var(--ff-text-tertiary)] cursor-not-allowed"
             : "bg-primary-600 text-white hover:bg-primary-700"
         )}>
           <Upload className="w-4 h-4" />

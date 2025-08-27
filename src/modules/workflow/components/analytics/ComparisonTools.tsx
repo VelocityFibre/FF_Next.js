@@ -1,5 +1,5 @@
 // 🟢 WORKING: Template and project comparison analysis tools
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
 import { Button } from '@/shared/components/ui/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/Select';
@@ -19,21 +19,13 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   Radar,
-  LineChart,
-  Line
 } from 'recharts';
 import {
   GitCompare,
   TrendingUp,
   TrendingDown,
-  Clock,
-  Target,
   CheckCircle,
   AlertTriangle,
-  Users,
-  Layers,
-  Zap,
-  Award,
   Minus
 } from 'lucide-react';
 import { WorkflowAnalytics } from '../../types/workflow.types';
@@ -63,7 +55,7 @@ interface TemplateComparison {
   };
 }
 
-export function ComparisonTools({ analytics, dateRange }: ComparisonToolsProps) {
+export function ComparisonTools({ analytics, dateRange: _dateRange }: ComparisonToolsProps) {
   const [selectedTemplate1, setSelectedTemplate1] = useState<string>('');
   const [selectedTemplate2, setSelectedTemplate2] = useState<string>('');
   const [comparison, setComparison] = useState<TemplateComparison | null>(null);

@@ -38,8 +38,7 @@ export async function importContractorsFromCSV(
         }
 
         // 🟢 WORKING: Log header mapping for debugging
-        log.info('Contractor CSV Header mapping:', { data: headers.map(h => `"${h}" -> "${DEFAULT_CONTRACTOR_HEADER_MAPPING[h] || 'unmapped'}"` }, 'csvProcessor');
-        );
+        log.info('Contractor CSV Header mapping:', { data: headers.map(h => `"${h}" -> "${DEFAULT_CONTRACTOR_HEADER_MAPPING[h] || 'unmapped'}"`) }, 'csvProcessor');
         
         const rows: ContractorImportRow[] = [];
         const parseErrors: Array<{row: number, message: string}> = [];

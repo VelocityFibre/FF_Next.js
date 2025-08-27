@@ -444,7 +444,7 @@ describe('WorkflowPortalContext', () => {
 
   describe('Hook Error Handling', () => {
     it('should throw error when used outside provider', () => {
-      // Mock console.error to avoid error output in test
+      // Mock console.error to suppress test output
       const originalError = console.error;
       console.error = jest.fn();
 

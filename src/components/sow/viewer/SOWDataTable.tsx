@@ -21,7 +21,7 @@ export function SOWDataTable({ data, type, maxItems = 50 }: SOWDataTableProps) {
         ? "bg-success-100 text-success-700"
         : status === 'in_progress'
         ? "bg-warning-100 text-warning-700"
-        : "bg-surface-secondary text-text-tertiary"
+        : "bg-[var(--ff-surface-secondary)] text-[var(--ff-text-tertiary)]"
     )}>
       {status || 'planned'}
     </span>
@@ -30,40 +30,40 @@ export function SOWDataTable({ data, type, maxItems = 50 }: SOWDataTableProps) {
   const renderPolesTable = () => (
     <table className="w-full">
       <thead>
-        <tr className="border-b border-border-primary">
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+        <tr className="border-b border-[var(--ff-border-primary)]">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Pole Number
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Coordinates
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Type
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Status
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Municipality
           </th>
         </tr>
       </thead>
       <tbody>
         {displayData.map((pole: any, index: number) => (
-          <tr key={pole.id || index} className="border-b border-border-secondary hover:bg-surface-primary">
-            <td className="px-4 py-3 text-sm font-medium text-text-primary">
+          <tr key={pole.id || index} className="border-b border-[var(--ff-border-secondary)] hover:bg-[var(--ff-surface-primary)]">
+            <td className="px-4 py-3 text-sm font-medium text-[var(--ff-text-primary)]">
               {pole.pole_number}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {pole.latitude?.toFixed(6)}, {pole.longitude?.toFixed(6)}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {pole.pole_type || '-'}
             </td>
             <td className="px-4 py-3">
               {getStatusBadge(pole.status)}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {pole.municipality || '-'}
             </td>
           </tr>
@@ -75,40 +75,40 @@ export function SOWDataTable({ data, type, maxItems = 50 }: SOWDataTableProps) {
   const renderDropsTable = () => (
     <table className="w-full">
       <thead>
-        <tr className="border-b border-border-primary">
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+        <tr className="border-b border-[var(--ff-border-primary)]">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Drop Number
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Pole Number
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Address
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Cable Type
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Length
           </th>
         </tr>
       </thead>
       <tbody>
         {displayData.map((drop: any, index: number) => (
-          <tr key={drop.id || index} className="border-b border-border-secondary hover:bg-surface-primary">
-            <td className="px-4 py-3 text-sm font-medium text-text-primary">
+          <tr key={drop.id || index} className="border-b border-[var(--ff-border-secondary)] hover:bg-[var(--ff-surface-primary)]">
+            <td className="px-4 py-3 text-sm font-medium text-[var(--ff-text-primary)]">
               {drop.drop_number}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {drop.pole_number || '-'}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {drop.address || '-'}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {drop.cable_type || '-'}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {drop.cable_length || '-'}
             </td>
           </tr>
@@ -120,50 +120,50 @@ export function SOWDataTable({ data, type, maxItems = 50 }: SOWDataTableProps) {
   const renderFibreTable = () => (
     <table className="w-full">
       <thead>
-        <tr className="border-b border-border-primary">
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+        <tr className="border-b border-[var(--ff-border-primary)]">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Segment ID
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Cable Size
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Layer
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Length (m)
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Complete
           </th>
-          <th className="text-left px-4 py-3 text-xs font-medium text-text-secondary uppercase tracking-wider">
+          <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ff-text-secondary)] uppercase tracking-wider">
             Contractor
           </th>
         </tr>
       </thead>
       <tbody>
         {displayData.map((segment: any, index: number) => (
-          <tr key={segment.id || index} className="border-b border-border-secondary hover:bg-surface-primary">
-            <td className="px-4 py-3 text-sm font-medium text-text-primary">
+          <tr key={segment.id || index} className="border-b border-[var(--ff-border-secondary)] hover:bg-[var(--ff-surface-primary)]">
+            <td className="px-4 py-3 text-sm font-medium text-[var(--ff-text-primary)]">
               {segment.segment_id}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {segment.cable_size || '-'}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {segment.layer || '-'}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {segment.length?.toLocaleString() || '-'}
             </td>
             <td className="px-4 py-3">
               {segment.is_complete ? (
                 <CheckCircle className="w-4 h-4 text-success-600" />
               ) : (
-                <span className="text-text-tertiary">-</span>
+                <span className="text-[var(--ff-text-tertiary)]">-</span>
               )}
             </td>
-            <td className="px-4 py-3 text-sm text-text-secondary">
+            <td className="px-4 py-3 text-sm text-[var(--ff-text-secondary)]">
               {segment.contractor || '-'}
             </td>
           </tr>
@@ -186,11 +186,11 @@ export function SOWDataTable({ data, type, maxItems = 50 }: SOWDataTableProps) {
   };
 
   return (
-    <div className="bg-background-secondary rounded-lg overflow-hidden">
+    <div className="bg-[var(--ff-background-secondary)] rounded-lg overflow-hidden">
       <div className="overflow-x-auto">
         {renderTable()}
         {data.length > maxItems && (
-          <div className="px-4 py-3 text-sm text-text-secondary bg-surface-secondary">
+          <div className="px-4 py-3 text-sm text-[var(--ff-text-secondary)] bg-[var(--ff-surface-secondary)]">
             Showing {maxItems} of {data.length} {type}
           </div>
         )}

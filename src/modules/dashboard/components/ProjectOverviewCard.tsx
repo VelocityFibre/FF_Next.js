@@ -164,14 +164,14 @@ export function ProjectOverviewCard({
   if (isLoading) {
     return (
       <div className={cn(
-        'bg-surface-primary rounded-lg border border-border-primary p-6',
+        'bg-[var(--ff-surface-primary)] rounded-lg border border-[var(--ff-border-primary)] p-6',
         className
       )}>
         <div className="animate-pulse">
-          <div className="h-4 bg-surface-secondary rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-[var(--ff-surface-secondary)] rounded w-1/3 mb-4"></div>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-surface-secondary rounded"></div>
+              <div key={i} className="h-20 bg-[var(--ff-surface-secondary)] rounded"></div>
             ))}
           </div>
         </div>
@@ -181,20 +181,20 @@ export function ProjectOverviewCard({
 
   return (
     <div className={cn(
-      'bg-surface-primary rounded-lg border border-border-primary p-6',
+      'bg-[var(--ff-surface-primary)] rounded-lg border border-[var(--ff-border-primary)] p-6',
       className
     )}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <FolderOpen className="w-5 h-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-text-primary">
+          <h3 className="text-lg font-semibold text-[var(--ff-text-primary)]">
             Active Projects
           </h3>
         </div>
         
         {/* Tabs */}
-        <div className="flex space-x-1 bg-surface-secondary rounded-lg p-1">
+        <div className="flex space-x-1 bg-[var(--ff-surface-secondary)] rounded-lg p-1">
           {[
             { key: 'all' as const, label: 'All' },
             { key: 'active' as const, label: 'Active' },
@@ -206,8 +206,8 @@ export function ProjectOverviewCard({
               className={cn(
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 selectedTab === tab.key
-                  ? 'bg-surface-primary text-text-primary shadow-sm'
-                  : 'text-text-secondary hover:text-text-primary'
+                  ? 'bg-[var(--ff-surface-primary)] text-[var(--ff-text-primary)] shadow-sm'
+                  : 'text-[var(--ff-text-secondary)] hover:text-[var(--ff-text-primary)]'
               )}
             >
               {tab.label}
@@ -227,14 +227,14 @@ export function ProjectOverviewCard({
           return (
             <div
               key={project.id}
-              className="border border-border-secondary rounded-lg p-4 hover:border-border-primary transition-colors cursor-pointer"
+              className="border border-[var(--ff-border-secondary)] rounded-lg p-4 hover:border-[var(--ff-border-primary)] transition-colors cursor-pointer"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-text-primary truncate">
+                  <h4 className="font-medium text-[var(--ff-text-primary)] truncate">
                     {project.name}
                   </h4>
-                  <div className="flex items-center space-x-4 mt-1 text-sm text-text-tertiary">
+                  <div className="flex items-center space-x-4 mt-1 text-sm text-[var(--ff-text-tertiary)]">
                     <div className="flex items-center space-x-1">
                       <MapPin className="w-3 h-3" />
                       <span>{project.location}</span>
@@ -272,14 +272,14 @@ export function ProjectOverviewCard({
               {/* Progress bar */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-text-secondary">
+                  <span className="text-[var(--ff-text-secondary)]">
                     Progress: {project.tasksCompleted}/{project.totalTasks} tasks
                   </span>
-                  <span className="font-medium text-text-primary">
+                  <span className="font-medium text-[var(--ff-text-primary)]">
                     {project.progress}%
                   </span>
                 </div>
-                <div className="w-full bg-surface-secondary rounded-full h-2">
+                <div className="w-full bg-[var(--ff-surface-secondary)] rounded-full h-2">
                   <div
                     className="bg-primary-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${project.progress}%` }}
@@ -287,7 +287,7 @@ export function ProjectOverviewCard({
                 </div>
                 
                 {/* Timeline info */}
-                <div className="flex items-center justify-between text-xs text-text-tertiary mt-2">
+                <div className="flex items-center justify-between text-xs text-[var(--ff-text-tertiary)] mt-2">
                   <span>Started {formatDate(project.startDate)}</span>
                   <div className="flex items-center space-x-1">
                     <Clock className="w-3 h-3" />
@@ -310,14 +310,14 @@ export function ProjectOverviewCard({
       {/* Empty state */}
       {filteredProjects.length === 0 && (
         <div className="text-center py-8">
-          <FolderOpen className="w-12 h-12 text-text-tertiary mx-auto mb-3" />
-          <p className="text-text-secondary">
+          <FolderOpen className="w-12 h-12 text-[var(--ff-text-tertiary)] mx-auto mb-3" />
+          <p className="text-[var(--ff-text-secondary)]">
             {projects.length === 0 
               ? 'No projects found in database' 
               : `No ${selectedTab} projects found`
             }
           </p>
-          <p className="text-xs text-text-tertiary mt-1">
+          <p className="text-xs text-[var(--ff-text-tertiary)] mt-1">
             {projects.length === 0 
               ? 'Projects will appear here when added to the system'
               : 'Try selecting a different filter'

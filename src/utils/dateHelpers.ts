@@ -1,4 +1,3 @@
-import { log } from '@/lib/logger';
 
 /**
  * Safe date conversion utilities

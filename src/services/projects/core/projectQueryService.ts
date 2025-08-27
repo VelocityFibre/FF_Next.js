@@ -23,6 +23,18 @@ export class ProjectQueryService {
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
       log.error('Error fetching projects from Neon:', { data: error }, 'projectQueryService');
+      
+      // If it's a database connection error, throw it to be handled by React Query
+      if (error && typeof error === 'object') {
+        const errorMessage = 'message' in error ? (error as any).message : '';
+        if (errorMessage.includes('password authentication failed') || 
+            errorMessage.includes('connection refused') ||
+            errorMessage.includes('network error')) {
+          throw error; // Let React Query handle the retry logic
+        }
+      }
+      
+      // For other errors, return empty array to prevent UI crashes
       return [];
     }
   }
@@ -50,6 +62,18 @@ export class ProjectQueryService {
       return ProjectDataMapper.mapToProject(result[0] as any);
     } catch (error) {
       log.error('Error fetching project by ID:', { data: error }, 'projectQueryService');
+      
+      // If it's a database connection error, throw it to be handled by React Query
+      if (error && typeof error === 'object') {
+        const errorMessage = 'message' in error ? (error as any).message : '';
+        if (errorMessage.includes('password authentication failed') || 
+            errorMessage.includes('connection refused') ||
+            errorMessage.includes('network error')) {
+          throw error; // Let React Query handle the retry logic
+        }
+      }
+      
+      // For other errors, return null
       return null;
     }
   }

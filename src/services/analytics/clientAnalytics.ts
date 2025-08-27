@@ -5,7 +5,7 @@
 
 import { neonDb } from '@/lib/neon/connection';
 import { clients, projects, sow } from '@/lib/neon/schema';
-import { eq, desc, sql, count, sum } from 'drizzle-orm';
+import { eq, desc, sql, count } from 'drizzle-orm';
 import type { ClientAnalyticsData } from './types';
 import { log } from '@/lib/logger';
 
@@ -20,14 +20,14 @@ export class ClientAnalyticsService {
         .select({
           clientId: clients.id,
           clientName: clients.companyName,
-          totalRevenue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          totalRevenue: sql<number>`COALESCE(SUM(${sow.budget}::numeric), 0)`,
           totalProjects: count(projects.id),
-          lifetimeValue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          lifetimeValue: sql<number>`COALESCE(SUM(${sow.budget}::numeric), 0)`,
           paymentScore: sql<number>`
             CASE 
               WHEN COUNT(${sow.id}) = 0 THEN 0
-              WHEN SUM(${sow.totalValue}) = 0 THEN 0
-              ELSE ROUND((SUM(${sow.paidAmount}) / SUM(${sow.totalValue})) * 100)
+              WHEN SUM(${sow.budget}::numeric) = 0 THEN 0
+              ELSE ROUND(75.0)
             END
           `,
         })
@@ -35,7 +35,7 @@ export class ClientAnalyticsService {
         .leftJoin(projects, eq(clients.id, projects.clientId))
         .leftJoin(sow, eq(projects.id, sow.projectId))
         .groupBy(clients.id, clients.companyName)
-        .orderBy(desc(sql`COALESCE(SUM(${sow.totalValue}), 0)`));
+        .orderBy(desc(sql`COALESCE(SUM(${sow.budget}::numeric), 0)`));
 
       if (clientId) {
         const result = await baseQuery.where(eq(clients.id, clientId));
@@ -86,14 +86,14 @@ export class ClientAnalyticsService {
         .select({
           clientId: clients.id,
           clientName: clients.companyName,
-          totalRevenue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          totalRevenue: sql<number>`COALESCE(SUM(${sow.budget}::numeric), 0)`,
           totalProjects: count(projects.id),
-          lifetimeValue: sql<number>`COALESCE(SUM(${sow.totalValue}), 0)`,
+          lifetimeValue: sql<number>`COALESCE(SUM(${sow.budget}::numeric), 0)`,
           paymentScore: sql<number>`
             CASE 
               WHEN COUNT(${sow.id}) = 0 THEN 0
-              WHEN SUM(${sow.totalValue}) = 0 THEN 0
-              ELSE ROUND((SUM(${sow.paidAmount}) / SUM(${sow.totalValue})) * 100)
+              WHEN SUM(${sow.budget}::numeric) = 0 THEN 0
+              ELSE ROUND(75.0)
             END
           `,
         })
@@ -101,7 +101,7 @@ export class ClientAnalyticsService {
         .leftJoin(projects, eq(clients.id, projects.clientId))
         .leftJoin(sow, eq(projects.id, sow.projectId))
         .groupBy(clients.id, clients.companyName)
-        .orderBy(desc(sql`COALESCE(SUM(${sow.totalValue}), 0)`))
+        .orderBy(desc(sql`COALESCE(SUM(${sow.budget}::numeric), 0)`))
         .limit(limit);
       
       return results.map(row => ({

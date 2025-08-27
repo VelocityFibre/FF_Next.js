@@ -183,38 +183,38 @@ export function Dashboard() {
 
       {/* Additional KPI Cards for Analytics Users */}
       {hasPermission(Permission.ANALYTICS_READ) && (
-        <div className="bg-surface-primary rounded-lg border border-border-primary p-6">
+        <div className="bg-[var(--ff-surface-primary)] rounded-lg border border-[var(--ff-border-primary)] p-6">
           <div className="flex items-center space-x-2 mb-4">
             <TrendingUp className="w-5 h-5 text-primary-600" />
-            <h3 className="text-lg font-semibold text-text-primary">
+            <h3 className="text-lg font-semibold text-[var(--ff-text-primary)]">
               Performance Metrics
             </h3>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="bg-[var(--ff-surface-secondary)] rounded-lg p-4">
               <div className="text-2xl font-bold text-success-600">
                 {stats.qualityScore > 0 ? formatPercentage(stats.qualityScore) : '0%'}
               </div>
-              <div className="text-sm text-text-secondary">Quality Score</div>
+              <div className="text-sm text-[var(--ff-text-secondary)]">Quality Score</div>
             </div>
-            <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="bg-[var(--ff-surface-secondary)] rounded-lg p-4">
               <div className="text-2xl font-bold text-primary-600">
                 {stats.onTimeDelivery > 0 ? formatPercentage(stats.onTimeDelivery) : '0%'}
               </div>
-              <div className="text-sm text-text-secondary">On-Time Delivery</div>
+              <div className="text-sm text-[var(--ff-text-secondary)]">On-Time Delivery</div>
             </div>
-            <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="bg-[var(--ff-surface-secondary)] rounded-lg p-4">
               <div className="text-2xl font-bold text-warning-600">
                 {stats.performanceScore > 0 ? formatPercentage(stats.performanceScore) : '0%'}
               </div>
-              <div className="text-sm text-text-secondary">Performance Score</div>
+              <div className="text-sm text-[var(--ff-text-secondary)]">Performance Score</div>
             </div>
-            <div className="bg-surface-secondary rounded-lg p-4">
+            <div className="bg-[var(--ff-surface-secondary)] rounded-lg p-4">
               <div className="text-2xl font-bold text-info-600">
                 {stats.totalRevenue > 0 ? formatCurrency(stats.totalRevenue) : 'R0'}
               </div>
-              <div className="text-sm text-text-secondary">Total Revenue</div>
+              <div className="text-sm text-[var(--ff-text-secondary)]">Total Revenue</div>
             </div>
           </div>
         </div>
@@ -222,17 +222,17 @@ export function Dashboard() {
 
       {/* Empty State for Limited Permissions */}
       {visibleStats.length === 0 && (
-        <div className="bg-surface-primary rounded-lg border border-border-primary p-12 text-center">
-          <div className="w-16 h-16 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-            <TrendingUp className="w-8 h-8 text-text-tertiary" />
+        <div className="bg-[var(--ff-surface-primary)] rounded-lg border border-[var(--ff-border-primary)] p-12 text-center">
+          <div className="w-16 h-16 bg-[var(--ff-surface-secondary)] rounded-full flex items-center justify-center mx-auto mb-4">
+            <TrendingUp className="w-8 h-8 text-[var(--ff-text-tertiary)]" />
           </div>
-          <h3 className="text-lg font-medium text-text-primary mb-2">
+          <h3 className="text-lg font-medium text-[var(--ff-text-primary)] mb-2">
             Welcome to FibreFlow
           </h3>
-          <p className="text-text-secondary mb-4">
+          <p className="text-[var(--ff-text-secondary)] mb-4">
             Your dashboard will display relevant information once you have access to project data.
           </p>
-          <p className="text-sm text-text-tertiary">
+          <p className="text-sm text-[var(--ff-text-tertiary)]">
             Contact your administrator to request additional permissions.
           </p>
         </div>

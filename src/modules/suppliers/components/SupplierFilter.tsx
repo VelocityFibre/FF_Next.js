@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   Search, 
   Filter, 
@@ -63,7 +63,7 @@ export function SupplierFilter() {
   // Extract unique filter options from suppliers
   const filterOptions = useMemo(() => {
     const categories = [...new Set(suppliers.map(s => s.category))];
-    const locations = [...new Set(suppliers.map(s => s.location).filter(Boolean))];
+    const locations = [...new Set(suppliers.map(s => s.location).filter(Boolean) as string[])];
     const statuses = [...new Set(suppliers.map(s => s.status))];
 
     return {
@@ -350,7 +350,7 @@ export function SupplierFilter() {
                 Location
               </label>
               <div className="space-y-2">
-                {filterOptions.locations.map(location => (
+                {filterOptions.locations.map((location: string) => (
                   <label key={location} className="flex items-center space-x-2">
                     <input
                       type="checkbox"

@@ -40,23 +40,23 @@ export function ActivityListItem({ activity, isLast }: ActivityListItemProps) {
             <div className="flex-1 min-w-0">
               {/* User info */}
               <div className="flex items-center space-x-2 mb-1">
-                <span className="font-medium text-text-primary text-sm">
+                <span className="font-medium text-[var(--ff-text-primary)] text-sm">
                   {activity.user.name}
                 </span>
-                <span className="text-xs text-text-tertiary">
+                <span className="text-xs text-[var(--ff-text-tertiary)]">
                   ({activity.user.role})
                 </span>
               </div>
 
               {/* Description */}
-              <p className="text-sm text-text-secondary mb-2">
+              <p className="text-sm text-[var(--ff-text-secondary)] mb-2">
                 {activity.description}
               </p>
 
               {/* Project link */}
               {activity.project && (
                 <div className="flex items-center space-x-1 mb-2">
-                  <FileText className="w-3 h-3 text-text-tertiary" />
+                  <FileText className="w-3 h-3 text-[var(--ff-text-tertiary)]" />
                   <span className="text-xs text-primary-600 hover:text-primary-700 cursor-pointer">
                     {activity.project}
                   </span>
@@ -65,7 +65,7 @@ export function ActivityListItem({ activity, isLast }: ActivityListItemProps) {
 
               {/* Metadata */}
               {activity.metadata && (
-                <div className="flex items-center space-x-3 text-xs text-text-tertiary">
+                <div className="flex items-center space-x-3 text-xs text-[var(--ff-text-tertiary)]">
                   {activity.metadata.location && (
                     <div className="flex items-center space-x-1">
                       <MapPin className="w-3 h-3" />
@@ -94,7 +94,7 @@ export function ActivityListItem({ activity, isLast }: ActivityListItemProps) {
             </div>
 
             {/* Timestamp */}
-            <div className="text-xs text-text-tertiary ml-4">
+            <div className="text-xs text-[var(--ff-text-tertiary)] ml-4">
               {formatTimestamp(activity.timestamp)}
             </div>
           </div>

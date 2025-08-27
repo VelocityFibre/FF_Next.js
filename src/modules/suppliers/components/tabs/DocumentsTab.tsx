@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   FileText, 
   Download, 
   Upload, 
   Eye, 
-  Calendar, 
   CheckCircle, 
   AlertTriangle,
   XCircle,
@@ -12,8 +11,6 @@ import {
   Shield,
   Award,
   Search,
-  Filter,
-  Plus,
   FolderOpen
 } from 'lucide-react';
 import { useSuppliersPortal } from '../../context/SuppliersPortalContext';

@@ -16,7 +16,7 @@ export function ActivityHeader({ showAll, hasMore, onViewAll }: ActivityHeaderPr
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center space-x-2">
         <Clock className="w-5 h-5 text-primary-600" />
-        <h3 className="text-lg font-semibold text-text-primary">
+        <h3 className="text-lg font-semibold text-[var(--ff-text-primary)]">
           Recent Activity
         </h3>
       </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginCredentials, UserRole } from '@/types/auth.types';
-import { log } from '@/lib/logger';
 import {
   LoginFormProps,
   AuthHeader,

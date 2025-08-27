@@ -36,7 +36,7 @@ const VFLogo: React.FC<VFLogoProps> = ({ className = '', size = 'large' }) => {
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <div className={`bg-white rounded-xl shadow-sm ${containerPadding}`}>
+      <div className={`rounded-xl shadow-sm ${containerPadding}`} style={{ backgroundColor: 'var(--ff-surface-primary)' }}>
         {logoSrc ? (
           <img 
             src={logoSrc} 
@@ -58,8 +58,8 @@ const VFLogo: React.FC<VFLogoProps> = ({ className = '', size = 'large' }) => {
         )}
         
         {/* Fallback gradient logo */}
-        <div className={`hidden fallback-logo ${logoSize} rounded-lg bg-gradient-to-br from-blue-500 via-pink-500 to-pink-600 flex items-center justify-center flex-shrink-0`}>
-          <span className="text-white font-bold text-2xl">VF</span>
+        <div className={`hidden fallback-logo ${logoSize} rounded-lg flex items-center justify-center flex-shrink-0`} style={{ background: 'linear-gradient(135deg, var(--ff-primary-500) 0%, var(--ff-accent-500) 50%, var(--ff-accent-600) 100%)' }}>
+          <span className="font-bold text-2xl" style={{ color: 'var(--ff-text-inverse)' }}>VF</span>
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ export async function processImportRows(
   
   // Extract all manager names first
   const managerNames = extractUniqueManagers(rows);
-  log.info('📊 Unique managers found:', { data: Array.from(managerNames }, 'rowProcessor'););
+  log.info('📊 Unique managers found:', { data: Array.from(managerNames) }, 'rowProcessor');
   
   // Sort rows to process managers first
   const sortedRows = sortByManagerHierarchy(rows, managerNames);
@@ -79,7 +79,7 @@ export async function processImportRows(
       
       // Validate employeeId - this is critical for database constraint
       if (!row.employeeId || row.employeeId.trim() === '') {
-        log.info(`Row ${rowNumber} missing employeeId. Available fields:`, { data: Object.keys(row }, 'rowProcessor'););
+        log.info(`Row ${rowNumber} missing employeeId. Available fields:`, { data: Object.keys(row) }, 'rowProcessor');
 
         errors.push({
           row: rowNumber,
@@ -124,8 +124,8 @@ export async function processImportRows(
         managerName: row.managerName,
         resolvedUuid: reportsTo,
         reportsToType: typeof reportsTo,
-        reportsToValue: JSON.stringify(reportsTo }, 'rowProcessor');}
-      });
+        reportsToValue: JSON.stringify(reportsTo)
+      } }, 'rowProcessor');
       
       // Parse start date if provided
       let startDate = new Date();

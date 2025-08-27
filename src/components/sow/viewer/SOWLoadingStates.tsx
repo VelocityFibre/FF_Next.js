@@ -8,7 +8,7 @@ export function SOWLoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-12">
       <Loader2 className="w-8 h-8 animate-spin text-primary-600 mb-4" />
-      <p className="text-text-secondary">Loading SOW data from Neon...</p>
+      <p className="text-[var(--ff-text-secondary)]">Loading SOW data from Neon...</p>
     </div>
   );
 }
@@ -42,9 +42,9 @@ export function SOWErrorState({ error, onRetry }: SOWErrorStateProps) {
 export function SOWEmptyState() {
   return (
     <div className="text-center py-12">
-      <MapPin className="w-12 h-12 text-text-tertiary mx-auto mb-4" />
-      <h3 className="text-lg font-medium text-text-primary mb-2">No SOW Data</h3>
-      <p className="text-text-secondary">
+      <MapPin className="w-12 h-12 text-[var(--ff-text-tertiary)] mx-auto mb-4" />
+      <h3 className="text-lg font-medium text-[var(--ff-text-primary)] mb-2">No SOW Data</h3>
+      <p className="text-[var(--ff-text-secondary)]">
         No Scope of Work data has been uploaded for this project yet.
       </p>
     </div>

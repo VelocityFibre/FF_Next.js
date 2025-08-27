@@ -16,7 +16,7 @@ const sizeClasses = {
 
 const variantClasses = {
   primary: 'text-primary-600',
-  secondary: 'text-text-secondary',
+  secondary: 'text-[var(--ff-text-secondary)]',
   white: 'text-white',
   success: 'text-success-600',
   warning: 'text-warning-600',
@@ -59,7 +59,7 @@ export function LoadingSpinner({
           ></path>
         </svg>
         {label && size !== 'sm' && (
-          <span className="text-sm text-text-secondary">{label}</span>
+          <span className="text-sm text-[var(--ff-text-secondary)]">{label}</span>
         )}
         <span className="sr-only">{label}</span>
       </div>
@@ -116,8 +116,8 @@ export function LoadingOverlay({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-surface-overlay z-50 flex items-center justify-center">
-      <div className="bg-surface-primary rounded-lg shadow-xl p-8 border border-border-primary">
+    <div className="fixed inset-0 bg-[var(--ff-surface-overlay)] z-50 flex items-center justify-center">
+      <div className="bg-[var(--ff-surface-primary)] rounded-lg shadow-xl p-8 border border-[var(--ff-border-primary)]">
         <LoadingSpinner size="lg" variant={variant} label={label} />
       </div>
     </div>

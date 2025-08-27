@@ -67,8 +67,8 @@ export class AuditLoggerCore {
         entityType,
         entityId,
         userId: context.userId,
-        timestamp: new Date( }, 'AuditLoggerCore');}.toISOString()
-      });
+        timestamp: new Date().toISOString()
+      } }, 'AuditLoggerCore');
     } catch (error) {
       log.error('[AuditLogger] Failed to log audit entry:', { data: error }, 'AuditLoggerCore');
       // Don't throw error to avoid breaking business logic

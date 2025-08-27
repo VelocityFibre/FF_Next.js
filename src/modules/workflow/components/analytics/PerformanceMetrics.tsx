@@ -1,15 +1,14 @@
 // 🟢 WORKING: Advanced performance metrics dashboard with KPI analysis
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
 import { Badge } from '@/shared/components/ui/Badge';
 import { Progress } from '@/shared/components/ui/Progress';
-import { Button } from '@/shared/components/ui/Button';
 import { 
   TrendingUp, 
   TrendingDown, 
   Target, 
   Clock, 
-  Users, 
+ 
   AlertTriangle,
   CheckCircle,
   Zap,
@@ -149,7 +148,14 @@ export function PerformanceMetrics({ analytics, dateRange }: PerformanceMetricsP
   const improvementAreas = useMemo(() => {
     if (!analytics) return [];
 
-    const areas = [];
+    const areas: Array<{
+      type: string;
+      name: string;
+      issue: string;
+      priority: 'high' | 'medium' | 'low';
+      value: number;
+      recommendation?: string;
+    }> = [];
 
     // Low completion rate phases
     const problematicPhases = analytics.phaseMetrics
@@ -163,6 +169,7 @@ export function PerformanceMetrics({ analytics, dateRange }: PerformanceMetricsP
         name: phase.phaseName,
         issue: `Low completion rate: ${Math.round(phase.completionRate)}%`,
         priority: phase.completionRate < 60 ? 'high' : 'medium',
+        value: phase.completionRate,
         recommendation: `Review and optimize ${phase.phaseName} workflow steps`
       });
     });
@@ -179,6 +186,7 @@ export function PerformanceMetrics({ analytics, dateRange }: PerformanceMetricsP
         name: template.templateName,
         issue: `Above average duration: ${Math.round(template.averageDuration)} days`,
         priority: template.averageDuration > analytics.performanceMetrics.averageProjectDuration * 2 ? 'high' : 'medium',
+        value: template.averageDuration,
         recommendation: 'Consider streamlining phases or improving resource allocation'
       });
     });

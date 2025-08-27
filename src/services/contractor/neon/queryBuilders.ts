@@ -12,8 +12,6 @@ import type { ContractorFilter } from '@/types/contractor.types';
  * Query contractors with filters
  */
 export async function queryContractorsWithFilters(filter?: ContractorFilter) {
-  let query = neonDb.select().from(contractors);
-  
   const conditions = [];
   
   // Always filter active contractors unless explicitly requested
@@ -34,28 +32,51 @@ export async function queryContractorsWithFilters(filter?: ContractorFilter) {
   
   // Filter by status
   if (filter?.status) {
-    conditions.push(eq(contractors.status, filter.status));
+    if (Array.isArray(filter.status)) {
+      conditions.push(or(...filter.status.map(s => eq(contractors.status, s))));
+    } else {
+      conditions.push(eq(contractors.status, filter.status));
+    }
   }
   
   // Filter by business type
   if (filter?.businessType) {
-    conditions.push(eq(contractors.businessType, filter.businessType));
+    if (Array.isArray(filter.businessType)) {
+      conditions.push(or(...filter.businessType.map(bt => eq(contractors.businessType, bt))));
+    } else {
+      conditions.push(eq(contractors.businessType, filter.businessType));
+    }
   }
   
   // Filter by province
   if (filter?.province) {
-    conditions.push(eq(contractors.province, filter.province));
+    if (Array.isArray(filter.province)) {
+      conditions.push(or(...filter.province.map(p => eq(contractors.province, p))));
+    } else {
+      conditions.push(eq(contractors.province, filter.province));
+    }
   }
   
   // Filter by compliance status
   if (filter?.complianceStatus) {
-    conditions.push(eq(contractors.complianceStatus, filter.complianceStatus));
+    if (Array.isArray(filter.complianceStatus)) {
+      conditions.push(or(...filter.complianceStatus.map(cs => eq(contractors.complianceStatus, cs))));
+    } else {
+      conditions.push(eq(contractors.complianceStatus, filter.complianceStatus));
+    }
   }
   
   // Filter by RAG overall rating
   if (filter?.ragOverall) {
-    conditions.push(eq(contractors.ragOverall, filter.ragOverall));
+    if (Array.isArray(filter.ragOverall)) {
+      conditions.push(or(...filter.ragOverall.map(r => eq(contractors.ragOverall, r))));
+    } else {
+      conditions.push(eq(contractors.ragOverall, filter.ragOverall));
+    }
   }
+  
+  // Build the base query
+  let query = neonDb.select().from(contractors);
   
   // Apply all conditions
   if (conditions.length > 0) {

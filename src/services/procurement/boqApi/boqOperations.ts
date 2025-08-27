@@ -12,7 +12,7 @@ export class BOQOperations {
   /**
    * Get BOQ with its items and exceptions
    */
-  static async getBOQWithItems(context: ProcurementContext, boqId: string): Promise<BOQWithItems> {
+  static async getBOQWithItems(_context: ProcurementContext, _boqId: string): Promise<BOQWithItems> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('BOQ operations not implemented - connect to real database service');
   }
@@ -20,7 +20,7 @@ export class BOQOperations {
   /**
    * Get all BOQs for a project
    */
-  static async getBOQsByProject(_context: ProcurementContext, projectId: string): Promise<BOQ[]> {
+  static async getBOQsByProject(_context: ProcurementContext, _projectId: string): Promise<BOQ[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('BOQ operations not implemented - connect to real database service');
   }
@@ -28,7 +28,7 @@ export class BOQOperations {
   /**
    * Get BOQ by ID
    */
-  static async getBOQ(context: ProcurementContext, boqId: string): Promise<BOQ> {
+  static async getBOQ(_context: ProcurementContext, _boqId: string): Promise<BOQ> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('BOQ operations not implemented - connect to real database service');
   }
@@ -36,7 +36,7 @@ export class BOQOperations {
   /**
    * Update BOQ
    */
-  static async updateBOQ(context: ProcurementContext, boqId: string, updates: Partial<BOQ>): Promise<BOQ> {
+  static async updateBOQ(_context: ProcurementContext, _boqId: string, _updates: Partial<BOQ>): Promise<BOQ> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('BOQ operations not implemented - connect to real database service');
   }
@@ -44,7 +44,7 @@ export class BOQOperations {
   /**
    * Delete BOQ
    */
-  static async deleteBOQ(context: ProcurementContext, boqId: string): Promise<void> {
+  static async deleteBOQ(_context: ProcurementContext, _boqId: string): Promise<void> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('BOQ operations not implemented - connect to real database service');
   }
@@ -53,7 +53,7 @@ export class BOQOperations {
    * Create BOQ
    */
   static async createBOQ(context: ProcurementContext, boqData: BOQCreateData): Promise<BOQ> {
-    const newBOQ: BOQ = {
+    const _newBOQ: BOQ = {
       id: `boq-${Date.now()}`,
       projectId: context.projectId,
       name: boqData.title || `BOQ ${boqData.version}`,

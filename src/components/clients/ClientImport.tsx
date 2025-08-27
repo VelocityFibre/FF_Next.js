@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Building2 } from 'lucide-react';
 import { clientService } from '@/services/clientService';
 import { ClientImportResult } from '@/types/client.types';
-import { log } from '@/lib/logger';
 import {
   ClientImportProps,
   ClientFileDropZone,

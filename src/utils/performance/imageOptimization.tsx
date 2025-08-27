@@ -4,7 +4,6 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { log } from '@/lib/logger';
 
 export interface ImageLoadOptions {
   src: string;

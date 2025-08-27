@@ -1,6 +1,7 @@
 // 🟢 WORKING: Enhanced procurement portal context provider with view modes
 import React, { createContext, useContext } from 'react';
 import type { ProcurementPortalContext } from '@/types/procurement/portal.types';
+import type { Project } from '@/types/project.types';
 
 // Create the context
 const ProcurementPortalContext = createContext<ProcurementPortalContext | undefined>(undefined);
@@ -62,7 +63,19 @@ export function useProjectFilter() {
   const { selectedProject, viewMode, setProject, setViewMode } = useProcurementPortal();
   
   const handleProjectChange = (project: { id: string; name: string; code: string } | undefined) => {
-    setProject(project);
+    // Convert simple project object to full Project type
+    const projectData = project ? {
+      ...project,
+      projectType: 'fiber' as const,
+      startDate: new Date(),
+      endDate: new Date(),
+      status: 'active' as const,
+      priority: 'medium' as const,
+      progress: 0,
+      clientId: '',
+      manager: ''
+    } : undefined;
+    setProject(projectData as Project | undefined);
     if (project) {
       setViewMode('single');
     }

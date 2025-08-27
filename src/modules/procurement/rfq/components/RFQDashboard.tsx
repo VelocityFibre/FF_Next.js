@@ -57,7 +57,7 @@ interface RFQDashboardProps {
   onCreateRFQ: () => void;
 }
 
-export function RFQDashboard({ projectId, searchTerm, statusFilter, onCreateRFQ }: RFQDashboardProps) {
+export function RFQDashboard({ projectId: _projectId, searchTerm, statusFilter, onCreateRFQ: _onCreateRFQ }: RFQDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [rfqStats, setRFQStats] = useState<RFQStatsData>({
@@ -493,13 +493,13 @@ export function RFQDashboard({ projectId, searchTerm, statusFilter, onCreateRFQ 
                     type="text"
                     placeholder="Search RFQs..."
                     value={searchTerm}
-                    onChange={(e) => {/* Search handled by parent */}}
+                    onChange={(_e) => {/* Search handled by parent */}}
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
                 </div>
                 <select
                   value={statusFilter}
-                  onChange={(e) => {/* Filter handled by parent */}}
+                  onChange={(_e) => {/* Filter handled by parent */}}
                   className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Status</option>

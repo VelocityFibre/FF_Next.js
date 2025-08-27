@@ -1,17 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   MessageSquare, 
   Send, 
   Paperclip, 
   Search, 
-  Filter,
   Clock,
   CheckCircle,
-  AlertCircle,
   User,
   Building2,
-  Phone,
-  Mail,
   MoreVertical,
   Archive,
   Star,

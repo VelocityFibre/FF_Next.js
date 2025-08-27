@@ -1,13 +1,32 @@
-import { log } from '@/lib/logger';
-
 /**
  * Logger Service
  * Proper logging replacement for console.* statements
  * Zero Tolerance Enforcement: No console.* statements allowed
  */
 
+// Global type declarations for log storage
+declare global {
+  interface Window {
+    __appLogs?: LogEntry[];
+  }
+  namespace NodeJS {
+    interface Process {
+      __appLogs?: LogEntry[];
+    }
+  }
+}
+
 export interface LogData {
   [key: string]: any;
+}
+
+export interface LogEntry {
+  timestamp: string;
+  level: 'debug' | 'info' | 'warn' | 'error';
+  component: string | undefined;
+  message: string;
+  data: LogData | undefined;
+  formattedMessage: string;
 }
 
 export interface LoggerOptions {
@@ -90,32 +109,44 @@ class Logger {
     const prefix = component ? `[${component}]` : '';
     const logMessage = `${timestamp} [${level.toUpperCase()}] ${prefix} ${message}`;
 
-    if (this.options.enableConsole) {
-      // Only in development - controlled console output
-      if (process.env.NODE_ENV === 'development') {
-        switch (level) {
-          case 'debug':
-            // eslint-disable-next-line no-console
-            log.debug(logMessage, { data: data || '' }, 'logger');
-            break;
-          case 'info':
-            // eslint-disable-next-line no-console
-            log.info(logMessage, { data: data || '' }, 'logger');
-            break;
-          case 'warn':
-            // eslint-disable-next-line no-console
-            log.warn(logMessage, { data: data || '' }, 'logger');
-            break;
-          case 'error':
-            // eslint-disable-next-line no-console
-            log.error(logMessage, { data: data || '' }, 'logger');
-            break;
-        }
+    // Store logs in memory for development (could be sent to external service in production)
+    const logEntry = {
+      timestamp,
+      level,
+      component,
+      message,
+      data,
+      formattedMessage: logMessage
+    };
+
+    // Store in global log collection (browser or Node.js)
+    if (typeof window !== 'undefined') {
+      // Browser environment
+      if (!window.__appLogs) window.__appLogs = [];
+      window.__appLogs.push(logEntry);
+      
+      // Limit log storage to prevent memory issues
+      if (window.__appLogs.length > 1000) {
+        window.__appLogs.shift();
+      }
+    } else {
+      // Node.js environment - could write to file or send to logging service
+      // For now, just store in process (could be extended)
+      if (!process.__appLogs) process.__appLogs = [];
+      process.__appLogs.push(logEntry);
+      
+      // Limit log storage
+      if (process.__appLogs.length > 1000) {
+        process.__appLogs.shift();
       }
     }
 
-    // In production, logs could be sent to external service
-    // This prevents all console.* usage in production
+    // In development, could optionally write to stderr/stdout
+    // But we avoid console.* statements entirely for zero-tolerance compliance
+    if (this.options.enableFile && process.env.NODE_ENV === 'development') {
+      // Could implement file logging here if needed
+      // fs.appendFile('app.log', logMessage + '\n', () => {})
+    }
   }
 
   /**
@@ -128,6 +159,46 @@ class Logger {
     const currentLevelIndex = levels.indexOf(this.options.level || 'info');
     const messageLevelIndex = levels.indexOf(level);
     return messageLevelIndex >= currentLevelIndex;
+  }
+
+  /**
+   * Get all stored logs (for debugging in development)
+   * @returns Array of log entries
+   */
+  getLogs(): LogEntry[] {
+    if (typeof window !== 'undefined') {
+      return window.__appLogs || [];
+    } else {
+      return (process as any).__appLogs || [];
+    }
+  }
+
+  /**
+   * Clear all stored logs
+   */
+  clearLogs(): void {
+    if (typeof window !== 'undefined') {
+      window.__appLogs = [];
+    } else {
+      (process as any).__appLogs = [];
+    }
+  }
+
+  /**
+   * Get logs for development debugging (replaces console access)
+   * This method can be used in development to inspect logs without console
+   */
+  getRecentLogs(count: number = 50): LogEntry[] {
+    const logs = this.getLogs();
+    return logs.slice(-count);
+  }
+
+  /**
+   * Export logs as string (for debugging or external service)
+   */
+  exportLogs(): string {
+    const logs = this.getLogs();
+    return logs.map(log => log.formattedMessage + (log.data ? ` ${JSON.stringify(log.data)}` : '')).join('\n');
   }
 }
 

@@ -131,7 +131,7 @@ export class ScoreUpdater {
     // In a production system, you would log to an audit table
     log.info('RAG Score Update:', { data: {
       contractorId,
-      timestamp: new Date( }, 'scoreUpdater');}.toISOString(),
+      timestamp: new Date().toISOString(),
       changes: {
         overall: { from: oldScore?.overall || 0, to: newScore.overall },
         performance: { from: oldScore?.performance || 0, to: newScore.performance },
@@ -139,6 +139,6 @@ export class ScoreUpdater {
         reliability: { from: oldScore?.reliability || 0, to: newScore.reliability },
         capabilities: { from: oldScore?.capabilities || 0, to: newScore.capabilities }
       }
-    });
+    } }, 'scoreUpdater');
   }
 }

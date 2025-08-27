@@ -1,7 +1,6 @@
 // 🟢 WORKING: Advanced trend analysis with forecasting and predictive insights
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -9,15 +8,10 @@ import {
   Tooltip,
   ResponsiveContainer,
   ComposedChart,
-  Bar,
   Area,
-  AreaChart,
-  ScatterChart,
-  Scatter
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
 import { Badge } from '@/shared/components/ui/Badge';
-import { Button } from '@/shared/components/ui/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/Select';
 import { 
   TrendingUp, 
@@ -25,11 +19,9 @@ import {
   Activity,
   Calendar,
   Target,
-  AlertCircle,
   Clock,
   BarChart3,
   Zap,
-  ArrowRight
 } from 'lucide-react';
 import { WorkflowAnalytics } from '../../types/workflow.types';
 
@@ -64,7 +56,7 @@ interface TrendInsight {
   confidence: 'high' | 'medium' | 'low';
 }
 
-export function TrendAnalysis({ analytics, dateRange }: TrendAnalysisProps) {
+export function TrendAnalysis({ analytics, dateRange: _dateRange }: TrendAnalysisProps) {
   const [selectedMetric, setSelectedMetric] = useState<TrendMetric>('completion_rate');
   const [forecastPeriod, setForecastPeriod] = useState<ForecastPeriod>('month');
 
@@ -215,7 +207,7 @@ export function TrendAnalysis({ analytics, dateRange }: TrendAnalysisProps) {
       avg: values.reduce((sum, val) => sum + val, 0) / values.length
     }));
 
-    const overallAvg = monthlyAvg.reduce((sum, m) => sum + m.avg, 0) / monthlyAvg.length;
+    // const overallAvg = monthlyAvg.reduce((sum, m) => sum + m.avg, 0) / monthlyAvg.length;
     const highestMonth = monthlyAvg.reduce((max, m) => m.avg > max.avg ? m : max);
     const lowestMonth = monthlyAvg.reduce((min, m) => m.avg < min.avg ? m : min);
 

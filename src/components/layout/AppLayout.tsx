@@ -219,10 +219,10 @@ export function AppLayout() {
   // Show loading spinner while user data is being fetched
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-primary">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--ff-background-primary)]">
         <div className="text-center">
           <LoadingSpinner size="lg" className="mx-auto mb-4" />
-          <p className="text-text-secondary">Loading application...</p>
+          <p className="text-[var(--ff-text-secondary)]">Loading application...</p>
         </div>
       </div>
     );
@@ -231,7 +231,7 @@ export function AppLayout() {
   const pageMeta = getPageMeta();
 
   return (
-    <div className="flex h-screen bg-background-secondary overflow-hidden">
+    <div className="flex h-screen bg-[var(--ff-background-secondary)] overflow-hidden">
       {/* Sidebar */}
       <Sidebar 
         isOpen={sidebarOpen} 
@@ -243,7 +243,7 @@ export function AppLayout() {
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-20 bg-surface-overlay lg:hidden"
+          className="fixed inset-0 z-20 bg-[var(--ff-surface-overlay)] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -263,7 +263,7 @@ export function AppLayout() {
         />
         
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-background-primary">
+        <main className="flex-1 overflow-y-auto bg-[var(--ff-background-primary)]">
           <div className="min-h-full">
             <Outlet />
           </div>

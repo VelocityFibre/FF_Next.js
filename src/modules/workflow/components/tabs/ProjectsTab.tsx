@@ -213,8 +213,8 @@ export function ProjectsTab() {
           <ProjectWorkflowList 
             workflows={filteredWorkflows}
             onAssignWorkflow={handleAssignToProject}
-            onEditWorkflow={(id) => log.info('Edit workflow:', { data: id }, 'ProjectsTab');}
-            onViewDetails={(id) => log.info('View details:', { data: id }, 'ProjectsTab');}
+            onEditWorkflow={(id) => log.info('Edit workflow:', { data: id }, 'ProjectsTab')}
+            onViewDetails={(id) => log.info('View details:', { data: id }, 'ProjectsTab')}
           />
         ) : (
           <WorkflowAnalytics />

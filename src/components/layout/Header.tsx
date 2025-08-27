@@ -6,7 +6,6 @@ import { BreadcrumbNavigation } from './header/BreadcrumbNavigation';
 import { SearchBar } from './header/SearchBar';
 import { NotificationsDropdown } from './header/NotificationsDropdown';
 import { UserMenuDropdown } from './header/UserMenuDropdown';
-import { log } from '@/lib/logger';
 
 export function Header({ 
   title = 'Dashboard', 
@@ -61,7 +60,7 @@ export function Header({
   };
 
   return (
-    <header className="bg-surface-primary border-b border-border-primary shadow-sm">
+    <header className="bg-[var(--ff-surface-primary)] border-b border-[var(--ff-border-primary)] shadow-sm">
       <div className="px-4 lg:px-6 py-4">
         <div className="flex items-center justify-between">
           <BreadcrumbNavigation 
@@ -90,7 +89,7 @@ export function Header({
 
             {/* Sync/Refresh button */}
             <button 
-              className="p-2 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-lg transition-colors"
+              className="p-2 text-[var(--ff-text-secondary)] hover:text-[var(--ff-text-primary)] hover:bg-[var(--ff-surface-secondary)] rounded-lg transition-colors"
               title="Sync data"
             >
               <RefreshCw className="h-4 w-4" />

@@ -6,9 +6,7 @@ import {
   Send, 
   TrendingUp, 
   FileText, 
-  MessageSquare,
-  User,
-  CheckCircle
+  MessageSquare
 } from 'lucide-react';
 
 // Supplier types
@@ -373,10 +371,10 @@ export function SuppliersPortalProvider({ children }: SuppliersPortalProviderPro
         dispatch({ 
           type: 'UPDATE_ALL_STATS', 
           payload: {
-            totalSuppliers: mockSuppliers.length,
+            totalSuppliers: suppliers.length,
             activeSuppliers: suppliers.filter(s => s.status === 'active').length,
-            averageRating: suppliers.length > 0 ? suppliers.reduce((sum, s) => sum + s.rating, 0) / suppliers.length : 0,
-            complianceRate: mockSuppliers.reduce((sum, s) => sum + s.complianceScore, 0) / mockSuppliers.length,
+            averageRating: suppliers.length > 0 ? suppliers.reduce((sum: number, s: Supplier) => sum + s.rating, 0) / suppliers.length : 0,
+            complianceRate: suppliers.length > 0 ? suppliers.reduce((sum: number, s: Supplier) => sum + s.complianceScore, 0) / suppliers.length : 0,
             pendingRFQs: 12,
             unreadMessages: 8
           }

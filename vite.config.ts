@@ -6,7 +6,12 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Enable Fast Refresh for better development experience
+      fastRefresh: true,
+      // Optimize JSX runtime for better performance
+      jsxRuntime: 'automatic',
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
@@ -87,87 +92,119 @@ export default defineConfig({
     port: 5173,
     host: true,
     open: true,
+    hmr: {
+      overlay: true,
+      port: 24678, // Different port for HMR
+    },
+    watch: {
+      usePolling: false,
+      ignored: ['**/node_modules/**', '**/.git/**'],
+    },
+    cors: true,
+    // Performance optimizations for development
+    middlewareMode: false,
+    fs: {
+      strict: true,
+    },
+  },
+  css: {
+    postcss: './postcss.config.js',
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/variables.scss";`,
+      },
+    },
+    devSourcemap: true,
+    modules: {
+      localsConvention: 'camelCase',
+      generateScopedName: '[name]__[local]___[hash:base64:5]',
+    },
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
     target: 'esnext',
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 300, // Lower limit to catch issues earlier
+    cssCodeSplit: true,
+    minify: 'esbuild',
+    reportCompressedSize: false, // Faster builds
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Core React dependencies and ALL React-dependent libraries in vendor chunk
-          if (id.includes('node_modules/react') || 
-              id.includes('node_modules/react-dom') ||
-              id.includes('node_modules/react-router-dom') ||
-              id.includes('node_modules/@tanstack/react-query') || 
-              id.includes('node_modules/zustand') ||
-              id.includes('node_modules/recharts') ||
-              id.includes('node_modules/lucide-react') ||
-              id.includes('node_modules/@mui') || 
-              id.includes('node_modules/@emotion') || 
-              id.includes('node_modules/framer-motion')) {
-            return 'vendor';
+        // Let Vite handle automatic chunking based on actual imports
+        assetFileNames: (assetInfo) => {
+          // Optimize CSS asset naming and caching
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'assets/css/[name]-[hash][extname]';
           }
-          
-          // All context files and React hooks must be in vendor chunk to ensure React is available
-          if (id.includes('src/contexts/') || 
-              id.includes('Context.tsx') || 
-              id.includes('context/') ||
-              id.includes('/context.tsx') ||
-              id.includes('src/hooks/') ||
-              id.includes('src/components/ui/') ||
-              id.includes('useState') ||
-              id.includes('useEffect') ||
-              id.includes('forwardRef')) {
-            return 'vendor';
+          if (assetInfo.name?.match(/\.(png|jpe?g|gif|svg|webp)$/)) {
+            return 'assets/images/[name]-[hash][extname]';
           }
-          
-          // Excel processing library (large dependency)
-          if (id.includes('node_modules/xlsx') || id.includes('node_modules/papaparse')) {
-            return 'xlsx';
+          if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
+            return 'assets/fonts/[name]-[hash][extname]';
           }
-          
-          // Firebase
-          if (id.includes('node_modules/firebase')) {
-            return 'firebase';
-          }
-          
-          // Database and ORM
-          if (id.includes('node_modules/drizzle-orm') || id.includes('node_modules/@neondatabase')) {
-            return 'database';
-          }
-          
-          // Module-specific chunks for large modules
-          if (id.includes('src/modules/analytics')) {
-            return 'vendor';
-          }
-          
-          if (id.includes('src/modules/suppliers')) {
-            return 'vendor';
-          }
-          
-          if (id.includes('src/modules/procurement')) {
-            return 'vendor';
-          }
-          
-          if (id.includes('src/modules/projects')) {
-            return 'vendor';
-          }
-          
-          if (id.includes('src/modules/contractors')) {
-            return 'vendor';
-          }
-          
-          // Services
-          if (id.includes('src/services')) {
-            return 'services';
-          }
+          return 'assets/[name]-[hash][extname]';
         },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+      },
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        unknownGlobalSideEffects: false,
       },
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'recharts', '@tanstack/react-query', 'zustand', 'lucide-react', '@mui/material'],
+    include: [
+      // Critical path dependencies only
+      'react', 
+      'react-dom', 
+      'react-router-dom',
+      'clsx',
+      'tailwind-merge',
+      'date-fns',
+      'axios'
+    ],
+    exclude: [
+      '@vite/client', 
+      '@vite/env',
+      // Large optional dependencies - load dynamically
+      'xlsx',
+      'papaparse',
+      'recharts',
+      '@mui/material',
+      '@mui/icons-material',
+      '@emotion/react',
+      '@emotion/styled',
+      'framer-motion',
+      'lucide-react',
+      // State management - load when needed
+      '@tanstack/react-query', 
+      'zustand',
+      // Firebase - load dynamically
+      'firebase/app',
+      'firebase/auth',
+      'firebase/firestore',
+      'firebase/storage',
+      // Database - load when needed
+      'drizzle-orm',
+      '@neondatabase/serverless'
+    ],
+    esbuildOptions: {
+      target: 'esnext',
+    },
+  },
+  esbuild: {
+    target: 'esnext',
+    logOverride: { 'this-is-undefined-in-esm': 'silent' },
+    treeShaking: true,
+    minifyIdentifiers: true,
+    minifySyntax: true,
+    minifyWhitespace: true,
+  },
+  // Performance monitoring
+  define: {
+    __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production'),
+    __PERFORMANCE_MONITORING__: JSON.stringify(true),
   },
 })

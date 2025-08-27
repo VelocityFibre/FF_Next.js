@@ -13,7 +13,7 @@ interface SOWTabNavigationProps {
 
 export function SOWTabNavigation({ tabs, activeTab, onTabChange }: SOWTabNavigationProps) {
   return (
-    <div className="border-b border-border-primary">
+    <div className="border-b border-[var(--ff-border-primary)]">
       <nav className="flex gap-6">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -25,7 +25,7 @@ export function SOWTabNavigation({ tabs, activeTab, onTabChange }: SOWTabNavigat
                 "flex items-center gap-2 px-1 py-3 border-b-2 transition-colors",
                 activeTab === tab.id
                   ? "border-primary-600 text-primary-600"
-                  : "border-transparent text-text-secondary hover:text-text-primary"
+                  : "border-transparent text-[var(--ff-text-secondary)] hover:text-[var(--ff-text-primary)]"
               )}
             >
               <Icon className="w-4 h-4" />
@@ -35,7 +35,7 @@ export function SOWTabNavigation({ tabs, activeTab, onTabChange }: SOWTabNavigat
                   "ml-2 px-2 py-0.5 text-xs rounded-full",
                   activeTab === tab.id
                     ? "bg-primary-100 text-primary-700"
-                    : "bg-surface-secondary text-text-tertiary"
+                    : "bg-[var(--ff-surface-secondary)] text-[var(--ff-text-tertiary)]"
                 )}>
                   {tab.count}
                 </span>

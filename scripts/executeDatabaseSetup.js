@@ -10,13 +10,17 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
 // Load environment variables
+
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is required. Check your .env file.');
+}
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const connectionString = process.env.VITE_NEON_DATABASE_URL || process.env.DATABASE_URL || 
-  'postgresql://neondb_owner:npg_Jq8OGXiWcYK0@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+  'process.env.DATABASE_URL';
 
 async function setupDatabase() {
   console.log('🚀 Starting complete database setup...');

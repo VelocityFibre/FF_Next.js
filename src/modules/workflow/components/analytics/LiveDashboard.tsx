@@ -1,5 +1,5 @@
 // 🟢 WORKING: Real-time workflow monitoring dashboard with live metrics
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
 import { Button } from '@/shared/components/ui/Button';
 import { Badge } from '@/shared/components/ui/Badge';
@@ -7,10 +7,8 @@ import { Progress } from '@/shared/components/ui/Progress';
 import { 
   Activity,
   RefreshCw,
-  Clock,
   CheckCircle,
   AlertTriangle,
-  Users,
   Zap,
   TrendingUp,
   TrendingDown,

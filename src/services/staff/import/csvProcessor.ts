@@ -21,7 +21,7 @@ export async function importFromCSV(file: File, overwriteExisting: boolean = tru
         const lines = text.split('\n').filter(line => line.trim());
         const headers = lines[0].split(',').map(h => h.trim());
 
-        log.info('Header mapping will be:', { data: headers.map(h => `${h} -> ${DEFAULT_HEADER_MAPPING[h] || 'unmapped'}` }, 'csvProcessor'););
+        log.info('Header mapping will be:', { data: headers.map(h => `${h} -> ${DEFAULT_HEADER_MAPPING[h] || 'unmapped'}`) }, 'csvProcessor');
         
         const rows: StaffImportRow[] = [];
         

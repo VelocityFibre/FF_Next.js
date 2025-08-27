@@ -11,7 +11,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/shared/components/ui/Button';
 import type { ProcurementViewMode } from '@/types/procurement/portal.types';
-import type { Project, ProjectStatus } from '@/types/project.types';
+import type { Project } from '@/types/project.types';
+import { ProjectStatus } from '@/types/project.types';
 
 type ProjectFilterProject = Pick<Project, 'id' | 'name' | 'code' | 'status'> & { lastActivity?: string };
 

@@ -20,18 +20,18 @@ export function UploadSummary({
   return (
     <>
       {/* Summary */}
-      <div className="bg-background-secondary rounded-lg p-4">
-        <h4 className="text-sm font-medium text-text-primary mb-3">Upload Summary</h4>
+      <div className="bg-[var(--ff-background-secondary)] rounded-lg p-4">
+        <h4 className="text-sm font-medium text-[var(--ff-text-primary)] mb-3">Upload Summary</h4>
         <div className="space-y-2">
           {files.map(file => (
             <div key={file.type} className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary capitalize">{file.type}:</span>
+              <span className="text-[var(--ff-text-secondary)] capitalize">{file.type}:</span>
               <span className={cn(
                 "font-medium",
                 file.status === 'success' ? "text-success-600" :
                 file.status === 'error' ? "text-error-600" :
                 file.status === 'processing' ? "text-primary-600" :
-                "text-text-tertiary"
+                "text-[var(--ff-text-tertiary)]"
               )}>
                 {file.status === 'success' && file.data ? `${file.data.length} items` :
                  file.status === 'error' ? 'Failed' :

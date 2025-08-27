@@ -13,7 +13,7 @@ export class ItemManager {
   /**
    * Get BOQ item by ID
    */
-  static async getBOQItem(context: ProcurementContext, itemId: string): Promise<BOQItem> {
+  static async getBOQItem(_context: ProcurementContext, _itemId: string): Promise<BOQItem> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');
   }
@@ -21,7 +21,7 @@ export class ItemManager {
   /**
    * Get BOQ items by BOQ ID
    */
-  static async getBOQItems(context: ProcurementContext, boqId: string): Promise<BOQItem[]> {
+  static async getBOQItems(_context: ProcurementContext, _boqId: string): Promise<BOQItem[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');
   }
@@ -30,9 +30,9 @@ export class ItemManager {
    * Update BOQ item
    */
   static async updateBOQItem(
-    context: ProcurementContext, 
-    itemId: string, 
-    updates: Partial<BOQItem>
+    _context: ProcurementContext, 
+    _itemId: string, 
+    _updates: Partial<BOQItem>
   ): Promise<BOQItem> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');
@@ -77,7 +77,7 @@ export class ItemManager {
   /**
    * Delete BOQ item
    */
-  static async deleteBOQItem(context: ProcurementContext, itemId: string): Promise<void> {
+  static async deleteBOQItem(_context: ProcurementContext, _itemId: string): Promise<void> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');
   }
@@ -107,9 +107,9 @@ export class ItemManager {
    * Get BOQ items by status
    */
   static async getBOQItemsByStatus(
-    context: ProcurementContext,
-    boqId: string,
-    status: string
+    _context: ProcurementContext,
+    _boqId: string,
+    _status: string
   ): Promise<BOQItem[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');
@@ -119,9 +119,9 @@ export class ItemManager {
    * Get BOQ items by mapping status
    */
   static async getBOQItemsByMappingStatus(
-    context: ProcurementContext,
-    boqId: string,
-    mappingStatus: string
+    _context: ProcurementContext,
+    _boqId: string,
+    _mappingStatus: string
   ): Promise<BOQItem[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');
@@ -131,11 +131,11 @@ export class ItemManager {
    * Search BOQ items
    */
   static async searchBOQItems(
-    context: ProcurementContext,
-    boqId: string,
+    _context: ProcurementContext,
+    _boqId: string,
     searchTerm: string
   ): Promise<BOQItem[]> {
-    const searchLower = searchTerm.toLowerCase();
+    const _searchLower = searchTerm.toLowerCase();
     
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Item Manager operations not implemented - connect to real database service');

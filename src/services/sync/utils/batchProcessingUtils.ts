@@ -27,7 +27,7 @@ export class BatchProcessingUtils {
       const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults);
       
-      // Add delay between batches to avoid overwhelming the system
+      // Add delay between batches to prevent overwhelming the system
       if (i + batchSize < items.length && delayMs > 0) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
       }
@@ -146,7 +146,10 @@ export class BatchProcessingUtils {
     batchSize: number = 10,
     delayMs: number = 100,
     onProgress?: (completed: number, total: number, results: R[]) => void
-  ): Promise<{ results: R[]; errors: Array<{ index: number; error: Error }> }> {
+  ): Promise<{ 
+    results: R[]; 
+    errors: Array<{ index: number; error: Error }> 
+  }> {
     const results: R[] = [];
     const errors: Array<{ index: number; error: Error }> = [];
     

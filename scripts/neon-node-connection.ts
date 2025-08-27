@@ -6,9 +6,11 @@ import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { neonTables } from '../src/lib/neon/schema';
 
-// Get connection string from Node.js environment
-const neonUrl = process.env.DATABASE_URL || process.env.VITE_NEON_DATABASE_URL || 
-  'postgresql://neondb_owner:npg_CrI6tbA7nexf@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+// Get connection string from Node.js environment - SECURED
+const neonUrl = process.env.DATABASE_URL;
+if (!neonUrl) {
+  throw new Error('DATABASE_URL environment variable is required. Check your .env file.');
+}
 
 // Create Neon client  
 const sql = neon(neonUrl);

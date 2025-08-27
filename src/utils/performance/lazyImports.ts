@@ -88,7 +88,10 @@ export async function safeImport<T>(
 export function isModuleAvailable(moduleName: string): Promise<boolean> {
   return import(moduleName)
     .then(() => true)
-    .catch(() => false);
+    .catch((error: unknown) => {
+      // Module is not available, return false
+      return false;
+    });
 }
 
 /**

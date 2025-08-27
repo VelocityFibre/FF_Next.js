@@ -12,7 +12,7 @@ export class ExceptionManager {
   /**
    * Get BOQ exceptions
    */
-  static async getBOQExceptions(context: ProcurementContext, boqId: string): Promise<BOQException[]> {
+  static async getBOQExceptions(_context: ProcurementContext, _boqId: string): Promise<BOQException[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
@@ -20,7 +20,7 @@ export class ExceptionManager {
   /**
    * Get BOQ exception by ID
    */
-  static async getBOQException(context: ProcurementContext, exceptionId: string): Promise<BOQException> {
+  static async getBOQException(_context: ProcurementContext, _exceptionId: string): Promise<BOQException> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
@@ -29,9 +29,9 @@ export class ExceptionManager {
    * Update BOQ exception
    */
   static async updateBOQException(
-    context: ProcurementContext, 
-    exceptionId: string, 
-    updates: Partial<BOQException>
+    _context: ProcurementContext, 
+    _exceptionId: string, 
+    _updates: Partial<BOQException>
   ): Promise<BOQException> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');
@@ -44,7 +44,7 @@ export class ExceptionManager {
     context: ProcurementContext, 
     exceptionData: CreateBOQExceptionData
   ): Promise<BOQException> {
-    const newException: BOQException = {
+    const _newException: BOQException = {
       id: `exc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       boqId: exceptionData.boqId,
       boqItemId: exceptionData.boqItemId || `item-${Date.now()}`,
@@ -67,7 +67,7 @@ export class ExceptionManager {
   /**
    * Delete BOQ exception
    */
-  static async deleteBOQException(context: ProcurementContext, exceptionId: string): Promise<void> {
+  static async deleteBOQException(_context: ProcurementContext, _exceptionId: string): Promise<void> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');
   }
@@ -76,9 +76,9 @@ export class ExceptionManager {
    * Get exceptions by status
    */
   static async getExceptionsByStatus(
-    context: ProcurementContext,
-    boqId: string,
-    status: string
+    _context: ProcurementContext,
+    _boqId: string,
+    _status: string
   ): Promise<BOQException[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');
@@ -88,9 +88,9 @@ export class ExceptionManager {
    * Get exceptions by severity
    */
   static async getExceptionsBySeverity(
-    context: ProcurementContext,
-    boqId: string,
-    severity: string
+    _context: ProcurementContext,
+    _boqId: string,
+    _severity: string
   ): Promise<BOQException[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');
@@ -100,9 +100,9 @@ export class ExceptionManager {
    * Get exceptions by priority
    */
   static async getExceptionsByPriority(
-    context: ProcurementContext,
-    boqId: string,
-    priority: string
+    _context: ProcurementContext,
+    _boqId: string,
+    _priority: string
   ): Promise<BOQException[]> {
     // MOCK DATA REMOVED - Real database connection required
     throw new Error('Exception Manager operations not implemented - connect to real database service');

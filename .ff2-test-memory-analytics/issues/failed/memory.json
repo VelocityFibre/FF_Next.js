@@ -1,0 +1,104 @@
+{
+  "issueId": "failed-issue-0",
+  "jobId": "job-failed-issue-0-1756288456179-od4nmz",
+  "sessionId": "session-failed-0",
+  "startTime": "2025-08-27T09:54:16.179Z",
+  "status": "failed",
+  "decisions": [
+    {
+      "agentType": "code-implementer",
+      "category": "implementation",
+      "description": "Skip proper error handling",
+      "options": [],
+      "reasoning": "Faster development",
+      "relatedContext": [],
+      "id": "decision-1756288456184-q2zropxk1",
+      "timestamp": "2025-08-27T09:54:16.184Z",
+      "outcome": {
+        "success": false,
+        "metrics": {
+          "implementationTime": 120,
+          "codeQuality": 0.4,
+          "maintainability": 0.3,
+          "testCoverage": 60
+        },
+        "lessons": [
+          "Skipping error handling led to runtime failures"
+        ],
+        "timestamp": "2025-08-27T09:54:16.186Z"
+      }
+    }
+  ],
+  "gotchas": [
+    {
+      "agentType": "code-implementer",
+      "severity": "critical",
+      "category": "runtime",
+      "description": "Database connection timeout",
+      "errorPattern": "Connection timeout after 30s",
+      "context": "Database initialization",
+      "preventionNotes": [
+        "Increase timeout",
+        "Add retry logic"
+      ],
+      "relatedDecisions": [],
+      "id": "gotcha-1756288456182-qrtrcnv9u",
+      "timestamp": "2025-08-27T09:54:16.182Z"
+    }
+  ],
+  "context": [],
+  "outcomes": [
+    {
+      "agentType": "system",
+      "type": "failure",
+      "category": "task-completion",
+      "description": "Job failed due to critical errors",
+      "metrics": {
+        "duration": 120,
+        "codeChanges": {
+          "linesAdded": 50,
+          "linesRemoved": 0,
+          "filesModified": 3
+        },
+        "qualityMetrics": {
+          "testCoverage": 60,
+          "lintErrors": 5,
+          "typeErrors": 2,
+          "complexity": 4
+        }
+      },
+      "relatedDecisions": [],
+      "relatedGotchas": [],
+      "lessons": [],
+      "id": "outcome-1756288456187-td9fec7ua",
+      "timestamp": "2025-08-27T09:54:16.187Z"
+    }
+  ],
+  "metadata": {
+    "agentTypes": [
+      "code-implementer"
+    ],
+    "complexity": "low",
+    "priority": "medium",
+    "tags": [],
+    "relatedIssues": [
+      "failed-issue-0"
+    ],
+    "childJobIds": [],
+    "totalDuration": 1
+  },
+  "analytics": {
+    "patternMatches": [],
+    "efficiencyMetrics": {
+      "decisionTime": 0,
+      "gotchaResolutionTime": 0,
+      "contextRetrievalTime": 0,
+      "knowledgeReuseRate": 0,
+      "errorRate": 0
+    },
+    "learningScore": 0,
+    "reuseScore": 0,
+    "innovationScore": 0
+  },
+  "endTime": "2025-08-27T09:54:16.187Z"
+}

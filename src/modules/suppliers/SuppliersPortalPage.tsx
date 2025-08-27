@@ -33,7 +33,7 @@ class SuppliersPortalErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static override getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
@@ -41,7 +41,7 @@ class SuppliersPortalErrorBoundary extends React.Component<
     log.error('Suppliers Portal Error:', { data: error, errorInfo }, 'SuppliersPortalPage');
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">

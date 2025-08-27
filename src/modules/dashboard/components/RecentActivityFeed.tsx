@@ -29,7 +29,7 @@ export function RecentActivityFeed({
 
   return (
     <div className={cn(
-      'bg-surface-primary rounded-lg border border-border-primary p-6',
+      'bg-[var(--ff-surface-primary)] rounded-lg border border-[var(--ff-border-primary)] p-6',
       className
     )}>
       <ActivityHeader 

@@ -19,8 +19,6 @@ import type {
   WorkflowTemplateQuery,
   BulkUpdateOrderRequest,
   WorkflowValidationResult,
-  WorkflowValidationError,
-  WorkflowValidationWarning
 } from '../types/workflow.types';
 
 export class WorkflowManagementService {
@@ -296,7 +294,7 @@ export class WorkflowManagementService {
     return { ...phase, id };
   }
 
-  async deletePhase(id: string): Promise<void> {
+  async deletePhase(_id: string): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 100));
     // Mock implementation
   }
@@ -373,7 +371,7 @@ export class WorkflowManagementService {
     return { ...step, id };
   }
 
-  async deleteStep(id: string): Promise<void> {
+  async deleteStep(_id: string): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
 
@@ -443,7 +441,7 @@ export class WorkflowManagementService {
     return { ...task, id };
   }
 
-  async deleteTask(id: string): Promise<void> {
+  async deleteTask(_id: string): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
 
@@ -468,12 +466,12 @@ export class WorkflowManagementService {
     };
   }
 
-  async bulkUpdateOrder(items: BulkUpdateOrderRequest): Promise<void> {
+  async bulkUpdateOrder(_items: BulkUpdateOrderRequest): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 100));
     // Mock implementation
   }
 
-  async bulkDelete(ids: string[]): Promise<void> {
+  async bulkDelete(_ids: string[]): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 100));
     // Mock implementation
   }
