@@ -23,6 +23,7 @@ import { RAGScoreChart } from './components/RAGScoreChart';
 import { TrendIndicators } from './components/TrendIndicators';
 import { PerformanceLeaderboard } from './components/PerformanceLeaderboard';
 import { ComparativeAnalysisChart } from './components/ComparativeAnalysisChart';
+import { log } from '@/lib/logger';
 import {
   PerformanceDashboardData,
   PerformanceDashboardProps,
@@ -142,7 +143,7 @@ export function PerformanceDashboard({
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load performance data';
       setError(errorMessage);
-      console.error('Performance dashboard error:', err);
+      log.error('Performance dashboard error:', { data: err }, 'PerformanceDashboard');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

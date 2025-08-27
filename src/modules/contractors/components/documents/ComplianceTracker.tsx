@@ -20,6 +20,7 @@ import { ContractorDocument } from '@/types/contractor.types';
 import { ComplianceIssue } from './types/documentApproval.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface ComplianceTrackerProps {
   /**
@@ -282,7 +283,7 @@ export function ComplianceTracker({
       
       toast.success('Compliance report exported successfully');
     } catch (error) {
-      console.error('Failed to export compliance report:', error);
+      log.error('Failed to export compliance report:', { data: error }, 'ComplianceTracker');
       toast.error('Failed to export compliance report');
     } finally {
       setIsLoading(false);

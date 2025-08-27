@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { BOQ, BOQFormData, BOQStatusType } from '@/types/procurement/boq.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'boqs';
 
@@ -53,7 +54,7 @@ export class BOQCrud {
         } as BOQ;
       });
     } catch (error) {
-      console.error('Error fetching BOQs:', error);
+      log.error('Error fetching BOQs:', { data: error }, 'boqCrud');
       throw error;
     }
   }
@@ -81,7 +82,7 @@ export class BOQCrud {
         rejectedAt: data.rejectedAt?.toDate?.() || undefined
       } as BOQ;
     } catch (error) {
-      console.error('Error fetching BOQ:', error);
+      log.error('Error fetching BOQ:', { data: error }, 'boqCrud');
       throw error;
     }
   }
@@ -110,7 +111,7 @@ export class BOQCrud {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), boq);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating BOQ:', error);
+      log.error('Error creating BOQ:', { data: error }, 'boqCrud');
       throw error;
     }
   }
@@ -128,7 +129,7 @@ export class BOQCrud {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating BOQ:', error);
+      log.error('Error updating BOQ:', { data: error }, 'boqCrud');
       throw error;
     }
   }
@@ -140,7 +141,7 @@ export class BOQCrud {
     try {
       await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
-      console.error('Error deleting BOQ:', error);
+      log.error('Error deleting BOQ:', { data: error }, 'boqCrud');
       throw error;
     }
   }
@@ -164,7 +165,7 @@ export class BOQCrud {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating BOQ status:', error);
+      log.error('Error updating BOQ status:', { data: error }, 'boqCrud');
       throw error;
     }
   }
@@ -192,7 +193,7 @@ export class BOQCrud {
       const snapshot = await getDoc(docRef);
       return snapshot.exists();
     } catch (error) {
-      console.error('Error checking BOQ existence:', error);
+      log.error('Error checking BOQ existence:', { data: error }, 'boqCrud');
       return false;
     }
   }

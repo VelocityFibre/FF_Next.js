@@ -17,6 +17,7 @@ import {
 } from '../../types/project.types';
 import { SOWFileValidator } from './fileValidator';
 import { SOW_CONFIG, SOWMetadata } from './types';
+import { log } from '@/lib/logger';
 
 export class SOWUploadService {
   /**
@@ -112,7 +113,7 @@ export class SOWUploadService {
         successful.push(result.value);
       } else {
         failed.push(result.fileName);
-        console.warn(`Failed to upload ${result.fileName}:`, result.error);
+        log.warn(`Failed to upload ${result.fileName}:`, { data: result.error }, 'uploadService');
       }
     });
 

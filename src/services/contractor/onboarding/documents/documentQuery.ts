@@ -8,6 +8,7 @@ import { contractorDocuments } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
 import { ContractorDocument } from '@/types/contractor.types';
 import { getDocumentRequirements } from '../stageDefinitions';
+import { log } from '@/lib/logger';
 
 /**
  * Document query operations
@@ -24,7 +25,7 @@ export class DocumentQuery {
         .where(eq(contractorDocuments.contractorId, contractorId));
       return docs as ContractorDocument[];
     } catch (error) {
-      console.error('Failed to get contractor documents:', error);
+      log.error('Failed to get contractor documents:', { data: error }, 'documentQuery');
       return [];
     }
   }

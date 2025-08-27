@@ -1,6 +1,6 @@
 // 🟢 WORKING: Integration example for the new Procurement Portal
-import React from 'react';
-import { Routes, Route, Navigate, useLocation, useSearchParams } from 'react-router-dom';
+// React import removed - not using JSX in this component
+import { Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import { ProcurementPortalPage } from './ProcurementPortalPage';
 import {
   DashboardTab,
@@ -12,15 +12,15 @@ import {
 } from './components/tabs';
 
 // Import existing components for integration
-import { SupplierPortalPage } from './suppliers/SupplierPortalPage';
-import { ReportsAnalyticsPage } from './reports/ReportsAnalyticsPage';
+import SupplierPortalPage from './suppliers/SupplierPortalPage';
+import ReportsAnalyticsPage from './reports/ReportsAnalyticsPage';
+import { log } from '@/lib/logger';
 
 /**
  * Main procurement routes with the new portal structure
  * This replaces the existing procurement routing
  */
 export function ProcurementPortalRoutes() {
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   
   // Get active tab from URL or default to overview
@@ -116,7 +116,7 @@ export class ProcurementPortalSession {
         timestamp: Date.now()
       }));
     } catch (error) {
-      console.warn('Failed to save procurement portal state:', error);
+      log.warn('Failed to save procurement portal state:', { data: error }, 'ProcurementPortalIntegration');
     }
   }
 
@@ -139,7 +139,7 @@ export class ProcurementPortalSession {
 
       return state;
     } catch (error) {
-      console.warn('Failed to load procurement portal state:', error);
+      log.warn('Failed to load procurement portal state:', { data: error }, 'ProcurementPortalIntegration');
       return null;
     }
   }
@@ -148,7 +148,7 @@ export class ProcurementPortalSession {
     try {
       sessionStorage.removeItem(this.STORAGE_KEY);
     } catch (error) {
-      console.warn('Failed to clear procurement portal state:', error);
+      log.warn('Failed to clear procurement portal state:', { data: error }, 'ProcurementPortalIntegration');
     }
   }
 }
@@ -220,7 +220,7 @@ export function NavigationExample() {
 
     const url = ProcurementPortalURL.generateURL({
       tab,
-      project,
+      ...(project && { project }),
       viewMode: project ? 'single' : 'all'
     });
 

@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Score Calculation Module
  * Handles RAG score calculation logic
@@ -109,7 +111,7 @@ export class ScoreCalculation {
           
           return { contractorId: contractor.id, score };
         } catch (error) {
-          console.error(`Failed to calculate RAG score for contractor ${contractor.id}:`, error);
+          log.error(`Failed to calculate RAG score for contractor ${contractor.id}:`, { data: error }, 'scoreCalculation');
           return { contractorId: contractor.id, score: null };
         }
       });

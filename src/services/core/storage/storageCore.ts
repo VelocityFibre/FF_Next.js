@@ -8,6 +8,7 @@ import { StorageEncryption } from './encryption';
 import { StorageCompression } from './compression';
 import { StorageUtils } from './storageUtils';
 import type { StorageType, StorageOptions, StorageItem } from './types';
+import { log } from '@/lib/logger';
 
 export class StorageCore {
   private localStorage = new LocalStorageAdapter();
@@ -97,7 +98,7 @@ export class StorageCore {
       const item: StorageItem<T> = JSON.parse(serializedValue);
       return this.utils.validateAndReturnItem(item);
     } catch (error) {
-      console.warn(`Failed to parse stored value for key ${namespacedKey}:`, error);
+      log.warn(`Failed to parse stored value for key ${namespacedKey}:`, { data: error }, 'storageCore');
       return null;
     }
   }

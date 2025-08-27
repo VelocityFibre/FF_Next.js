@@ -4,6 +4,7 @@
  */
 
 import { sql } from '@/lib/neon';
+import { log } from '@/lib/logger';
 import type { 
   ProjectSummary, 
   ProjectStatusStats, 
@@ -55,7 +56,7 @@ export class ProjectSummaryAnalytics {
         averageProgress: parseFloat(result[0].avg_progress) || 0
       };
     } catch (error) {
-      console.error('Error fetching project summary:', error);
+      log.error('Error fetching project summary:', { data: error }, 'summary-analytics');
       return {
         totalProjects: 0,
         activeProjects: 0,
@@ -103,7 +104,7 @@ export class ProjectSummaryAnalytics {
         count: parseInt(row.count)
       }));
     } catch (error) {
-      console.error('Error fetching projects by status:', error);
+      log.error('Error fetching projects by status:', { data: error }, 'summary-analytics');
       return [];
     }
   }
@@ -152,7 +153,7 @@ export class ProjectSummaryAnalytics {
         totalBudget: parseFloat(row.total_budget) || 0
       }));
     } catch (error) {
-      console.error('Error fetching projects by client:', error);
+      log.error('Error fetching projects by client:', { data: error }, 'summary-analytics');
       return [];
     }
   }
@@ -202,7 +203,7 @@ export class ProjectSummaryAnalytics {
         }
       }));
     } catch (error) {
-      console.error('Error fetching top clients:', error);
+      log.error('Error fetching top clients:', { data: error }, 'summary-analytics');
       return [];
     }
   }
@@ -250,7 +251,7 @@ export class ProjectSummaryAnalytics {
         }))
       };
     } catch (error) {
-      console.error('Error fetching project distribution:', error);
+      log.error('Error fetching project distribution:', { data: error }, 'summary-analytics');
       return {
         byStatus: [],
         byType: [],

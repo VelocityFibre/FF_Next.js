@@ -1,23 +1,23 @@
 // 🟢 WORKING: Dashboard tab component with project context awareness
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { 
   BarChart3, 
   FileText, 
   Send, 
   ShoppingCart, 
-  Package, 
   AlertTriangle,
   TrendingUp,
   Clock,
-  CheckCircle,
   Building2,
   Globe
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useProcurementPortal } from '../../context/ProcurementPortalProvider';
 import { ProcurementDashboard } from '../ProcurementDashboard';
 import { AllProjectsOverview } from '../AllProjectsOverview';
 
 export function DashboardTab() {
+  const navigate = useNavigate();
   const { 
     selectedProject, 
     viewMode, 
@@ -32,19 +32,15 @@ export function DashboardTab() {
       // Show aggregate view across all projects
       return (
         <AllProjectsOverview 
-          metrics={aggregateMetrics}
+          aggregateMetrics={aggregateMetrics}
           projectSummaries={projectSummaries}
-          isLoading={isLoading}
+          navigate={navigate}
         />
       );
     } else if (selectedProject) {
       // Show project-specific dashboard
       return (
-        <ProcurementDashboard 
-          projectId={selectedProject.id}
-          projectName={selectedProject.name}
-          projectCode={selectedProject.code}
-        />
+        <ProcurementDashboard />
       );
     } else {
       // Show welcome/selection state
@@ -116,7 +112,7 @@ function WelcomeState() {
 
 // Quick stats cards for project dashboard
 export function QuickStatsCards({ 
-  projectId, 
+  projectId: _projectId, 
   stats 
 }: { 
   projectId: string; 

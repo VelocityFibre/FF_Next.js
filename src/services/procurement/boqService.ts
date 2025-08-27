@@ -18,6 +18,7 @@ import {
 import { db } from '../../config/firebase';
 import { BOQ, BOQFormData, BOQStatusType } from '../../types/procurement/boq.types';
 import { BOQCrud } from './boq/boqCrud';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'boqs';
 
@@ -68,7 +69,7 @@ export const boqService = {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error approving BOQ:', error);
+      log.error('Error approving BOQ:', { data: error }, 'boqService');
       throw error;
     }
   },
@@ -84,7 +85,7 @@ export const boqService = {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error rejecting BOQ:', error);
+      log.error('Error rejecting BOQ:', { data: error }, 'boqService');
       throw error;
     }
   },
@@ -105,7 +106,7 @@ export const boqService = {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), boq);
       return docRef.id;
     } catch (error) {
-      console.error('Error uploading BOQ:', error);
+      log.error('Error uploading BOQ:', { data: error }, 'boqService');
       throw error;
     }
   },
@@ -130,7 +131,7 @@ export const boqService = {
       
       return summary;
     } catch (error) {
-      console.error('Error getting BOQ summary:', error);
+      log.error('Error getting BOQ summary:', { data: error }, 'boqService');
       throw error;
     }
   },

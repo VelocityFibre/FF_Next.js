@@ -15,6 +15,7 @@ import {
 import { db } from '../../../../../config/firebase';
 import { Project, ProjectListQuery } from '../../../types/project.types';
 import { ProjectQueryResult } from '../types/service.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'projects';
 
@@ -87,7 +88,7 @@ export class ProjectQueryService {
       
       return result;
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      log.error('Error fetching projects:', { data: error }, 'ProjectQueryService');
       throw new Error('Failed to fetch projects');
     }
   }
@@ -108,7 +109,7 @@ export class ProjectQueryService {
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt,
       } as Project));
     } catch (error) {
-      console.error('Error fetching projects by client:', error);
+      log.error('Error fetching projects by client:', { data: error }, 'ProjectQueryService');
       throw new Error('Failed to fetch projects by client');
     }
   }
@@ -129,7 +130,7 @@ export class ProjectQueryService {
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt,
       } as Project));
     } catch (error) {
-      console.error('Error fetching projects by manager:', error);
+      log.error('Error fetching projects by manager:', { data: error }, 'ProjectQueryService');
       throw new Error('Failed to fetch projects by manager');
     }
   }

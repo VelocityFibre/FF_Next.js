@@ -8,6 +8,7 @@ import { TrendingUp, AlertTriangle, CheckCircle, BarChart3, Shield, DollarSign, 
 import { contractorService } from '@/services/contractorService';
 import { RAGScoreDetails, ContractorRAGRanking } from '@/types/contractor.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { log } from '@/lib/logger';
 
 interface RAGDashboardProps {
   contractorId?: string;
@@ -37,7 +38,7 @@ export function RAGDashboard({ contractorId, showRankings = false }: RAGDashboar
         setRankings(rankedContractors);
       }
     } catch (error) {
-      console.error('Failed to load RAG data:', error);
+      log.error('Failed to load RAG data:', { data: error }, 'RAGDashboard');
     } finally {
       setIsLoading(false);
     }

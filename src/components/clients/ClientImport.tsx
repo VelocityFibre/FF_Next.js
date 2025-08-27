@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Building2 } from 'lucide-react';
 import { clientService } from '@/services/clientService';
 import { ClientImportResult } from '@/types/client.types';
+import { log } from '@/lib/logger';
 import {
   ClientImportProps,
   ClientFileDropZone,
@@ -61,7 +62,7 @@ export function ClientImport({ onComplete }: ClientImportProps = {}) {
         onComplete();
       }
     } catch (error) {
-      // console.error('Import error:', error);
+      // log.error('Import error:', { data: error }, 'ClientImport');
       setImportResult({
         success: false,
         imported: 0,
@@ -102,7 +103,7 @@ export function ClientImport({ onComplete }: ClientImportProps = {}) {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      // console.error('Export error:', error);
+      // log.error('Export error:', { data: error }, 'ClientImport');
       alert('Failed to export client data');
     }
   };

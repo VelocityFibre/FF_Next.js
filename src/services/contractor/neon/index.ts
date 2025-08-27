@@ -13,6 +13,7 @@ import { queryContractorsWithFilters, queryContractorById, queryActiveContractor
 import { mapToContractor, mapToContractors, mapToDropdownOption } from './dataMappers';
 import { createContractor, updateContractor, deleteContractor } from './crudOperations';
 import { getContractorSummary as getContractorSummaryStats } from './statistics';
+import { log } from '@/lib/logger';
 
 /**
  * Contractor service using Neon PostgreSQL database
@@ -26,7 +27,7 @@ export const contractorNeonService = {
       const result = await queryContractorsWithFilters(filter);
       return mapToContractors(result);
     } catch (error) {
-      console.error('Error fetching contractors:', error);
+      log.error('Error fetching contractors:', { data: error }, 'index');
       throw error;
     }
   },
@@ -42,7 +43,7 @@ export const contractorNeonService = {
       
       return mapToContractor(result[0]);
     } catch (error) {
-      console.error('Error fetching contractor:', error);
+      log.error('Error fetching contractor:', { data: error }, 'index');
       throw error;
     }
   },
@@ -70,7 +71,7 @@ export const contractorNeonService = {
       const result = await queryActiveContractors();
       return result.map((contractor: any) => mapToDropdownOption(contractor));
     } catch (error) {
-      console.error('Error fetching active contractors:', error);
+      log.error('Error fetching active contractors:', { data: error }, 'index');
       throw error;
     }
   },
@@ -89,7 +90,7 @@ export const contractorNeonService = {
       const result = await queryContractorsWithFilters(filter);
       return mapToContractors(result);
     } catch (error) {
-      console.error('Error searching contractors:', error);
+      log.error('Error searching contractors:', { data: error }, 'index');
       throw error;
     }
   }

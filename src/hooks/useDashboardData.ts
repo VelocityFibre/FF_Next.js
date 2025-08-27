@@ -7,6 +7,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { DashboardStatsService } from '@/services/dashboard/dashboardStatsService';
 import type { DashboardStats } from '@/services/dashboard/dashboardStatsService';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Re-export dashboard stats interface from service
 export type { DashboardStats } from '@/services/dashboard/dashboardStatsService';
@@ -73,7 +74,7 @@ export function useDashboardData() {
         lastUpdated: new Date(),
       });
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      log.error('Failed to load dashboard data:', { data: error }, 'useDashboardData');
       setMetrics(prev => ({
         ...prev,
         isLoading: false,

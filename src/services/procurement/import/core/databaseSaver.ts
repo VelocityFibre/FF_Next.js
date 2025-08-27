@@ -5,6 +5,7 @@
 
 import { ProcurementContext } from '../../../../types/procurement/base.types';
 import { ImportConfig, MappingResults, SaveResult } from './types';
+import { log } from '@/lib/logger';
 
 export class BOQImportDatabaseSaver {
   /**
@@ -34,7 +35,7 @@ export class BOQImportDatabaseSaver {
         exceptionsCreated
       };
     } catch (error) {
-      console.error('Error saving BOQ data:', error);
+      log.error('Error saving BOQ data:', { data: error }, 'databaseSaver');
       throw new Error(`Database save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -77,7 +78,7 @@ export class BOQImportDatabaseSaver {
         await this.saveItem(boqId, item);
         itemsCreated++;
       } catch (error) {
-        console.warn(`Failed to save item: ${item.description}`, error);
+        log.warn(`Failed to save item: ${item.description}`, { data: error }, 'databaseSaver');
       }
     }
     
@@ -96,7 +97,7 @@ export class BOQImportDatabaseSaver {
         await this.saveException(boqId, exception);
         exceptionsCreated++;
       } catch (error) {
-        console.warn(`Failed to save exception: ${exception.exception.id}`, error);
+        log.warn(`Failed to save exception: ${exception.exception.id}`, { data: error }, 'databaseSaver');
       }
     }
     

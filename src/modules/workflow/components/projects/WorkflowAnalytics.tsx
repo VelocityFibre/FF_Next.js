@@ -14,6 +14,7 @@ import {
 
 import type { WorkflowAnalytics as WorkflowAnalyticsData } from '../../types/workflow.types';
 import { workflowTemplateService } from '../../services/WorkflowTemplateService';
+import { log } from '@/lib/logger';
 
 interface MetricCardProps {
   title: string;
@@ -110,7 +111,7 @@ export function WorkflowAnalytics() {
       setAnalyticsData(data);
     } catch (err) {
       setError('Failed to load analytics data');
-      console.error('Analytics loading error:', err);
+      log.error('Analytics loading error:', { data: err }, 'WorkflowAnalytics');
     } finally {
       setLoading(false);
     }

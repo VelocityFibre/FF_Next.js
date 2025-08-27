@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { RFQ, RFQFormData, RFQStatus } from '@/types/procurement.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'rfqs';
 
@@ -52,7 +53,7 @@ export class RFQOperations {
         ...doc.data()
       } as RFQ));
     } catch (error) {
-      console.error('Error fetching RFQs:', error);
+      log.error('Error fetching RFQs:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -74,7 +75,7 @@ export class RFQOperations {
         ...snapshot.data()
       } as RFQ;
     } catch (error) {
-      console.error('Error fetching RFQ:', error);
+      log.error('Error fetching RFQ:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -112,7 +113,7 @@ export class RFQOperations {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), rfq);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating RFQ:', error);
+      log.error('Error creating RFQ:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -136,7 +137,7 @@ export class RFQOperations {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating RFQ:', error);
+      log.error('Error updating RFQ:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -148,7 +149,7 @@ export class RFQOperations {
     try {
       await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
-      console.error('Error deleting RFQ:', error);
+      log.error('Error deleting RFQ:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -166,7 +167,7 @@ export class RFQOperations {
       
       await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
     } catch (error) {
-      console.error('Error updating RFQ status:', error);
+      log.error('Error updating RFQ status:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -188,7 +189,7 @@ export class RFQOperations {
         ...doc.data()
       } as RFQ));
     } catch (error) {
-      console.error('Error fetching RFQs by project:', error);
+      log.error('Error fetching RFQs by project:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -210,7 +211,7 @@ export class RFQOperations {
         ...doc.data()
       } as RFQ));
     } catch (error) {
-      console.error('Error fetching RFQs by status:', error);
+      log.error('Error fetching RFQs by status:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -238,7 +239,7 @@ export class RFQOperations {
       
       await Promise.all(promises);
     } catch (error) {
-      console.error('Error batch updating RFQs:', error);
+      log.error('Error batch updating RFQs:', { data: error }, 'operations');
       throw error;
     }
   }
@@ -266,7 +267,7 @@ export class RFQOperations {
         rfq.rfqNumber?.toLowerCase().includes(searchTermLower)
       );
     } catch (error) {
-      console.error('Error searching RFQs:', error);
+      log.error('Error searching RFQs:', { data: error }, 'operations');
       throw error;
     }
   }

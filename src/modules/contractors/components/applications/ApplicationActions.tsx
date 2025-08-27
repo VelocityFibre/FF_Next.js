@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { log } from '@/lib/logger';
 import { 
   Check, 
   X, 
@@ -159,10 +160,10 @@ export function ApplicationActions({
       const result = await onAction(contractorId, action, { reason, notes });
       if (!result.success) {
         // TODO: Show error toast
-        console.error('Action failed:', result.message);
+        log.error('Action failed:', { data: result.message }, 'ApplicationActions');
       }
     } catch (error) {
-      console.error('Action error:', error);
+      log.error('Action error:', { data: error }, 'ApplicationActions');
     } finally {
       setIsLoading(false);
       setConfirmation({ isOpen: false });
@@ -478,13 +479,13 @@ export function BulkApplicationActions({
       const failCount = results.length - successCount;
       
       // TODO: Show success/error toast
-      console.log(`Bulk action completed: ${successCount} successful, ${failCount} failed`);
+      log.info(`Bulk action completed: ${successCount} successful, ${failCount} failed`, undefined, 'ApplicationActions');
       
       if (onClearSelection) {
         onClearSelection();
       }
     } catch (error) {
-      console.error('Bulk action error:', error);
+      log.error('Bulk action error:', { data: error }, 'ApplicationActions');
     } finally {
       setIsLoading(false);
       setConfirmation({ isOpen: false });

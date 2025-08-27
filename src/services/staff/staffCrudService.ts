@@ -14,6 +14,7 @@ import {
   Unsubscribe
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   StaffMember, 
   StaffFormData,
@@ -77,7 +78,7 @@ export const staffCrudService = {
       
       return staffMembers;
     } catch (error) {
-      console.error('Error getting staff:', error);
+      log.error('Error getting staff:', { data: error }, 'staffCrudService');
       throw new Error('Failed to fetch staff');
     }
   },
@@ -99,7 +100,7 @@ export const staffCrudService = {
         ...snapshot.data() 
       } as StaffMember;
     } catch (error) {
-      console.error('Error getting staff member:', error);
+      log.error('Error getting staff member:', { data: error }, 'staffCrudService');
       throw new Error('Failed to fetch staff member');
     }
   },
@@ -165,7 +166,7 @@ export const staffCrudService = {
       const docRef = await addDoc(collection(db, 'staff'), staffData);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating staff member:', error);
+      log.error('Error creating staff member:', { data: error }, 'staffCrudService');
       throw new Error('Failed to create staff member');
     }
   },
@@ -192,7 +193,7 @@ export const staffCrudService = {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating staff member:', error);
+      log.error('Error updating staff member:', { data: error }, 'staffCrudService');
       throw new Error('Failed to update staff member');
     }
   },
@@ -216,7 +217,7 @@ export const staffCrudService = {
       
       await deleteDoc(doc(db, 'staff', id));
     } catch (error) {
-      console.error('Error deleting staff member:', error);
+      log.error('Error deleting staff member:', { data: error }, 'staffCrudService');
       throw new Error('Failed to delete staff member');
     }
   },

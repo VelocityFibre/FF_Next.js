@@ -10,6 +10,7 @@ import {
 import { getOnboardingStages } from './stageDefinitions';
 import { ProgressTracker } from './progressTracker';
 import { DocumentManager } from './documentManager';
+import { log } from '@/lib/logger';
 
 export class OnboardingProgressManager {
   /**
@@ -31,7 +32,7 @@ export class OnboardingProgressManager {
 
       return onboardingProgress;
     } catch (error) {
-      console.error('Failed to initialize onboarding progress:', error);
+      log.error('Failed to initialize onboarding progress:', { data: error }, 'OnboardingProgressManager');
       throw error;
     }
   }
@@ -62,7 +63,7 @@ export class OnboardingProgressManager {
         lastUpdated: new Date()
       };
     } catch (error) {
-      console.error('Failed to get onboarding progress:', error);
+      log.error('Failed to get onboarding progress:', { data: error }, 'OnboardingProgressManager');
       throw error;
     }
   }
@@ -105,7 +106,7 @@ export class OnboardingProgressManager {
 
       return progress;
     } catch (error) {
-      console.error('Failed to update stage completion:', error);
+      log.error('Failed to update stage completion:', { data: error }, 'OnboardingProgressManager');
       throw error;
     }
   }
@@ -142,7 +143,7 @@ export class OnboardingProgressManager {
 
       return progress;
     } catch (error) {
-      console.error('Failed to reset onboarding progress:', error);
+      log.error('Failed to reset onboarding progress:', { data: error }, 'OnboardingProgressManager');
       throw error;
     }
   }
@@ -163,7 +164,7 @@ export class OnboardingProgressManager {
           const progress = await this.getProgress(contractorId);
           return { contractorId, progress };
         } catch (error) {
-          console.error(`Failed to get progress for contractor ${contractorId}:`, error);
+          log.error(`Failed to get progress for contractor ${contractorId}:`, { data: error }, 'OnboardingProgressManager');
           return null;
         }
       });

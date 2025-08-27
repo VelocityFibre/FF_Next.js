@@ -20,6 +20,7 @@ import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { contractorDocuments } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
+import { log } from '@/lib/logger';
 import { 
   ContractorDocument,
   DocumentType
@@ -59,7 +60,7 @@ export const contractorDocumentService = {
         // If index error, fall back to simpler query and sort in memory
         if (indexError?.code === 'failed-precondition' || 
             indexError?.message?.includes('index')) {
-          console.warn('Composite index not available, using fallback query with client-side sorting');
+          log.warn('Composite index not available, using fallback query with client-side sorting', undefined, 'contractorDocumentService');
           
           // Fallback: Simple query with client-side sorting
           const fallbackQuery = query(
@@ -82,7 +83,7 @@ export const contractorDocumentService = {
         throw indexError;
       }
     } catch (error) {
-      console.error('Error getting contractor documents:', error);
+      log.error('Error getting contractor documents:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to fetch contractor documents');
     }
   },
@@ -152,12 +153,12 @@ export const contractorDocumentService = {
           notes: data.notes,
         });
       } catch (neonError) {
-        console.warn('Failed to sync document to Neon:', neonError);
+        log.warn('Failed to sync document to Neon:', { data: neonError }, 'contractorDocumentService');
       }
       
       return docRef.id;
     } catch (error) {
-      console.error('Error uploading document:', error);
+      log.error('Error uploading document:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to upload document');
     }
   },
@@ -193,10 +194,10 @@ export const contractorDocumentService = {
           })
           .where(eq(contractorDocuments.id, documentId));
       } catch (neonError) {
-        console.warn('Failed to sync document verification to Neon:', neonError);
+        log.warn('Failed to sync document verification to Neon:', { data: neonError }, 'contractorDocumentService');
       }
     } catch (error) {
-      console.error('Error verifying document:', error);
+      log.error('Error verifying document:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to verify document');
     }
   },
@@ -226,7 +227,7 @@ export const contractorDocumentService = {
       
       await updateDoc(doc(db, 'contractor_documents', documentId), updateData);
     } catch (error) {
-      console.error('Error updating document:', error);
+      log.error('Error updating document:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to update document');
     }
   },
@@ -244,10 +245,10 @@ export const contractorDocumentService = {
           .delete(contractorDocuments)
           .where(eq(contractorDocuments.id, documentId));
       } catch (neonError) {
-        console.warn('Failed to delete document from Neon:', neonError);
+        log.warn('Failed to delete document from Neon:', { data: neonError }, 'contractorDocumentService');
       }
     } catch (error) {
-      console.error('Error deleting document:', error);
+      log.error('Error deleting document:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to delete document');
     }
   },
@@ -274,7 +275,7 @@ export const contractorDocumentService = {
         // Fallback: Use single where clause and filter client-side
         if (indexError?.code === 'failed-precondition' || 
             indexError?.message?.includes('index')) {
-          console.warn('Expiring documents query index not available, using fallback with client-side filtering');
+          log.warn('Expiring documents query index not available, using fallback with client-side filtering', undefined, 'contractorDocumentService');
           
           const fallbackQuery = query(
             collection(db, 'contractor_documents'),
@@ -293,7 +294,7 @@ export const contractorDocumentService = {
         throw indexError;
       }
     } catch (error) {
-      console.error('Error getting expiring documents:', error);
+      log.error('Error getting expiring documents:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to fetch expiring documents');
     }
   },
@@ -321,7 +322,7 @@ export const contractorDocumentService = {
         updatedAt: data.updatedAt?.toDate() || new Date(),
       } as ContractorDocument;
     } catch (error) {
-      console.error('Error getting document:', error);
+      log.error('Error getting document:', { data: error }, 'contractorDocumentService');
       throw new Error('Failed to fetch document');
     }
   }

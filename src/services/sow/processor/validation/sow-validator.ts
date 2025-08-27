@@ -6,6 +6,7 @@
 import { NeonPoleData, NeonDropData, NeonFibreData } from '../../neonSOWService';
 import { ValidationResult, ValidationError, CrossValidationResult } from './validator-types';
 import { SOWValidationRules } from './validation-rules';
+import { log } from '@/lib/logger';
 
 /**
  * Main SOW data validator class
@@ -160,7 +161,7 @@ export class SOWValidator {
       
       // Warning for missing pole assignment (not an error)
       if (!drop.pole_number) {
-        console.warn(`Drop ${drop.drop_number} has no pole assignment`);
+        log.warn(`Drop ${drop.drop_number} has no pole assignment`, undefined, 'sow-validator');
       }
       
       if (dropErrors.length === 0) {

@@ -15,6 +15,7 @@ import {
 import { sowPoleImportService } from './sowPoleImport';
 import { sowDropImportService } from './sowDropImport';
 import { sowFiberImportService } from './sowFiberImport';
+import { log } from '@/lib/logger';
 
 export class SOWTrackerService {
   /**
@@ -94,7 +95,7 @@ export class SOWTrackerService {
         errors: []
       };
     } catch (error) {
-      console.error('Error getting import summary:', error);
+      log.error('Error getting import summary:', { data: error }, 'sowTrackerService');
       throw error;
     }
   }

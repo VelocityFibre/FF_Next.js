@@ -8,6 +8,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { clientAnalytics } from '@/lib/neon/schema';
 import type { NewClientAnalytics } from '@/lib/neon/schema';
 import type { ClientSyncStatistics } from './types';
+import { log } from '@/lib/logger';
 
 export class ClientDataAccess {
   /**
@@ -62,7 +63,7 @@ export class ClientDataAccess {
         avgSyncTime
       };
     } catch (error) {
-      console.error('Failed to get client sync statistics:', error);
+      log.error('Failed to get client sync statistics:', { data: error }, 'dataAccess');
       return {
         totalClients: 0,
         lastSyncTime: null,

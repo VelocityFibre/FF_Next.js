@@ -6,6 +6,7 @@
 import { ProcurementError } from '../base.errors';
 import { getErrorSeverity } from '../error.constants';
 import { ErrorLogContext, IErrorLogger } from './types';
+import { log } from '@/lib/logger';
 
 export class ProcurementErrorLogger implements IErrorLogger {
   /**
@@ -38,7 +39,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
    */
   logCritical(error: unknown, context: ErrorLogContext): void {
     const logData = this.createLogData(error, context, 'critical');
-    console.error('[ProcurementError:CRITICAL]', logData);
+    log.error('[ProcurementError:CRITICAL]', { data: logData }, 'errorLogger');
     
     // Send to monitoring service in production
     this.sendToMonitoringService(error, context, 'critical');
@@ -49,7 +50,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
    */
   logHigh(error: unknown, context: ErrorLogContext): void {
     const logData = this.createLogData(error, context, 'high');
-    console.error('[ProcurementError:HIGH]', logData);
+    log.error('[ProcurementError:HIGH]', { data: logData }, 'errorLogger');
     
     // Send to monitoring service in production
     this.sendToMonitoringService(error, context, 'high');
@@ -60,7 +61,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
    */
   logMedium(error: unknown, context: ErrorLogContext): void {
     const logData = this.createLogData(error, context, 'medium');
-    console.warn('[ProcurementError:MEDIUM]', logData);
+    log.warn('[ProcurementError:MEDIUM]', { data: logData }, 'errorLogger');
   }
 
   /**
@@ -68,7 +69,11 @@ export class ProcurementErrorLogger implements IErrorLogger {
    */
   logLow(error: unknown, context: ErrorLogContext): void {
     // TODO: Implement low severity logging
-    void this.createLogData(error, context, 'low');
+    const logData = this.createLogData(error, context, 'low');
+    // Currently not persisting low-severity logs to avoid spam
+    if (logData && process.env.NODE_ENV === 'development') {
+      log.debug('Low severity error:', logData, 'errorLogger');
+    }
   }
 
   /**
@@ -162,11 +167,12 @@ export class ProcurementErrorLogger implements IErrorLogger {
 
     // For now, just ensure we don't break in development
     if (process.env.NODE_ENV === 'development') {
-      console.debug('[ProcurementError:MonitoringService]', 'Would send to monitoring service:', {
+      log.debug('[ProcurementError:MonitoringService]', {
+        data: 'Would send to monitoring service:',
         severity,
         error: error instanceof Error ? error.message : String(error),
         context
-      });
+      }, 'errorLogger');
     }
   }
 
@@ -187,9 +193,9 @@ export class ProcurementErrorLogger implements IErrorLogger {
     };
 
     if (duration > 5000) { // Log slow operations (>5s)
-      console.warn('[ProcurementPerformance:SLOW]', logData);
+      log.warn('[ProcurementPerformance:SLOW]', { data: logData }, 'errorLogger');
     } else if (duration > 1000) { // Log medium operations (>1s)
-
+      log.info('[ProcurementPerformance:MEDIUM]', { data: logData }, 'errorLogger');
     }
   }
 
@@ -203,7 +209,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
     context: ErrorLogContext
   ): void {
     // TODO: Implement audit logging
-    void {
+    const auditData = {
       timestamp: new Date().toISOString(),
       type: 'audit',
       action,
@@ -211,5 +217,7 @@ export class ProcurementErrorLogger implements IErrorLogger {
       userId,
       context: this.sanitizeErrorContext(context)
     };
+    
+    log.info('[ProcurementAudit]', { data: auditData }, 'errorLogger');
   }
 }

@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { LucideLoader2 } from 'lucide-react';
 import { ChartErrorBoundary } from './ChartErrorBoundary';
+import { log } from '@/lib/logger';
 
 // Dynamic chart components to avoid SSR issues with Recharts
 // These components are loaded asynchronously to prevent forwardRef bundling issues
@@ -15,7 +16,7 @@ const createLazyChartComponent = (componentName: string) =>
         return { default: module[componentName] as React.ComponentType<any> };
       })
       .catch(error => {
-        console.error(`Failed to load recharts component ${componentName}:`, error);
+        log.error(`Failed to load recharts component ${componentName}:`, { data: error }, 'DynamicChart');
         // Return a fallback component
         const FallbackComponent: React.ComponentType<any> = () => 
           React.createElement('div', {

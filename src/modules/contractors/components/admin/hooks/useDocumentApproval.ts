@@ -3,6 +3,7 @@ import { contractorService } from '@/services/contractorService';
 import { ContractorDocument } from '@/types/contractor.types';
 import { useAuth } from '@/contexts/AuthContext';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export interface DocumentWithContractor extends ContractorDocument {
   contractorName: string | undefined;
@@ -71,7 +72,7 @@ export function useDocumentApproval({
         setDocuments(allDocs);
       }
     } catch (error: any) {
-      console.error('Failed to load documents:', error);
+      log.error('Failed to load documents:', { data: error }, 'useDocumentApproval');
       toast.error(error.message || 'Failed to load documents');
     } finally {
       setIsLoading(false);
@@ -134,7 +135,7 @@ export function useDocumentApproval({
         onApprovalComplete();
       }
     } catch (error: any) {
-      console.error('Failed to approve document:', error);
+      log.error('Failed to approve document:', { data: error }, 'useDocumentApproval');
       toast.error(error.message || 'Failed to approve document');
     } finally {
       setIsProcessing(false);
@@ -180,7 +181,7 @@ export function useDocumentApproval({
         onApprovalComplete();
       }
     } catch (error: any) {
-      console.error('Failed to reject document:', error);
+      log.error('Failed to reject document:', { data: error }, 'useDocumentApproval');
       toast.error(error.message || 'Failed to reject document');
     } finally {
       setIsProcessing(false);

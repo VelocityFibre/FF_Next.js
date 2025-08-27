@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { procurementApiService } from '../../procurementApiService';
+import { log } from '@/lib/logger';
 import {
   createMockContext,
   setupMocks,
@@ -80,8 +81,8 @@ describe('Memory Management Performance', () => {
       expect(heapGrowth).toBeLessThan(200 * 1024 * 1024); // Less than 200MB heap growth
       expect(rssGrowth).toBeLessThan(300 * 1024 * 1024); // Less than 300MB RSS growth
 
-      console.log('Memory Usage:', {
-        heapGrowth: `${(heapGrowth / 1024 / 1024).toFixed(2)} MB`,
+      log.info('Memory Usage:', { data: {
+        heapGrowth: `${(heapGrowth / 1024 / 1024 }, 'memoryManagement');}.toFixed(2)} MB`,
         rssGrowth: `${(rssGrowth / 1024 / 1024).toFixed(2)} MB`,
         external: `${(finalMemory.external / 1024 / 1024).toFixed(2)} MB`,
         arrayBuffers: `${(finalMemory.arrayBuffers / 1024 / 1024).toFixed(2)} MB`
@@ -118,7 +119,7 @@ describe('Memory Management Performance', () => {
         if (i % 25 === 0) {
           const currentMemory = process.memoryUsage();
           const currentGrowth = currentMemory.heapUsed - initialMemory.heapUsed;
-          console.log(`Memory after ${i} operations: ${(currentGrowth / 1024 / 1024).toFixed(2)} MB`);
+          log.info(`Memory after ${i} operations: ${(currentGrowth / 1024 / 1024, undefined, 'memoryManagement');.toFixed(2)} MB`);
         }
       }
       
@@ -135,7 +136,7 @@ describe('Memory Management Performance', () => {
       // Memory growth should be minimal after GC
       expect(memoryGrowth).toBeLessThan(50 * 1024 * 1024); // Less than 50MB
 
-      console.log(`Final memory growth after ${operationCount} operations: ${(memoryGrowth / 1024 / 1024).toFixed(2)} MB`);
+      log.info(`Final memory growth after ${operationCount} operations: ${(memoryGrowth / 1024 / 1024, undefined, 'memoryManagement');.toFixed(2)} MB`);
     });
 
     it('should handle memory pressure gracefully', async () => {
@@ -163,7 +164,7 @@ describe('Memory Management Performance', () => {
         }
         
         const memoryBefore = process.memoryUsage();
-        console.log(`Memory under pressure: ${(memoryBefore.heapUsed / 1024 / 1024).toFixed(2)} MB`);
+        log.info(`Memory under pressure: ${(memoryBefore.heapUsed / 1024 / 1024, undefined, 'memoryManagement');.toFixed(2)} MB`);
         
         // System should still function under memory pressure
         const result = await procurementApiService.getBOQs(context);
@@ -241,9 +242,9 @@ describe('Memory Management Performance', () => {
       const memoryEfficiencyRatio = secondHalfAvg / firstHalfAvg;
       expect(memoryEfficiencyRatio).toBeLessThan(3); // Memory shouldn't grow > 3x in second half
 
-      console.log('Streaming Memory Efficiency:', {
+      log.info('Streaming Memory Efficiency:', { data: {
         totalChunks,
-        firstHalfAvg: `${(firstHalfAvg / 1024 / 1024).toFixed(2)} MB`,
+        firstHalfAvg: `${(firstHalfAvg / 1024 / 1024 }, 'memoryManagement');}.toFixed(2)} MB`,
         secondHalfAvg: `${(secondHalfAvg / 1024 / 1024).toFixed(2)} MB`,
         efficiencyRatio: memoryEfficiencyRatio.toFixed(2)
       });
@@ -308,8 +309,8 @@ describe('Memory Management Performance', () => {
       const reclaimPercentage = (memoryReclaimed / growthBeforeCleanup) * 100;
       expect(reclaimPercentage).toBeGreaterThan(50); // Should reclaim > 50% of memory
       
-      console.log('Event Handler Memory Test:', {
-        beforeCleanup: `${(growthBeforeCleanup / 1024 / 1024).toFixed(2)} MB`,
+      log.info('Event Handler Memory Test:', { data: {
+        beforeCleanup: `${(growthBeforeCleanup / 1024 / 1024 }, 'memoryManagement');}.toFixed(2)} MB`,
         afterCleanup: `${(growthAfterCleanup / 1024 / 1024).toFixed(2)} MB`,
         reclaimed: `${(memoryReclaimed / 1024 / 1024).toFixed(2)} MB`,
         reclaimPercentage: `${reclaimPercentage.toFixed(1)}%`
@@ -368,8 +369,8 @@ describe('Memory Management Performance', () => {
       
       const reclaimPercentage = (memoryReclaimed / closureMemoryGrowth) * 100;
       
-      console.log('Closure Memory Test:', {
-        closureGrowth: `${(closureMemoryGrowth / 1024 / 1024).toFixed(2)} MB`,
+      log.info('Closure Memory Test:', { data: {
+        closureGrowth: `${(closureMemoryGrowth / 1024 / 1024 }, 'memoryManagement');}.toFixed(2)} MB`,
         finalGrowth: `${(finalMemoryGrowth / 1024 / 1024).toFixed(2)} MB`,
         reclaimed: `${(memoryReclaimed / 1024 / 1024).toFixed(2)} MB`,
         reclaimRate: `${reclaimPercentage.toFixed(1)}%`
@@ -433,8 +434,8 @@ describe('Memory Management Performance', () => {
       // Object pooling should show some memory efficiency
       expect(memoryEfficiency).toBeGreaterThan(-0.5); // Allow for some variance
       
-      console.log('Object Pooling Test:', {
-        withoutPooling: `${(withoutPoolingGrowth / 1024 / 1024).toFixed(2)} MB`,
+      log.info('Object Pooling Test:', { data: {
+        withoutPooling: `${(withoutPoolingGrowth / 1024 / 1024 }, 'memoryManagement');}.toFixed(2)} MB`,
         withPooling: `${(withPoolingGrowth / 1024 / 1024).toFixed(2)} MB`,
         efficiency: `${(memoryEfficiency * 100).toFixed(1)}%`
       });
@@ -475,8 +476,8 @@ describe('Memory Management Performance', () => {
       const totalDataSize = 1000 * 1024; // 1MB total in both cases
       expect(Math.abs(smallBufferGrowth - largeBufferGrowth)).toBeLessThan(totalDataSize * 0.5); // Within 50% of each other
 
-      console.log('Buffer Management Test:', {
-        smallBuffers: `${(smallBufferGrowth / 1024 / 1024).toFixed(2)} MB (1000 x 1KB)`,
+      log.info('Buffer Management Test:', { data: {
+        smallBuffers: `${(smallBufferGrowth / 1024 / 1024 }, 'memoryManagement');}.toFixed(2)} MB (1000 x 1KB)`,
         largeBuffers: `${(largeBufferGrowth / 1024 / 1024).toFixed(2)} MB (10 x 100KB)`,
         totalData: `${(totalDataSize / 1024 / 1024).toFixed(2)} MB`
       });

@@ -7,6 +7,7 @@ import { createNeonClient } from '@/lib/neon-sql';
 import { getTableName } from './schema';
 import { NeonPoleData, NeonDropData, NeonFibreData, SOWOperationResult } from './types';
 import { SOWSummaryService } from './summaryService';
+import { log } from '@/lib/logger';
 
 const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
@@ -68,7 +69,7 @@ export class SOWDataOperationsService {
         message: `Successfully uploaded ${poles.length} poles to Neon` 
       };
     } catch (error) {
-      console.error('Error uploading poles to Neon:', error);
+      log.error('Error uploading poles to Neon:', { data: error }, 'dataOperations');
       throw error;
     }
   }
@@ -127,7 +128,7 @@ export class SOWDataOperationsService {
         message: `Successfully uploaded ${drops.length} drops to Neon` 
       };
     } catch (error) {
-      console.error('Error uploading drops to Neon:', error);
+      log.error('Error uploading drops to Neon:', { data: error }, 'dataOperations');
       throw error;
     }
   }
@@ -179,7 +180,7 @@ export class SOWDataOperationsService {
         message: `Successfully uploaded ${fibres.length} fibre segments to Neon` 
       };
     } catch (error) {
-      console.error('Error uploading fibre to Neon:', error);
+      log.error('Error uploading fibre to Neon:', { data: error }, 'dataOperations');
       throw error;
     }
   }

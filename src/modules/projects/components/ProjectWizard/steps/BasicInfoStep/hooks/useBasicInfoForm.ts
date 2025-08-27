@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { reverseGeocode, getCurrentLocation, validateSouthAfricanGPS, parseGPSCoordinates } from '@/utils/geoLocation';
 import type { GpsState } from '../types/basicInfo.types';
+import { log } from '@/lib/logger';
 
 export function useBasicInfoForm(form: any) {
   const { watch, setValue } = form;
@@ -60,7 +61,7 @@ export function useBasicInfoForm(form: any) {
         }
       } catch (error) {
         setGpsState(prev => ({ ...prev, geocodingError: 'Failed to lookup location' }));
-        console.error('Geocoding error:', error);
+        log.error('Geocoding error:', { data: error }, 'useBasicInfoForm');
       } finally {
         setGpsState(prev => ({ ...prev, isGeocoding: false }));
       }
@@ -79,7 +80,7 @@ export function useBasicInfoForm(form: any) {
       setValue('location.coordinates.longitude' as any, position.lng);
     } catch (error) {
       setGpsState(prev => ({ ...prev, geocodingError: 'Could not get current location' }));
-      console.error('Geolocation error:', error);
+      log.error('Geolocation error:', { data: error }, 'useBasicInfoForm');
     } finally {
       setGpsState(prev => ({ ...prev, isGeocoding: false }));
     }

@@ -6,6 +6,7 @@ import { BreadcrumbNavigation } from './header/BreadcrumbNavigation';
 import { SearchBar } from './header/SearchBar';
 import { NotificationsDropdown } from './header/NotificationsDropdown';
 import { UserMenuDropdown } from './header/UserMenuDropdown';
+import { log } from '@/lib/logger';
 
 export function Header({ 
   title = 'Dashboard', 
@@ -54,7 +55,7 @@ export function Header({
       await signOut();
       navigate('/login');
     } catch (error) {
-      console.error('Logout failed:', error);
+      log.error('Logout failed:', { data: error }, 'Header');
     }
     */
   };

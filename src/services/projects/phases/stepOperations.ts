@@ -10,6 +10,7 @@ import {
 import { db, auth } from '@/config/firebase';
 import { Step } from '@/types/project.types';
 import { updatePhaseProgress, updateProjectProgress } from './progressCalculations';
+import { log } from '@/lib/logger';
 
 /**
  * Get all steps for a phase
@@ -27,7 +28,7 @@ export async function getPhaseSteps(projectId: string, phaseId: string): Promise
       ...doc.data()
     } as Step));
   } catch (error) {
-    console.error('Error getting phase steps:', error);
+    log.error('Error getting phase steps:', { data: error }, 'stepOperations');
     throw new Error('Failed to fetch phase steps');
   }
 }
@@ -58,7 +59,7 @@ export async function updateStep(
     await updatePhaseProgress(projectId, phaseId);
     await updateProjectProgress(projectId);
   } catch (error) {
-    console.error('Error updating step:', error);
+    log.error('Error updating step:', { data: error }, 'stepOperations');
     throw new Error('Failed to update step');
   }
 }

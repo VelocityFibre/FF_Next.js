@@ -1,5 +1,6 @@
 // 🟢 WORKING: Procurement portal type definitions
 import type { LucideIcon } from 'lucide-react';
+import type { Project } from '@/types/project.types';
 
 export type ProcurementTabId = 
   | 'overview'
@@ -112,11 +113,7 @@ export interface ProjectSummary {
  * Enhanced procurement portal context with view mode support
  */
 export interface ProcurementPortalContext {
-  selectedProject?: {
-    id: string;
-    name: string;
-    code: string;
-  } | undefined;
+  selectedProject?: Project | undefined;
   viewMode: ProcurementViewMode;
   aggregateMetrics?: AggregateProjectMetrics | undefined;
   projectSummaries?: ProjectSummary[] | undefined;
@@ -126,7 +123,7 @@ export interface ProcurementPortalContext {
   permissions: ProcurementPermissions;
   isLoading: boolean;
   error?: string | undefined;
-  setProject: (project: { id: string; name: string; code: string; } | undefined) => void;
+  setProject: (project: Project | undefined) => void;
   setViewMode: (mode: ProcurementViewMode) => void;
   setActiveTab: (tab: ProcurementTabId) => void;
   setLoading: (loading: boolean) => void;

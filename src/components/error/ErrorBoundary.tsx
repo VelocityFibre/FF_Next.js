@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react';
+import { log } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -44,7 +45,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     // Log error to console in development
     if (import.meta.env.DEV) {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      log.error('ErrorBoundary caught an error:', { data: error, errorInfo }, 'ErrorBoundary');
     }
 
     // In production, you would send this to your error tracking service

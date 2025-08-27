@@ -1,4 +1,5 @@
 import { NeonPoleData, NeonDropData, NeonFibreData } from '../../neonSOWService';
+import { log } from '@/lib/logger';
 
 /**
  * Validate poles data
@@ -63,7 +64,7 @@ export function validateDrops(drops: NeonDropData[]): { valid: NeonDropData[], i
     
     // Warning for missing pole assignment (not an error)
     if (!drop.pole_number) {
-      console.warn(`Drop ${drop.drop_number} has no pole assignment`);
+      log.warn(`Drop ${drop.drop_number} has no pole assignment`, undefined, 'validators');
     }
     
     if (dropErrors.length === 0) {

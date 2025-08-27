@@ -136,7 +136,14 @@
       "Bash(VITE_NEON_DATABASE_URL=\"postgresql://neondb_owner:npg_CrI6tbA7nexf@ep-wandering-dew-a14qgf25-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx scripts/add-completion-notes-column.ts)",
       "Bash(firebase --version)",
       "Bash(firebase firestore:indexes:*)",
-      "Bash(FF2.bat:*)"
+      "Bash(FF2.bat:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh repo fork:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git remote add:*)",
+      "Bash(cp:*)",
+      "Bash(npx vitest run:*)",
+      "Bash(vitest run:*)"
     ],
     "deny": [],
     "ask": [],

@@ -4,6 +4,7 @@
  */
 
 import { StaffFormData } from '@/types/staff.types';
+import { log } from '@/lib/logger';
 
 /**
  * Validate required fields for staff creation
@@ -63,18 +64,18 @@ export function processReportsToField(reportsTo: string | undefined | null): str
  */
 export function logDebugInfo(_operation: string, data: any, reportsTo?: any): void {
 
-  console.log('1. Raw input data:', JSON.stringify(data, null, 2));
+  log.info('1. Raw input data:', { data: JSON.stringify(data, null, 2 }, 'validators'););
   
   if (reportsTo !== undefined) {
 
 
 
-    console.log('   - String representation:', String(reportsTo));
-    console.log('   - JSON stringify:', JSON.stringify(reportsTo));
+    log.info('   - String representation:', { data: String(reportsTo }, 'validators'););
+    log.info('   - JSON stringify:', { data: JSON.stringify(reportsTo }, 'validators'););
 
 
 
-    console.log('   - Trimmed length:', reportsTo ? String(reportsTo).trim().length : 'N/A');
+    log.info('   - Trimmed length:', { data: reportsTo ? String(reportsTo }, 'validators');.length : 'N/A');
   }
 }
 
@@ -82,7 +83,7 @@ export function logDebugInfo(_operation: string, data: any, reportsTo?: any): vo
  * Log error information
  */
 export function logError(operation: string, error: unknown, data: any): void {
-  console.error(`❌ ${operation} ERROR - Detailed error info:`, {
+  log.error(`❌ ${operation} ERROR - Detailed error info:`, { data: {
     message: error instanceof Error ? error.message : 'Unknown error',
     stack: error instanceof Error ? error.stack : 'No stack trace',
     inputData: data,
@@ -90,5 +91,5 @@ export function logError(operation: string, error: unknown, data: any): void {
       employeeId: data.employeeId,
       reportsTo: data.reportsTo
     }
-  });
+  } }, 'validators');
 }

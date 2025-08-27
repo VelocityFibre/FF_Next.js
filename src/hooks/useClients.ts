@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { clientService } from '@/services/clientService';
+import { log } from '@/lib/logger';
 import { 
   ClientFormData, 
   ClientFilter,
@@ -91,7 +92,7 @@ export function useCreateClient() {
       queryClient.invalidateQueries({ queryKey: clientKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to create client:', error);
+      log.error('Failed to create client:', { data: error }, 'useClients');
       throw error;
     },
   });
@@ -114,7 +115,7 @@ export function useUpdateClient() {
       queryClient.invalidateQueries({ queryKey: clientKeys.summary() });
     },
     onError: (error: Error) => {
-      console.error('Failed to update client:', error);
+      log.error('Failed to update client:', { data: error }, 'useClients');
       throw error;
     },
   });
@@ -136,7 +137,7 @@ export function useDeleteClient() {
       queryClient.invalidateQueries({ queryKey: clientKeys.summary() });
     },
     onError: (error: Error) => {
-      console.error('Failed to delete client:', error);
+      log.error('Failed to delete client:', { data: error }, 'useClients');
       throw error;
     },
   });
@@ -156,7 +157,7 @@ export function useUpdateClientMetrics() {
       queryClient.invalidateQueries({ queryKey: clientKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to update client metrics:', error);
+      log.error('Failed to update client metrics:', { data: error }, 'useClients');
       throw error;
     },
   });
@@ -176,7 +177,7 @@ export function useAddContactHistory() {
       queryClient.invalidateQueries({ queryKey: clientKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to add contact history:', error);
+      log.error('Failed to add contact history:', { data: error }, 'useClients');
       throw error;
     },
   });

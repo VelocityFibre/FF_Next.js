@@ -4,6 +4,7 @@
  */
 
 import { ContractorImportRow, ContractorImportError } from '@/types/contractor/import.types';
+import { log } from '@/lib/logger';
 
 /**
  * Validate contractor import data
@@ -149,7 +150,7 @@ export function validateContractorData(
     
     if (suspiciousDomains.includes(domain)) {
       // This is a warning, not an error - we'll allow it but flag it
-      console.warn(`Row ${rowNumber}: Personal email domain detected for business: ${domain}`);
+      log.warn(`Row ${rowNumber}: Personal email domain detected for business: ${domain}`, undefined, 'validators');
     }
   }
   

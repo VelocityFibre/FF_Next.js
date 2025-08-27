@@ -1,12 +1,13 @@
 // 🟢 WORKING: BOQ tab component with project filtering and integration
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, FileText, Search, Filter, Download, Upload } from 'lucide-react';
 import { Button } from '@/shared/components/ui/Button';
 import { useProcurementPortal } from '../../context/ProcurementPortalProvider';
-import { BOQDashboard } from '../boq/BOQDashboard';
-import { BOQCreate } from '../boq/BOQCreate';
-import { BOQEdit } from '../boq/BOQEdit';
+import { BOQDashboard } from '../../boq/components/BOQDashboard';
+import { BOQCreate } from '../../boq/components/BOQCreate';
+import { BOQEdit } from '../../boq/components/BOQEdit';
 import type { BOQItem } from '@/types/procurement/boq.types';
+import { log } from '@/lib/logger';
 
 export function BOQTab() {
   const { selectedProject, updateTabBadge } = useProcurementPortal();
@@ -42,14 +43,14 @@ export function BOQTab() {
   };
 
   // Handle BOQ save (create/update)
-  const handleSaveBOQ = async (boqData: Partial<BOQItem>) => {
+  const handleSaveBOQ = async (_boqData: Partial<BOQItem>) => {
     setIsLoading(true);
     try {
       // TODO: Implement actual save logic
       await new Promise(resolve => setTimeout(resolve, 1000));
       handleBackToDashboard();
     } catch (error) {
-      console.error('Error saving BOQ:', error);
+      log.error('Error saving BOQ:', { data: error }, 'BOQTab');
     } finally {
       setIsLoading(false);
     }

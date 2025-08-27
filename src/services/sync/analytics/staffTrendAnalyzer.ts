@@ -6,6 +6,7 @@
 import { neonDb } from '@/lib/neon/connection';
 import { staffPerformance } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
+import { log } from '@/lib/logger';
 
 /**
  * Staff performance trend analysis service
@@ -37,7 +38,7 @@ export class StaffTrendAnalyzer {
 
       return trends;
     } catch (error) {
-      console.error('Failed to get performance trends:', error);
+      log.error('Failed to get performance trends:', { data: error }, 'staffTrendAnalyzer');
       return this.getDefaultTrends();
     }
   }
@@ -126,7 +127,7 @@ export class StaffTrendAnalyzer {
       // Convert to 0-100 scale (higher std dev = higher volatility)
       return Math.min(100, Math.round(standardDeviation * 2));
     } catch (error) {
-      console.error('Failed to calculate performance volatility:', error);
+      log.error('Failed to calculate performance volatility:', { data: error }, 'staffTrendAnalyzer');
       return 0;
     }
   }
@@ -178,7 +179,7 @@ export class StaffTrendAnalyzer {
         confidence
       };
     } catch (error) {
-      console.error('Failed to predict next month performance:', error);
+      log.error('Failed to predict next month performance:', { data: error }, 'staffTrendAnalyzer');
       return {
         predictedProductivity: 75,
         predictedQuality: 80,

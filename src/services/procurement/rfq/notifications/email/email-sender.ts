@@ -6,6 +6,7 @@
 import { Timestamp } from 'firebase/firestore';
 import { RFQ } from '@/types/procurement.types';
 import { RFQEmailTemplates } from './email-templates';
+import { log } from '@/lib/logger';
 import type { 
   EmailContent, 
   EmailNotificationOptions, 
@@ -94,7 +95,7 @@ export class RFQEmailSender {
       // }));
       
     } catch (error) {
-      console.error('Error sending supplier notification:', error);
+      log.error('Error sending supplier notification:', { data: error }, 'email-sender');
       throw new Error(`Failed to send email notification: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

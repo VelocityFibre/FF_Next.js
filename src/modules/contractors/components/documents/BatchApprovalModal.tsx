@@ -19,6 +19,7 @@ import { BulkApprovalRequest, DocumentRejectionReason } from './types/documentAp
 import { contractorService } from '@/services/contractorService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface BatchApprovalModalProps {
   /**
@@ -151,7 +152,7 @@ export function BatchApprovalModal({
               selected: true
             } as DocumentPreview;
           } catch (error) {
-            console.error(`Failed to load document ${id}:`, error);
+            log.error(`Failed to load document ${id}:`, { data: error }, 'BatchApprovalModal');
             return {
               id,
               name: `Document ${id}`,
@@ -172,7 +173,7 @@ export function BatchApprovalModal({
       setSelectedDocuments(new Set(validIds));
       
     } catch (error) {
-      console.error('Failed to load document previews:', error);
+      log.error('Failed to load document previews:', { data: error }, 'BatchApprovalModal');
       setPreviewError('Failed to load document previews. Some documents may not be available.');
     } finally {
       setIsLoadingPreview(false);
@@ -282,7 +283,7 @@ export function BatchApprovalModal({
     try {
       await onSubmit(request);
     } catch (error) {
-      console.error('Batch operation failed:', error);
+      log.error('Batch operation failed:', { data: error }, 'BatchApprovalModal');
       toast.error('Batch operation failed');
     }
   };

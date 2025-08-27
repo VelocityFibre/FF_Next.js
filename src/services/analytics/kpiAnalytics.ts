@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { kpiMetrics } from '@/lib/neon/schema';
 import { eq, and, gte, lte, sql, count, avg } from 'drizzle-orm';
 import type { KPIDashboardItem, KPITrend } from './types';
+import { log } from '@/lib/logger';
 
 export class KPIAnalyticsService {
   /**
@@ -50,7 +51,7 @@ export class KPIAnalyticsService {
         recordCount: row.recordCount
       }));
     } catch (error) {
-      console.error('Failed to get KPI dashboard:', error);
+      log.error('Failed to get KPI dashboard:', { data: error }, 'kpiAnalytics');
       // Return empty array instead of throwing
       return [];
     }
@@ -94,7 +95,7 @@ export class KPIAnalyticsService {
         count: row.count
       }));
     } catch (error) {
-      console.error('Failed to get KPI trends:', error);
+      log.error('Failed to get KPI trends:', { data: error }, 'kpiAnalytics');
       // Return empty array instead of throwing
       return [];
     }

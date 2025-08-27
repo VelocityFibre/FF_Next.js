@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { WorkflowAnalytics } from '../../types/workflow.types';
 import { workflowTemplateService } from '../../services/WorkflowTemplateService';
+import { log } from '@/lib/logger';
 
 interface ComparisonToolsProps {
   analytics: WorkflowAnalytics | null;
@@ -141,7 +142,7 @@ export function ComparisonTools({ analytics, dateRange }: ComparisonToolsProps) 
       const result = await workflowTemplateService.compareTemplates(selectedTemplate1, selectedTemplate2);
       setComparison(result);
     } catch (error) {
-      console.error('Template comparison failed:', error);
+      log.error('Template comparison failed:', { data: error }, 'ComparisonTools');
     } finally {
       setLoading(false);
     }

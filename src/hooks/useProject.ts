@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { projectsService } from '@/services/projectsService';
+import { log } from '@/lib/logger';
 
 export interface Project {
   id: string;
@@ -42,7 +43,7 @@ export function useProject(): UseProjectResult {
       const project = await projectsService.getById(id);
       setCurrentProject(project);
     } catch (err) {
-      console.error('Failed to load project:', err);
+      log.error('Failed to load project:', { data: err }, 'useProject');
       setError(err instanceof Error ? err.message : 'Failed to load project');
       setCurrentProject(null);
     } finally {

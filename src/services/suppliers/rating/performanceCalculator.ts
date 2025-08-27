@@ -7,6 +7,7 @@ import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { SupplierPerformance, PerformancePeriod } from '@/types/supplier/base.types';
 import { PerformanceTrendPoint } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -37,7 +38,7 @@ export class SupplierPerformanceCalculator {
       
       return performance;
     } catch (error) {
-      console.error(`Error calculating supplier performance for ${supplierId}:`, error);
+      log.error(`Error calculating supplier performance for ${supplierId}:`, { data: error }, 'performanceCalculator');
       throw new Error(`Failed to calculate supplier performance: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -71,7 +72,7 @@ export class SupplierPerformanceCalculator {
       
       return trends;
     } catch (error) {
-      console.error(`Error getting performance trends for ${supplierId}:`, error);
+      log.error(`Error getting performance trends for ${supplierId}:`, { data: error }, 'performanceCalculator');
       return [];
     }
   }

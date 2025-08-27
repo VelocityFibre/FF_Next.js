@@ -5,6 +5,7 @@
 
 import { boqService } from '../boqService';
 import { supplierService } from '@/services/suppliers/supplierService';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Core report data interfaces
 export interface CostSavingsReport {
@@ -212,7 +213,7 @@ export class ProcurementReportsService {
         monthlyTrends
       };
     } catch (error) {
-      console.error('Error generating cost savings report:', error);
+      log.error('Error generating cost savings report:', { data: error }, 'procurementReportsService');
       throw new Error('Failed to generate cost savings report');
     }
   }
@@ -265,7 +266,7 @@ export class ProcurementReportsService {
         complianceStats
       };
     } catch (error) {
-      console.error('Error generating supplier performance report:', error);
+      log.error('Error generating supplier performance report:', { data: error }, 'procurementReportsService');
       throw new Error('Failed to generate supplier performance report');
     }
   }
@@ -294,7 +295,7 @@ export class ProcurementReportsService {
         monthlyTrends
       };
     } catch (error) {
-      console.error('Error generating spend analysis report:', error);
+      log.error('Error generating spend analysis report:', { data: error }, 'procurementReportsService');
       throw new Error('Failed to generate spend analysis report');
     }
   }
@@ -322,7 +323,7 @@ export class ProcurementReportsService {
         bottleneckAnalysis
       };
     } catch (error) {
-      console.error('Error generating cycle time report:', error);
+      log.error('Error generating cycle time report:', { data: error }, 'procurementReportsService');
       throw new Error('Failed to generate cycle time report');
     }
   }
@@ -352,7 +353,7 @@ export class ProcurementReportsService {
         monthlyVariances
       };
     } catch (error) {
-      console.error('Error generating budget variance report:', error);
+      log.error('Error generating budget variance report:', { data: error }, 'procurementReportsService');
       throw new Error('Failed to generate budget variance report');
     }
   }

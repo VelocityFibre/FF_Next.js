@@ -13,6 +13,7 @@ import {
 } from './types';
 import { SingleSupplierSubscription } from './singleSupplier';
 import { SuppliersListSubscription } from './suppliersList';
+import { log } from '@/lib/logger';
 
 export class SubscriptionManager implements ISubscriptionManager {
   private subscriptions = new Map<string, () => void>();
@@ -45,7 +46,7 @@ export class SubscriptionManager implements ISubscriptionManager {
       try {
         unsubscribe();
       } catch (error) {
-        console.error('Error unsubscribing:', error);
+        log.error('Error unsubscribing:', { data: error }, 'subscriptionManager');
       }
     });
     this.subscriptions.clear();

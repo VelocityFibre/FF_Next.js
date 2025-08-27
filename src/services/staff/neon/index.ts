@@ -12,6 +12,7 @@ import { queryStaffWithFilters, queryStaffById, queryActiveStaff, queryProjectMa
 import { mapToStaffMember, mapToStaffMembers, mapToDropdownOption } from './dataMappers';
 import { createStaff, createOrUpdateStaff, updateStaff, deleteStaff } from './crudOperations';
 import { getStaffSummary as getStaffSummaryStats } from './statistics';
+import { log } from '@/lib/logger';
 
 /**
  * Staff service using Neon PostgreSQL database
@@ -25,7 +26,7 @@ export const staffNeonService = {
       const result = await queryStaffWithFilters(filter);
       return mapToStaffMembers(result);
     } catch (error) {
-      console.error('Error fetching staff:', error);
+      log.error('Error fetching staff:', { data: error }, 'index');
       throw error;
     }
   },
@@ -41,7 +42,7 @@ export const staffNeonService = {
       
       return mapToStaffMember(result[0]);
     } catch (error) {
-      console.error('Error fetching staff member:', error);
+      log.error('Error fetching staff member:', { data: error }, 'index');
       throw error;
     }
   },
@@ -74,7 +75,7 @@ export const staffNeonService = {
       const result = await queryActiveStaff();
       return result.map((staff: any) => mapToDropdownOption(staff));
     } catch (error) {
-      console.error('Error fetching active staff:', error);
+      log.error('Error fetching active staff:', { data: error }, 'index');
       throw error;
     }
   },
@@ -87,7 +88,7 @@ export const staffNeonService = {
       const result = await queryProjectManagers();
       return result.map((staff: any) => mapToDropdownOption(staff, true));
     } catch (error) {
-      console.error('Error fetching project managers:', error);
+      log.error('Error fetching project managers:', { data: error }, 'index');
       throw error;
     }
   },

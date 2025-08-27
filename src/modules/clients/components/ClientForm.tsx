@@ -20,6 +20,7 @@ import {
   CommunicationSection
 } from './ClientFormSections';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { log } from '@/lib/logger';
 
 export function ClientForm() {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ export function ClientForm() {
       }
       navigate('/app/clients');
     } catch (error) {
-      console.error('Failed to save client:', error);
+      log.error('Failed to save client:', { data: error }, 'ClientForm');
     }
   };
 

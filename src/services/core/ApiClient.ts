@@ -5,6 +5,7 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { auth } from '@/config/firebase';
+import { log } from '@/lib/logger';
 
 export interface ApiError {
   message: string;
@@ -49,7 +50,7 @@ class ApiClient {
             config.headers.Authorization = `Bearer ${token}`;
           }
         } catch (error) {
-          console.warn('Failed to get auth token:', error);
+          log.warn('Failed to get auth token:', { data: error }, 'ApiClient');
         }
 
         // Add request metadata

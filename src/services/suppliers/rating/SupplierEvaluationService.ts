@@ -6,6 +6,7 @@
 import { PerformancePeriod } from '@/types/supplier/base.types';
 import { SupplierEvaluationReport, EvaluationActionItem } from './types';
 import { SupplierPerformanceCalculator } from './performanceCalculator';
+import { log } from '@/lib/logger';
 
 export class SupplierEvaluationService {
   /**
@@ -65,7 +66,7 @@ export class SupplierEvaluationService {
         evaluationPeriod: period
       };
     } catch (error) {
-      console.error(`Error generating evaluation report for ${supplierId}:`, error);
+      log.error(`Error generating evaluation report for ${supplierId}:`, { data: error }, 'SupplierEvaluationService');
       throw error;
     }
   }
@@ -89,7 +90,7 @@ export class SupplierEvaluationService {
           const report = await this.generateEvaluationReport(supplierId, period);
           return { supplierId, report };
         } catch (error) {
-          console.error(`Failed to generate report for supplier ${supplierId}:`, error);
+          log.error(`Failed to generate report for supplier ${supplierId}:`, { data: error }, 'SupplierEvaluationService');
           return null;
         }
       });
@@ -214,7 +215,7 @@ export class SupplierEvaluationService {
         recommendationsSummary
       };
     } catch (error) {
-      console.error('Error getting evaluation summary:', error);
+      log.error('Error getting evaluation summary:', { data: error }, 'SupplierEvaluationService');
       throw error;
     }
   }
@@ -291,7 +292,7 @@ export class SupplierEvaluationService {
         upcomingDueDates
       };
     } catch (error) {
-      console.error('Error getting action items summary:', error);
+      log.error('Error getting action items summary:', { data: error }, 'SupplierEvaluationService');
       return {
         totalActionItems: 0,
         highPriority: 0,

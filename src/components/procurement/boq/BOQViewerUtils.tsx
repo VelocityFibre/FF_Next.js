@@ -6,6 +6,7 @@ import { CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { BOQItem } from '@/types/procurement/boq.types';
 import { VisibleColumns } from './BOQViewerTypes';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 /**
  * Get status badge styling
@@ -99,7 +100,7 @@ export const exportBOQToCSV = (
 
     toast.success('BOQ exported successfully');
   } catch (error) {
-    // console.error('Failed to export BOQ:', error);
+    // log.error('Failed to export BOQ:', { data: error }, 'BOQViewerUtils');
     toast.error('Failed to export BOQ');
   }
 };

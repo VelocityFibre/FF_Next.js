@@ -4,6 +4,7 @@
  */
 
 import * as XLSX from 'xlsx';
+import { log } from '@/lib/logger';
 
 // Security limits
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -106,7 +107,7 @@ export class SecureXLSX {
             if (!allowHTML && typeof sanitizedValue === 'string') {
               const htmlStripped = sanitizedValue.replace(/<[^>]*>/g, '');
               if (htmlStripped !== sanitizedValue) {
-                console.warn(`HTML content removed from cell ${cellAddress}`);
+                log.warn(`HTML content removed from cell ${cellAddress}`, undefined, 'secure-xlsx');
               }
               cell.v = htmlStripped;
             } else {
@@ -163,7 +164,7 @@ export class SecureXLSX {
       
       return sanitizedWorkbook;
     } catch (error) {
-      console.error('Secure XLSX read failed:', error);
+      log.error('Secure XLSX read failed:', { data: error }, 'secure-xlsx');
       throw new Error(`Secure XLSX parsing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -181,7 +182,7 @@ export class SecureXLSX {
         raw: false
       });
     } catch (error) {
-      console.error('Secure sheet to JSON conversion failed:', error);
+      log.error('Secure sheet to JSON conversion failed:', { data: error }, 'secure-xlsx');
       throw new Error(`Secure JSON conversion failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -211,7 +212,7 @@ export class SecureXLSX {
         compression: true
       });
     } catch (error) {
-      console.error('Secure XLSX write failed:', error);
+      log.error('Secure XLSX write failed:', { data: error }, 'secure-xlsx');
       throw new Error(`Secure XLSX write failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

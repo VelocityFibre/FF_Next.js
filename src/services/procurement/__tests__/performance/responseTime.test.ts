@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { procurementApiService } from '../../procurementApiService';
+import { log } from '@/lib/logger';
 import {
   createMockContext,
   setupMocks,
@@ -189,7 +190,7 @@ describe('Response Time Performance', () => {
       expect(maxResponseTime).toBeLessThan(3000); // Max under 3 seconds
       expect(totalTime).toBeLessThan(10000); // Total time under 10 seconds
 
-      console.log(`Load Test Results: ${concurrentRequests} requests, avg: ${avgResponseTime.toFixed(2)}ms, max: ${maxResponseTime.toFixed(2)}ms`);
+      log.info(`Load Test Results: ${concurrentRequests} requests, avg: ${avgResponseTime.toFixed(2, undefined, 'responseTime');}ms, max: ${maxResponseTime.toFixed(2)}ms`);
     });
 
     it('should scale response times linearly with request complexity', async () => {
@@ -267,7 +268,7 @@ describe('Response Time Performance', () => {
         // Indexed queries should be fast
         expect(queryTime).toBeLessThan(500); // Under 500ms for indexed queries
         
-        console.log(`${query.name}: ${queryTime.toFixed(2)}ms`);
+        log.info(`${query.name}: ${queryTime.toFixed(2, undefined, 'responseTime');}ms`);
       }
     });
 
@@ -321,8 +322,8 @@ describe('Response Time Performance', () => {
       
       expect(performanceRatio).toBeLessThan(3); // Last page < 3x first page time
       
-      console.log('Pagination Performance:', {
-        firstPage: firstPageTime.toFixed(2) + 'ms',
+      log.info('Pagination Performance:', { data: {
+        firstPage: firstPageTime.toFixed(2 }, 'responseTime');} + 'ms',
         lastPage: lastPageTime.toFixed(2) + 'ms',
         ratio: performanceRatio.toFixed(2)
       });
@@ -406,8 +407,8 @@ describe('Response Time Performance', () => {
       expect(standardDeviation).toBeLessThan(averageTime * 0.5); // StdDev < 50% of average
       expect(maxTime).toBeLessThan(averageTime * 3); // Max < 3x average
 
-      console.log('Performance Statistics:', {
-        average: averageTime.toFixed(2) + 'ms',
+      log.info('Performance Statistics:', { data: {
+        average: averageTime.toFixed(2 }, 'responseTime');} + 'ms',
         min: minTime.toFixed(2) + 'ms',
         max: maxTime.toFixed(2) + 'ms',
         stdDev: standardDeviation.toFixed(2) + 'ms'
@@ -461,7 +462,7 @@ describe('Response Time Performance', () => {
       const performanceDegradation = degradedTime / baselineTime;
       
       if (performanceDegradation > 2) {
-        console.warn(`Performance degradation detected: ${performanceDegradation.toFixed(2)}x slower`);
+        log.warn(`Performance degradation detected: ${performanceDegradation.toFixed(2, undefined, 'responseTime');}x slower`);
       }
 
       expect(performanceDegradation).toBeGreaterThan(1); // Should be noticeably slower

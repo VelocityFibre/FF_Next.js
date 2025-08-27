@@ -21,6 +21,9 @@ import type {
   AggregateProjectMetrics,
   ProjectSummary
 } from '@/types/procurement/portal.types';
+import type { Project } from '@/types/project.types';
+import { ProjectType, ProjectStatus, Priority } from '@/types/project.types';
+import { log } from '@/lib/logger';
 
 export function ProcurementPage() {
   const navigate = useNavigate();
@@ -28,11 +31,20 @@ export function ProcurementPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   
   // State management
-  const [selectedProject, setSelectedProject] = useState<{ id: string; name: string; code: string } | undefined>(
+  const [selectedProject, setSelectedProject] = useState<Project | undefined>(
     searchParams.get('project') ? {
       id: searchParams.get('project')!,
       name: searchParams.get('projectName') || 'Unknown',
-      code: searchParams.get('projectCode') || 'N/A'
+      code: searchParams.get('projectCode') || 'N/A',
+      projectType: ProjectType.FIBRE,
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+      status: ProjectStatus.ACTIVE,
+      priority: Priority.MEDIUM,
+      plannedProgress: 0,
+      actualProgress: 0,
+      createdBy: 'system',
+      createdAt: new Date().toISOString()
     } : undefined
   );
   const [viewMode, setViewMode] = useState<ProcurementViewMode>(() => {
@@ -110,7 +122,7 @@ export function ProcurementPage() {
       setAggregateMetrics(mockAggregateMetrics);
       setProjectSummaries(mockProjectSummaries);
     } catch (error) {
-      console.error('Error loading aggregate metrics:', error);
+      log.error('Error loading aggregate metrics:', { data: error }, 'ProcurementPage');
       setError('Failed to load aggregate data');
     }
   };
@@ -266,7 +278,7 @@ export function ProcurementPage() {
   };
 
   // Handle project selection
-  const handleProjectChange = (project: { id: string; name: string; code: string } | undefined) => {
+  const handleProjectChange = (project: Project | undefined) => {
     setSelectedProject(project);
     
     // Update URL parameters

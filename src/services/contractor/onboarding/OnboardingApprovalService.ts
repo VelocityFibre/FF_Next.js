@@ -12,6 +12,7 @@ import { ProgressTracker } from './progressTracker';
 import { DocumentManager } from './documentManager';
 import { OnboardingProgressManager } from './OnboardingProgressManager';
 import { OnboardingDatabaseService } from './OnboardingDatabaseService';
+import { log } from '@/lib/logger';
 
 export class OnboardingApprovalService {
   private progressManager = new OnboardingProgressManager();
@@ -54,7 +55,7 @@ export class OnboardingApprovalService {
       // In production, trigger approval workflow notification
       return progress;
     } catch (error) {
-      console.error('Failed to submit for approval:', error);
+      log.error('Failed to submit for approval:', { data: error }, 'OnboardingApprovalService');
       throw error;
     }
   }
@@ -87,7 +88,7 @@ export class OnboardingApprovalService {
 
       return progress;
     } catch (error) {
-      console.error('Failed to approve contractor:', error);
+      log.error('Failed to approve contractor:', { data: error }, 'OnboardingApprovalService');
       throw error;
     }
   }
@@ -115,7 +116,7 @@ export class OnboardingApprovalService {
 
       return progress;
     } catch (error) {
-      console.error('Failed to reject contractor:', error);
+      log.error('Failed to reject contractor:', { data: error }, 'OnboardingApprovalService');
       throw error;
     }
   }
@@ -128,7 +129,7 @@ export class OnboardingApprovalService {
       const progress = await this.progressManager.getProgress(contractorId);
       return ProgressTracker.canSubmitForApproval(progress);
     } catch (error) {
-      console.error('Failed to check submission eligibility:', error);
+      log.error('Failed to check submission eligibility:', { data: error }, 'OnboardingApprovalService');
       return { canSubmit: false, reason: 'Error checking eligibility' };
     }
   }

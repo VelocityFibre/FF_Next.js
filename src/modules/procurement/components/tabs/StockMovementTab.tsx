@@ -1,9 +1,9 @@
 // 🟢 WORKING: Stock Movement tab with inventory tracking and project allocation
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Package, Search, Filter, TrendingUp, TrendingDown, AlertTriangle, Plus } from 'lucide-react';
 import { Button } from '@/shared/components/ui/Button';
 import { useProcurementPortal } from '../../context/ProcurementPortalProvider';
-import { StockManagement } from '../../stock/StockManagement';
+import StockManagement from '../../stock/StockManagement';
 
 export function StockMovementTab() {
   const { selectedProject, updateTabBadge } = useProcurementPortal();
@@ -159,7 +159,7 @@ export function StockMovementTab() {
             </div>
             
             <div className="p-6">
-              <StockManagement projectId={selectedProject.id} />
+              <StockManagement />
             </div>
           </div>
         </div>

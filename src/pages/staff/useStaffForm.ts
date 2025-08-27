@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStaffMember, useCreateStaff, useUpdateStaff } from '@/hooks/useStaff';
 import { safeToDate } from '@/utils/dateHelpers';
+import { log } from '@/lib/logger';
 import { 
   StaffFormData, 
   Department, 
@@ -106,7 +107,7 @@ export function useStaffForm(id?: string) {
       }
       navigate('/app/staff');
     } catch (error) {
-      console.error('Failed to save staff member:', error);
+      log.error('Failed to save staff member:', { data: error }, 'useStaffForm');
     }
   };
 

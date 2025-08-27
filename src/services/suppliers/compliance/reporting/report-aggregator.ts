@@ -6,6 +6,7 @@
 import { ComplianceSummaryReport, SupplierDocument } from './report-types';
 import { ComplianceChecker } from './compliance-checker';
 import { ComplianceCalculator } from './compliance-calculator';
+import { log } from '@/lib/logger';
 
 export class ReportAggregator {
   /**
@@ -69,7 +70,7 @@ export class ReportAggregator {
         generatedAt: new Date()
       };
     } catch (error) {
-      console.error('Error generating summary report:', error);
+      log.error('Error generating summary report:', { data: error }, 'report-aggregator');
       throw new Error(`Failed to generate summary report: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

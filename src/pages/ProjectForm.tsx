@@ -13,6 +13,7 @@ import { ProjectBasicInfo } from './forms/ProjectBasicInfo';
 import { ProjectClientInfo } from './forms/ProjectClientInfo';
 import { ProjectDetailsSection } from './forms/ProjectDetailsSection';
 import { ProjectScheduleBudget } from './forms/ProjectScheduleBudget';
+import { log } from '@/lib/logger';
 
 export function ProjectForm() {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ export function ProjectForm() {
         navigate('/app/projects');
       }
     } catch (error) {
-      console.error('Failed to save project:', error);
+      log.error('Failed to save project:', { data: error }, 'ProjectForm');
       setIsSubmitting(false);
     }
   };

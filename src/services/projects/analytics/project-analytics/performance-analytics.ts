@@ -4,6 +4,7 @@
  */
 
 import { sql } from '@/lib/neon';
+import { log } from '@/lib/logger';
 import type { 
   ProjectPerformanceMetrics, 
   OverdueProject,
@@ -43,7 +44,7 @@ export class ProjectPerformanceAnalytics {
         clientName: row.client_name || 'No client assigned'
       }));
     } catch (error) {
-      console.error('Error fetching overdue projects:', error);
+      log.error('Error fetching overdue projects:', { data: error }, 'performance-analytics');
       return [];
     }
   }
@@ -97,7 +98,7 @@ export class ProjectPerformanceAnalytics {
         clientSatisfactionScore: 4.2 // Placeholder - would need client feedback system
       };
     } catch (error) {
-      console.error('Error fetching project performance metrics:', error);
+      log.error('Error fetching project performance metrics:', { data: error }, 'performance-analytics');
       return {
         onTimeCompletionRate: 0,
         averageProjectDuration: 0,
@@ -171,7 +172,7 @@ export class ProjectPerformanceAnalytics {
         }
       ];
     } catch (error) {
-      console.error('Error calculating performance KPIs:', error);
+      log.error('Error calculating performance KPIs:', { data: error }, 'performance-analytics');
       return [];
     }
   }
@@ -203,7 +204,7 @@ export class ProjectPerformanceAnalytics {
         qualityScore: Math.round(qualityScore)
       };
     } catch (error) {
-      console.error('Error calculating efficiency analysis:', error);
+      log.error('Error calculating efficiency analysis:', { data: error }, 'performance-analytics');
       return {
         productivity: 0,
         resourceUtilization: 0,
@@ -281,7 +282,7 @@ export class ProjectPerformanceAnalytics {
         ]
       };
     } catch (error) {
-      console.error('Error calculating risk assessment:', error);
+      log.error('Error calculating risk assessment:', { data: error }, 'performance-analytics');
       return {
         highRisk: 0,
         mediumRisk: 0,

@@ -6,6 +6,7 @@
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../../../config/firebase';
 import { ProjectCrudService } from './ProjectCrudService';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'projects';
 
@@ -44,7 +45,7 @@ export class ProjectTeamService {
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
-      console.error('Error adding team member:', error);
+      log.error('Error adding team member:', { data: error }, 'ProjectTeamService');
       throw new Error('Failed to add team member');
     }
   }
@@ -65,7 +66,7 @@ export class ProjectTeamService {
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
-      console.error('Error removing team member:', error);
+      log.error('Error removing team member:', { data: error }, 'ProjectTeamService');
       throw new Error('Failed to remove team member');
     }
   }

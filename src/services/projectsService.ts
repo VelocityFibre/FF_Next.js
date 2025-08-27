@@ -4,6 +4,7 @@
  */
 
 import { db } from '@/lib/firebase';
+import { log } from '@/lib/logger';
 import { 
   collection, 
   doc, 
@@ -118,7 +119,7 @@ class ProjectsService {
 
       return filtered;
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      log.error('Error fetching projects:', { data: error }, 'projectsService');
       throw error;
     }
   }
@@ -145,7 +146,7 @@ class ProjectsService {
         updatedAt: data.updatedAt?.toDate()
       } as Project;
     } catch (error) {
-      console.error('Error fetching project:', error);
+      log.error('Error fetching project:', { data: error }, 'projectsService');
       throw error;
     }
   }
@@ -175,7 +176,7 @@ class ProjectsService {
 
       return created;
     } catch (error) {
-      console.error('Error creating project:', error);
+      log.error('Error creating project:', { data: error }, 'projectsService');
       throw error;
     }
   }
@@ -208,7 +209,7 @@ class ProjectsService {
 
       return updated;
     } catch (error) {
-      console.error('Error updating project:', error);
+      log.error('Error updating project:', { data: error }, 'projectsService');
       throw error;
     }
   }
@@ -220,7 +221,7 @@ class ProjectsService {
     try {
       await deleteDoc(doc(db, this.collectionName, id));
     } catch (error) {
-      console.error('Error deleting project:', error);
+      log.error('Error deleting project:', { data: error }, 'projectsService');
       throw error;
     }
   }

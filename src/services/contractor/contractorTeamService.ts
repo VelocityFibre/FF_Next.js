@@ -19,6 +19,7 @@ import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { contractorTeams, teamMembers } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
+import { log } from '@/lib/logger';
 import { 
   ContractorTeam, 
   TeamMember,
@@ -63,7 +64,7 @@ export const contractorTeamService = {
       // Sort teams by name in JavaScript
       return teams.sort((a, b) => a.teamName.localeCompare(b.teamName));
     } catch (error) {
-      console.error('Error getting contractor teams:', error);
+      log.error('Error getting contractor teams:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to fetch contractor teams');
     }
   },
@@ -109,13 +110,13 @@ export const contractorTeamService = {
           });
         }
       } catch (neonError) {
-        console.warn('Failed to sync team to Neon:', neonError);
+        log.warn('Failed to sync team to Neon:', { data: neonError }, 'contractorTeamService');
         // Continue anyway - Firebase is primary
       }
       
       return docRef.id;
     } catch (error) {
-      console.error('Error creating team:', error);
+      log.error('Error creating team:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to create team');
     }
   },
@@ -147,11 +148,11 @@ export const contractorTeamService = {
             .where(eq(contractorTeams.id, teamId as any));
         }
       } catch (neonError) {
-        console.warn('Failed to sync team update to Neon:', neonError);
+        log.warn('Failed to sync team update to Neon:', { data: neonError }, 'contractorTeamService');
         // Continue anyway - Firebase is primary
       }
     } catch (error) {
-      console.error('Error updating team:', error);
+      log.error('Error updating team:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to update team');
     }
   },
@@ -179,10 +180,10 @@ export const contractorTeamService = {
       try {
         await neonDb.delete(contractorTeams).where(eq(contractorTeams.id, teamId));
       } catch (neonError) {
-        console.warn('Failed to delete team from Neon:', neonError);
+        log.warn('Failed to delete team from Neon:', { data: neonError }, 'contractorTeamService');
       }
     } catch (error) {
-      console.error('Error deleting team:', error);
+      log.error('Error deleting team:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to delete team');
     }
   },
@@ -206,7 +207,7 @@ export const contractorTeamService = {
         updatedAt: doc.data().updatedAt?.toDate() || new Date(),
       } as TeamMember));
     } catch (error) {
-      console.error('Error getting team members:', error);
+      log.error('Error getting team members:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to fetch team members');
     }
   },
@@ -251,12 +252,12 @@ export const contractorTeamService = {
           isTeamLead: data.isTeamLead,
         });
       } catch (neonError) {
-        console.warn('Failed to sync member to Neon:', neonError);
+        log.warn('Failed to sync member to Neon:', { data: neonError }, 'contractorTeamService');
       }
       
       return docRef.id;
     } catch (error) {
-      console.error('Error adding team member:', error);
+      log.error('Error adding team member:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to add team member');
     }
   },
@@ -273,7 +274,7 @@ export const contractorTeamService = {
       
       await updateDoc(doc(db, 'team_members', memberId), updateData);
     } catch (error) {
-      console.error('Error updating team member:', error);
+      log.error('Error updating team member:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to update team member');
     }
   },
@@ -289,10 +290,10 @@ export const contractorTeamService = {
       try {
         await neonDb.delete(teamMembers).where(eq(teamMembers.id, memberId));
       } catch (neonError) {
-        console.warn('Failed to delete member from Neon:', neonError);
+        log.warn('Failed to delete member from Neon:', { data: neonError }, 'contractorTeamService');
       }
     } catch (error) {
-      console.error('Error removing team member:', error);
+      log.error('Error removing team member:', { data: error }, 'contractorTeamService');
       throw new Error('Failed to remove team member');
     }
   }

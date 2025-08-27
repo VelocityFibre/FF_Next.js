@@ -5,6 +5,7 @@
 
 import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { SupplierStatistics, StatisticsOptions } from './types';
+import { log } from '@/lib/logger';
 
 export class BasicStatsCalculator {
   /**
@@ -36,7 +37,7 @@ export class BasicStatsCalculator {
 
       return stats;
     } catch (error) {
-      console.error('Error generating supplier statistics:', error);
+      log.error('Error generating supplier statistics:', { data: error }, 'basicStats');
       throw new Error(`Failed to generate statistics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -263,7 +264,7 @@ export class BasicStatsCalculator {
         topCategories
       };
     } catch (error) {
-      console.error('Error generating dashboard summary:', error);
+      log.error('Error generating dashboard summary:', { data: error }, 'basicStats');
       return {
         totalSuppliers: 0,
         activeSuppliers: 0,

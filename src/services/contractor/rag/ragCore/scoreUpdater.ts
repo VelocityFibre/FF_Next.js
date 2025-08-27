@@ -7,6 +7,7 @@ import { db } from '@/lib/neon/connection';
 import { contractors } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
 import { RAGScore } from '../types';
+import { log } from '@/lib/logger';
 
 export class ScoreUpdater {
   /**
@@ -27,7 +28,7 @@ export class ScoreUpdater {
         })
         .where(eq(contractors.id, contractorId));
     } catch (error) {
-      console.error('Failed to update contractor RAG score:', error);
+      log.error('Failed to update contractor RAG score:', { data: error }, 'scoreUpdater');
       throw error;
     }
   }
@@ -54,7 +55,7 @@ export class ScoreUpdater {
           await this.updateContractorRAGScore(contractorId, score);
           return { success: true, contractorId };
         } catch (error) {
-          console.error(`Failed to update RAG score for contractor ${contractorId}:`, error);
+          log.error(`Failed to update RAG score for contractor ${contractorId}:`, { data: error }, 'scoreUpdater');
           return { success: false, contractorId };
         }
       });
@@ -128,9 +129,9 @@ export class ScoreUpdater {
     newScore: RAGScore
   ): Promise<void> {
     // In a production system, you would log to an audit table
-    console.log('RAG Score Update:', {
+    log.info('RAG Score Update:', { data: {
       contractorId,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date( }, 'scoreUpdater');}.toISOString(),
       changes: {
         overall: { from: oldScore?.overall || 0, to: newScore.overall },
         performance: { from: oldScore?.performance || 0, to: newScore.performance },

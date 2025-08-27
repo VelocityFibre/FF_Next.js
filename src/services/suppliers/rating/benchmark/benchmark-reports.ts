@@ -5,6 +5,7 @@
 
 import { BenchmarkCalculator } from './benchmark-calculator';
 import { ComparisonEngine } from './comparison-engine';
+import { log } from '@/lib/logger';
 import { 
   BenchmarkTrendPoint, 
   TrendAnalysisConfig, 
@@ -30,7 +31,7 @@ export class BenchmarkReports {
       // TODO: Implement real historical data query
       return this.queryHistoricalTrends(config);
     } catch (error) {
-      console.error('Error getting benchmark trends:', error);
+      log.error('Error getting benchmark trends:', { data: error }, 'benchmark-reports');
       return [];
     }
   }
@@ -79,7 +80,7 @@ export class BenchmarkReports {
   private static async queryHistoricalTrends(config: TrendAnalysisConfig): Promise<BenchmarkTrendPoint[]> {
     // This would integrate with a time-series database or data warehouse
     // to retrieve actual historical benchmark data
-    console.warn('Historical trend querying not yet implemented');
+    log.warn('Historical trend querying not yet implemented', undefined, 'benchmark-reports');
     return this.generateMockTrendData(config);
   }
 
@@ -149,7 +150,7 @@ export class BenchmarkReports {
       
       return result;
     } catch (error) {
-      console.error('Error generating comparison report:', error);
+      log.error('Error generating comparison report:', { data: error }, 'benchmark-reports');
       throw error;
     }
   }
@@ -207,7 +208,7 @@ export class BenchmarkReports {
         insights
       };
     } catch (error) {
-      console.error('Error generating industry report:', error);
+      log.error('Error generating industry report:', { data: error }, 'benchmark-reports');
       throw error;
     }
   }
@@ -259,7 +260,7 @@ export class BenchmarkReports {
         }
       };
     } catch (error) {
-      console.error('Error validating benchmark data:', error);
+      log.error('Error validating benchmark data:', { data: error }, 'benchmark-reports');
       return {
         valid: false,
         errors: ['Validation failed due to system error'],

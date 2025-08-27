@@ -8,6 +8,7 @@ import { ImportStats, BOQImportService } from '@/services/procurement/boqImportS
 import { procurementApiService } from '@/services/procurement/boqApiExtensions';
 import { ProcurementContext } from '@/types/procurement.types';
 import { RecentActivity } from './BOQDashboardTypes';
+import { log } from '@/lib/logger';
 
 export class BOQDataLoader {
   private boqImportService: BOQImportService;
@@ -43,7 +44,7 @@ export class BOQDataLoader {
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
         .slice(0, 5);
     } catch (error) {
-      console.error('Failed to load recent BOQs:', error);
+      log.error('Failed to load recent BOQs:', { data: error }, 'BOQDataLoader');
       return [];
     }
   }

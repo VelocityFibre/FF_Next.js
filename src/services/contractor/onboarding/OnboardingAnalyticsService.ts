@@ -6,6 +6,7 @@
 import { ProgressTracker } from './progressTracker';
 import { OnboardingProgressManager } from './OnboardingProgressManager';
 import { OnboardingDatabaseService } from './OnboardingDatabaseService';
+import { log } from '@/lib/logger';
 
 export class OnboardingAnalyticsService {
   private progressManager = new OnboardingProgressManager();
@@ -24,7 +25,7 @@ export class OnboardingAnalyticsService {
       
       return ProgressTracker.getOnboardingStatistics(progressList);
     } catch (error) {
-      console.error('Failed to get onboarding analytics:', error);
+      log.error('Failed to get onboarding analytics:', { data: error }, 'OnboardingAnalyticsService');
       throw error;
     }
   }
@@ -56,7 +57,7 @@ export class OnboardingAnalyticsService {
         averageTimeToComplete: 7 // Mock data - would be calculated from database
       };
     } catch (error) {
-      console.error('Failed to get completion stats:', error);
+      log.error('Failed to get completion stats:', { data: error }, 'OnboardingAnalyticsService');
       return {
         totalContractors: 0,
         completedOnboarding: 0,
@@ -101,7 +102,7 @@ export class OnboardingAnalyticsService {
         }
       ];
     } catch (error) {
-      console.error('Failed to get stage analytics:', error);
+      log.error('Failed to get stage analytics:', { data: error }, 'OnboardingAnalyticsService');
       return [];
     }
   }
@@ -130,7 +131,7 @@ export class OnboardingAnalyticsService {
         commonRejectionReasons: []
       };
     } catch (error) {
-      console.error('Failed to get approval stats:', error);
+      log.error('Failed to get approval stats:', { data: error }, 'OnboardingAnalyticsService');
       return {
         totalSubmissions: 0,
         approved: 0,
@@ -180,7 +181,7 @@ export class OnboardingAnalyticsService {
       
       return trends;
     } catch (error) {
-      console.error('Failed to get trend analysis:', error);
+      log.error('Failed to get trend analysis:', { data: error }, 'OnboardingAnalyticsService');
       return [];
     }
   }
@@ -211,7 +212,7 @@ export class OnboardingAnalyticsService {
         actionItems
       };
     } catch (error) {
-      console.error('Failed to generate report:', error);
+      log.error('Failed to generate report:', { data: error }, 'OnboardingAnalyticsService');
       throw error;
     }
   }

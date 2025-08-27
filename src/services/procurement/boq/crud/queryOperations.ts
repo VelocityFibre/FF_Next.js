@@ -13,6 +13,7 @@ import {
 import { db } from '../../../../config/firebase';
 import { BOQ, BOQStatusType } from '../../../../types/procurement/boq.types';
 import { BOQDataTransformers } from './dataTransformers';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'boqs';
 
@@ -62,7 +63,7 @@ export class BOQQueryOperations {
       
       return results;
     } catch (error) {
-      console.error('Error fetching filtered BOQs:', error);
+      log.error('Error fetching filtered BOQs:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -83,7 +84,7 @@ export class BOQQueryOperations {
         BOQDataTransformers.transformFirestoreDoc(doc)
       );
     } catch (error) {
-      console.error('Error fetching BOQs by project:', error);
+      log.error('Error fetching BOQs by project:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -104,7 +105,7 @@ export class BOQQueryOperations {
         BOQDataTransformers.transformFirestoreDoc(doc)
       );
     } catch (error) {
-      console.error('Error fetching BOQs by status:', error);
+      log.error('Error fetching BOQs by status:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -125,7 +126,7 @@ export class BOQQueryOperations {
         BOQDataTransformers.transformFirestoreDoc(doc)
       );
     } catch (error) {
-      console.error('Error fetching BOQs by uploader:', error);
+      log.error('Error fetching BOQs by uploader:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -151,7 +152,7 @@ export class BOQQueryOperations {
         boq.version?.toLowerCase().includes(searchTermLower)
       );
     } catch (error) {
-      console.error('Error searching BOQs:', error);
+      log.error('Error searching BOQs:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -176,7 +177,7 @@ export class BOQQueryOperations {
 
       return allBOQs.filter(boq => boq.createdAt >= cutoffDate);
     } catch (error) {
-      console.error('Error fetching recent BOQs:', error);
+      log.error('Error fetching recent BOQs:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -217,7 +218,7 @@ export class BOQQueryOperations {
 
       return stats;
     } catch (error) {
-      console.error('Error getting project statistics:', error);
+      log.error('Error getting project statistics:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -256,7 +257,7 @@ export class BOQQueryOperations {
         hasPrev: page > 1
       };
     } catch (error) {
-      console.error('Error getting paginated BOQs:', error);
+      log.error('Error getting paginated BOQs:', { data: error }, 'queryOperations');
       throw error;
     }
   }
@@ -273,7 +274,7 @@ export class BOQQueryOperations {
         BOQDataTransformers.transformFirestoreDoc(doc)
       );
     } catch (error) {
-      console.error('Error fetching all BOQs:', error);
+      log.error('Error fetching all BOQs:', { data: error }, 'queryOperations');
       throw error;
     }
   }

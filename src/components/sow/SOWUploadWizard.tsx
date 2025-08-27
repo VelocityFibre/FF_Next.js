@@ -7,6 +7,7 @@ import { validateStepData, processStepData } from './wizard/SOWDataValidator';
 import { SOWStepProgress } from './wizard/SOWStepProgress';
 import { SOWFileUploader } from './wizard/SOWFileUploader';
 import { SOWWizardNavigation } from './wizard/SOWWizardNavigation';
+import { log } from '@/lib/logger';
 
 export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploadWizardProps) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -57,7 +58,7 @@ export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploa
 
       setIsUploading(false);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      log.error('Error uploading file:', { data: error }, 'SOWUploadWizard');
       setUploadError('Failed to process file. Please check the file format.');
       setIsUploading(false);
     }

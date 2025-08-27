@@ -6,6 +6,7 @@
 import { sql } from '@/lib/neon';
 import { StaffMember, StaffFormData } from '@/types/staff.types';
 import { validateStaffData, processReportsToField, logDebugInfo, logError } from './validators';
+import { log } from '@/lib/logger';
 
 /**
  * Create new staff member
@@ -123,7 +124,7 @@ export async function updateStaff(id: string, data: Partial<StaffFormData>): Pro
     `;
     return result[0] as StaffMember;
   } catch (error) {
-    console.error('Error updating staff member:', error);
+    log.error('Error updating staff member:', { data: error }, 'crudOperations');
     throw error;
   }
 }
@@ -135,7 +136,7 @@ export async function deleteStaff(id: string): Promise<void> {
   try {
     await sql`DELETE FROM staff WHERE id = ${id}`;
   } catch (error) {
-    console.error('Error deleting staff member:', error);
+    log.error('Error deleting staff member:', { data: error }, 'crudOperations');
     throw error;
   }
 }

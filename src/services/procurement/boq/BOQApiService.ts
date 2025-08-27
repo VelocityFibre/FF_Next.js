@@ -19,6 +19,7 @@ import type {
   ExceptionResolution 
 } from './types';
 import type { BOQException } from '@/lib/neon/schema';
+import { log } from '@/lib/logger';
 
 export class BOQApiService extends BaseService {
   constructor(options: ServiceOptions = {}) {
@@ -49,7 +50,7 @@ export class BOQApiService extends BaseService {
       const mappingResult = await this.performAutomaticMapping(context, boqId);
       if (!mappingResult.success) {
         // Import succeeded but mapping failed - log warning but don't fail
-        console.warn('[BOQService] Mapping failed after successful import:', mappingResult.error);
+        log.warn('[BOQService] Mapping failed after successful import:', { data: mappingResult.error }, 'BOQApiService');
       }
 
       // Prepare result

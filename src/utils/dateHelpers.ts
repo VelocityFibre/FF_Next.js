@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Safe date conversion utilities
  */
@@ -46,7 +48,7 @@ export function safeToISOString(date: any): string {
     // Default to current date
     return new Date().toISOString();
   } catch (error) {
-    // console.warn('Error converting date:', error, date);
+    // log.warn('Error converting date:', { data: error, date }, 'dateHelpers');
     return new Date().toISOString();
   }
 }
@@ -95,7 +97,7 @@ export function safeToDate(date: any): Date {
     // Default to current date
     return new Date();
   } catch (error) {
-    // console.warn('Error converting date:', error, date);
+    // log.warn('Error converting date:', { data: error, date }, 'dateHelpers');
     return new Date();
   }
 }
@@ -115,7 +117,7 @@ export function safeFormatDate(date: any, fallback: string = 'N/A'): string {
     }
     return fallback;
   } catch (error) {
-    // console.warn('Error formatting date:', error, date);
+    // log.warn('Error formatting date:', { data: error, date }, 'dateHelpers');
     return fallback;
   }
 }

@@ -17,6 +17,7 @@ import {
 } from './ContractorFormSections';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export function ContractorCreate() {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ export function ContractorCreate() {
       toast.success('Contractor created successfully!');
       navigate('/app/contractors');
     } catch (error) {
-      console.error('Failed to create contractor:', error);
+      log.error('Failed to create contractor:', { data: error }, 'ContractorCreate');
       toast.error('Failed to create contractor. Please try again.');
     } finally {
       setIsSubmitting(false);

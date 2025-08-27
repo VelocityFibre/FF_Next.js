@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Storage Compression
  * Handles compression and decompression of stored data
@@ -21,7 +23,7 @@ export class StorageCompression {
       }
       return data;
     } catch (error) {
-      console.warn('Compression failed:', error);
+      log.warn('Compression failed:', { data: error }, 'compression');
       return data;
     }
   }
@@ -38,7 +40,7 @@ export class StorageCompression {
       // In production, this would decompress the data
       return data;
     } catch (error) {
-      console.warn('Decompression failed:', error);
+      log.warn('Decompression failed:', { data: error }, 'compression');
       return data;
     }
   }

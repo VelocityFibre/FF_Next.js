@@ -5,6 +5,7 @@
 
 import { neonDb } from '@/lib/neon/connection';
 import { staffPerformance } from '@/lib/neon/schema';
+import { log } from '@/lib/logger';
 
 /**
  * Team performance analytics service
@@ -35,7 +36,7 @@ export class TeamAnalyticsService {
 
       return this.calculateTeamMetrics(latestPeriodRecords);
     } catch (error) {
-      console.error('Failed to get team performance summary:', error);
+      log.error('Failed to get team performance summary:', { data: error }, 'teamAnalyticsService');
       return this.getEmptyTeamSummary();
     }
   }
@@ -138,7 +139,7 @@ export class TeamAnalyticsService {
 
       return distribution;
     } catch (error) {
-      console.error('Failed to get performance distribution:', error);
+      log.error('Failed to get performance distribution:', { data: error }, 'teamAnalyticsService');
       return { excellent: 0, good: 0, average: 0, belowAverage: 0 };
     }
   }
@@ -183,7 +184,7 @@ export class TeamAnalyticsService {
         };
       });
     } catch (error) {
-      console.error('Failed to get department comparison:', error);
+      log.error('Failed to get department comparison:', { data: error }, 'teamAnalyticsService');
       return [];
     }
   }
@@ -235,7 +236,7 @@ export class TeamAnalyticsService {
 
       return trends;
     } catch (error) {
-      console.error('Failed to get team trends:', error);
+      log.error('Failed to get team trends:', { data: error }, 'teamAnalyticsService');
       return [];
     }
   }

@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * SOW Service - Main Service Facade
  * Provides high-level SOW document operations using modular components
@@ -51,7 +53,7 @@ class SOWService {
 
       return document;
     } catch (error) {
-      console.error('Error uploading SOW document:', error);
+      log.error('Error uploading SOW document:', { data: error }, 'sowService');
       throw new Error('Failed to upload SOW document');
     }
   }
@@ -81,12 +83,12 @@ class SOWService {
       }
 
       if (result.failed.length > 0) {
-        console.warn('Some files failed to upload:', result.failed);
+        log.warn('Some files failed to upload:', { data: result.failed }, 'sowService');
       }
 
       return result.successful;
     } catch (error) {
-      console.error('Error uploading multiple SOW documents:', error);
+      log.error('Error uploading multiple SOW documents:', { data: error }, 'sowService');
       throw new Error('Failed to upload multiple SOW documents');
     }
   }
@@ -102,7 +104,7 @@ class SOWService {
     try {
       await SOWDocumentService.updateStatus(projectId, documentId, status);
     } catch (error) {
-      console.error('Error updating document status:', error);
+      log.error('Error updating document status:', { data: error }, 'sowService');
       throw new Error('Failed to update document status');
     }
   }
@@ -117,7 +119,7 @@ class SOWService {
     try {
       await SOWDocumentService.deleteDocument(projectId, documentId);
     } catch (error) {
-      console.error('Error deleting SOW document:', error);
+      log.error('Error deleting SOW document:', { data: error }, 'sowService');
       throw new Error('Failed to delete SOW document');
     }
   }
@@ -132,7 +134,7 @@ class SOWService {
     try {
       return await SOWDocumentService.getByType(projectId, type);
     } catch (error) {
-      console.error('Error fetching SOW documents by type:', error);
+      log.error('Error fetching SOW documents by type:', { data: error }, 'sowService');
       throw new Error('Failed to fetch SOW documents');
     }
   }
@@ -144,7 +146,7 @@ class SOWService {
     try {
       return await SOWDataExtractor.extractFromFile(file);
     } catch (error) {
-      console.error('Error extracting SOW data:', error);
+      log.error('Error extracting SOW data:', { data: error }, 'sowService');
       throw new Error('Failed to extract SOW data');
     }
   }
@@ -170,7 +172,7 @@ class SOWService {
     try {
       return await SOWDocumentService.getAll(projectId);
     } catch (error) {
-      console.error('Error fetching all SOW documents:', error);
+      log.error('Error fetching all SOW documents:', { data: error }, 'sowService');
       throw new Error('Failed to fetch SOW documents');
     }
   }
@@ -190,7 +192,7 @@ class SOWService {
         metadata
       );
     } catch (error) {
-      console.error('Error updating document metadata:', error);
+      log.error('Error updating document metadata:', { data: error }, 'sowService');
       throw new Error('Failed to update document metadata');
     }
   }

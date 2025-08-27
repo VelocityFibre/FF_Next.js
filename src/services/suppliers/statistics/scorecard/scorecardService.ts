@@ -19,6 +19,7 @@ import {
 import { ScoreCalculator } from './scoreCalculator';
 import { BenchmarkCalculator } from './benchmarkCalculator';
 import { RecommendationGenerator } from './recommendationGenerator';
+import { log } from '@/lib/logger';
 
 export class ScorecardService {
   /**
@@ -114,7 +115,7 @@ export class ScorecardService {
         }
       };
     } catch (error) {
-      console.error('Error generating supplier scorecard:', error);
+      log.error('Error generating supplier scorecard:', { data: error }, 'scorecardService');
       throw new Error(`Failed to generate scorecard: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

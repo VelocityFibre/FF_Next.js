@@ -5,6 +5,7 @@
 
 import { createNeonClient } from '@/lib/neon-sql';
 import { getTableName } from './schema';
+import { log } from '@/lib/logger';
 
 const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
@@ -51,7 +52,7 @@ export class SOWSummaryService {
 
       return { success: true };
     } catch (error) {
-      console.error('Error updating project summary:', error);
+      log.error('Error updating project summary:', { data: error }, 'summaryService');
       // Non-critical error, don't throw
       return { success: false, error };
     }
@@ -72,7 +73,7 @@ export class SOWSummaryService {
         data: result[0] || null
       };
     } catch (error) {
-      console.error('Error fetching project summary:', error);
+      log.error('Error fetching project summary:', { data: error }, 'summaryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -96,7 +97,7 @@ export class SOWSummaryService {
         data: results
       };
     } catch (error) {
-      console.error('Error fetching all project summaries:', error);
+      log.error('Error fetching all project summaries:', { data: error }, 'summaryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

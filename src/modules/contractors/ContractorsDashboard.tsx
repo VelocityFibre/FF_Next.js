@@ -15,6 +15,7 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { useContractorsDashboardData } from '@/hooks/useDashboardData';
 import { getContractorsDashboardCards } from '@/config/dashboards/dashboardConfigs';
 import { ContractorImport } from '@/components/contractor/ContractorImport';
+import { log } from '@/lib/logger';
 export function ContractorsDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
@@ -66,7 +67,7 @@ export function ContractorsDashboard() {
           {
             label: 'Export Report',
             icon: Download as React.ComponentType<{ className?: string; }>,
-            onClick: () => console.log('Export contractors report'),
+            onClick: () => log.info('Export contractors report', undefined, 'ContractorsDashboard'),
             variant: 'secondary'
           },
           {
@@ -198,7 +199,7 @@ export function ContractorsDashboard() {
         isOpen={showImportModal}
         onClose={() => setShowImportModal(false)}
         onComplete={(result) => {
-          console.log('Import completed:', result);
+          log.info('Import completed:', { data: result }, 'ContractorsDashboard');
           setShowImportModal(false);
           loadDashboardData(); // Refresh dashboard data
         }}

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useSuppliersPortal } from '../../context/SuppliersPortalContext';
 import { cn } from '@/lib/utils';
+import { log } from '@/lib/logger';
 
 // Document types
 interface SupplierDocument {
@@ -402,12 +403,12 @@ export function DocumentsTab() {
   }, [selectedSupplier, searchTerm, typeFilter, statusFilter, requirementFilter]);
 
   const handleViewDocument = (document: SupplierDocument) => {
-    console.log('View document:', document.id);
+    log.info('View document:', { data: document.id }, 'DocumentsTab');
     // Implementation for viewing document
   };
 
   const handleDownloadDocument = (document: SupplierDocument) => {
-    console.log('Download document:', document.id);
+    log.info('Download document:', { data: document.id }, 'DocumentsTab');
     // Implementation for downloading document
   };
 

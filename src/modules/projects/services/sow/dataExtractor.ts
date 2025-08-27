@@ -4,6 +4,7 @@
  */
 
 import { SOWDataExtractionResult } from './types';
+import { log } from '@/lib/logger';
 
 export class SOWDataExtractor {
   /**
@@ -21,7 +22,7 @@ export class SOWDataExtractor {
         rawData: [],
       };
     } catch (error) {
-      console.error('Error extracting SOW data:', error);
+      log.error('Error extracting SOW data:', { data: error }, 'dataExtractor');
       throw new Error('Failed to extract SOW data');
     }
   }

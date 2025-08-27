@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { staffImportService } from '@/services/staff/staffImportService';
 import { StaffImportAdvancedState, ImportProgress } from '../types/importAdvanced.types';
 import { validateImportFile, getFileTypeFromFile } from '../utils/importUtils';
+import { log } from '@/lib/logger';
 
 const initialProgress: ImportProgress = {
   total: 0,
@@ -91,7 +92,7 @@ export function useStaffImportAdvanced() {
       }
 
     } catch (error: any) {
-      console.error('Import failed:', error);
+      log.error('Import failed:', { data: error }, 'useStaffImportAdvanced');
       setState(prev => ({
         ...prev,
         progress: { ...prev.progress, status: 'error' }

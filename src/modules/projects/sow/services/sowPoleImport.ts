@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { PoleImportRow } from '../types/sowImport.types';
+import { log } from '@/lib/logger';
 
 export class SOWPoleImportService {
   private readonly BATCH_SIZE = 500;
@@ -109,7 +110,7 @@ export class SOWPoleImportService {
 
       return results;
     } catch (error) {
-      console.error('Error importing poles:', error);
+      log.error('Error importing poles:', { data: error }, 'sowPoleImport');
       throw error;
     }
   }

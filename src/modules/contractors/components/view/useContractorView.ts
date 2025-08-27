@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { contractorService } from '@/services/contractorService';
 import { Contractor } from '@/types/contractor.types';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export type TabType = 'overview' | 'teams' | 'assignments' | 'documents' | 'onboarding' | 'compliance' | 'ratecards';
 
@@ -36,7 +37,7 @@ export function useContractorView() {
         }
         setContractor(contractorData);
       } catch (error) {
-        console.error('Failed to load contractor:', error);
+        log.error('Failed to load contractor:', { data: error }, 'useContractorView');
         toast.error('Failed to load contractor data');
         navigate('/app/contractors');
       } finally {

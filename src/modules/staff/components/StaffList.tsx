@@ -12,6 +12,7 @@ import { StaffListHeader } from './StaffListHeader';
 import { StaffFilters } from './StaffFilters';
 import { StaffTable } from './StaffTable';
 import { StaffFilter, StaffMember } from '@/types/staff.types';
+import { log } from '@/lib/logger';
 
 export function StaffList() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ export function StaffList() {
       await staffService.delete(id);
       refetch();
     } catch (error) {
-      console.error('Failed to delete staff member:', error);
+      log.error('Failed to delete staff member:', { data: error }, 'StaffList');
     }
   };
 
@@ -77,7 +78,7 @@ export function StaffList() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Export failed:', error);
+      log.error('Export failed:', { data: error }, 'StaffList');
     }
   };
 

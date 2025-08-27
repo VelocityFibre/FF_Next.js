@@ -4,6 +4,7 @@
  */
 
 import type { CurrencyOptions, NumberFormatOptions } from './types';
+import { log } from '@/lib/logger';
 
 export class NumberFormatter {
   private defaultLocale = 'en-US';
@@ -29,7 +30,7 @@ export class NumberFormatter {
         maximumFractionDigits,
       }).format(amount);
     } catch (error) {
-      console.warn('Currency formatting failed:', error);
+      log.warn('Currency formatting failed:', { data: error }, 'numberFormatter');
       return `${currency} ${amount.toFixed(minimumFractionDigits)}`;
     }
   }
@@ -60,7 +61,7 @@ export class NumberFormatter {
 
       return new Intl.NumberFormat(locale, formatOptions).format(value);
     } catch (error) {
-      console.warn('Number formatting failed:', error);
+      log.warn('Number formatting failed:', { data: error }, 'numberFormatter');
       return value.toString();
     }
   }

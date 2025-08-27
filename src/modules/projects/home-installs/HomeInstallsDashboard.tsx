@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { log } from '@/lib/logger';
 import { 
   Home, 
   Calendar, 
@@ -52,7 +53,7 @@ export function HomeInstallsDashboard() {
         successRate: 96.5
       });
     } catch (error) {
-      console.error('Error loading install stats:', error);
+      log.error('Error loading install stats:', { data: error }, 'HomeInstallsDashboard');
     } finally {
       setLoading(false);
     }

@@ -8,6 +8,7 @@ import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firesto
 import { UserProjectAccess, ProjectInfo } from './types';
 import { ProjectAccessValidator } from './validator';
 import type { ServiceResponse } from '@/services/core/BaseService';
+import { log } from '@/lib/logger';
 
 /**
  * Project access data operations
@@ -58,7 +59,7 @@ export class ProjectAccessDataService {
         data: projectAccess
       };
     } catch (error) {
-      console.error('[ProjectAccessDataService] fetchUserProjectAccess error:', error);
+      log.error('[ProjectAccessDataService] fetchUserProjectAccess error:', { data: error }, 'dataService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch user project access',
@@ -96,7 +97,7 @@ export class ProjectAccessDataService {
         data: projectInfo
       };
     } catch (error) {
-      console.error('[ProjectAccessDataService] getProjectInfo error:', error);
+      log.error('[ProjectAccessDataService] getProjectInfo error:', { data: error }, 'dataService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to get project info',
@@ -119,7 +120,7 @@ export class ProjectAccessDataService {
       const projectData = projectDoc.data();
       return projectData.status !== 'archived' && projectData.status !== 'deleted';
     } catch (error) {
-      console.error('[ProjectAccessDataService] isProjectActive error:', error);
+      log.error('[ProjectAccessDataService] isProjectActive error:', { data: error }, 'dataService');
       return false;
     }
   }
@@ -140,7 +141,7 @@ export class ProjectAccessDataService {
       
       return memberInfo?.role || null;
     } catch (error) {
-      console.error('[ProjectAccessDataService] getUserProjectRole error:', error);
+      log.error('[ProjectAccessDataService] getUserProjectRole error:', { data: error }, 'dataService');
       return null;
     }
   }

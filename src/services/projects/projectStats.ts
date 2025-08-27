@@ -7,6 +7,7 @@ import {
   limit
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   Project,
   ProjectSummary,
@@ -57,7 +58,7 @@ export async function getProjectSummary(): Promise<ProjectSummary> {
       averageProgress: calculateAverageProgress(allSnapshot.docs.map(doc => doc.data() as Project))
     };
   } catch (error) {
-    console.error('Error getting project summary:', error);
+    log.error('Error getting project summary:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch project summary');
   }
 }
@@ -79,7 +80,7 @@ export async function getRecentProjects(count: number = 5): Promise<Project[]> {
       ...doc.data()
     } as Project));
   } catch (error) {
-    console.error('Error getting recent projects:', error);
+    log.error('Error getting recent projects:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch recent projects');
   }
 }
@@ -115,7 +116,7 @@ export async function getOverdueProjects(): Promise<Project[]> {
       return endDate < now && project.actualProgress < 100;
     });
   } catch (error) {
-    console.error('Error getting overdue projects:', error);
+    log.error('Error getting overdue projects:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch overdue projects');
   }
 }
@@ -137,7 +138,7 @@ export async function getProjectsByStatus(status: ProjectStatus): Promise<Projec
       ...doc.data()
     } as Project));
   } catch (error) {
-    console.error('Error getting projects by status:', error);
+    log.error('Error getting projects by status:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch projects by status');
   }
 }
@@ -158,7 +159,7 @@ export async function getProjectCountByType(): Promise<Record<string, number>> {
     
     return counts;
   } catch (error) {
-    console.error('Error getting project counts by type:', error);
+    log.error('Error getting project counts by type:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch project counts');
   }
 }
@@ -196,7 +197,7 @@ export async function getProjectsEndingSoon(): Promise<Project[]> {
       return endDate >= now && endDate <= weekFromNow;
     });
   } catch (error) {
-    console.error('Error getting projects ending soon:', error);
+    log.error('Error getting projects ending soon:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch projects ending soon');
   }
 }
@@ -241,7 +242,7 @@ export async function calculateBudgetVariance(): Promise<{
       totalVariance
     };
   } catch (error) {
-    console.error('Error calculating budget variance:', error);
+    log.error('Error calculating budget variance:', { data: error }, 'projectStats');
     throw new Error('Failed to calculate budget variance');
   }
 }

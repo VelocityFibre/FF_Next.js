@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { clients, projects, sow } from '@/lib/neon/schema';
 import { eq, desc, sql, count, sum } from 'drizzle-orm';
 import type { ClientAnalyticsData } from './types';
+import { log } from '@/lib/logger';
 
 export class ClientAnalyticsService {
   /**
@@ -69,7 +70,7 @@ export class ClientAnalyticsService {
         paymentScore: Number(row.paymentScore || 0)
       }));
     } catch (error) {
-      console.error('Failed to get client analytics:', error);
+      log.error('Failed to get client analytics:', { data: error }, 'clientAnalytics');
       // Return empty array or default structure instead of throwing
       return [];
     }
@@ -112,7 +113,7 @@ export class ClientAnalyticsService {
         paymentScore: Number(row.paymentScore || 0)
       }));
     } catch (error) {
-      console.error('Failed to get top clients:', error);
+      log.error('Failed to get top clients:', { data: error }, 'clientAnalytics');
       // Return empty array instead of throwing
       return [];
     }

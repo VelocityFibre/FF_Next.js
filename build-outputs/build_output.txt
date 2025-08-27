@@ -1,0 +1,27 @@
+
+> fibreflow-react@1.0.0 build
+> vite build
+
+[36mvite v4.5.14 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 4111 modules transformed.
+[31m[vite-plugin-pwa:build] "Layers3" is not exported by "node_modules/lucide-react/dist/esm/lucide-react.js", imported by "src/modules/workflow/components/tabs/ProjectsTab.tsx".[39m
+file: [36mC:/Jarvis/AI Workspace/FibreFlow_React/src/modules/workflow/components/tabs/ProjectsTab.tsx:3:9[39m
+[33m1: // 🟡 PARTIAL: Projects tab component - placeholder for project workflow management
+2: import React from 'react';
+3: import { Layers3, Wrench } from 'lucide-react';
+            ^
+4: 
+5: export function ProjectsTab() {[39m
+[31merror during build:
+RollupError: "Layers3" is not exported by "node_modules/lucide-react/dist/esm/lucide-react.js", imported by "src/modules/workflow/components/tabs/ProjectsTab.tsx".
+    at error (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:2287:30)
+    at Module.error (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:13745:16)
+    at Module.traceVariable (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:14175:29)
+    at ModuleScope.findVariable (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:12615:39)
+    at FunctionScope.findVariable (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:7124:38)
+    at ChildScope.findVariable (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:7124:38)
+    at Identifier.bind (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:8319:40)
+    at CallExpression.bind (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:5888:28)
+    at CallExpression.bind (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:9890:15)
+    at Property.bind (file:///C:/Jarvis/AI%20Workspace/FibreFlow_React/node_modules/rollup/dist/es/shared/node-entry.js:5892:23)[39m

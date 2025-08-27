@@ -8,6 +8,7 @@ import { CheckCircle, Clock, AlertCircle, FileText, Upload, User, Shield, Award 
 import { contractorOnboardingService, OnboardingProgress } from '@/services/contractor/contractorOnboardingService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface OnboardingWorkflowProps {
   contractorId: string;
@@ -29,7 +30,7 @@ export function OnboardingWorkflow({ contractorId, contractorName }: OnboardingW
       const onboardingProgress = await contractorOnboardingService.getOnboardingProgress(contractorId);
       setProgress(onboardingProgress);
     } catch (error) {
-      console.error('Failed to load onboarding progress:', error);
+      log.error('Failed to load onboarding progress:', { data: error }, 'OnboardingWorkflow');
       toast.error('Failed to load onboarding progress');
     } finally {
       setIsLoading(false);
@@ -50,7 +51,7 @@ export function OnboardingWorkflow({ contractorId, contractorName }: OnboardingW
       setProgress(updatedProgress);
       toast.success('Progress updated successfully');
     } catch (error) {
-      console.error('Failed to update progress:', error);
+      log.error('Failed to update progress:', { data: error }, 'OnboardingWorkflow');
       toast.error('Failed to update progress');
     } finally {
       setIsUpdating(false);
@@ -66,7 +67,7 @@ export function OnboardingWorkflow({ contractorId, contractorName }: OnboardingW
       setProgress(updatedProgress);
       toast.success('Submitted for approval successfully');
     } catch (error: any) {
-      console.error('Failed to submit for approval:', error);
+      log.error('Failed to submit for approval:', { data: error }, 'OnboardingWorkflow');
       toast.error(error.message || 'Failed to submit for approval');
     } finally {
       setIsUpdating(false);

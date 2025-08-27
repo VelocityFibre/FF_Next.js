@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { contractorService } from '@/services/contractorService';
 import { ContractorTeam, TeamMember, TeamFormData, MemberFormData } from '@/types/contractor.types';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export function useTeamManagement(contractorId: string) {
   const [teams, setTeams] = useState<ContractorTeam[]>([]);
@@ -32,7 +33,7 @@ export function useTeamManagement(contractorId: string) {
         setSelectedTeam(data[0]);
       }
     } catch (error) {
-      console.error('Failed to load teams:', error);
+      log.error('Failed to load teams:', { data: error }, 'useTeamManagement');
       toast.error('Failed to load teams');
     } finally {
       setIsLoading(false);
@@ -44,7 +45,7 @@ export function useTeamManagement(contractorId: string) {
       const data = await contractorService.teams.getTeamMembers(teamId);
       setTeamMembers(data);
     } catch (error) {
-      console.error('Failed to load team members:', error);
+      log.error('Failed to load team members:', { data: error }, 'useTeamManagement');
       toast.error('Failed to load team members');
     }
   };

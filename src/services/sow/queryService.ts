@@ -6,6 +6,7 @@
 import { createNeonClient } from '@/lib/neon-sql';
 import { getTableName } from './schema';
 import { SOWData, SOWOperationResult } from './types';
+import { log } from '@/lib/logger';
 
 const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
@@ -42,7 +43,7 @@ export class SOWQueryService {
         data
       };
     } catch (error) {
-      console.error('Error fetching SOW data from Neon:', error);
+      log.error('Error fetching SOW data from Neon:', { data: error }, 'queryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -69,7 +70,7 @@ export class SOWQueryService {
         data: poles
       };
     } catch (error) {
-      console.error('Error fetching poles data:', error);
+      log.error('Error fetching poles data:', { data: error }, 'queryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -91,7 +92,7 @@ export class SOWQueryService {
         data: drops
       };
     } catch (error) {
-      console.error('Error fetching drops data:', error);
+      log.error('Error fetching drops data:', { data: error }, 'queryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -113,7 +114,7 @@ export class SOWQueryService {
         data: fibre
       };
     } catch (error) {
-      console.error('Error fetching fibre data:', error);
+      log.error('Error fetching fibre data:', { data: error }, 'queryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -142,7 +143,7 @@ export class SOWQueryService {
         data: poles
       };
     } catch (error) {
-      console.error('Error searching poles:', error);
+      log.error('Error searching poles:', { data: error }, 'queryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -171,7 +172,7 @@ export class SOWQueryService {
         data: drops
       };
     } catch (error) {
-      console.error('Error searching drops:', error);
+      log.error('Error searching drops:', { data: error }, 'queryService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

@@ -11,19 +11,14 @@ import {
 } from 'lucide-react';
 import { Button } from '@/shared/components/ui/Button';
 import type { ProcurementViewMode } from '@/types/procurement/portal.types';
+import type { Project, ProjectStatus } from '@/types/project.types';
 
-interface Project {
-  id: string;
-  name: string;
-  code: string;
-  status: 'active' | 'completed' | 'on-hold' | 'cancelled';
-  lastActivity?: string;
-}
+type ProjectFilterProject = Pick<Project, 'id' | 'name' | 'code' | 'status'> & { lastActivity?: string };
 
 interface ProjectFilterProps {
-  selectedProject?: Project | undefined;
+  selectedProject?: ProjectFilterProject | undefined;
   viewMode: ProcurementViewMode;
-  onProjectChange: (project: Project | undefined) => void;
+  onProjectChange: (project: ProjectFilterProject | undefined) => void;
   onViewModeChange: (mode: ProcurementViewMode) => void;
   disabled?: boolean;
 }
@@ -37,51 +32,51 @@ export function ProjectFilter({
 }: ProjectFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<Project['status'] | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Mock projects - would be replaced with real data from API
-  const allProjects: Project[] = [
+  const allProjects: ProjectFilterProject[] = [
     { 
       id: '1', 
       name: 'Johannesburg Fiber Rollout', 
       code: 'JHB-2024-001', 
-      status: 'active',
+      status: ProjectStatus.ACTIVE,
       lastActivity: '2 hours ago'
     },
     { 
       id: '2', 
       name: 'Cape Town Metro Network', 
       code: 'CPT-2024-002', 
-      status: 'active',
+      status: ProjectStatus.ACTIVE,
       lastActivity: '4 hours ago'
     },
     { 
       id: '3', 
       name: 'Durban Coastal Installation', 
       code: 'DBN-2024-003', 
-      status: 'active',
+      status: ProjectStatus.ACTIVE,
       lastActivity: '1 day ago'
     },
     { 
       id: '4', 
       name: 'Pretoria Business District', 
       code: 'PTA-2024-004', 
-      status: 'on-hold',
+      status: ProjectStatus.ON_HOLD,
       lastActivity: '3 days ago'
     },
     { 
       id: '5', 
       name: 'Port Elizabeth Expansion', 
       code: 'PE-2024-005', 
-      status: 'completed',
+      status: ProjectStatus.COMPLETED,
       lastActivity: '1 week ago'
     },
     { 
       id: '6', 
       name: 'Bloemfontein Network', 
       code: 'BFN-2024-006', 
-      status: 'active',
+      status: ProjectStatus.ACTIVE,
       lastActivity: '6 hours ago'
     }
   ];
@@ -110,7 +105,7 @@ export function ProjectFilter({
   }, []);
 
   // Handle individual project selection
-  const handleProjectSelect = (project: Project) => {
+  const handleProjectSelect = (project: ProjectFilterProject) => {
     onProjectChange(project);
     onViewModeChange('single');
     setIsOpen(false);
@@ -135,18 +130,20 @@ export function ProjectFilter({
   };
 
   // Get status badge styles
-  const getStatusBadgeStyles = (status: Project['status']) => {
+  const getStatusBadgeStyles = (status: ProjectStatus) => {
     const baseStyles = 'px-2 py-0.5 text-xs font-medium rounded-full';
     
     switch (status) {
-      case 'active':
+      case ProjectStatus.ACTIVE:
         return `${baseStyles} bg-green-100 text-green-700`;
-      case 'completed':
+      case ProjectStatus.COMPLETED:
         return `${baseStyles} bg-blue-100 text-blue-700`;
-      case 'on-hold':
+      case ProjectStatus.ON_HOLD:
         return `${baseStyles} bg-yellow-100 text-yellow-700`;
-      case 'cancelled':
+      case ProjectStatus.CANCELLED:
         return `${baseStyles} bg-red-100 text-red-700`;
+      case ProjectStatus.PLANNING:
+        return `${baseStyles} bg-purple-100 text-purple-700`;
       default:
         return `${baseStyles} bg-gray-100 text-gray-700`;
     }
@@ -170,7 +167,7 @@ export function ProjectFilter({
                   All Projects
                 </div>
                 <div className="text-xs text-blue-600">
-                  Aggregate view • {allProjects.filter(p => p.status === 'active').length} active
+                  Aggregate view • {allProjects.filter(p => p.status === ProjectStatus.ACTIVE).length} active
                 </div>
               </div>
             </>
@@ -184,7 +181,7 @@ export function ProjectFilter({
                 <div className="text-xs text-gray-500 flex items-center gap-2">
                   <span>{selectedProject.code}</span>
                   <span className={getStatusBadgeStyles(selectedProject.status)}>
-                    {selectedProject.status}
+                    {selectedProject.status.replace('_', ' ')}
                   </span>
                 </div>
               </div>
@@ -234,17 +231,17 @@ export function ProjectFilter({
             {/* Status Filter */}
             <div className="flex gap-2 flex-wrap">
               <span className="text-xs text-gray-500 py-1">Status:</span>
-              {['all', 'active', 'completed', 'on-hold', 'cancelled'].map((status) => (
+              {(['all', ProjectStatus.PLANNING, ProjectStatus.ACTIVE, ProjectStatus.ON_HOLD, ProjectStatus.COMPLETED, ProjectStatus.CANCELLED] as const).map((status) => (
                 <button
                   key={status}
-                  onClick={() => setStatusFilter(status as Project['status'] | 'all')}
+                  onClick={() => setStatusFilter(status)}
                   className={`px-2 py-1 text-xs font-medium rounded-full transition-colors ${
                     statusFilter === status
                       ? 'bg-primary-100 text-primary-700'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
-                  {status === 'all' ? 'All' : status.replace('-', ' ')}
+                  {status === 'all' ? 'All' : status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                   {statusFilter === status && <Check className="inline h-3 w-3 ml-1" />}
                 </button>
               ))}
@@ -296,7 +293,7 @@ export function ProjectFilter({
                         <div className="text-sm text-gray-500 flex items-center gap-2">
                           <span>{project.code}</span>
                           <span className={getStatusBadgeStyles(project.status)}>
-                            {project.status}
+                            {project.status.replace('_', ' ')}
                           </span>
                           {project.lastActivity && (
                             <span className="text-xs">• {project.lastActivity}</span>

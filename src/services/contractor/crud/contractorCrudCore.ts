@@ -12,6 +12,7 @@ import {
 } from '@/types/contractor.types';
 // Import Neon service as primary database
 import { contractorNeonService } from '../contractorNeonService';
+import { log } from '@/lib/logger';
 // Keep Firebase operations for backward compatibility/migration
 import {
   getAllContractorsFromFirebase,
@@ -42,7 +43,7 @@ export class ContractorCrudCore {
       const contractors = await contractorNeonService.getAll(filter);
       return contractors;
     } catch (error) {
-      console.error('Error getting contractors from Neon:', error);
+      log.error('Error getting contractors from Neon:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to fetch contractors');
     }
   }
@@ -55,7 +56,7 @@ export class ContractorCrudCore {
       // Use Neon as primary database
       return await contractorNeonService.getById(id);
     } catch (error) {
-      console.error('Error getting contractor from Neon:', error);
+      log.error('Error getting contractor from Neon:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to fetch contractor');
     }
   }
@@ -72,13 +73,13 @@ export class ContractorCrudCore {
       try {
         await createContractorInFirebase(data);
       } catch (firebaseError) {
-        console.warn('Failed to sync contractor to Firebase:', firebaseError);
+        log.warn('Failed to sync contractor to Firebase:', { data: firebaseError }, 'contractorCrudCore');
         // Don't fail the entire operation for sync issues
       }
       
       return contractor.id;
     } catch (error) {
-      console.error('Error creating contractor:', error);
+      log.error('Error creating contractor:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to create contractor');
     }
   }
@@ -95,10 +96,10 @@ export class ContractorCrudCore {
       try {
         await updateContractorInFirebase(id, data);
       } catch (firebaseError) {
-        console.warn('Failed to sync contractor update to Firebase:', firebaseError);
+        log.warn('Failed to sync contractor update to Firebase:', { data: firebaseError }, 'contractorCrudCore');
       }
     } catch (error) {
-      console.error('Error updating contractor:', error);
+      log.error('Error updating contractor:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to update contractor');
     }
   }
@@ -115,10 +116,10 @@ export class ContractorCrudCore {
       try {
         await deleteContractorFromFirebase(id);
       } catch (firebaseError) {
-        console.warn('Failed to delete contractor from Firebase:', firebaseError);
+        log.warn('Failed to delete contractor from Firebase:', { data: firebaseError }, 'contractorCrudCore');
       }
     } catch (error) {
-      console.error('Error deleting contractor:', error);
+      log.error('Error deleting contractor:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to delete contractor');
     }
   }
@@ -131,7 +132,7 @@ export class ContractorCrudCore {
       const { getContractorAnalytics } = await import('../neon/statistics');
       return await getContractorAnalytics();
     } catch (error) {
-      console.error('Error getting contractor analytics:', error);
+      log.error('Error getting contractor analytics:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to fetch contractor analytics');
     }
   }
@@ -166,7 +167,7 @@ export class ContractorCrudCore {
       const updatePromises = updates.map(({ id, data }) => this.update(id, data));
       await Promise.all(updatePromises);
     } catch (error) {
-      console.error('Error in batch update:', error);
+      log.error('Error in batch update:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to update contractors in batch');
     }
   }
@@ -179,7 +180,7 @@ export class ContractorCrudCore {
       // Use Neon service search functionality
       return await contractorNeonService.searchByName(searchTerm);
     } catch (error) {
-      console.error('Error searching contractors:', error);
+      log.error('Error searching contractors:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to search contractors');
     }
   }
@@ -216,7 +217,7 @@ export class ContractorCrudCore {
       return null;
       
     } catch (error) {
-      console.error('Error finding contractor by email or registration:', error);
+      log.error('Error finding contractor by email or registration:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to search for existing contractor');
     }
   }

@@ -26,6 +26,7 @@ import {
 } from '@/types/contractor';
 import { RateItemApiService, ServiceTemplateApiService } from '@/services/contractor';
 import { formatCurrency } from '@/lib/utils';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Rate Items Grid Component
 export function RateItemsGrid({ 
@@ -77,7 +78,7 @@ export function RateItemsGrid({
         
       } catch (err) {
         setError('Failed to load rate items');
-        console.error('Error loading rate items:', err);
+        log.error('Error loading rate items:', { data: err }, 'RateItemsGrid');
       } finally {
         setLoading(false);
       }
@@ -144,7 +145,7 @@ export function RateItemsGrid({
       onRateItemAdd?.(newItem);
       
     } catch (err) {
-      console.error('Error adding rate item:', err);
+      log.error('Error adding rate item:', { data: err }, 'RateItemsGrid');
       setError('Failed to add rate item');
     }
   };
@@ -176,7 +177,7 @@ export function RateItemsGrid({
       onRateItemUpdate?.(updatedItem);
       
     } catch (err) {
-      console.error('Error updating rate item:', err);
+      log.error('Error updating rate item:', { data: err }, 'RateItemsGrid');
       setError('Failed to update rate item');
     }
   };
@@ -199,7 +200,7 @@ export function RateItemsGrid({
       onRateItemDelete?.(itemId);
       
     } catch (err) {
-      console.error('Error deleting rate item:', err);
+      log.error('Error deleting rate item:', { data: err }, 'RateItemsGrid');
       setError('Failed to delete rate item');
     }
   };

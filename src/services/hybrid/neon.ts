@@ -4,6 +4,7 @@
  */
 
 import { analyticsService } from '@/services/analytics/analyticsService';
+import { log } from '@/lib/logger';
 
 export class NeonAnalyticsService {
   /**
@@ -83,7 +84,7 @@ export class NeonAnalyticsService {
       
     } catch (error) {
       // Don't throw - sync failures shouldn't break main operations
-      console.warn('Failed to sync project to analytics:', error);
+      log.warn('Failed to sync project to analytics:', { data: error }, 'neon');
     }
   }
 
@@ -110,7 +111,7 @@ export class NeonAnalyticsService {
       
     } catch (error) {
       // Silent fail for analytics sync
-      console.warn('Failed to sync client to analytics:', error);
+      log.warn('Failed to sync client to analytics:', { data: error }, 'neon');
     }
   }
 
@@ -127,7 +128,7 @@ export class NeonAnalyticsService {
         )
       };
     } catch (error) {
-      console.error('Error fetching project dashboard data:', error);
+      log.error('Error fetching project dashboard data:', { data: error }, 'neon');
       return { overview: null, trends: null };
     }
   }
@@ -142,7 +143,7 @@ export class NeonAnalyticsService {
         topClients: await this.getTopClients(10)
       };
     } catch (error) {
-      console.error('Error fetching client dashboard data:', error);
+      log.error('Error fetching client dashboard data:', { data: error }, 'neon');
       return { analytics: null, topClients: [] };
     }
   }
@@ -168,7 +169,7 @@ export class NeonAnalyticsService {
         };
       }
     } catch (error) {
-      console.error('Error generating analytics report:', error);
+      log.error('Error generating analytics report:', { data: error }, 'neon');
       throw new Error('Failed to generate analytics report');
     }
   }

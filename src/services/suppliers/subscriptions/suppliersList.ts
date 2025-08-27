@@ -7,6 +7,7 @@ import { query, collection, onSnapshot, orderBy, where, limit } from 'firebase/f
 import { db } from '@/config/firebase';
 import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { SuppliersCallback, SupplierSubscriptionFilter, SubscriptionOptions } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -53,14 +54,14 @@ export class SuppliersListSubscription {
           callback(suppliers);
         },
         (error) => {
-          console.error('Error subscribing to suppliers:', error);
+          log.error('Error subscribing to suppliers:', { data: error }, 'suppliersList');
           options?.onError?.(error);
         }
       );
 
       return unsubscribe;
     } catch (error) {
-      console.error('Error setting up suppliers subscription:', error);
+      log.error('Error setting up suppliers subscription:', { data: error }, 'suppliersList');
       const errorObj = error instanceof Error ? error : new Error('Unknown error');
       options?.onError?.(errorObj);
       

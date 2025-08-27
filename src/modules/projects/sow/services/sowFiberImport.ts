@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { FiberImportRow } from '../types/sowImport.types';
+import { log } from '@/lib/logger';
 
 export class SOWFiberImportService {
   private readonly BATCH_SIZE = 500;
@@ -122,7 +123,7 @@ export class SOWFiberImportService {
 
       return results;
     } catch (error) {
-      console.error('Error importing fiber sections:', error);
+      log.error('Error importing fiber sections:', { data: error }, 'sowFiberImport');
       throw error;
     }
   }

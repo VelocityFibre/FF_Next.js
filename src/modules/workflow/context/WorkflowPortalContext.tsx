@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { workflowManagementService } from '../services/WorkflowManagementService';
 import { workflowTemplateService } from '../services/WorkflowTemplateService';
+import { log } from '@/lib/logger';
 import type { 
   WorkflowPortalContext as IWorkflowPortalContext,
   WorkflowTabId,
@@ -174,7 +175,7 @@ export function WorkflowPortalProvider({ children }: WorkflowPortalProviderProps
       });
 
     } catch (error) {
-      console.error('Error loading template stats:', error);
+      log.error('Error loading template stats:', { data: error }, 'WorkflowPortalContext');
       setError(error instanceof Error ? error.message : 'Failed to load template statistics');
     } finally {
       setLoading(false);
@@ -210,7 +211,7 @@ export function WorkflowPortalProvider({ children }: WorkflowPortalProviderProps
               mockStats.activeWorkflows > 0 ? 'info' : undefined
       });
     } catch (error) {
-      console.error('Error loading project workflow stats:', error);
+      log.error('Error loading project workflow stats:', { data: error }, 'WorkflowPortalContext');
     }
   }, [state.projectWorkflows, updateTabBadge]);
 
@@ -255,7 +256,7 @@ export function WorkflowPortalProvider({ children }: WorkflowPortalProviderProps
       
       dispatch({ type: 'SET_PROJECT_WORKFLOWS', payload: mockWorkflows });
     } catch (error) {
-      console.error('Error loading project workflows:', error);
+      log.error('Error loading project workflows:', { data: error }, 'WorkflowPortalContext');
       setError(error instanceof Error ? error.message : 'Failed to load project workflows');
     } finally {
       setLoading(false);
@@ -271,7 +272,7 @@ export function WorkflowPortalProvider({ children }: WorkflowPortalProviderProps
       });
       dispatch({ type: 'SET_TEMPLATES', payload: templatesResult.templates });
     } catch (error) {
-      console.error('Error loading templates:', error);
+      log.error('Error loading templates:', { data: error }, 'WorkflowPortalContext');
       setError(error instanceof Error ? error.message : 'Failed to load templates');
     }
   }, [setError]);
@@ -281,13 +282,13 @@ export function WorkflowPortalProvider({ children }: WorkflowPortalProviderProps
     try {
       setLoading(true);
       // In real implementation, this would use workflowManagementService
-      console.log('Creating project workflow:', workflowData);
+      log.info('Creating project workflow:', { data: workflowData }, 'WorkflowPortalContext');
       
       // Mock creation and refresh data
       await loadProjectWorkflows();
       await loadProjectWorkflowStats();
     } catch (error) {
-      console.error('Error creating project workflow:', error);
+      log.error('Error creating project workflow:', { data: error }, 'WorkflowPortalContext');
       setError(error instanceof Error ? error.message : 'Failed to create project workflow');
     } finally {
       setLoading(false);

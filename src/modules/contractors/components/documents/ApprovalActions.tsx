@@ -16,6 +16,7 @@ import {
 import { ContractorDocument } from '@/types/contractor.types';
 import { DocumentRejectionReason } from './types/documentApproval.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { log } from '@/lib/logger';
 
 interface ApprovalActionsProps {
   /**
@@ -178,7 +179,7 @@ export function ApprovalActions({
       setIsSubmitting(true);
       await onApprove();
     } catch (error) {
-      console.error('Quick approval failed:', error);
+      log.error('Quick approval failed:', { data: error }, 'ApprovalActions');
     } finally {
       setIsSubmitting(false);
     }
@@ -208,7 +209,7 @@ export function ApprovalActions({
       setShowApprovalForm(false);
       setValidationErrors([]);
     } catch (error) {
-      console.error('Approval failed:', error);
+      log.error('Approval failed:', { data: error }, 'ApprovalActions');
     } finally {
       setIsSubmitting(false);
     }
@@ -239,7 +240,7 @@ export function ApprovalActions({
       setShowRejectionForm(false);
       setValidationErrors([]);
     } catch (error) {
-      console.error('Rejection failed:', error);
+      log.error('Rejection failed:', { data: error }, 'ApprovalActions');
     } finally {
       setIsSubmitting(false);
     }

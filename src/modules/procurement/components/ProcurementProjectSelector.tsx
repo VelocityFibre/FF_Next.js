@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/ui/Button';
 import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
 import type { ProcurementViewMode } from '@/types/procurement/portal.types';
 import type { Project } from '@/types/project.types';
+import { log } from '@/lib/logger';
 
 // Using Project type from types/project.types instead of local interface
 
@@ -38,7 +39,7 @@ export function ProcurementProjectSelector({
         const projects = await ProjectQueryService.getActiveProjects();
         setAllProjects(projects);
       } catch (error) {
-        console.error('Error loading projects:', error);
+        log.error('Error loading projects:', { data: error }, 'ProcurementProjectSelector');
         setAllProjects([]); // Empty array instead of mock data
       } finally {
         setIsLoadingProjects(false);

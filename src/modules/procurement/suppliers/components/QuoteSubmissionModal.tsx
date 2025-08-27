@@ -3,6 +3,7 @@ import { X, Plus, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { VelocityButton } from '@/components/ui/VelocityButton';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { log } from '@/lib/logger';
 
 interface RFQInvitation {
   id: string;
@@ -199,7 +200,7 @@ const QuoteSubmissionModal: React.FC<QuoteSubmissionModalProps> = ({
       await onSubmit(quoteSubmission);
       onClose();
     } catch (error) {
-      console.error('Failed to submit quote:', error);
+      log.error('Failed to submit quote:', { data: error }, 'QuoteSubmissionModal');
     } finally {
       setLoading(false);
     }

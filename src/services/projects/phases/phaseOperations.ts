@@ -11,6 +11,7 @@ import {
 import { db, auth } from '@/config/firebase';
 import { Phase } from '@/types/project.types';
 import { updateProjectProgress } from './progressCalculations';
+import { log } from '@/lib/logger';
 
 /**
  * Get all phases for a project
@@ -28,7 +29,7 @@ export async function getProjectPhases(projectId: string): Promise<Phase[]> {
       ...doc.data()
     } as Phase));
   } catch (error) {
-    console.error('Error getting project phases:', error);
+    log.error('Error getting project phases:', { data: error }, 'phaseOperations');
     throw new Error('Failed to fetch project phases');
   }
 }
@@ -50,7 +51,7 @@ export async function getPhaseById(projectId: string, phaseId: string): Promise<
       ...snapshot.data()
     } as Phase;
   } catch (error) {
-    console.error('Error getting phase:', error);
+    log.error('Error getting phase:', { data: error }, 'phaseOperations');
     throw new Error('Failed to fetch phase');
   }
 }
@@ -79,7 +80,7 @@ export async function updatePhase(
     // Update project progress
     await updateProjectProgress(projectId);
   } catch (error) {
-    console.error('Error updating phase:', error);
+    log.error('Error updating phase:', { data: error }, 'phaseOperations');
     throw new Error('Failed to update phase');
   }
 }

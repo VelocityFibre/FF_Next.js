@@ -1,5 +1,5 @@
 // 🟢 WORKING: Router integration for procurement portal tabs
-import React from 'react';
+// React import removed - not using JSX syntax in this file
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProcurementPortalPage } from '../ProcurementPortalPage';
 import {

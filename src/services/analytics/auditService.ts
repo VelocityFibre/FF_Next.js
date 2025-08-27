@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { auditLog } from '@/lib/neon/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import type { AuditEntry, AuditChanges, AuditMetadata } from './types';
+import { log } from '@/lib/logger';
 
 export class AuditService {
   /**
@@ -36,7 +37,7 @@ export class AuditService {
         source: 'web',
       });
     } catch (error) {
-      console.error('Failed to log audit action:', error);
+      log.error('Failed to log audit action:', { data: error }, 'auditService');
       // Don't throw - audit logging shouldn't break main functionality
     }
   }
@@ -79,7 +80,7 @@ export class AuditService {
         timestamp: row.timestamp
       }));
     } catch (error) {
-      console.error('Failed to get audit trail:', error);
+      log.error('Failed to get audit trail:', { data: error }, 'auditService');
       throw error;
     }
   }

@@ -5,6 +5,7 @@
 
 import { BOQ } from '../../../../types/procurement/boq.types';
 import { BOQCrud } from '../crud';
+import { log } from '@/lib/logger';
 
 /**
  * BOQ Comparison and Variance Analysis
@@ -51,7 +52,7 @@ export class BOQComparisonAnalyzer {
         categoryChanges: {} // Would need item-level comparison
       };
     } catch (error) {
-      console.error('Error comparing BOQ versions:', error);
+      log.error('Error comparing BOQ versions:', { data: error }, 'comparison-analyzer');
       throw error;
     }
   }

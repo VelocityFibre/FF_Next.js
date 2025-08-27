@@ -4,6 +4,7 @@
  */
 
 import { RecoveryOption } from './handler-types';
+import { log } from '@/lib/logger';
 
 interface NotificationConfig {
   email: {
@@ -90,7 +91,7 @@ export class NotificationHandler {
         messageId: 'MSG-' + Date.now()
       };
     } catch (notificationError) {
-      console.error('Failed to send error notification:', notificationError);
+      log.error('Failed to send error notification:', { data: notificationError }, 'notification-handler');
       return {
         sent: false,
         channels: []
@@ -136,7 +137,7 @@ export class NotificationHandler {
 
       return true;
     } catch (error) {
-      console.error('Failed to send recovery notification:', error);
+      log.error('Failed to send recovery notification:', { data: error }, 'notification-handler');
       return false;
     }
   }
@@ -185,18 +186,21 @@ export class NotificationHandler {
       : this.config.email.recipients;
 
     // Mock email sending - would integrate with actual email service
-    void {
+    const emailData = {
       to: recipients,
       subject: `Stock Error Alert - ${severity.toUpperCase()} - ${error.constructor.name}`,
       body: this.formatEmailBody(error, severity, recoveryOptions, attemptCount)
     };
 
+    log.debug('Email notification would be sent:', emailData, 'notification-handler');
   }
 
   private static async sendSMSNotification(error: any, _severity: string): Promise<void> {
     // Mock SMS sending - would integrate with SMS service
-    void `CRITICAL STOCK ERROR: ${error.constructor.name} - Item: ${error.itemCode || 'N/A'} - Immediate attention required`;
-
+    const smsMessage = `CRITICAL STOCK ERROR: ${error.constructor.name} - Item: ${error.itemCode || 'N/A'} - Immediate attention required`;
+    
+    // TODO: Replace with actual SMS service integration
+    log.warn('SMS notification would be sent:', { data: smsMessage }, 'notification-handler');
   }
 
   private static async sendWebhookNotification(
@@ -205,7 +209,7 @@ export class NotificationHandler {
     recoveryOptions: RecoveryOption[]
   ): Promise<void> {
     // Mock webhook sending - would integrate with webhook service
-    void {
+    const webhookData = {
       type: 'stock_error',
       timestamp: new Date().toISOString(),
       severity,
@@ -223,8 +227,7 @@ export class NotificationHandler {
       }))
     };
 
-    // Mock webhook - would make actual HTTP request
-
+    log.debug('Webhook notification would be sent:', { data: webhookData }, 'notification-handler');
   }
 
   private static formatEmailBody(

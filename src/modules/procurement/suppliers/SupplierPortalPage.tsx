@@ -7,6 +7,7 @@ import { SupplierCrudService } from '@/services/suppliers';
 import type { Supplier, SupplierDocument } from '@/types/supplier/base.types';
 import { DocumentType } from '@/types/supplier/base.types';
 import QuoteSubmissionModal from './components/QuoteSubmissionModal';
+import { log } from '@/lib/logger';
 
 interface SupplierPortalProps {}
 
@@ -143,7 +144,7 @@ const SupplierPortalPage: React.FC<SupplierPortalProps> = () => {
         ]);
         
       } catch (error) {
-        console.error('Failed to initialize supplier session:', error);
+        log.error('Failed to initialize supplier session:', { data: error }, 'SupplierPortalPage');
       } finally {
         setLoading(false);
       }
@@ -160,7 +161,7 @@ const SupplierPortalPage: React.FC<SupplierPortalProps> = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setAuthStep('verification');
     } catch (error) {
-      console.error('Authentication failed:', error);
+      log.error('Authentication failed:', { data: error }, 'SupplierPortalPage');
     } finally {
       setLoading(false);
     }
@@ -178,7 +179,7 @@ const SupplierPortalPage: React.FC<SupplierPortalProps> = () => {
         authenticated: true
       });
     } catch (error) {
-      console.error('Verification failed:', error);
+      log.error('Verification failed:', { data: error }, 'SupplierPortalPage');
     } finally {
       setLoading(false);
     }
@@ -210,7 +211,7 @@ const SupplierPortalPage: React.FC<SupplierPortalProps> = () => {
       } : null);
       
     } catch (error) {
-      console.error('Failed to submit quote:', error);
+      log.error('Failed to submit quote:', { data: error }, 'SupplierPortalPage');
       throw error;
     }
   };

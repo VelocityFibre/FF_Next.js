@@ -3,6 +3,7 @@ import { ArrowLeft, Edit, Mail, Phone, Calendar, Briefcase, Award } from 'lucide
 import { useStaffMember, useDeleteStaff } from '@/hooks/useStaff';
 import { format } from 'date-fns';
 import { safeToDate } from '@/utils/dateHelpers';
+import { log } from '@/lib/logger';
 
 export function StaffDetail() {
   const navigate = useNavigate();
@@ -187,7 +188,7 @@ export function StaffDetail() {
                           const date = safeToDate(startDate);
                           return format(date, 'dd MMM yyyy');
                         } catch (error) {
-                          console.warn('Error formatting start date:', error);
+                          log.warn('Error formatting start date:', { data: error }, 'StaffDetail');
                           return 'Invalid Date';
                         }
                       }
@@ -210,7 +211,7 @@ export function StaffDetail() {
                             const date = safeToDate(endDate);
                             return format(date, 'dd MMM yyyy');
                           } catch (error) {
-                            console.warn('Error formatting end date:', error);
+                            log.warn('Error formatting end date:', { data: error }, 'StaffDetail');
                             return 'Invalid Date';
                           }
                         }

@@ -11,6 +11,7 @@ import {
 import { db } from '@/config/firebase';
 import { RFQStatus } from '@/types/procurement.types';
 import { RFQCrud } from './rfqCrud';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'rfqs';
 
@@ -42,7 +43,7 @@ export class RFQWorkflow {
         sentBy: 'current-user-id' // TODO: Get from auth context
       });
     } catch (error) {
-      console.error('Error sending RFQ to suppliers:', error);
+      log.error('Error sending RFQ to suppliers:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -59,7 +60,7 @@ export class RFQWorkflow {
         closureReason: reason
       });
     } catch (error) {
-      console.error('Error closing RFQ:', error);
+      log.error('Error closing RFQ:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -78,7 +79,7 @@ export class RFQWorkflow {
       
       // TODO: Notify suppliers about cancellation
     } catch (error) {
-      console.error('Error cancelling RFQ:', error);
+      log.error('Error cancelling RFQ:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -98,7 +99,7 @@ export class RFQWorkflow {
       
       // TODO: Notify suppliers about deadline extension
     } catch (error) {
-      console.error('Error extending RFQ deadline:', error);
+      log.error('Error extending RFQ deadline:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -136,7 +137,7 @@ export class RFQWorkflow {
       
       // TODO: If RFQ is already issued, send invites to new suppliers
     } catch (error) {
-      console.error('Error adding suppliers to RFQ:', error);
+      log.error('Error adding suppliers to RFQ:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -159,7 +160,7 @@ export class RFQWorkflow {
       
       // TODO: Notify removed suppliers if RFQ was already sent
     } catch (error) {
-      console.error('Error removing suppliers from RFQ:', error);
+      log.error('Error removing suppliers from RFQ:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -183,7 +184,7 @@ export class RFQWorkflow {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error marking RFQ as ready:', error);
+      log.error('Error marking RFQ as ready:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }
@@ -216,7 +217,7 @@ export class RFQWorkflow {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error reopening RFQ:', error);
+      log.error('Error reopening RFQ:', { data: error }, 'rfqWorkflow');
       throw error;
     }
   }

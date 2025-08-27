@@ -9,6 +9,7 @@ import { eq } from 'drizzle-orm';
 import type { ContractorFormData, Contractor } from '@/types/contractor.types';
 import type { NewContractor } from '@/lib/neon/schema/contractor.schema';
 import { mapToNeonContractor, mapToContractor } from './dataMappers';
+import { log } from '@/lib/logger';
 
 /**
  * Create new contractor in Neon database
@@ -28,7 +29,7 @@ export async function createContractor(data: ContractorFormData): Promise<Contra
 
     return mapToContractor(result[0]);
   } catch (error) {
-    console.error('Error creating contractor in Neon:', error);
+    log.error('Error creating contractor in Neon:', { data: error }, 'crudOperations');
     throw new Error('Failed to create contractor');
   }
 }
@@ -53,7 +54,7 @@ export async function updateContractor(id: string, data: Partial<ContractorFormD
 
     return mapToContractor(result[0]);
   } catch (error) {
-    console.error('Error updating contractor in Neon:', error);
+    log.error('Error updating contractor in Neon:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor');
   }
 }
@@ -76,7 +77,7 @@ export async function deleteContractor(id: string): Promise<void> {
       throw new Error('Contractor not found');
     }
   } catch (error) {
-    console.error('Error deleting contractor in Neon:', error);
+    log.error('Error deleting contractor in Neon:', { data: error }, 'crudOperations');
     throw new Error('Failed to delete contractor');
   }
 }
@@ -95,7 +96,7 @@ export async function hardDeleteContractor(id: string): Promise<void> {
       throw new Error('Contractor not found');
     }
   } catch (error) {
-    console.error('Error hard deleting contractor in Neon:', error);
+    log.error('Error hard deleting contractor in Neon:', { data: error }, 'crudOperations');
     throw new Error('Failed to permanently delete contractor');
   }
 }
@@ -118,7 +119,7 @@ export async function updateContractorStatus(id: string, status: string): Promis
       throw new Error('Contractor not found');
     }
   } catch (error) {
-    console.error('Error updating contractor status:', error);
+    log.error('Error updating contractor status:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor status');
   }
 }
@@ -141,7 +142,7 @@ export async function updateContractorCompliance(id: string, complianceStatus: s
       throw new Error('Contractor not found');
     }
   } catch (error) {
-    console.error('Error updating contractor compliance:', error);
+    log.error('Error updating contractor compliance:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor compliance');
   }
 }
@@ -170,7 +171,7 @@ export async function updateContractorRAG(id: string, ragScores: {
       throw new Error('Contractor not found');
     }
   } catch (error) {
-    console.error('Error updating contractor RAG scores:', error);
+    log.error('Error updating contractor RAG scores:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor RAG scores');
   }
 }
@@ -198,7 +199,7 @@ export async function updateContractorProjectStats(id: string, stats: {
       throw new Error('Contractor not found');
     }
   } catch (error) {
-    console.error('Error updating contractor project stats:', error);
+    log.error('Error updating contractor project stats:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor project statistics');
   }
 }

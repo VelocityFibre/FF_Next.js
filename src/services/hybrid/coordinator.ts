@@ -7,6 +7,7 @@ import { FirebaseProjectService, FirebaseClientService } from './firebase';
 import { NeonAnalyticsService } from './neon';
 import type { Project } from '@/types/project.types';
 import type { Client } from '@/types/client.types';
+import { log } from '@/lib/logger';
 
 export class HybridCoordinator {
   private firebaseProjects: FirebaseProjectService;
@@ -153,7 +154,7 @@ export class HybridCoordinator {
       await Promise.allSettled([...projectSyncPromises, ...clientSyncPromises]);
 
     } catch (error) {
-      console.error('Error during bulk sync:', error);
+      log.error('Error during bulk sync:', { data: error }, 'coordinator');
       throw new Error('Bulk sync failed');
     }
   }
@@ -186,7 +187,7 @@ export class HybridCoordinator {
         }
       };
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      log.error('Error fetching dashboard data:', { data: error }, 'coordinator');
       throw new Error('Failed to fetch dashboard data');
     }
   }

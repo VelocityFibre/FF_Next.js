@@ -16,6 +16,7 @@ import { CompanyProfileTab } from './components/tabs/CompanyProfileTab';
 import { PerformanceTab } from './components/tabs/PerformanceTab';
 import { DocumentsTab } from './components/tabs/DocumentsTab';
 import { MessagesTab } from './components/tabs/MessagesTab';
+import { log } from '@/lib/logger';
 
 // Error boundary component
 interface ErrorBoundaryState {
@@ -37,7 +38,7 @@ class SuppliersPortalErrorBoundary extends React.Component<
   }
 
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Suppliers Portal Error:', error, errorInfo);
+    log.error('Suppliers Portal Error:', { data: error, errorInfo }, 'SuppliersPortalPage');
   }
 
   render() {

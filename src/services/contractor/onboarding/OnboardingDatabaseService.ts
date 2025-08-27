@@ -6,6 +6,7 @@
 import { db } from '@/lib/neon/connection';
 import { contractors } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
+import { log } from '@/lib/logger';
 
 export class OnboardingDatabaseService {
   /**
@@ -26,7 +27,7 @@ export class OnboardingDatabaseService {
         })
         .where(eq(contractors.id, contractorId));
     } catch (error) {
-      console.error('Failed to update contractor status:', error);
+      log.error('Failed to update contractor status:', { data: error }, 'OnboardingDatabaseService');
       throw error;
     }
   }
@@ -43,7 +44,7 @@ export class OnboardingDatabaseService {
       
       return result.map(r => r.id);
     } catch (error) {
-      console.error('Failed to get contractor IDs:', error);
+      log.error('Failed to get contractor IDs:', { data: error }, 'OnboardingDatabaseService');
       return [];
     }
   }
@@ -61,7 +62,7 @@ export class OnboardingDatabaseService {
       
       return result.length > 0 ? result[0] : null;
     } catch (error) {
-      console.error('Failed to get contractor by ID:', error);
+      log.error('Failed to get contractor by ID:', { data: error }, 'OnboardingDatabaseService');
       return null;
     }
   }
@@ -78,7 +79,7 @@ export class OnboardingDatabaseService {
       
       return result;
     } catch (error) {
-      console.error('Failed to get contractors by status:', error);
+      log.error('Failed to get contractors by status:', { data: error }, 'OnboardingDatabaseService');
       return [];
     }
   }
@@ -99,7 +100,7 @@ export class OnboardingDatabaseService {
         })
         .where(eq(contractors.id, contractorId));
     } catch (error) {
-      console.error('Failed to update onboarding data:', error);
+      log.error('Failed to update onboarding data:', { data: error }, 'OnboardingDatabaseService');
       throw error;
     }
   }
@@ -117,7 +118,7 @@ export class OnboardingDatabaseService {
       
       return result.length > 0 ? result[0].onboardingProgress : null;
     } catch (error) {
-      console.error('Failed to get onboarding data:', error);
+      log.error('Failed to get onboarding data:', { data: error }, 'OnboardingDatabaseService');
       return null;
     }
   }
@@ -134,7 +135,7 @@ export class OnboardingDatabaseService {
       // In production, this would log to an events table
 
     } catch (error) {
-      console.error('Failed to log onboarding event:', error);
+      log.error('Failed to log onboarding event:', { data: error }, 'OnboardingDatabaseService');
     }
   }
 
@@ -161,7 +162,7 @@ export class OnboardingDatabaseService {
         rejected: 0
       };
     } catch (error) {
-      console.error('Failed to get onboarding stats:', error);
+      log.error('Failed to get onboarding stats:', { data: error }, 'OnboardingDatabaseService');
       return {
         total: 0,
         notStarted: 0,

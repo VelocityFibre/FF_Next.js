@@ -5,6 +5,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 import {
   BOQVersion,
   VersionComparison,
@@ -37,7 +38,7 @@ export const useBOQHistory = (
       const versions: BOQVersion[] = []; // Empty array - shows "No version history available"
       setVersions(versions); // Empty array until real BOQ history service is connected
     } catch (error) {
-      console.error('Failed to load version history:', error);
+      log.error('Failed to load version history:', { data: error }, 'useBOQHistory');
       toast.error('Failed to load version history');
     } finally {
       setIsLoading(false);
@@ -142,7 +143,7 @@ export const useBOQHistory = (
       setComparison(mockComparison);
       setShowComparison(true);
     } catch (error) {
-      console.error('Failed to compare versions:', error);
+      log.error('Failed to compare versions:', { data: error }, 'useBOQHistory');
       toast.error('Failed to compare versions');
     } finally {
       setIsComparing(false);
@@ -159,7 +160,7 @@ export const useBOQHistory = (
       onRestore?.(version);
       loadVersionHistory();
     } catch (error) {
-      console.error('Failed to restore version:', error);
+      log.error('Failed to restore version:', { data: error }, 'useBOQHistory');
       toast.error('Failed to restore version');
     }
   };
@@ -182,7 +183,7 @@ export const useBOQHistory = (
 
       toast.success('Version exported successfully');
     } catch (error) {
-      console.error('Failed to export version:', error);
+      log.error('Failed to export version:', { data: error }, 'useBOQHistory');
       toast.error('Failed to export version');
     }
   };

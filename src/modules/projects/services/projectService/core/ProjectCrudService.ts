@@ -13,6 +13,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../../../../../config/firebase';
+import { log } from '@/lib/logger';
 import { 
   Project, 
   CreateProjectRequest, 
@@ -53,7 +54,7 @@ export class ProjectCrudService {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), projectData);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating project:', error);
+      log.error('Error creating project:', { data: error }, 'ProjectCrudService');
       throw new Error('Failed to create project');
     }
   }
@@ -75,7 +76,7 @@ export class ProjectCrudService {
         updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt,
       } as Project;
     } catch (error) {
-      console.error('Error fetching project:', error);
+      log.error('Error fetching project:', { data: error }, 'ProjectCrudService');
       throw new Error('Failed to fetch project');
     }
   }
@@ -90,7 +91,7 @@ export class ProjectCrudService {
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
-      console.error('Error updating project:', error);
+      log.error('Error updating project:', { data: error }, 'ProjectCrudService');
       throw new Error('Failed to update project');
     }
   }
@@ -100,7 +101,7 @@ export class ProjectCrudService {
       const docRef = doc(db, COLLECTION_NAME, projectId);
       await deleteDoc(docRef);
     } catch (error) {
-      console.error('Error deleting project:', error);
+      log.error('Error deleting project:', { data: error }, 'ProjectCrudService');
       throw new Error('Failed to delete project');
     }
   }
@@ -113,7 +114,7 @@ export class ProjectCrudService {
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
-      console.error('Error updating project status:', error);
+      log.error('Error updating project status:', { data: error }, 'ProjectCrudService');
       throw new Error('Failed to update project status');
     }
   }

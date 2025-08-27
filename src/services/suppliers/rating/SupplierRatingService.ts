@@ -9,6 +9,7 @@ import { Supplier } from '@/types/supplier/base.types';
 import { SupplierComparison } from './types';
 import { SupplierCrudService } from '../supplier.crud';
 import { SupplierRatingManager } from './ratingManager';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -50,7 +51,7 @@ export class SupplierRatingService {
         })
         .slice(0, limit);
     } catch (error) {
-      console.error('Error fetching top-rated suppliers:', error);
+      log.error('Error fetching top-rated suppliers:', { data: error }, 'SupplierRatingService');
       throw new Error(`Failed to fetch top-rated suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -77,7 +78,7 @@ export class SupplierRatingService {
 
       return comparisons;
     } catch (error) {
-      console.error('Error comparing suppliers:', error);
+      log.error('Error comparing suppliers:', { data: error }, 'SupplierRatingService');
       throw new Error(`Failed to compare suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -106,7 +107,7 @@ export class SupplierRatingService {
         })
         .slice(0, limit);
     } catch (error) {
-      console.error('Error getting suppliers by rating range:', error);
+      log.error('Error getting suppliers by rating range:', { data: error }, 'SupplierRatingService');
       throw new Error(`Failed to get suppliers by rating range: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -130,7 +131,7 @@ export class SupplierRatingService {
         })
         .slice(0, limit);
     } catch (error) {
-      console.error('Error getting most reviewed suppliers:', error);
+      log.error('Error getting most reviewed suppliers:', { data: error }, 'SupplierRatingService');
       throw new Error(`Failed to get most reviewed suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -162,7 +163,7 @@ export class SupplierRatingService {
         })
         .slice(0, limit);
     } catch (error) {
-      console.error('Error getting recently rated suppliers:', error);
+      log.error('Error getting recently rated suppliers:', { data: error }, 'SupplierRatingService');
       throw new Error(`Failed to get recently rated suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

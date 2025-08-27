@@ -10,6 +10,7 @@ import { staffPerformance } from '@/lib/neon/schema';
 import type { NewStaffPerformance } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
 import type { FirebaseStaffData, SyncResult } from '../types';
+import { log } from '@/lib/logger';
 
 /**
  * Core staff synchronization functionality
@@ -39,7 +40,7 @@ export class StaffSyncCore {
           errorCount++;
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
           errors.push(`Staff ${member.id}: ${errorMessage}`);
-          console.error(`Failed to sync staff member ${member.id}:`, error);
+          log.error(`Failed to sync staff member ${member.id}:`, { data: error }, 'staffSyncCore');
         }
       }
 
@@ -52,7 +53,7 @@ export class StaffSyncCore {
         errors: errors.length > 0 ? errors : undefined
       };
     } catch (error) {
-      console.error('Failed to sync staff:', error);
+      log.error('Failed to sync staff:', { data: error }, 'staffSyncCore');
       return {
         type: 'staff',
         success: false,
@@ -96,7 +97,7 @@ export class StaffSyncCore {
 
       await this.upsertStaffPerformance(staffId, performanceData);
     } catch (error) {
-      console.error(`Failed to sync staff member ${staffId}:`, error);
+      log.error(`Failed to sync staff member ${staffId}:`, { data: error }, 'staffSyncCore');
       throw error;
     }
   }
@@ -157,7 +158,7 @@ export class StaffSyncCore {
         avgSyncTime
       };
     } catch (error) {
-      console.error('Failed to get staff sync statistics:', error);
+      log.error('Failed to get staff sync statistics:', { data: error }, 'staffSyncCore');
       return {
         totalStaff: 0,
         lastSyncTime: null,

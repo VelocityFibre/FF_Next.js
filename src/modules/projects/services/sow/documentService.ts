@@ -18,6 +18,7 @@ import {
   DocumentStatus 
 } from '../../types/project.types';
 import { projectService } from '../projectService/index';
+import { log } from '@/lib/logger';
 
 export class SOWDocumentService {
   /**
@@ -94,7 +95,7 @@ export class SOWDocumentService {
       const storageRef = ref(storage, documentToDelete.fileUrl);
       await deleteObject(storageRef);
     } catch (storageError) {
-      console.warn('Error deleting file from storage:', storageError);
+      log.warn('Error deleting file from storage:', { data: storageError }, 'documentService');
     }
 
     // Remove from project

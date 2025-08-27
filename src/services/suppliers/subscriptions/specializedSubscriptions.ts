@@ -7,6 +7,7 @@ import { query, collection, onSnapshot, orderBy, where, limit } from 'firebase/f
 import { db } from '@/config/firebase';
 import { SupplierStatus } from '@/types/supplier/base.types';
 import { SubscriptionOptions, SupplierRatingData, SupplierComplianceData } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -41,14 +42,14 @@ export class SpecializedSubscriptions {
           callback(supplierRatings);
         },
         (error) => {
-          console.error('Error subscribing to supplier ratings:', error);
+          log.error('Error subscribing to supplier ratings:', { data: error }, 'specializedSubscriptions');
           options?.onError?.(error);
         }
       );
 
       return unsubscribe;
     } catch (error) {
-      console.error('Error setting up supplier ratings subscription:', error);
+      log.error('Error setting up supplier ratings subscription:', { data: error }, 'specializedSubscriptions');
       const errorObj = error instanceof Error ? error : new Error('Unknown error');
       options?.onError?.(errorObj);
       
@@ -86,14 +87,14 @@ export class SpecializedSubscriptions {
           callback(complianceData);
         },
         (error) => {
-          console.error('Error subscribing to compliance status:', error);
+          log.error('Error subscribing to compliance status:', { data: error }, 'specializedSubscriptions');
           options?.onError?.(error);
         }
       );
 
       return unsubscribe;
     } catch (error) {
-      console.error('Error setting up compliance status subscription:', error);
+      log.error('Error setting up compliance status subscription:', { data: error }, 'specializedSubscriptions');
       const errorObj = error instanceof Error ? error : new Error('Unknown error');
       options?.onError?.(errorObj);
       

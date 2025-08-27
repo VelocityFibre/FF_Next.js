@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import { log } from '@/lib/logger';
 
 /**
  * SOW Data Parser
@@ -37,7 +38,7 @@ async function processCSV(file: File, _type: string): Promise<any[]> {
       });
       
       if (parseResult.errors.length > 0) {
-        console.warn('CSV parsing warnings:', parseResult.errors);
+        log.warn('CSV parsing warnings:', { data: parseResult.errors }, 'parser');
       }
       resolve(parseResult.data);
     };
@@ -119,7 +120,7 @@ export function extractDate(row: Record<string, unknown>, possibleKeys: string[]
         return date.toISOString();
       }
     } catch (e) {
-      console.warn('Failed to parse date:', value);
+      log.warn('Failed to parse date:', { data: value }, 'parser');
     }
   }
   return undefined;

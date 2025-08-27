@@ -1,4 +1,5 @@
 import { sql } from '../lib/neon';
+import { log } from '@/lib/logger';
 
 async function testNeonClients() {
   try {
@@ -19,7 +20,7 @@ async function testNeonClients() {
       ORDER BY ordinal_position
     `;
     columns.forEach(col => {
-      console.log(`  - ${col.column_name}: ${col.data_type} ${col.is_nullable === 'NO' ? '(required)' : ''}`);
+      log.info(`  - ${col.column_name}: ${col.data_type} ${col.is_nullable === 'NO' ? '(required);' : ''}`, {}, 'test-neon-clients');
     });
     
     // 4. Count records
@@ -46,7 +47,7 @@ async function testNeonClients() {
       LIMIT 5
     `;
   } catch (error) {
-    console.error('❌ Error:', error);
+    log.error('❌ Error:', { data: error }, 'test-neon-clients');
   }
 }
 

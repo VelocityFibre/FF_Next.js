@@ -5,6 +5,7 @@
 
 import { query, collection, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   SupplierStatus, 
   Supplier, 
@@ -31,7 +32,7 @@ export class StatusQueries {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error(`Error fetching suppliers by status ${status}:`, error);
+      log.error(`Error fetching suppliers by status ${status}:`, { data: error }, 'statusQueries');
       throw new Error(`Failed to fetch suppliers by status: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -81,7 +82,7 @@ export class StatusQueries {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error fetching preferred suppliers:', error);
+      log.error('Error fetching preferred suppliers:', { data: error }, 'statusQueries');
       throw new Error(`Failed to fetch preferred suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -108,7 +109,7 @@ export class StatusQueries {
 
       return summary;
     } catch (error) {
-      console.error('Error getting status summary:', error);
+      log.error('Error getting status summary:', { data: error }, 'statusQueries');
       throw new Error(`Failed to get status summary: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -138,7 +139,7 @@ export class StatusQueries {
       
       return [];
     } catch (error) {
-      console.error(`Error fetching status history for ${supplierId}:`, error);
+      log.error(`Error fetching status history for ${supplierId}:`, { data: error }, 'statusQueries');
       return [];
     }
   }
@@ -174,7 +175,7 @@ export class StatusQueries {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error fetching suppliers with conditions:', error);
+      log.error('Error fetching suppliers with conditions:', { data: error }, 'statusQueries');
       throw new Error(`Failed to fetch suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

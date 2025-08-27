@@ -1,5 +1,6 @@
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import { log } from '@/lib/logger';
 
 /**
  * Process uploaded file (Excel or CSV)
@@ -32,7 +33,7 @@ export async function processCSV(file: File, _type: string): Promise<any[]> {
       });
       
       if (parseResult.errors.length > 0) {
-        console.warn('CSV parsing warnings:', parseResult.errors);
+        log.warn('CSV parsing warnings:', { data: parseResult.errors }, 'fileReaders');
       }
       resolve(parseResult.data);
     };

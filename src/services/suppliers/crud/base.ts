@@ -23,6 +23,7 @@ import {
   SupplierStatus
 } from '@/types/supplier/base.types';
 import { SupplierFilter } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -54,7 +55,7 @@ export class SupplierBaseCrud {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error fetching suppliers:', error);
+      log.error('Error fetching suppliers:', { data: error }, 'base');
       throw new Error(`Failed to fetch suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -76,7 +77,7 @@ export class SupplierBaseCrud {
         ...snapshot.data()
       } as Supplier;
     } catch (error) {
-      console.error(`Error fetching supplier ${id}:`, error);
+      log.error(`Error fetching supplier ${id}:`, { data: error }, 'base');
       if (error instanceof Error && error.message.includes('not found')) {
         throw error;
       }
@@ -93,7 +94,7 @@ export class SupplierBaseCrud {
       const snapshot = await getDoc(docRef);
       return snapshot.exists();
     } catch (error) {
-      console.error(`Error checking supplier existence ${id}:`, error);
+      log.error(`Error checking supplier existence ${id}:`, { data: error }, 'base');
       return false;
     }
   }
@@ -117,7 +118,7 @@ export class SupplierBaseCrud {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), supplier);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating supplier:', error);
+      log.error('Error creating supplier:', { data: error }, 'base');
       throw new Error(`Failed to create supplier: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -143,7 +144,7 @@ export class SupplierBaseCrud {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error(`Error updating supplier ${id}:`, error);
+      log.error(`Error updating supplier ${id}:`, { data: error }, 'base');
       throw new Error(`Failed to update supplier: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -164,7 +165,7 @@ export class SupplierBaseCrud {
       
       await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
-      console.error(`Error deleting supplier ${id}:`, error);
+      log.error(`Error deleting supplier ${id}:`, { data: error }, 'base');
       throw new Error(`Failed to delete supplier: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { staffService } from '@/services/staffService';
 import { StaffFormData } from '@/types/staff.types';
 import { staffKeys } from './queryKeys';
+import { log } from '@/lib/logger';
 
 /**
  * Hook to create a new staff member
@@ -21,7 +22,7 @@ export function useCreateStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to create staff member:', error);
+      log.error('Failed to create staff member:', { data: error }, 'mutations');
       throw error;
     },
   });
@@ -40,7 +41,7 @@ export function useCreateOrUpdateStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to create or update staff member:', error);
+      log.error('Failed to create or update staff member:', { data: error }, 'mutations');
       throw error;
     },
   });
@@ -64,7 +65,7 @@ export function useUpdateStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.summary() });
     },
     onError: (error: Error) => {
-      console.error('Failed to update staff member:', error);
+      log.error('Failed to update staff member:', { data: error }, 'mutations');
       throw error;
     },
   });
@@ -87,7 +88,7 @@ export function useDeleteStaff() {
       queryClient.invalidateQueries({ queryKey: staffKeys.summary() });
     },
     onError: (error: Error) => {
-      console.error('Failed to delete staff member:', error);
+      log.error('Failed to delete staff member:', { data: error }, 'mutations');
       throw error;
     },
   });
@@ -107,7 +108,7 @@ export function useAssignStaffToProject() {
       queryClient.invalidateQueries({ queryKey: staffKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to assign staff to project:', error);
+      log.error('Failed to assign staff to project:', { data: error }, 'mutations');
       throw error;
     },
   });
@@ -127,7 +128,7 @@ export function useUpdateStaffProjectCount() {
       queryClient.invalidateQueries({ queryKey: staffKeys.all });
     },
     onError: (error: Error) => {
-      console.error('Failed to update staff project count:', error);
+      log.error('Failed to update staff project count:', { data: error }, 'mutations');
       throw error;
     },
   });

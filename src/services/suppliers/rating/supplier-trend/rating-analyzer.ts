@@ -4,6 +4,7 @@
  */
 
 import type { RatingTrend, TrendMetrics } from './trend-types';
+import { log } from '@/lib/logger';
 
 export class SupplierRatingAnalyzer {
   /**
@@ -68,7 +69,7 @@ export class SupplierRatingAnalyzer {
       
       return trends;
     } catch (error) {
-      console.error('Error analyzing rating trends:', error);
+      log.error('Error analyzing rating trends:', { data: error }, 'rating-analyzer');
       return [];
     }
   }

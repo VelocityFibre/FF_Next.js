@@ -7,7 +7,14 @@ import { ProcurementErrorBoundary } from '../../components/error/ProcurementErro
  * BOQ Dashboard - Main landing page for BOQ management
  * Following FibreFlow Universal Module Structure
  */
-export function BOQDashboard() {
+interface BOQDashboardProps {
+  projectId: string;
+  searchTerm: string;
+  onEdit: (boqId: string) => void;
+  onCreate: () => void;
+}
+
+export function BOQDashboard({ projectId: _projectId, searchTerm: _searchTerm, onEdit: _onEdit, onCreate: _onCreate }: BOQDashboardProps) {
   // Mock data - will be replaced with real BOQ data
   const mockBOQs = [
     {

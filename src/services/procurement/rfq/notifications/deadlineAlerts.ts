@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
+import { log } from '@/lib/logger';
 
 /**
  * Utility to convert Timestamp or Date to Date object
@@ -104,7 +105,7 @@ export class RFQDeadlineAlerts {
 
       callback(expiringSoon, overdue);
     }, (error) => {
-      console.error('Error subscribing to deadline alerts:', error);
+      log.error('Error subscribing to deadline alerts:', { data: error }, 'deadlineAlerts');
     });
   }
 
@@ -189,7 +190,7 @@ export class RFQDeadlineAlerts {
       } as RFQ));
       callback(rfqs);
     }, (error) => {
-      console.error('Error subscribing to upcoming deadlines:', error);
+      log.error('Error subscribing to upcoming deadlines:', { data: error }, 'deadlineAlerts');
     });
   }
 
@@ -220,7 +221,7 @@ export class RFQDeadlineAlerts {
       } as RFQ));
       callback(overdueRfqs);
     }, (error) => {
-      console.error('Error subscribing to overdue RFQs:', error);
+      log.error('Error subscribing to overdue RFQs:', { data: error }, 'deadlineAlerts');
     });
   }
 

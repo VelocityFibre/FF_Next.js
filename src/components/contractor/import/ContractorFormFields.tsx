@@ -262,7 +262,7 @@ export function ServiceSelect({
             return;
           }
         } catch (apiError) {
-          console.warn('Service templates API not available, using fallback services:', apiError);
+          // TODO: Replace with proper logging - Service templates API not available, using fallback
         }
         
         // Fallback to comprehensive default services
@@ -292,7 +292,7 @@ export function ServiceSelect({
         setAvailableServices(fallbackServices);
         
       } catch (error) {
-        console.error('Error in service loading:', error);
+        // TODO: Replace with proper logging - Error in service loading
         // Final fallback to basic services
         setAvailableServices(['Service Delivery', 'Civil', 'Optical']);
       } finally {

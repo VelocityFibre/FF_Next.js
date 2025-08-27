@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { contractors } from '@/lib/neon/schema/contractor.schema';
 import { count, eq, and, avg, sum } from 'drizzle-orm';
 import type { ContractorAnalytics } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 /**
  * Get contractor summary statistics
@@ -52,7 +53,7 @@ export async function getContractorSummary() {
       utilizationRate
     };
   } catch (error) {
-    console.error('Error getting contractor summary:', error);
+    log.error('Error getting contractor summary:', { data: error }, 'statistics');
     throw new Error('Failed to get contractor summary');
   }
 }
@@ -154,7 +155,7 @@ export async function getContractorAnalytics(): Promise<ContractorAnalytics> {
       }
     };
   } catch (error) {
-    console.error('Error getting contractor analytics:', error);
+    log.error('Error getting contractor analytics:', { data: error }, 'statistics');
     throw new Error('Failed to get contractor analytics');
   }
 }
@@ -173,7 +174,7 @@ export async function getContractorsByStatus() {
       .where(eq(contractors.isActive, true))
       .groupBy(contractors.status);
   } catch (error) {
-    console.error('Error getting contractors by status:', error);
+    log.error('Error getting contractors by status:', { data: error }, 'statistics');
     throw new Error('Failed to get contractors by status');
   }
 }
@@ -217,7 +218,7 @@ export async function getComplianceStats() {
       complianceRate
     };
   } catch (error) {
-    console.error('Error getting compliance stats:', error);
+    log.error('Error getting compliance stats:', { data: error }, 'statistics');
     throw new Error('Failed to get compliance statistics');
   }
 }

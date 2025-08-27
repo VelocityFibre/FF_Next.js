@@ -4,6 +4,7 @@ import { useSOWService } from '@/hooks/useSOW';
 import { sowDataProcessor } from '@/services/sowDataProcessor';
 import { neonSOWService } from '@/services/neonSOWService';
 import { SOWFile, FileTypeConfig } from '../types/sowUpload.types';
+import { log } from '@/lib/logger';
 
 export function useSOWUpload(
   projectId: string,
@@ -31,7 +32,7 @@ export function useSOWUpload(
     try {
       await sowService.saveSOWData(projectId, type, data);
     } catch (error) {
-      console.error(`Error saving ${type} to Firebase:`, error);
+      log.error(`Error saving ${type} to Firebase:`, { data: error }, 'useSOWUpload');
       throw error;
     }
   };
@@ -129,7 +130,7 @@ export function useSOWUpload(
       }
 
     } catch (error) {
-      console.error(`Error processing ${sowFile.type} file:`, error);
+      log.error(`Error processing ${sowFile.type} file:`, { data: error }, 'useSOWUpload');
       updateFileStatus(sowFile.type, 'error', `Failed to process file: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsProcessing(false);

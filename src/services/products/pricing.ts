@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { Product, PriceList, PriceListItem, CreatePriceListData, PriceAdjustment } from './types';
+import { log } from '@/lib/logger';
 
 const PRODUCTS_COLLECTION = 'products';
 const PRICE_LISTS_COLLECTION = 'price_lists';
@@ -49,7 +50,7 @@ export class ProductPricingService {
       const docRef = await addDoc(collection(db, PRICE_LISTS_COLLECTION), priceList);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating price list:', error);
+      log.error('Error creating price list:', { data: error }, 'pricing');
       throw error;
     }
   }
@@ -71,7 +72,7 @@ export class ProductPricingService {
         ...doc.data()
       } as PriceList));
     } catch (error) {
-      console.error('Error fetching price lists:', error);
+      log.error('Error fetching price lists:', { data: error }, 'pricing');
       throw error;
     }
   }
@@ -111,7 +112,7 @@ export class ProductPricingService {
       
       return priceList;
     } catch (error) {
-      console.error('Error fetching active price list:', error);
+      log.error('Error fetching active price list:', { data: error }, 'pricing');
       throw error;
     }
   }
@@ -138,7 +139,7 @@ export class ProductPricingService {
         approvedDate: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error updating price list:', error);
+      log.error('Error updating price list:', { data: error }, 'pricing');
       throw error;
     }
   }
@@ -177,7 +178,7 @@ export class ProductPricingService {
       
       await Promise.all(batch);
     } catch (error) {
-      console.error('Error bulk updating prices:', error);
+      log.error('Error bulk updating prices:', { data: error }, 'pricing');
       throw error;
     }
   }

@@ -2,6 +2,7 @@
 import React from 'react';
 import { TemplateList } from '../templates/TemplateList';
 import type { WorkflowTemplate } from '../../types/workflow.types';
+import { log } from '@/lib/logger';
 
 interface TemplatesTabProps {
   onTemplateEdit?: (templateId: string) => void;
@@ -9,12 +10,12 @@ interface TemplatesTabProps {
 
 export function TemplatesTab({ onTemplateEdit }: TemplatesTabProps) {
   const handleTemplateSelect = (template: WorkflowTemplate) => {
-    console.log('Template selected:', template.name);
+    log.info('Template selected:', { data: template.name }, 'TemplatesTab');
     // TODO: Handle template selection for preview/details
   };
 
   const handleTemplateEdit = (templateId: string) => {
-    console.log('Edit template:', templateId);
+    log.info('Edit template:', { data: templateId }, 'TemplatesTab');
     onTemplateEdit?.(templateId);
     // TODO: Navigate to editor or open edit modal
   };

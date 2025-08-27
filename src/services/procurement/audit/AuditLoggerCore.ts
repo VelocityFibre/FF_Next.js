@@ -14,6 +14,7 @@ import {
   AuditSummary 
 } from './types';
 import { generateChangesSummary, sanitizeValue } from './utils';
+import { log } from '@/lib/logger';
 
 export class AuditLoggerCore {
   private pendingLogs: NewAuditLog[] = [];
@@ -61,15 +62,15 @@ export class AuditLoggerCore {
       this.addToBatch(auditEntry);
 
       // Log to console for debugging (remove in production)
-      console.log('[AuditLogger]', {
+      log.info('[AuditLogger]', { data: {
         action,
         entityType,
         entityId,
         userId: context.userId,
-        timestamp: new Date().toISOString()
+        timestamp: new Date( }, 'AuditLoggerCore');}.toISOString()
       });
     } catch (error) {
-      console.error('[AuditLogger] Failed to log audit entry:', error);
+      log.error('[AuditLogger] Failed to log audit entry:', { data: error }, 'AuditLoggerCore');
       // Don't throw error to avoid breaking business logic
     }
   }
@@ -115,7 +116,7 @@ export class AuditLoggerCore {
 
       return results;
     } catch (error) {
-      console.error('[AuditLogger] Failed to get audit trail:', error);
+      log.error('[AuditLogger] Failed to get audit trail:', { data: error }, 'AuditLoggerCore');
       throw error;
     }
   }
@@ -169,7 +170,7 @@ export class AuditLoggerCore {
         recentActions: results.slice(0, 20) // Last 20 actions
       };
     } catch (error) {
-      console.error('[AuditLogger] Failed to get audit summary:', error);
+      log.error('[AuditLogger] Failed to get audit summary:', { data: error }, 'AuditLoggerCore');
       throw error;
     }
   }
@@ -229,7 +230,7 @@ export class AuditLoggerCore {
       await db.insert(auditLog).values(logsToProcess);
 
     } catch (error) {
-      console.error('[AuditLogger] Failed to process audit log batch:', error);
+      log.error('[AuditLogger] Failed to process audit log batch:', { data: error }, 'AuditLoggerCore');
       
       // Re-add failed logs to queue for retry
       this.pendingLogs.unshift(...logsToProcess);

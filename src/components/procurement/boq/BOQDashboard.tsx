@@ -23,6 +23,7 @@ import BOQOverview from './dashboard/BOQOverview';
 import { DashboardView, RecentActivity, BOQDashboardProps } from './dashboard/BOQDashboardTypes';
 import { getStatusColor, formatRelativeTime } from './dashboard/BOQDashboardUtils';
 import { BOQDataLoader } from './dashboard/BOQDataLoader';
+import { log } from '@/lib/logger';
 
 export default function BOQDashboard({ className }: BOQDashboardProps) {
   const { context } = useProcurementContext();
@@ -53,7 +54,7 @@ export default function BOQDashboard({ className }: BOQDashboardProps) {
       setRecentActivity(data.recentActivity);
       setActiveJobs(data.activeJobs);
     } catch (error) {
-      // console.error('Failed to load dashboard data:', error);
+      // log.error('Failed to load dashboard data:', { data: error }, 'BOQDashboard');
       toast.error('Failed to load dashboard data');
     } finally {
       setIsLoading(false);

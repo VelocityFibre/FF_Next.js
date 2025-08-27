@@ -15,6 +15,7 @@ import {
 import { ScorecardCalculator } from './scorecardCalculator';
 import { ScorecardAnalyzer } from './scorecardAnalyzer';
 import { ScorecardRecommendations } from './scorecardRecommendations';
+import { log } from '@/lib/logger';
 
 export class ScorecardGenerator {
   private static readonly DEFAULT_BATCH_CONFIG: BatchProcessingConfig = {
@@ -74,7 +75,7 @@ export class ScorecardGenerator {
 
       return scorecard;
     } catch (error) {
-      console.error('Error generating supplier scorecard:', error);
+      log.error('Error generating supplier scorecard:', { data: error }, 'scorecardGenerator');
       throw new Error(`Failed to generate scorecard: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -102,7 +103,7 @@ export class ScorecardGenerator {
           successful.push(scorecard);
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-          console.warn(`Failed to generate scorecard for supplier ${supplierId}:`, errorMessage);
+          log.warn(`Failed to generate scorecard for supplier ${supplierId}:`, { data: errorMessage }, 'scorecardGenerator');
           failed.push({ supplierId, error: errorMessage });
         }
       });
@@ -189,7 +190,7 @@ export class ScorecardGenerator {
       const allSuppliers = await supplierCrudService.SupplierCrudService.getAll();
       return allSuppliers.filter(isValidSupplier);
     } catch (error) {
-      console.error('Error fetching suppliers for analysis:', error);
+      log.error('Error fetching suppliers for analysis:', { data: error }, 'scorecardGenerator');
       return [];
     }
   }

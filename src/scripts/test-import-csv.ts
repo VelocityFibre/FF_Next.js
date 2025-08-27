@@ -3,6 +3,7 @@
  */
 
 import { staffImportService } from '@/services/staff/staffImportService';
+import { log } from '@/lib/logger';
 
 async function testCSVImport() {
 
@@ -26,19 +27,19 @@ VF002,Janice George,janice@velocityfibre.co.za,+27 00 000 0000,Admin,Service Del
     if (result.errors.length > 0) {
 
       result.errors.forEach((error, index) => {
-        console.log(`  ${index + 1}. Row ${error.row}: ${error.message} (${error.field})`);
+        log.info(`  ${index + 1}. Row ${error.row}: ${error.message} (${error.field}, undefined, 'test-import-csv');`);
       });
     }
     
     if (result.staffMembers.length > 0) {
 
       result.staffMembers.forEach((staff, index) => {
-        console.log(`  ${index + 1}. ${staff.name} (${staff.employeeId})`);
+        log.info(`  ${index + 1}. ${staff.name} (${staff.employeeId}, undefined, 'test-import-csv');`);
       });
     }
     
   } catch (error) {
-    console.error('💥 Test failed:', error);
+    log.error('💥 Test failed:', { data: error }, 'test-import-csv');
   }
 }
 

@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { staffPerformance } from '@/lib/neon/schema';
 import { eq, and, sum, avg } from 'drizzle-orm';
 import type { StaffPerformanceSummary } from './types';
+import { log } from '@/lib/logger';
 
 export class StaffAnalyticsService {
   /**
@@ -50,7 +51,7 @@ export class StaffAnalyticsService {
         avgEfficiency: Number(result.avgEfficiency || 0),
       }));
     } catch (error) {
-      console.error('Failed to get staff performance:', error);
+      log.error('Failed to get staff performance:', { data: error }, 'staffAnalytics');
       throw error;
     }
   }
@@ -83,7 +84,7 @@ export class StaffAnalyticsService {
         .orderBy(staffPerformance.periodStart)
         .limit(limit);
     } catch (error) {
-      console.error('Failed to get performance trends:', error);
+      log.error('Failed to get performance trends:', { data: error }, 'staffAnalytics');
       throw error;
     }
   }
@@ -123,7 +124,7 @@ export class StaffAnalyticsService {
         .orderBy(avg(metricColumn))
         .limit(limit);
     } catch (error) {
-      console.error('Failed to get top performers:', error);
+      log.error('Failed to get top performers:', { data: error }, 'staffAnalytics');
       throw error;
     }
   }

@@ -6,6 +6,7 @@
 import { db } from '@/lib/neon/connection';
 import { contractors, projectAssignments, contractorTeams } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
+import { log } from '@/lib/logger';
 import {
   ContractorAssignment,
   ContractorTeam
@@ -59,7 +60,7 @@ export class DataRetrieval {
         contractValue: Number(assignment.contractValue || 0)
       }));
     } catch (error) {
-      console.error('Failed to get contractor assignments:', error);
+      log.error('Failed to get contractor assignments:', { data: error }, 'dataRetrieval');
       return [];
     }
   }
@@ -82,7 +83,7 @@ export class DataRetrieval {
         skillLevel: 'intermediate' as 'junior' | 'intermediate' | 'senior' | 'expert'
       }));
     } catch (error) {
-      console.error('Failed to get contractor teams:', error);
+      log.error('Failed to get contractor teams:', { data: error }, 'dataRetrieval');
       return [];
     }
   }
@@ -132,7 +133,7 @@ export class DataRetrieval {
           const data = await this.getContractorData(contractorId);
           return { contractorId, data };
         } catch (error) {
-          console.error(`Failed to get data for contractor ${contractorId}:`, error);
+          log.error(`Failed to get data for contractor ${contractorId}:`, { data: error }, 'dataRetrieval');
           return { contractorId, data: null };
         }
       });

@@ -15,6 +15,7 @@ import {
   StandardDataTable
 } from '@/components/ui';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export function ContractorList() {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ export function ContractorList() {
       const data = await contractorService.getAll(filter);
       setContractors(data);
     } catch (error) {
-      console.error('Failed to load contractors:', error);
+      log.error('Failed to load contractors:', { data: error }, 'ContractorList');
       toast.error('Failed to load contractors');
     } finally {
       setIsLoading(false);
@@ -52,7 +53,7 @@ export function ContractorList() {
       const data = await contractorService.getAnalytics();
       setAnalytics(data);
     } catch (error) {
-      console.error('Failed to load analytics:', error);
+      log.error('Failed to load analytics:', { data: error }, 'ContractorList');
     }
   };
 

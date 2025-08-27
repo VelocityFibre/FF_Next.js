@@ -23,6 +23,7 @@ import { WorkflowTimeline } from './WorkflowTimeline';
 import { ExecutionLogs } from './ExecutionLogs';
 import type { ProjectWorkflow } from '../../types/workflow.types';
 import { formatDate } from '../../../../utils/dateHelpers';
+import { log } from '@/lib/logger';
 
 interface ProjectWorkflowDetailProps {
   workflowId: string;
@@ -154,14 +155,14 @@ export function ProjectWorkflowDetail({
       
       setWorkflow(mockWorkflow);
     } catch (error) {
-      console.error('Error loading workflow detail:', error);
+      log.error('Error loading workflow detail:', { data: error }, 'ProjectWorkflowDetail');
     } finally {
       setLoading(false);
     }
   };
 
   const handleStatusAction = (action: 'play' | 'pause' | 'complete') => {
-    console.log(`${action} workflow:`, workflowId);
+    log.info(`${action} workflow:`, { data: workflowId }, 'ProjectWorkflowDetail');
     // In real implementation, this would call API to update workflow status
   };
 

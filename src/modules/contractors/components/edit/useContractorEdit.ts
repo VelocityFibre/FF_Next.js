@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { contractorService } from '@/services/contractorService';
 import { ContractorFormData, Contractor } from '@/types/contractor.types';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export function useContractorEdit() {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ export function useContractorEdit() {
         
         setFormData(updateData);
       } catch (error) {
-        console.error('Failed to load contractor:', error);
+        log.error('Failed to load contractor:', { data: error }, 'useContractorEdit');
         toast.error('Failed to load contractor data');
         navigate('/app/contractors');
       } finally {
@@ -135,7 +136,7 @@ export function useContractorEdit() {
       toast.success('Contractor updated successfully!');
       navigate('/app/contractors');
     } catch (error) {
-      console.error('Failed to update contractor:', error);
+      log.error('Failed to update contractor:', { data: error }, 'useContractorEdit');
       toast.error('Failed to update contractor. Please try again.');
     } finally {
       setIsSubmitting(false);

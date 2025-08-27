@@ -5,6 +5,7 @@
 
 import { SupplierCrudService } from '../../supplier.crud';
 import { BenchmarkCalculator } from './benchmark-calculator';
+import { log } from '@/lib/logger';
 import { 
   SupplierComparison, 
   CategoryRanking, 
@@ -53,7 +54,7 @@ export class ComparisonEngine {
         categoryRanking
       };
     } catch (error) {
-      console.error('Error comparing supplier against benchmarks:', error);
+      log.error('Error comparing supplier against benchmarks:', { data: error }, 'comparison-engine');
       throw error;
     }
   }
@@ -94,7 +95,7 @@ export class ComparisonEngine {
 
       return rankings;
     } catch (error) {
-      console.error('Error getting category rankings:', error);
+      log.error('Error getting category rankings:', { data: error }, 'comparison-engine');
       return [];
     }
   }
@@ -206,7 +207,7 @@ export class ComparisonEngine {
         bestPerformers
       };
     } catch (error) {
-      console.error('Error comparing multiple suppliers:', error);
+      log.error('Error comparing multiple suppliers:', { data: error }, 'comparison-engine');
       throw error;
     }
   }
@@ -281,7 +282,7 @@ export class ComparisonEngine {
         insights
       };
     } catch (error) {
-      console.error('Error getting competitive positioning:', error);
+      log.error('Error getting competitive positioning:', { data: error }, 'comparison-engine');
       throw error;
     }
   }

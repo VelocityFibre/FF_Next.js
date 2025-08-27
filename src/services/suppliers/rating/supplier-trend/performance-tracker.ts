@@ -4,6 +4,7 @@
  */
 
 import type { PerformanceTrend, GrowthTrend, ReviewVolumeTrend } from './trend-types';
+import { log } from '@/lib/logger';
 
 export class SupplierPerformanceTracker {
   /**
@@ -75,7 +76,7 @@ export class SupplierPerformanceTracker {
       
       return trends;
     } catch (error) {
-      console.error('Error getting performance trends:', error);
+      log.error('Error getting performance trends:', { data: error }, 'performance-tracker');
       return [];
     }
   }
@@ -121,7 +122,7 @@ export class SupplierPerformanceTracker {
       
       return trends;
     } catch (error) {
-      console.error('Error getting supplier growth trends:', error);
+      log.error('Error getting supplier growth trends:', { data: error }, 'performance-tracker');
       return [];
     }
   }
@@ -168,7 +169,7 @@ export class SupplierPerformanceTracker {
       
       return trends;
     } catch (error) {
-      console.error('Error getting review volume trends:', error);
+      log.error('Error getting review volume trends:', { data: error }, 'performance-tracker');
       return [];
     }
   }

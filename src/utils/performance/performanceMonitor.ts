@@ -4,6 +4,7 @@
  */
 
 import * as React from 'react';
+import { log } from '@/lib/logger';
 
 // Extended performance entry types for Web Vitals
 interface LayoutShift extends PerformanceEntry {
@@ -65,7 +66,7 @@ class PerformanceMonitor {
       // Track navigation timing
       this.trackNavigationTiming();
     } catch (error) {
-      // console.warn('Performance tracking not supported:', error);
+      // log.warn('Performance tracking not supported:', { data: error }, 'performanceMonitor');
     }
   }
 
@@ -378,7 +379,7 @@ export function usePerformanceMonitor(componentName: string) {
   React.useEffect(() => {
     // Performance measurement disabled in production
     // const endTime = performance.now();
-    // console.debug(`${componentName} mount time: ${(endTime - startTime).toFixed(2)}ms`);
+    // log.debug(`${componentName} mount time: ${(endTime - startTime, undefined, 'performanceMonitor');.toFixed(2)}ms`);
   }, [componentName, _startTime]);
 
   const measureRender = React.useCallback((renderFn: () => any) => {
@@ -401,7 +402,7 @@ export function withPerformanceMonitoring<P extends Record<string, unknown>>(
     // Performance measurement disabled in production
     
     React.useEffect(() => {
-      // console.debug(`${displayName} rendered`);
+      // log.debug(`${displayName} rendered`, undefined, 'performanceMonitor');
     });
 
     return React.createElement(WrappedComponent, props);

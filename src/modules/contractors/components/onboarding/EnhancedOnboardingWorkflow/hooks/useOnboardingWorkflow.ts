@@ -4,6 +4,7 @@ import { contractorService } from '@/services/contractorService';
 import { ONBOARDING_STAGES } from '../constants/onboardingStages';
 import { calculateOverallProgress, checkMissingRequiredDocuments } from '../utils/progressUtils';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 export function useOnboardingWorkflow(contractorId: string, onStatusChange?: (status: string) => void) {
   const [documents, setDocuments] = useState<ContractorDocument[]>([]);
@@ -27,7 +28,7 @@ export function useOnboardingWorkflow(contractorId: string, onStatusChange?: (st
       const docs = await contractorService.documents.getByContractor(contractorId);
       setDocuments(docs);
     } catch (error) {
-      console.error('Failed to load documents:', error);
+      log.error('Failed to load documents:', { data: error }, 'useOnboardingWorkflow');
       toast.error('Failed to load documents');
     } finally {
       setIsLoading(false);
@@ -67,7 +68,7 @@ export function useOnboardingWorkflow(contractorId: string, onStatusChange?: (st
         onStatusChange('pending_approval');
       }
     } catch (error: any) {
-      console.error('Failed to submit for approval:', error);
+      log.error('Failed to submit for approval:', { data: error }, 'useOnboardingWorkflow');
       toast.error(error.message || 'Failed to submit for approval');
     } finally {
       setIsSubmitting(false);

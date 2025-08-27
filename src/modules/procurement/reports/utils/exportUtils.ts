@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Export utilities for procurement reports
  */
@@ -39,7 +41,7 @@ export function exportToCSV(data: any[], headers: string[], filename: string = '
       URL.revokeObjectURL(url);
     }
   } catch (error) {
-    console.error('Error exporting to CSV:', error);
+    log.error('Error exporting to CSV:', { data: error }, 'exportUtils');
     throw new Error('Failed to export CSV file');
   }
 }
@@ -49,7 +51,7 @@ export function exportToPDF(_data: any, filename: string = 'report'): Promise<vo
   return new Promise((resolve, reject) => {
     try {
       // TODO: Implement PDF export using jsPDF or similar library
-      console.warn('PDF export not yet implemented');
+      log.warn('PDF export not yet implemented', undefined, 'exportUtils');
       alert(`PDF export for ${filename} would be generated here`);
       resolve();
     } catch (error) {
@@ -63,7 +65,7 @@ export function exportToExcel(_data: any, filename: string = 'report'): Promise<
   return new Promise((resolve, reject) => {
     try {
       // TODO: Implement Excel export using xlsx library
-      console.warn('Excel export not yet implemented');
+      log.warn('Excel export not yet implemented', undefined, 'exportUtils');
       alert(`Excel export for ${filename} would be generated here`);
       resolve();
     } catch (error) {
@@ -107,7 +109,7 @@ export async function exportReport(
         throw new Error(`Export format ${options.format} not supported`);
     }
   } catch (error) {
-    console.error('Export failed:', error);
+    log.error('Export failed:', { data: error }, 'exportUtils');
     throw error;
   }
 }

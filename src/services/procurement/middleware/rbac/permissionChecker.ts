@@ -6,6 +6,7 @@
 import { ProjectAccessLevel } from '../projectAccessMiddleware';
 import type { ServiceResponse } from '@/services/core/BaseService';
 import { ProcurementPermission, ProcurementRoles, getRolePermissions } from './permissions';
+import { log } from '@/lib/logger';
 
 // User permission cache interface
 export interface UserPermissionCache {
@@ -123,7 +124,7 @@ export class PermissionChecker {
     defaultMessage: string,
     defaultCode: string
   ): ServiceResponse<boolean> {
-    console.error('[PermissionChecker] Error:', error);
+    log.error('[PermissionChecker] Error:', { data: error }, 'permissionChecker');
     return {
       success: false,
       error: error instanceof Error ? error.message : defaultMessage,

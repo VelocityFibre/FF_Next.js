@@ -11,6 +11,7 @@ import {
 import { db, auth } from '@/config/firebase';
 import { Task, TaskStatus } from '@/types/project.types';
 import { updateStepProgress, updatePhaseProgress, updateProjectProgress } from './progressCalculations';
+import { log } from '@/lib/logger';
 
 /**
  * Get all tasks for a step
@@ -32,7 +33,7 @@ export async function getStepTasks(
       ...doc.data()
     } as Task));
   } catch (error) {
-    console.error('Error getting step tasks:', error);
+    log.error('Error getting step tasks:', { data: error }, 'taskOperations');
     throw new Error('Failed to fetch step tasks');
   }
 }
@@ -71,7 +72,7 @@ export async function createTask(
     
     return docRef.id;
   } catch (error) {
-    console.error('Error creating task:', error);
+    log.error('Error creating task:', { data: error }, 'taskOperations');
     throw new Error('Failed to create task');
   }
 }
@@ -106,7 +107,7 @@ export async function updateTask(
     await updatePhaseProgress(projectId, phaseId);
     await updateProjectProgress(projectId);
   } catch (error) {
-    console.error('Error updating task:', error);
+    log.error('Error updating task:', { data: error }, 'taskOperations');
     throw new Error('Failed to update task');
   }
 }

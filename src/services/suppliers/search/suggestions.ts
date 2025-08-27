@@ -7,6 +7,7 @@ import { Supplier } from '@/types/supplier/base.types';
 import { SearchSuggestionContext, SearchFacets } from './types';
 import { SupplierQueryBuilder } from './queryBuilder';
 import { SupplierScoringService } from './scoring';
+import { log } from '@/lib/logger';
 
 export class SupplierSuggestionsService {
   /**
@@ -29,7 +30,7 @@ export class SupplierSuggestionsService {
       
       return suggestions;
     } catch (error) {
-      console.error('Error getting search suggestions:', error);
+      log.error('Error getting search suggestions:', { data: error }, 'suggestions');
       return { companies: [], categories: [], locations: [] };
     }
   }
@@ -58,7 +59,7 @@ export class SupplierSuggestionsService {
         ratings: SupplierScoringService.calculateRatingDistribution(supplierData)
       };
     } catch (error) {
-      console.error('Error getting search facets:', error);
+      log.error('Error getting search facets:', { data: error }, 'suggestions');
       return { categories: [], locations: [], businessTypes: [], ratings: [] };
     }
   }

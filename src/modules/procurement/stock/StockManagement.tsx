@@ -16,6 +16,7 @@ import {
 import { Button } from '@/shared/components/ui/Button';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/Tabs';
 import type { ProcurementPortalContext } from '@/types/procurement/portal.types';
+import { log } from '@/lib/logger';
 
 // Component imports - TODO: Implement these components
 // import InventoryDashboard from './components/InventoryDashboard';
@@ -82,7 +83,7 @@ export default function StockManagement() {
         setMetrics(mockMetrics);
         setError(null);
       } catch (err) {
-        console.error('Failed to load stock metrics:', err);
+        log.error('Failed to load stock metrics:', { data: err }, 'StockManagement');
         setError('Failed to load stock data. Please try again.');
       } finally {
         setIsLoading(false);

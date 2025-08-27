@@ -5,6 +5,7 @@
 
 import { SyncConfig, FullSyncResult } from './types';
 import { FullSyncOrchestrator } from './fullSync';
+import { log } from '@/lib/logger';
 
 export class PeriodicSyncManager {
   private syncInterval: NodeJS.Timeout | null = null;
@@ -32,17 +33,17 @@ export class PeriodicSyncManager {
     
     this.syncInterval = setInterval(async () => {
       try {
-        console.log(`[SyncCore] Starting scheduled sync (interval: ${this.config.intervalMinutes}m)`);
+        log.info(`[SyncCore] Starting scheduled sync (interval: ${this.config.intervalMinutes}m, undefined, 'periodicSync');`);
         const result = await this.fullSyncOrchestrator.performFullSync();
         this.onSyncComplete(result);
         
         if (result.success) {
 
         } else {
-          console.error(`[SyncCore] Scheduled sync completed with errors - ${result.failedRecords} failures`);
+          log.error(`[SyncCore] Scheduled sync completed with errors - ${result.failedRecords} failures`, undefined, 'periodicSync');
         }
       } catch (error) {
-        console.error('[SyncCore] Scheduled sync failed:', error);
+        log.error('[SyncCore] Scheduled sync failed:', { data: error }, 'periodicSync');
         
         // Create failed sync result
         const failedResult: FullSyncResult = {

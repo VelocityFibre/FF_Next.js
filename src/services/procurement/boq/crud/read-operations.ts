@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../config/firebase';
 import { BOQ, BOQStatusType } from '../../../../types/procurement/boq.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'boqs';
 
@@ -54,7 +55,7 @@ export class BOQReadOperations {
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => this.transformDoc(doc));
     } catch (error) {
-      console.error('Error fetching BOQs:', error);
+      log.error('Error fetching BOQs:', { data: error }, 'read-operations');
       throw error;
     }
   }
@@ -73,7 +74,7 @@ export class BOQReadOperations {
       
       return this.transformDoc(snapshot);
     } catch (error) {
-      console.error('Error fetching BOQ:', error);
+      log.error('Error fetching BOQ:', { data: error }, 'read-operations');
       throw error;
     }
   }
@@ -92,7 +93,7 @@ export class BOQReadOperations {
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => this.transformDoc(doc));
     } catch (error) {
-      console.error('Error fetching BOQs by project:', error);
+      log.error('Error fetching BOQs by project:', { data: error }, 'read-operations');
       throw error;
     }
   }
@@ -111,7 +112,7 @@ export class BOQReadOperations {
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => this.transformDoc(doc));
     } catch (error) {
-      console.error('Error fetching BOQs by status:', error);
+      log.error('Error fetching BOQs by status:', { data: error }, 'read-operations');
       throw error;
     }
   }
@@ -125,7 +126,7 @@ export class BOQReadOperations {
       const snapshot = await getDoc(docRef);
       return snapshot.exists();
     } catch (error) {
-      console.error('Error checking BOQ existence:', error);
+      log.error('Error checking BOQ existence:', { data: error }, 'read-operations');
       return false;
     }
   }
@@ -149,7 +150,7 @@ export class BOQReadOperations {
         boq.version?.toLowerCase().includes(searchTermLower)
       );
     } catch (error) {
-      console.error('Error searching BOQs:', error);
+      log.error('Error searching BOQs:', { data: error }, 'read-operations');
       throw error;
     }
   }

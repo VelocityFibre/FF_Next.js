@@ -13,6 +13,7 @@ import {
 import { db } from '@/config/firebase';
 import { Supplier } from '@/types/supplier/base.types';
 import { SupplierBatchOptions } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -49,7 +50,7 @@ export class SupplierBatchOperations {
 
       return allSuppliers;
     } catch (error) {
-      console.error('Error fetching suppliers by IDs:', error);
+      log.error('Error fetching suppliers by IDs:', { data: error }, 'batch');
       throw new Error(`Failed to fetch suppliers by IDs: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -83,7 +84,7 @@ export class SupplierBatchOperations {
       
       return results;
     } catch (error) {
-      console.error('Error processing supplier batch:', error);
+      log.error('Error processing supplier batch:', { data: error }, 'batch');
       throw new Error(`Failed to process supplier batch: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

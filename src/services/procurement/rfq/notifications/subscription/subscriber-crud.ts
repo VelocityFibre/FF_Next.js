@@ -13,6 +13,7 @@ import {
 import { db } from '@/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
 import { RFQSubscriptionManager } from './subscription-manager';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'rfqs';
 
@@ -98,7 +99,7 @@ export class RFQSubscriberCrud {
 
       callback(rfqs);
     }, (error) => {
-      console.error('Error in custom subscription:', error);
+      log.error('Error in custom subscription:', { data: error }, 'subscriber-crud');
     });
   }
 

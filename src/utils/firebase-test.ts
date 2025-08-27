@@ -1,5 +1,6 @@
 import { auth, db } from '@/config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { log } from '@/lib/logger';
 
 /**
  * Test Firebase connection
@@ -13,7 +14,7 @@ export async function testFirebaseConnection(): Promise<boolean> {
     // Firebase connection successful
     return true;
   } catch (error) {
-    // console.error('❌ Firebase connection failed:', error);
+    // log.error('❌ Firebase connection failed:', { data: error }, 'firebase-test');
     return false;
   }
 }

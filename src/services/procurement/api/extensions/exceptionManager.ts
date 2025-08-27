@@ -4,6 +4,7 @@
  */
 
 import { BOQException, ProcurementContext, CreateBOQExceptionData } from './types';
+import { log } from '@/lib/logger';
 // MOCK DATA REMOVED - This service requires connection to real database
 // Consider using the Firebase-based boqService from '@/services/procurement/boqService'
 
@@ -121,7 +122,7 @@ export class ExceptionManager {
         const updatedException = await this.updateBOQException(context, id, excUpdates);
         updatedExceptions.push(updatedException);
       } catch (error) {
-        console.warn(`Failed to update exception ${id}:`, error);
+        log.warn(`Failed to update exception ${id}:`, { data: error }, 'exceptionManager');
       }
     }
 

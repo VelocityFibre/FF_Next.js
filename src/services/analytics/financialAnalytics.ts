@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { projects, sow } from '@/lib/neon/schema';
 import { eq, gte, sql, count, sum } from 'drizzle-orm';
 import type { FinancialOverview, CashFlowTrend } from './types';
+import { log } from '@/lib/logger';
 
 export class FinancialAnalyticsService {
   /**
@@ -51,7 +52,7 @@ export class FinancialAnalyticsService {
         budgetUtilization: Number(row.totalBudget || 0) > 0 ? (Number(row.actualCost || 0) / Number(row.totalBudget || 0)) * 100 : 0
       }));
     } catch (error) {
-      console.error('Failed to get financial overview:', error);
+      log.error('Failed to get financial overview:', { data: error }, 'financialAnalytics');
       // Return empty structure with zeros instead of throwing
       return [{
         totalInvoices: 0,
@@ -97,7 +98,7 @@ export class FinancialAnalyticsService {
         netFlow: row.netFlow || 0
       }));
     } catch (error) {
-      console.error('Failed to get cash flow trends:', error);
+      log.error('Failed to get cash flow trends:', { data: error }, 'financialAnalytics');
       // Return empty array instead of throwing
       return [];
     }

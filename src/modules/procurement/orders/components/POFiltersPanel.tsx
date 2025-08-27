@@ -8,8 +8,7 @@ import {
   DollarSign,
   User,
   Package,
-  RefreshCw,
-  Loader2
+  RefreshCw
 } from 'lucide-react';
 import {
   VelocityButton,
@@ -26,6 +25,7 @@ import type {
 } from '../../../../types/procurement/po.types';
 import type { Project } from '@/types/project.types';
 import type { Supplier } from '@/services/suppliers/status/types';
+import { log } from '@/lib/logger';
 
 interface POFiltersPanelProps {
   filters: POFilters;
@@ -59,7 +59,7 @@ export const POFiltersPanel: React.FC<POFiltersPanelProps> = ({
         setSuppliers(activeSuppliers);
         setProjects(activeProjects);
       } catch (error) {
-        console.error('Error loading filter data:', error);
+        log.error('Error loading filter data:', { data: error }, 'POFiltersPanel');
         // Set empty arrays instead of mock data on error
         setSuppliers([]);
         setProjects([]);

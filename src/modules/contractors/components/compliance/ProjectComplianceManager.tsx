@@ -11,6 +11,7 @@ import { ComplianceTrackingList } from './project/ComplianceTrackingList';
 import { AddRequirementModal } from './project/AddRequirementModal';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface ProjectComplianceManagerProps {
   projectId: string;
@@ -46,7 +47,7 @@ export function ProjectComplianceManager({
         setComplianceRecords(records);
       }
     } catch (error) {
-      console.error('Failed to load compliance data:', error);
+      log.error('Failed to load compliance data:', { data: error }, 'ProjectComplianceManager');
       toast.error('Failed to load compliance data');
     } finally {
       setIsLoading(false);

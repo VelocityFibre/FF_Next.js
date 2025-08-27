@@ -5,6 +5,7 @@
 
 import { BOQItem, ProcurementContext, CreateBOQItemData } from './types';
 import { BOQItemMappingStatusType } from '@/types/procurement/boq.types';
+import { log } from '@/lib/logger';
 // MOCK DATA REMOVED - This service requires connection to real database
 // Consider using the Firebase-based boqService from '@/services/procurement/boqService'
 
@@ -95,7 +96,7 @@ export class ItemManager {
         const updatedItem = await this.updateBOQItem(context, id, itemUpdates);
         updatedItems.push(updatedItem);
       } catch (error) {
-        console.warn(`Failed to update item ${id}:`, error);
+        log.warn(`Failed to update item ${id}:`, { data: error }, 'itemManager');
       }
     }
 

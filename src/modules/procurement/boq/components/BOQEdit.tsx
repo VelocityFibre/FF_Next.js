@@ -1,11 +1,20 @@
 // import React from 'react'; // Not used in this component
 import { ProcurementErrorBoundary } from '../../components/error/ProcurementErrorBoundary';
+import type { BOQItem } from '@/types/procurement/boq.types';
+
+interface BOQEditProps {
+  boqId: string;
+  projectId: string;
+  onSave: (boqData: Partial<BOQItem>) => Promise<void>;
+  onCancel: () => void;
+  isLoading: boolean;
+}
 
 /**
  * BOQ Edit Form - Following Universal Module Structure
  * EXACT same fields as BOQCreate, pre-populated with existing data
  */
-export function BOQEdit() {
+export function BOQEdit({ boqId: _boqId, projectId: _projectId, onSave: _onSave, onCancel: _onCancel, isLoading: _isLoading }: BOQEditProps) {
   return (
     <ProcurementErrorBoundary level="component">
       <div className="p-6">

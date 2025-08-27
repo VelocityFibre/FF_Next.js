@@ -10,6 +10,7 @@ import { SupplierStatisticsService } from './SupplierStatisticsService';
 import { SupplierEvaluationService } from './SupplierEvaluationService';
 import { SupplierBenchmarkService } from './SupplierBenchmarkService';
 import { SupplierTrendService } from './SupplierTrendService';
+import { log } from '@/lib/logger';
 
 export class SupplierRatingAnalyticsService {
   /**
@@ -125,7 +126,7 @@ export class SupplierRatingAnalyticsService {
         supplierCount: supplierIds?.length || 'all'
       };
     } catch (error) {
-      console.error('Error generating comprehensive report:', error);
+      log.error('Error generating comprehensive report:', { data: error }, 'analyticsService');
       throw error;
     }
   }

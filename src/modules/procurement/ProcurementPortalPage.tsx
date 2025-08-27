@@ -1,11 +1,14 @@
 // 🟢 WORKING: Main Procurement Portal with comprehensive tabbed navigation
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import type { Project } from '@/types/project.types';
+import { ProjectType, ProjectStatus, Priority } from '@/types/project.types';
 import { AlertCircle } from 'lucide-react';
 import { ProcurementTabs } from './components/ProcurementTabs';
 import { ProjectFilter } from './components/ProjectFilter';
 import { ProcurementPortalProvider } from './context/ProcurementPortalProvider';
 import { useProcurementPermissions } from './hooks/useProcurementPermissions';
+import { log } from '@/lib/logger';
 import type { 
   ProcurementTabId, 
   ProcurementViewMode,
@@ -19,18 +22,29 @@ interface ProcurementPortalPageProps {
 }
 
 export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   
   // State management
-  const [selectedProject, setSelectedProject] = useState<{ id: string; name: string; code: string } | undefined>(() => {
+  const [selectedProject, setSelectedProject] = useState<Project | undefined>(() => {
     const projectId = searchParams.get('project');
     const projectName = searchParams.get('projectName');
     const projectCode = searchParams.get('projectCode');
     
     if (projectId && projectName && projectCode) {
-      return { id: projectId, name: projectName, code: projectCode };
+      return {
+        id: projectId,
+        name: projectName,
+        code: projectCode,
+        projectType: ProjectType.FIBRE,
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString(),
+        status: ProjectStatus.ACTIVE,
+        priority: Priority.MEDIUM,
+        plannedProgress: 0,
+        actualProgress: 0,
+        createdBy: 'system',
+        createdAt: new Date().toISOString()
+      };
     }
     return undefined;
   });
@@ -130,7 +144,7 @@ export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) 
       setAggregateMetrics(mockAggregateMetrics);
       setProjectSummaries(mockProjectSummaries);
     } catch (error) {
-      console.error('Error loading aggregate metrics:', error);
+      log.error('Error loading aggregate metrics:', { data: error }, 'ProcurementPortalPage');
       setError('Failed to load aggregate data');
     } finally {
       setIsLoading(false);
@@ -140,7 +154,7 @@ export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) 
   /**
    * Load project-specific data and update tab badges
    */
-  const loadProjectData = async (projectId: string): Promise<void> => {
+  const loadProjectData = async (_projectId: string): Promise<void> => {
     setIsLoading(true);
     try {
       // TODO: Replace with actual API calls
@@ -159,7 +173,7 @@ export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) 
         reports: {}
       });
     } catch (error) {
-      console.error('Error loading project data:', error);
+      log.error('Error loading project data:', { data: error }, 'ProcurementPortalPage');
       setError('Failed to load project data');
     } finally {
       setIsLoading(false);
@@ -167,7 +181,7 @@ export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) 
   };
 
   // Handle project selection
-  const handleProjectChange = (project: { id: string; name: string; code: string } | undefined) => {
+  const handleProjectChange = (project: Project | undefined) => {
     setSelectedProject(project);
     
     // Update URL parameters

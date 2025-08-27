@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ProjectProvider } from '@/contexts/ProjectContext';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import { AppRouter } from './app/router';
+import { log } from '@/lib/logger';
 import './styles/App.css';
 
 const queryClient = new QueryClient({
@@ -22,7 +23,7 @@ function App(): JSX.Element {
       onError={(_error, _errorInfo) => {
         // In production, send to error tracking service
         if (process.env.NODE_ENV === 'development') {
-          // console.error('Global error caught:', error, errorInfo);
+          // log.error('Global error caught:', { data: error, errorInfo }, 'App');
         }
       }}
     >

@@ -9,6 +9,7 @@ import { ScoreCalculator } from './scoreCalculator';
 import { BenchmarkCalculator } from './benchmarkCalculator';
 import { RecommendationGenerator } from './recommendationGenerator';
 import { SupplierUtils } from './utils';
+import { log } from '@/lib/logger';
 
 // Main service - check if it exists
 export { ScorecardService } from './scorecardService';
@@ -49,7 +50,7 @@ export class ScorecardGenerator {
       const result = await ScorecardService.generateSupplierScorecard(supplierId);
       return result.scorecard;
     } catch (error) {
-      console.warn('ScorecardService not available, using fallback');
+      log.warn('ScorecardService not available, using fallback', undefined, 'index');
       return null;
     }
   }
@@ -61,7 +62,7 @@ export class ScorecardGenerator {
     try {
       return ScorecardService.generateMultipleScorecards(supplierIds);
     } catch (error) {
-      console.warn('ScorecardService not available, using fallback');
+      log.warn('ScorecardService not available, using fallback', undefined, 'index');
       return [];
     }
   }

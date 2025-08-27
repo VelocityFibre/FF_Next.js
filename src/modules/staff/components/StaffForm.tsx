@@ -18,6 +18,7 @@ import {
 } from './StaffFormSections';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Timestamp } from 'firebase/firestore';
+import { log } from '@/lib/logger';
 
 export function StaffForm() {
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ export function StaffForm() {
       }
       navigate('/app/staff');
     } catch (error) {
-      console.error('Failed to save staff member:', error);
+      log.error('Failed to save staff member:', { data: error }, 'StaffForm');
     }
   };
 

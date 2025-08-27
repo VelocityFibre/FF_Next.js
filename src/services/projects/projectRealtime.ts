@@ -8,6 +8,7 @@ import {
   Unsubscribe
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   Project,
   ProjectHierarchy,
@@ -35,7 +36,7 @@ export function subscribeToProject(
       callback(null);
     }
   }, (error) => {
-    console.error('Error in project subscription:', error);
+    log.error('Error in project subscription:', { data: error }, 'projectRealtime');
     callback(null);
   });
 }
@@ -64,7 +65,7 @@ export function subscribeToProjects(
     } as Project));
     callback(projects);
   }, (error) => {
-    console.error('Error in projects subscription:', error);
+    log.error('Error in projects subscription:', { data: error }, 'projectRealtime');
     callback([]);
   });
 }
@@ -88,7 +89,7 @@ export function subscribeToProjectPhases(
     } as Phase));
     callback(phases);
   }, (error) => {
-    console.error('Error in phases subscription:', error);
+    log.error('Error in phases subscription:', { data: error }, 'projectRealtime');
     callback([]);
   });
 }
@@ -113,7 +114,7 @@ export function subscribeToPhaseSteps(
     } as Step));
     callback(steps);
   }, (error) => {
-    console.error('Error in steps subscription:', error);
+    log.error('Error in steps subscription:', { data: error }, 'projectRealtime');
     callback([]);
   });
 }
@@ -139,7 +140,7 @@ export function subscribeToStepTasks(
     } as Task));
     callback(tasks);
   }, (error) => {
-    console.error('Error in tasks subscription:', error);
+    log.error('Error in tasks subscription:', { data: error }, 'projectRealtime');
     callback([]);
   });
 }

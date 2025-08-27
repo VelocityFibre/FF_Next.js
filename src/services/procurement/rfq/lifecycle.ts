@@ -17,6 +17,7 @@ import {
 import { db } from '@/config/firebase';
 import { RFQStatus } from '@/types/procurement.types';
 import { RFQOperations } from './operations';
+import { log } from '@/lib/logger';
 
 /**
  * Utility to convert Timestamp or Date to Date object
@@ -76,7 +77,7 @@ export class RFQLifecycle {
         sentBy: 'current-user-id' // TODO: Get from auth context
       });
     } catch (error) {
-      console.error('Error sending RFQ to suppliers:', error);
+      log.error('Error sending RFQ to suppliers:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -105,7 +106,7 @@ export class RFQLifecycle {
       
       return docRef.id;
     } catch (error) {
-      console.error('Error submitting RFQ response:', error);
+      log.error('Error submitting RFQ response:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -127,7 +128,7 @@ export class RFQLifecycle {
         ...doc.data()
       } as any));
     } catch (error) {
-      console.error('Error fetching RFQ responses:', error);
+      log.error('Error fetching RFQ responses:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -157,7 +158,7 @@ export class RFQLifecycle {
       
       // TODO: Notify selected and non-selected suppliers
     } catch (error) {
-      console.error('Error selecting RFQ response:', error);
+      log.error('Error selecting RFQ response:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -200,7 +201,7 @@ export class RFQLifecycle {
         bestPaymentTerms
       };
     } catch (error) {
-      console.error('Error comparing RFQ responses:', error);
+      log.error('Error comparing RFQ responses:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -218,7 +219,7 @@ export class RFQLifecycle {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error closing RFQ:', error);
+      log.error('Error closing RFQ:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -238,7 +239,7 @@ export class RFQLifecycle {
       
       // TODO: Notify suppliers of cancellation
     } catch (error) {
-      console.error('Error cancelling RFQ:', error);
+      log.error('Error cancelling RFQ:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -261,7 +262,7 @@ export class RFQLifecycle {
       
       // TODO: Notify suppliers of deadline extension
     } catch (error) {
-      console.error('Error extending RFQ deadline:', error);
+      log.error('Error extending RFQ deadline:', { data: error }, 'lifecycle');
       throw error;
     }
   }
@@ -283,7 +284,7 @@ export class RFQLifecycle {
       const deadline = toDate(rfq.responseDeadline);
       return new Date() > deadline;
     } catch (error) {
-      console.error('Error checking RFQ deadline:', error);
+      log.error('Error checking RFQ deadline:', { data: error }, 'lifecycle');
       return false;
     }
   }

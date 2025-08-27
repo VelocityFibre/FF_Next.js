@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginCredentials, UserRole } from '@/types/auth.types';
+import { log } from '@/lib/logger';
 import {
   LoginFormProps,
   AuthHeader,
@@ -63,7 +64,7 @@ export function LoginForm({ onSuccess, mode = 'login', onModeChange }: LoginForm
       }
       onSuccess?.();
     } catch (err) {
-      // console.error('Authentication error:', err);
+      // log.error('Authentication error:', { data: err }, 'LoginForm');
       // Error is handled by the auth context
     } finally {
       setIsLoading(false);
@@ -76,7 +77,7 @@ export function LoginForm({ onSuccess, mode = 'login', onModeChange }: LoginForm
       await signInWithGoogleEnhanced(rememberMe);
       onSuccess?.();
     } catch (err) {
-      // console.error('Google sign-in error:', err);
+      // log.error('Google sign-in error:', { data: err }, 'LoginForm');
       // Error is handled by the auth context
     }
   };

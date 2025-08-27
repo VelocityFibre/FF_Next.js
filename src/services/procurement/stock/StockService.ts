@@ -26,6 +26,7 @@ import type {
   StockStatusType
 } from '@/types/procurement/stock';
 import type { ProcurementApiContext } from '../index';
+import { log } from '@/lib/logger';
 
 export interface StockFilters {
   page?: number;
@@ -472,7 +473,7 @@ export class StockService extends BaseService {
       await db.execute('SELECT 1');
       return true;
     } catch (error) {
-      console.error('[StockService] Database connection failed:', error);
+      log.error('[StockService] Database connection failed:', { data: error }, 'StockService');
       return false;
     }
   }

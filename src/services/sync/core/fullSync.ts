@@ -7,6 +7,7 @@ import { ProjectSync } from '../projectSync';
 import { ClientSync } from '../clientSync';
 import { StaffSync } from '../staffSync';
 import { SyncConfig, FullSyncResult, SyncError } from './types';
+import { log } from '@/lib/logger';
 
 export class FullSyncOrchestrator {
   private config: SyncConfig;
@@ -102,7 +103,7 @@ export class FullSyncOrchestrator {
     result.success = result.success && result.errors.length === 0;
 
     if (result.errors.length > 0) {
-      console.warn(`[SyncCore] Full sync had ${result.errors.length} errors`);
+      log.warn(`[SyncCore] Full sync had ${result.errors.length} errors`, undefined, 'fullSync');
     }
 
     return result;

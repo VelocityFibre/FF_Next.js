@@ -9,6 +9,7 @@ import {
   DEFAULT_CONTRACTOR_HEADER_MAPPING 
 } from '@/types/contractor/import.types';
 import { processContractorImportRows } from './rowProcessor';
+import { log } from '@/lib/logger';
 
 /**
  * Import contractors from CSV file
@@ -37,8 +38,7 @@ export async function importContractorsFromCSV(
         }
 
         // 🟢 WORKING: Log header mapping for debugging
-        console.log('Contractor CSV Header mapping:', 
-          headers.map(h => `"${h}" -> "${DEFAULT_CONTRACTOR_HEADER_MAPPING[h] || 'unmapped'}"`)
+        log.info('Contractor CSV Header mapping:', { data: headers.map(h => `"${h}" -> "${DEFAULT_CONTRACTOR_HEADER_MAPPING[h] || 'unmapped'}"` }, 'csvProcessor');
         );
         
         const rows: ContractorImportRow[] = [];

@@ -6,6 +6,7 @@
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { SupplierDocument, DocumentVerificationResult } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -32,7 +33,7 @@ export class DocumentManager {
       });
 
     } catch (error) {
-      console.error('Error adding document:', error);
+      log.error('Error adding document:', { data: error }, 'documentManager');
       throw new Error(`Failed to add document: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -62,7 +63,7 @@ export class DocumentManager {
       });
 
     } catch (error) {
-      console.error('Error removing document:', error);
+      log.error('Error removing document:', { data: error }, 'documentManager');
       throw new Error(`Failed to remove document: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -114,7 +115,7 @@ export class DocumentManager {
 
       return result;
     } catch (error) {
-      console.error('Error verifying document:', error);
+      log.error('Error verifying document:', { data: error }, 'documentManager');
       throw new Error(`Failed to verify document: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

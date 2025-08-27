@@ -7,6 +7,7 @@ import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../../../config/firebase';
 import { Project } from '../../../types/project.types';
 import { ProjectCrudService } from './ProjectCrudService';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'projects';
 
@@ -40,7 +41,7 @@ export class ProjectProgressService {
         updatedAt: serverTimestamp(),
       });
     } catch (error) {
-      console.error('Error updating project progress:', error);
+      log.error('Error updating project progress:', { data: error }, 'ProjectProgressService');
       throw new Error('Failed to update project progress');
     }
   }

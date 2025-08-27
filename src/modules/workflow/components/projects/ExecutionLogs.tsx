@@ -18,6 +18,7 @@ import {
 
 import type { WorkflowExecutionLog, ProjectWorkflow } from '../../types/workflow.types';
 import { formatDate } from '../../../../utils/dateHelpers';
+import { log } from '@/lib/logger';
 
 interface ExecutionLogsProps {
   workflowId?: string;
@@ -123,7 +124,7 @@ export function ExecutionLogs({
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
       ));
     } catch (error) {
-      console.error('Error loading execution logs:', error);
+      log.error('Error loading execution logs:', { data: error }, 'ExecutionLogs');
     } finally {
       setLoading(false);
     }

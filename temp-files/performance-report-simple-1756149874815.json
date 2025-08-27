@@ -1,0 +1,570 @@
+{
+  "timestamp": "2025-08-25T19:21:58.488Z",
+  "browserResults": [
+    {
+      "browser": "chromium",
+      "results": [
+        {
+          "url": "http://localhost:5173/",
+          "viewport": "Desktop",
+          "loadTime": 1496,
+          "metrics": {
+            "domContentLoaded": 644.8000000007451,
+            "loadComplete": 649.5,
+            "firstContentfulPaint": 912,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 17,
+              "total": 23
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:02.798Z"
+        },
+        {
+          "url": "http://localhost:5173/projects",
+          "viewport": "Desktop",
+          "loadTime": 894,
+          "metrics": {
+            "domContentLoaded": 516.0999999977648,
+            "loadComplete": 520.5999999977648,
+            "firstContentfulPaint": 604,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:06.456Z"
+        },
+        {
+          "url": "http://localhost:5173/procurement",
+          "viewport": "Desktop",
+          "loadTime": 848,
+          "metrics": {
+            "domContentLoaded": 485.3999999985099,
+            "loadComplete": 490.30000000074506,
+            "firstContentfulPaint": 568,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:10.117Z"
+        },
+        {
+          "url": "http://localhost:5173/staff",
+          "viewport": "Desktop",
+          "loadTime": 892,
+          "metrics": {
+            "domContentLoaded": 517,
+            "loadComplete": 522.1000000014901,
+            "firstContentfulPaint": 600,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:18.651Z"
+        },
+        {
+          "url": "http://localhost:5173/contractors",
+          "viewport": "Desktop",
+          "loadTime": 969,
+          "metrics": {
+            "domContentLoaded": 606.7999999970198,
+            "loadComplete": 611.6999999992549,
+            "firstContentfulPaint": 696,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:22.316Z"
+        },
+        {
+          "url": "http://localhost:5173/",
+          "viewport": "Tablet",
+          "loadTime": 1391,
+          "metrics": {
+            "domContentLoaded": 590.6999999992549,
+            "loadComplete": 596.3000000007451,
+            "firstContentfulPaint": 808,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 17,
+              "total": 23
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:26.430Z"
+        },
+        {
+          "url": "http://localhost:5173/projects",
+          "viewport": "Tablet",
+          "loadTime": 950,
+          "metrics": {
+            "domContentLoaded": 587.3000000007451,
+            "loadComplete": 591.7000000029802,
+            "firstContentfulPaint": 672,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:30.118Z"
+        },
+        {
+          "url": "http://localhost:5173/procurement",
+          "viewport": "Tablet",
+          "loadTime": 838,
+          "metrics": {
+            "domContentLoaded": 464.3999999985099,
+            "loadComplete": 469.19999999925494,
+            "firstContentfulPaint": 548,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:35.642Z"
+        },
+        {
+          "url": "http://localhost:5173/staff",
+          "viewport": "Tablet",
+          "loadTime": 1397,
+          "metrics": {
+            "domContentLoaded": 1027.800000000745,
+            "loadComplete": 1032.9000000022352,
+            "firstContentfulPaint": 1108,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:39.855Z"
+        },
+        {
+          "url": "http://localhost:5173/contractors",
+          "viewport": "Tablet",
+          "loadTime": 853,
+          "metrics": {
+            "domContentLoaded": 476.1000000014901,
+            "loadComplete": 480.9000000022352,
+            "firstContentfulPaint": 560,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:43.387Z"
+        },
+        {
+          "url": "http://localhost:5173/",
+          "viewport": "Mobile",
+          "loadTime": 1303,
+          "metrics": {
+            "domContentLoaded": 468.30000000074506,
+            "loadComplete": 472.8999999985099,
+            "firstContentfulPaint": 692,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 17,
+              "total": 25
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:47.384Z"
+        },
+        {
+          "url": "http://localhost:5173/projects",
+          "viewport": "Mobile",
+          "loadTime": 902,
+          "metrics": {
+            "domContentLoaded": 520.8000000007451,
+            "loadComplete": 524.5,
+            "firstContentfulPaint": 592,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:50.989Z"
+        },
+        {
+          "url": "http://localhost:5173/procurement",
+          "viewport": "Mobile",
+          "loadTime": 861,
+          "metrics": {
+            "domContentLoaded": 487.19999999925494,
+            "loadComplete": 492.0999999977648,
+            "firstContentfulPaint": 552,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:54.526Z"
+        },
+        {
+          "url": "http://localhost:5173/staff",
+          "viewport": "Mobile",
+          "loadTime": 852,
+          "metrics": {
+            "domContentLoaded": 474,
+            "loadComplete": 478.8999999985099,
+            "firstContentfulPaint": 556,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:22:58.072Z"
+        },
+        {
+          "url": "http://localhost:5173/contractors",
+          "viewport": "Mobile",
+          "loadTime": 919,
+          "metrics": {
+            "domContentLoaded": 558.6999999992549,
+            "loadComplete": 563.3999999985099,
+            "firstContentfulPaint": 648,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": {
+              "used": 14,
+              "total": 17
+            }
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:01.698Z"
+        }
+      ]
+    },
+    {
+      "browser": "firefox",
+      "results": [
+        {
+          "url": "http://localhost:5173/",
+          "viewport": "Desktop",
+          "loadTime": 3296,
+          "metrics": {
+            "domContentLoaded": 2358,
+            "loadComplete": 2358,
+            "firstContentfulPaint": 2487,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:11.679Z"
+        },
+        {
+          "url": "http://localhost:5173/projects",
+          "viewport": "Desktop",
+          "loadTime": 2129,
+          "metrics": {
+            "domContentLoaded": 1564,
+            "loadComplete": 1564,
+            "firstContentfulPaint": 1540,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:17.295Z"
+        },
+        {
+          "url": "http://localhost:5173/procurement",
+          "viewport": "Desktop",
+          "loadTime": 2628,
+          "metrics": {
+            "domContentLoaded": 2026,
+            "loadComplete": 2027,
+            "firstContentfulPaint": 1983,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:27.612Z"
+        },
+        {
+          "url": "http://localhost:5173/staff",
+          "viewport": "Desktop",
+          "loadTime": 2044,
+          "metrics": {
+            "domContentLoaded": 1491,
+            "loadComplete": 1492,
+            "firstContentfulPaint": 1460,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:33.469Z"
+        },
+        {
+          "url": "http://localhost:5173/contractors",
+          "viewport": "Desktop",
+          "loadTime": 1793,
+          "metrics": {
+            "domContentLoaded": 1228,
+            "loadComplete": 1229,
+            "firstContentfulPaint": 1191,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:38.305Z"
+        },
+        {
+          "url": "http://localhost:5173/",
+          "viewport": "Tablet",
+          "loadTime": 2542,
+          "metrics": {
+            "domContentLoaded": 1558,
+            "loadComplete": 1558,
+            "firstContentfulPaint": 1677,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:43.988Z"
+        },
+        {
+          "url": "http://localhost:5173/projects",
+          "viewport": "Tablet",
+          "loadTime": 2005,
+          "metrics": {
+            "domContentLoaded": 1458,
+            "loadComplete": 1458,
+            "firstContentfulPaint": 1425,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:49.079Z"
+        },
+        {
+          "url": "http://localhost:5173/procurement",
+          "viewport": "Tablet",
+          "loadTime": 2723,
+          "metrics": {
+            "domContentLoaded": 2122,
+            "loadComplete": 2123,
+            "firstContentfulPaint": 2077,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:23:54.932Z"
+        },
+        {
+          "url": "http://localhost:5173/staff",
+          "viewport": "Tablet",
+          "loadTime": 1979,
+          "metrics": {
+            "domContentLoaded": 1427,
+            "loadComplete": 1428,
+            "firstContentfulPaint": 1392,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:00.005Z"
+        },
+        {
+          "url": "http://localhost:5173/contractors",
+          "viewport": "Tablet",
+          "loadTime": 2543,
+          "metrics": {
+            "domContentLoaded": 1949,
+            "loadComplete": 1949,
+            "firstContentfulPaint": 1891,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:05.780Z"
+        },
+        {
+          "url": "http://localhost:5173/",
+          "viewport": "Mobile",
+          "loadTime": 2880,
+          "metrics": {
+            "domContentLoaded": 1719,
+            "loadComplete": 1720,
+            "firstContentfulPaint": 1858,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:12.093Z"
+        },
+        {
+          "url": "http://localhost:5173/projects",
+          "viewport": "Mobile",
+          "loadTime": 2466,
+          "metrics": {
+            "domContentLoaded": 1898,
+            "loadComplete": 1898,
+            "firstContentfulPaint": 1862,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:17.703Z"
+        },
+        {
+          "url": "http://localhost:5173/procurement",
+          "viewport": "Mobile",
+          "loadTime": 2165,
+          "metrics": {
+            "domContentLoaded": 1585,
+            "loadComplete": 1585,
+            "firstContentfulPaint": 1559,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:23.113Z"
+        },
+        {
+          "url": "http://localhost:5173/staff",
+          "viewport": "Mobile",
+          "loadTime": 1656,
+          "metrics": {
+            "domContentLoaded": 1091,
+            "loadComplete": 1091,
+            "firstContentfulPaint": 1067,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:27.931Z"
+        },
+        {
+          "url": "http://localhost:5173/contractors",
+          "viewport": "Mobile",
+          "loadTime": 1822,
+          "metrics": {
+            "domContentLoaded": 1245,
+            "loadComplete": 1245,
+            "firstContentfulPaint": 1219,
+            "transferSize": 1218,
+            "encodedBodySize": 918,
+            "requests": 0,
+            "totalTransferSize": 0,
+            "memoryUsage": null
+          },
+          "errors": [],
+          "timestamp": "2025-08-25T19:24:32.852Z"
+        }
+      ]
+    }
+  ]
+}

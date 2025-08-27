@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Users } from 'lucide-react';
 import { staffService } from '@/services/staffService';
 import { StaffImportResult } from '@/types/staff.types';
+import { log } from '@/lib/logger';
 import {
   StaffImportProps,
   FileDropZone,
@@ -61,7 +62,7 @@ export function StaffImport({ onComplete }: StaffImportProps) {
         onComplete();
       }
     } catch (error) {
-      console.error('Import error:', error);
+      log.error('Import error:', { data: error }, 'StaffImport');
       setImportResult({
         success: false,
         total: 0,
@@ -104,7 +105,7 @@ export function StaffImport({ onComplete }: StaffImportProps) {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Export error:', error);
+      log.error('Export error:', { data: error }, 'StaffImport');
       alert('Failed to export staff data');
     }
   };

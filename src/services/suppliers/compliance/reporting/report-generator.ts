@@ -7,6 +7,7 @@ import { ComplianceReport } from './report-types';
 import { ComplianceChecker } from './compliance-checker';
 import { ComplianceCalculator } from './compliance-calculator';
 import { RecommendationEngine } from './recommendation-engine';
+import { log } from '@/lib/logger';
 
 export class ReportGenerator {
   /**
@@ -98,7 +99,7 @@ export class ReportGenerator {
 
       return report;
     } catch (error) {
-      console.error('Error generating compliance report:', error);
+      log.error('Error generating compliance report:', { data: error }, 'report-generator');
       throw new Error(`Failed to generate compliance report: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

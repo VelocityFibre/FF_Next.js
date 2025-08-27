@@ -10,6 +10,7 @@ import {
   PEER_COMPARISON_THRESHOLDS
 } from '../scorecardTypes';
 import { ScorecardCalculator } from '../scorecardCalculator';
+import { log } from '@/lib/logger';
 
 export class BenchmarkCalculator {
   /**
@@ -38,7 +39,7 @@ export class BenchmarkCalculator {
         peerComparison
       };
     } catch (error) {
-      console.error('Error calculating benchmarks:', error);
+      log.error('Error calculating benchmarks:', { data: error }, 'benchmarkCalculator');
       return {
         industryPercentile: 50,
         categoryPercentile: 50,

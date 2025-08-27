@@ -8,6 +8,7 @@ import {
   SupplierTrends,
 } from '../scorecardTypes';
 import { ScorecardCalculator } from '../scorecardCalculator';
+import { log } from '@/lib/logger';
 
 export class TrendsCalculator {
   /**
@@ -29,7 +30,7 @@ export class TrendsCalculator {
         last12Months: this.normalizeScore(currentScore + historicalVariation.longTerm)
       };
     } catch (error) {
-      console.error('Error calculating trends:', error);
+      log.error('Error calculating trends:', { data: error }, 'trendsCalculator');
       return {
         last3Months: currentScore,
         last6Months: currentScore,

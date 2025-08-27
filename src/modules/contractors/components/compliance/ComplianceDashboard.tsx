@@ -12,6 +12,7 @@ import { ComplianceIssuesList } from './dashboard/ComplianceIssuesList';
 import { ComplianceExpiringItems } from './dashboard/ComplianceExpiringItems';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface ComplianceDashboardProps {
   contractorId: string;
@@ -33,7 +34,7 @@ export function ComplianceDashboard({ contractorId, contractorName, projectId }:
       const status = await contractorComplianceService.getComplianceStatus(contractorId, projectId);
       setComplianceStatus(status);
     } catch (error) {
-      console.error('Failed to load compliance status:', error);
+      log.error('Failed to load compliance status:', { data: error }, 'ComplianceDashboard');
       toast.error('Failed to load compliance status');
     } finally {
       setIsLoading(false);

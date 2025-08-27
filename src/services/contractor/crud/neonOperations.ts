@@ -8,6 +8,7 @@ import { contractors } from '@/lib/neon/schema';
 import { eq, count, and } from 'drizzle-orm';
 import { NewContractor } from '@/lib/neon/schema';
 import { ContractorFormData, ContractorAnalytics } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 /**
  * Create contractor record in Neon for analytics
@@ -59,7 +60,7 @@ export async function createContractorInNeon(id: string, data: ContractorFormDat
     
     await neonDb.insert(contractors).values(neonData);
   } catch (error) {
-    console.warn('Failed to sync contractor to Neon:', error);
+    log.warn('Failed to sync contractor to Neon:', { data: error }, 'neonOperations');
     // Don't fail the entire operation for analytics sync issues
     throw error;
   }
@@ -91,7 +92,7 @@ export async function updateContractorInNeon(id: string, data: Partial<Contracto
         .where(eq(contractors.id, id));
     }
   } catch (error) {
-    console.warn('Failed to sync contractor update to Neon:', error);
+    log.warn('Failed to sync contractor update to Neon:', { data: error }, 'neonOperations');
     throw error;
   }
 }
@@ -105,7 +106,7 @@ export async function deleteContractorFromNeon(id: string): Promise<void> {
       .delete(contractors)
       .where(eq(contractors.id, id));
   } catch (error) {
-    console.warn('Failed to delete contractor from Neon:', error);
+    log.warn('Failed to delete contractor from Neon:', { data: error }, 'neonOperations');
     throw error;
   }
 }
@@ -198,7 +199,7 @@ export async function getContractorAnalytics(): Promise<ContractorAnalytics> {
       pendingDocuments: 0,
     };
   } catch (error) {
-    console.error('Error getting contractor analytics:', error);
+    log.error('Error getting contractor analytics:', { data: error }, 'neonOperations');
     throw new Error('Failed to fetch contractor analytics');
   }
 }

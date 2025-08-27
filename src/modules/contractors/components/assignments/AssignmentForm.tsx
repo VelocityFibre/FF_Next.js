@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { X, Briefcase } from 'lucide-react';
 import { ContractorTeam } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 interface AssignmentFormData {
   projectId: string;
@@ -50,7 +51,7 @@ export function AssignmentForm({ teams, onSubmit, onCancel }: AssignmentFormProp
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error('Failed to create assignment:', error);
+      log.error('Failed to create assignment:', { data: error }, 'AssignmentForm');
     } finally {
       setIsSubmitting(false);
     }

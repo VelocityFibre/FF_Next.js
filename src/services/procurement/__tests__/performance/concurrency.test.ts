@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { procurementApiService } from '../../procurementApiService';
+import { log } from '@/lib/logger';
 import {
   createMockContext,
   setupMocks,
@@ -86,11 +87,11 @@ describe('Concurrency Performance', () => {
       expect(successfulResults.length).toBeGreaterThan(0); // At least some should succeed
       expect(successfulResults.length + throttledResults.length).toBe(concurrentRequests);
       
-      console.log('Concurrent Operations Test:', {
+      log.info('Concurrent Operations Test:', { data: {
         total: concurrentRequests,
         successful: successfulResults.length,
         throttled: throttledResults.length,
-        successRate: `${(successfulResults.length / concurrentRequests * 100).toFixed(1)}%`
+        successRate: `${(successfulResults.length / concurrentRequests * 100 }, 'concurrency');}.toFixed(1)}%`
       });
     });
 
@@ -163,10 +164,10 @@ describe('Concurrency Performance', () => {
       expect(averageResponseTime).toBeLessThan(5000); // Average under 5 seconds
       expect(maxResponseTime).toBeLessThan(10000); // Max under 10 seconds
       
-      console.log('Connection Pool Test:', {
+      log.info('Connection Pool Test:', { data: {
         totalRequests: concurrentRequests,
         successful: successfulResults.length,
-        successRate: `${(successfulResults.length / concurrentRequests * 100).toFixed(1)}%`,
+        successRate: `${(successfulResults.length / concurrentRequests * 100 }, 'concurrency');}.toFixed(1)}%`,
         avgResponseTime: `${averageResponseTime.toFixed(0)}ms`,
         maxResponseTime: `${maxResponseTime.toFixed(0)}ms`
       });
@@ -240,12 +241,12 @@ describe('Concurrency Performance', () => {
       // Should take reasonable time (indicating throttling is working)
       expect(totalTime).toBeGreaterThan(100); // At least 100ms for 100 requests (shows throttling)
       
-      console.log('Throttling Test:', {
+      log.info('Throttling Test:', { data: {
         totalRequests: burstRequests,
         successful: successfulRequests.length,
         throttled: throttledRequests.length,
         totalTime: `${totalTime}ms`,
-        requestsPerSecond: (burstRequests / (totalTime / 1000)).toFixed(1)
+        requestsPerSecond: (burstRequests / (totalTime / 1000 }, 'concurrency');}).toFixed(1)
       });
     });
   });
@@ -338,10 +339,10 @@ describe('Concurrency Performance', () => {
       // Response times should vary due to lock contention
       expect(maxResponseTime).toBeGreaterThan(minResponseTime * 1.5); // Max > 1.5x min (shows contention)
       
-      console.log('Lock Contention Test:', {
+      log.info('Lock Contention Test:', { data: {
         concurrentUpdates,
         successful: successfulResults.length,
-        avgResponseTime: `${avgResponseTime.toFixed(0)}ms`,
+        avgResponseTime: `${avgResponseTime.toFixed(0 }, 'concurrency');}}ms`,
         minResponseTime: `${minResponseTime.toFixed(0)}ms`,
         maxResponseTime: `${maxResponseTime.toFixed(0)}ms`,
         contentionRatio: (maxResponseTime / minResponseTime).toFixed(2)
@@ -419,10 +420,10 @@ describe('Concurrency Performance', () => {
       
       expect(avgTransactionTime).toBeLessThan(3000); // Average transaction time under 3 seconds
       
-      console.log('Transaction Isolation Test:', {
+      log.info('Transaction Isolation Test:', { data: {
         concurrentTransactions,
         successful: successfulTransactions.length,
-        avgTransactionTime: `${avgTransactionTime.toFixed(0)}ms`,
+        avgTransactionTime: `${avgTransactionTime.toFixed(0 }, 'concurrency');}}ms`,
         isolationEfficiency: `${(successfulTransactions.length / concurrentTransactions * 100).toFixed(1)}%`
       });
     });
@@ -492,10 +493,10 @@ describe('Concurrency Performance', () => {
       // Load should be reasonably balanced (some imbalance is normal)
       expect(loadImbalance).toBeLessThan(0.3); // Less than 30% imbalance
       
-      console.log('Load Balancing Test:', {
+      log.info('Load Balancing Test:', { data: {
         totalRequests,
         successful: successfulRequests.length,
-        instanceLoads: Object.fromEntries(instanceLoad),
+        instanceLoads: Object.fromEntries(instanceLoad }, 'concurrency');},
         loadImbalance: `${(loadImbalance * 100).toFixed(1)}%`
       });
     });
@@ -586,11 +587,11 @@ describe('Concurrency Performance', () => {
       // Should maintain high availability despite failover
       expect(successfulRequests.length).toBeGreaterThan(totalRequests * 0.7); // > 70% success rate
       
-      console.log('Failover Test:', {
+      log.info('Failover Test:', { data: {
         totalRequests,
         successful: successfulRequests.length,
         failed: failedRequests.length,
-        availability: `${(successfulRequests.length / totalRequests * 100).toFixed(1)}%`,
+        availability: `${(successfulRequests.length / totalRequests * 100 }, 'concurrency');}.toFixed(1)}%`,
         primaryHealthy: instanceHealth.get('primary')
       });
     });

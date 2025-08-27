@@ -4,6 +4,7 @@
  */
 
 import { FirebaseError } from 'firebase/app';
+import { log } from '@/lib/logger';
 
 export interface ServiceResponse<T> {
   success: boolean;
@@ -38,7 +39,7 @@ export abstract class BaseService {
    * Standardized error handling for all services
    */
   public handleError(error: unknown, operation: string): ServiceResponse<never> {
-    console.error(`[${this.serviceName}] Error in ${operation}:`, error);
+    log.error(`[${this.serviceName}] Error in ${operation}:`, { data: error }, 'BaseService');
 
     if (error instanceof FirebaseError) {
       return {

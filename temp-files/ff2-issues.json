@@ -1,0 +1,32 @@
+[
+  {
+    "title": "[FF2-001] Fix TypeScript Errors in Services Layer",
+    "body": "## Task\nFix all TypeScript errors in src/services directory\n\n## Current Status\n- Errors: 400+ in services\n- Priority: HIGH\n\n## Agent Assignment\n- Type: code-implementer\n- Instance: 1\n\n## Success Criteria\n- Zero TypeScript errors in services/",
+    "labels": ["ff2-task", "typescript", "bug", "parallel-execution"]
+  },
+  {
+    "title": "[FF2-002] Fix TypeScript Errors in UI Layer", 
+    "body": "## Task\nFix all TypeScript errors in pages/modules/components\n\n## Current Status\n- Errors: 300+ in UI\n- Priority: HIGH\n\n## Agent Assignment\n- Type: code-implementer\n- Instance: 2\n\n## Success Criteria\n- Zero TypeScript errors in UI layer",
+    "labels": ["ff2-task", "typescript", "bug", "parallel-execution"]
+  },
+  {
+    "title": "[FF2-003] Fix ESLint Errors",
+    "body": "## Task\nFix all ESLint errors (42 remaining)\n\n## Current Status\n- Errors: 42\n- Warnings: 1503\n- Priority: MEDIUM\n\n## Agent Assignment\n- Type: code-quality-reviewer\n- Instance: 3\n\n## Success Criteria\n- Zero ESLint errors",
+    "labels": ["ff2-task", "eslint", "code-quality", "parallel-execution"]
+  },
+  {
+    "title": "[FF2-004] Performance Optimization",
+    "body": "## Task\nOptimize bundle size and performance\n\n## Current Status\n- Build time: 19.5s\n- Bundle chunks: 8\n- Priority: MEDIUM\n\n## Agent Assignment\n- Type: performance-optimizer\n- Instance: 4\n\n## Success Criteria\n- Maintain <20s build time\n- Optimize lazy loading",
+    "labels": ["ff2-task", "performance", "enhancement", "parallel-execution"]
+  },
+  {
+    "title": "[FF2-005] Security Hardening",
+    "body": "## Task\nComplete security audit and fixes\n\n## Current Status\n- npm audit: 18 vulnerabilities\n- Priority: HIGH\n\n## Agent Assignment\n- Type: security-auditor\n- Instance: 5\n\n## Success Criteria\n- Zero high/critical vulnerabilities",
+    "labels": ["ff2-task", "security", "parallel-execution"]
+  },
+  {
+    "title": "[FF2-006] Test Coverage Validation",
+    "body": "## Task\nEnsure all fixes have proper test coverage\n\n## Current Status\n- Coverage: Unknown\n- Priority: MEDIUM\n\n## Agent Assignment\n- Type: test-coverage-validator\n- Instance: 6\n\n## Success Criteria\n- >90% test coverage\n- All tests pass",
+    "labels": ["ff2-task", "testing", "parallel-execution"]
+  }
+]

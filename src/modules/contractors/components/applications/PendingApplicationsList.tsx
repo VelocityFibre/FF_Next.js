@@ -25,6 +25,7 @@ import { contractorService } from '@/services/contractorService';
 import { ApplicationFilters } from './ApplicationFilters';
 import { ApplicationTable } from './ApplicationTable';
 import { BulkApplicationActions } from './ApplicationActions';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Props interface for PendingApplicationsList
 interface PendingApplicationsListProps {
@@ -112,7 +113,7 @@ export function PendingApplicationsList({
       setApplications(applicationSummaries);
       
       // DEBUG: Log application statuses
-      console.log('🔍 DEBUG - Application statuses:', {
+      log.info('🔍 DEBUG - Application statuses:', { data: {
         totalApplications: applicationSummaries.length,
         statusBreakdown: applicationSummaries.reduce((acc, app) => {
           acc[app.status] = (acc[app.status] || 0) + 1;
@@ -124,7 +125,7 @@ export function PendingApplicationsList({
           statusType: typeof app.status,
           statusLength: app.status?.length
         }))
-      });
+      } }, 'PendingApplicationsList');
       
       // Calculate quick stats
       const stats: QuickStats = {
@@ -135,11 +136,11 @@ export function PendingApplicationsList({
         averageProcessingDays: applicationSummaries.reduce((sum, app) => sum + app.daysInReview, 0) / applicationSummaries.length || 0
       };
       
-      console.log('📊 DEBUG - Calculated stats:', stats);
+      log.info('📊 DEBUG - Calculated stats:', { data: stats }, 'PendingApplicationsList');
       setQuickStats(stats);
       
     } catch (err) {
-      console.error('Failed to load applications:', err);
+      log.error('Failed to load applications:', { data: err }, 'PendingApplicationsList');
       setError('Failed to load applications. Please try again.');
       setApplications([]);
     } finally {
@@ -215,7 +216,7 @@ export function PendingApplicationsList({
       );
 
       // TODO: Show success toast notification
-      console.log(`Action ${action} completed for contractor ${contractorId}`);
+      log.info(`Action ${action} completed for contractor ${contractorId}`, undefined, 'PendingApplicationsList');
 
       return {
         contractorId,
@@ -225,7 +226,7 @@ export function PendingApplicationsList({
         timestamp: new Date()
       };
     } catch (error) {
-      console.error(`Failed to execute action ${action}:`, error);
+      log.error(`Failed to execute action ${action}:`, { data: error }, 'PendingApplicationsList');
       return {
         contractorId,
         action,
@@ -273,7 +274,7 @@ export function PendingApplicationsList({
   const handleExport = async () => {
     try {
       // TODO: Implement actual export functionality
-      console.log('Exporting applications data...');
+      log.info('Exporting applications data...', undefined, 'PendingApplicationsList');
       
       const csvContent = [
         ['Company', 'Contact', 'Status', 'Progress', 'Application Date', 'Days in Review'],
@@ -297,7 +298,7 @@ export function PendingApplicationsList({
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Export failed:', error);
+      log.error('Export failed:', { data: error }, 'PendingApplicationsList');
       // TODO: Show error toast
     }
   };

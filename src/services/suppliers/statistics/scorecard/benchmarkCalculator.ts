@@ -7,6 +7,7 @@ import { Supplier } from '@/types/supplier/base.types';
 import { TrendData, BenchmarkData } from './types';
 import { ScoreCalculator } from './scoreCalculator';
 import { SupplierUtils } from './utils';
+import { log } from '@/lib/logger';
 
 export class BenchmarkCalculator {
   /**
@@ -109,7 +110,7 @@ export class BenchmarkCalculator {
         peerComparison
       };
     } catch (error) {
-      console.error('Error calculating benchmarks:', error);
+      log.error('Error calculating benchmarks:', { data: error }, 'benchmarkCalculator');
       return {
         industryPercentile: 50,
         categoryPercentile: 50,
@@ -147,8 +148,9 @@ export class BenchmarkCalculator {
         };
       }
 
-      const _supplierScore = ScoreCalculator.calculateOverallScore(supplier);
-      void _supplierScore; // Variable calculated but not used in this function
+      const supplierScore = ScoreCalculator.calculateOverallScore(supplier);
+      // Note: supplierScore could be used for additional validation or logging
+      // Currently focusing on categoryScores below
       const categoryScores = categorySuppliers
         .map(s => ({
           id: s.id,
@@ -174,7 +176,7 @@ export class BenchmarkCalculator {
         topPerformers
       };
     } catch (error) {
-      console.error('Error calculating category benchmarks:', error);
+      log.error('Error calculating category benchmarks:', { data: error }, 'benchmarkCalculator');
       return {
         percentile: 50,
         rank: 1,
@@ -199,8 +201,9 @@ export class BenchmarkCalculator {
       const supplierCrudService = await import('../../supplier.crud');
       const allSuppliers = await supplierCrudService.SupplierCrudService.getAll();
       
-      const _supplierScore = ScoreCalculator.calculateOverallScore(supplier);
-      void _supplierScore; // Variable calculated but not used in this function
+      const supplierScore = ScoreCalculator.calculateOverallScore(supplier);
+      // Note: supplierScore could be used for regional comparison validation
+      // Currently using supplier location for geographic ranking
       const supplierAddress = supplier.addresses?.physical;
 
       if (!supplierAddress) {
@@ -246,7 +249,7 @@ export class BenchmarkCalculator {
         regionPercentile: Math.round(regionPercentile)
       };
     } catch (error) {
-      console.error('Error calculating regional benchmarks:', error);
+      log.error('Error calculating regional benchmarks:', { data: error }, 'benchmarkCalculator');
       return {
         cityRank: 1,
         provinceRank: 1,

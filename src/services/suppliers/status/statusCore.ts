@@ -5,6 +5,7 @@
 
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   SupplierStatus, 
   StatusUpdateData 
@@ -24,7 +25,7 @@ export class StatusCore {
       const updateData = this.buildStatusUpdateData(status, reason, userId);
       await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
     } catch (error) {
-      console.error(`Error updating supplier status for ${id}:`, error);
+      log.error(`Error updating supplier status for ${id}:`, { data: error }, 'statusCore');
       throw new Error(`Failed to update supplier status: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -141,7 +142,7 @@ export class StatusCore {
       const updateData = this.buildPreferenceUpdateData(isPreferred, userId);
       await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
     } catch (error) {
-      console.error(`Error updating supplier preference for ${id}:`, error);
+      log.error(`Error updating supplier preference for ${id}:`, { data: error }, 'statusCore');
       throw new Error(`Failed to update supplier preference: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

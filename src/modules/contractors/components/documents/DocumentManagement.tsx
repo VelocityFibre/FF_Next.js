@@ -9,6 +9,7 @@ import { contractorService } from '@/services/contractorService';
 import { ContractorDocument, DocumentType } from '@/types/contractor.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface DocumentManagementProps {
   contractorId: string;
@@ -30,7 +31,7 @@ export function DocumentManagement({ contractorId, contractorName }: DocumentMan
       const docs = await contractorService.documents.getByContractor(contractorId);
       setDocuments(docs);
     } catch (error) {
-      console.error('Failed to load documents:', error);
+      log.error('Failed to load documents:', { data: error }, 'DocumentManagement');
       toast.error('Failed to load documents');
     } finally {
       setIsLoading(false);

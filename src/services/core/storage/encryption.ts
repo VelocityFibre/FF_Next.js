@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Storage Encryption
  * Handles encryption and decryption of stored data
@@ -16,7 +18,7 @@ export class StorageEncryption {
     try {
       return btoa(data);
     } catch (error) {
-      console.warn('Encryption failed:', error);
+      log.warn('Encryption failed:', { data: error }, 'encryption');
       return data;
     }
   }
@@ -32,7 +34,7 @@ export class StorageEncryption {
     try {
       return atob(data);
     } catch (error) {
-      console.warn('Decryption failed:', error);
+      log.warn('Decryption failed:', { data: error }, 'encryption');
       return data;
     }
   }

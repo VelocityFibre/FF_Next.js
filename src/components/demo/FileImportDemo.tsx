@@ -8,13 +8,32 @@ import { Upload, FileText, BarChart3, Clock, Cpu } from 'lucide-react';
 import { FileImportUtils, FileImportBenchmark } from '@/services/fileImport';
 import type { FileProcessingResult } from '@/services/fileImport';
 
+interface BenchmarkResult {
+  strategy: string;
+  processingTime: number;
+  memoryPeak: number;
+  rowsPerSecond: number;
+  success: boolean;
+  error?: string;
+}
+
+interface FileImportBenchmarkResult {
+  file: {
+    name: string;
+    size: number;
+    type: string;
+  };
+  results: BenchmarkResult[];
+  recommendation: string;
+}
+
 interface DemoState {
   file: File | null;
   processing: boolean;
   progress: number;
   result: FileProcessingResult | null;
   error: string | null;
-  benchmark: any | null;
+  benchmark: FileImportBenchmarkResult | null;
   logs: string[];
 }
 
@@ -222,7 +241,7 @@ export function FileImportDemo() {
       <div className="bg-purple-50 p-4 rounded-lg mb-4">
         <h3 className="text-lg font-medium mb-2">Benchmark Results</h3>
         <div className="space-y-2">
-          {state.benchmark.results.map((result: any, index: number) => (
+          {state.benchmark.results.map((result: BenchmarkResult, index: number) => (
             <div key={index} className="flex justify-between items-center p-2 bg-white rounded border">
               <span className="font-medium capitalize">{result.strategy}</span>
               <div className="text-sm text-gray-600">

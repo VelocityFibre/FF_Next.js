@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { projectsService, Project } from '@/services/projectsService';
+import { log } from '@/lib/logger';
 
 export function useNeonProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -14,7 +15,7 @@ export function useNeonProjects() {
       setError(null);
     } catch (err) {
       setError('Failed to fetch projects');
-      console.error('Error fetching projects:', err);
+      log.error('Error fetching projects:', { data: err }, 'useNeonProjects');
     } finally {
       setLoading(false);
     }

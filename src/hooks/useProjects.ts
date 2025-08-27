@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { projectService } from '@/services/projectService';
+import { log } from '@/lib/logger';
 import { 
   ProjectFormData, 
   ProjectFilter 
@@ -86,7 +87,7 @@ export function useCreateProject() {
       queryClient.invalidateQueries({ queryKey: projectKeys.summary() });
     },
     onError: (error) => {
-      console.error('Failed to create project:', error);
+      log.error('Failed to create project:', { data: error }, 'useProjects');
     },
   });
 }
@@ -108,7 +109,7 @@ export function useUpdateProject() {
       queryClient.invalidateQueries({ queryKey: projectKeys.summary() });
     },
     onError: (error) => {
-      console.error('Failed to update project:', error);
+      log.error('Failed to update project:', { data: error }, 'useProjects');
     },
   });
 }
@@ -129,7 +130,7 @@ export function useDeleteProject() {
       queryClient.invalidateQueries({ queryKey: projectKeys.summary() });
     },
     onError: (error) => {
-      console.error('Failed to delete project:', error);
+      log.error('Failed to delete project:', { data: error }, 'useProjects');
     },
   });
 }
@@ -148,7 +149,7 @@ export function useInitializeProjectPhases() {
       queryClient.invalidateQueries({ queryKey: projectKeys.hierarchy(variables.projectId) });
     },
     onError: (error) => {
-      console.error('Failed to initialize project phases:', error);
+      log.error('Failed to initialize project phases:', { data: error }, 'useProjects');
     },
   });
 }
@@ -168,7 +169,7 @@ export function useUpdateProjectProgress() {
       queryClient.invalidateQueries({ queryKey: projectKeys.summary() });
     },
     onError: (error) => {
-      console.error('Failed to update project progress:', error);
+      log.error('Failed to update project progress:', { data: error }, 'useProjects');
     },
   });
 }

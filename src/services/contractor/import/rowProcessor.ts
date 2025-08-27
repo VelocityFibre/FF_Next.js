@@ -11,6 +11,7 @@ import {
 import { Contractor } from '@/types/contractor/base.types';
 import { validateContractorData, normalizeContractorData } from './validators';
 import { contractorService } from '@/services/contractorService';
+import { log } from '@/lib/logger';
 
 /**
  * Process contractor import rows with validation and duplicate detection
@@ -82,7 +83,7 @@ export async function processContractorImportRows(
             continue;
           } else {
             // For overwrite mode, we'll update existing contractor
-            console.log(`Will overwrite contractor: ${normalizedRow.email}`);
+            log.info(`Will overwrite contractor: ${normalizedRow.email}`, undefined, 'rowProcessor');
           }
         }
         
@@ -136,14 +137,14 @@ export async function processContractorImportRows(
     result.success = result.imported > 0 || (result.total === 0);
     
     // 🟢 WORKING: Log import summary
-    console.log(`Contractor import summary:`, {
+    log.info(`Contractor import summary:`, { data: {
       total: result.total,
       imported: result.imported,
       failed: result.failed,
       duplicates: result.duplicates,
       errors: result.errors.length
-    });
-    
+    }, 'rowProcessor');;
+    ;
     return result;
     
   } catch (error) {
@@ -251,7 +252,7 @@ async function createContractorFromRow(
     return contractor;
     
   } catch (error) {
-    console.error(`Failed to create contractor from row ${rowNumber}:`, error);
+    log.error(`Failed to create contractor from row ${rowNumber}:`, { data: error }, 'rowProcessor');
     return null;
   }
 }
@@ -300,7 +301,7 @@ async function batchInsertContractors(
         insertedContractors.push(result);
         
       } catch (contractorError) {
-        console.error(`Failed to insert contractor ${contractor.companyName}:`, contractorError);
+        log.error(`Failed to insert contractor ${contractor.companyName}:`, { data: contractorError }, 'rowProcessor');
         // Continue with other contractors
       }
     }

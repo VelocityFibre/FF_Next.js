@@ -4,6 +4,7 @@
  */
 
 import type { ContractorImportRow, BusinessType, SAProvince } from '@/types/contractor/import.types';
+import { log } from '@/lib/logger';
 import { 
   BUSINESS_TYPES, 
   SA_PROVINCES, 
@@ -58,7 +59,7 @@ export class ContractorImportValidator {
           return;
         }
       } catch (apiError) {
-        console.warn('Service templates API not available for validation, using fallback services:', apiError);
+        log.warn('Service templates API not available for validation, using fallback services:', { data: apiError }, 'contractorImportValidator');
       }
       
       // Fallback to comprehensive service list
@@ -91,7 +92,7 @@ export class ContractorImportValidator {
       ];
         
     } catch (error) {
-      console.error('Failed to load any services for validation:', error);
+      log.error('Failed to load any services for validation:', { data: error }, 'contractorImportValidator');
       // Final fallback to basic services
       this.availableServices = ['Service Delivery', 'Civil', 'Optical'];
     }

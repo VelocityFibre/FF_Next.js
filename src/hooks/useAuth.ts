@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import { User as FirebaseUser, onAuthStateChanged } from 'firebase/auth';
+import { log } from '@/lib/logger';
 
 export interface AuthUser {
   id: string;
@@ -47,7 +48,7 @@ export function useAuth(): UseAuthResult {
         setIsLoading(false);
       },
       (error) => {
-        console.error('Auth state change error:', error);
+        log.error('Auth state change error:', { data: error }, 'useAuth');
         setError(error.message);
         setIsLoading(false);
       }

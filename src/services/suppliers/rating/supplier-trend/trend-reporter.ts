@@ -5,6 +5,7 @@
 
 import { SupplierRatingAnalyzer } from './rating-analyzer';
 import { SupplierPerformanceTracker } from './performance-tracker';
+import { log } from '@/lib/logger';
 import type { 
   TrendSummaryReport, 
   CategoryTrend, 
@@ -71,7 +72,7 @@ export class SupplierTrendReporter {
       
       return categoryTrends;
     } catch (error) {
-      console.error('Error getting category trends:', error);
+      log.error('Error getting category trends:', { data: error }, 'trend-reporter');
       return {};
     }
   }
@@ -122,7 +123,7 @@ export class SupplierTrendReporter {
         recommendations
       };
     } catch (error) {
-      console.error('Error generating trend summary report:', error);
+      log.error('Error generating trend summary report:', { data: error }, 'trend-reporter');
       throw error;
     }
   }
@@ -164,7 +165,7 @@ export class SupplierTrendReporter {
         recommendations
       };
     } catch (error) {
-      console.error('Error generating advanced analytics report:', error);
+      log.error('Error generating advanced analytics report:', { data: error }, 'trend-reporter');
       throw error;
     }
   }

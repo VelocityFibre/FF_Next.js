@@ -6,6 +6,7 @@
 import { Supplier } from '@/types/supplier/base.types';
 import { ScorecardScoreCalculator } from './score-calculator';
 import type { TrendData, BenchmarkData } from './scorecard-types';
+import { log } from '@/lib/logger';
 
 export class ScorecardBenchmarkAnalyzer {
   /**
@@ -76,7 +77,7 @@ export class ScorecardBenchmarkAnalyzer {
         peerComparison
       };
     } catch (error) {
-      console.error('Error calculating benchmarks:', error);
+      log.error('Error calculating benchmarks:', { data: error }, 'benchmark-analyzer');
       return {
         industryPercentile: 50,
         categoryPercentile: 50,

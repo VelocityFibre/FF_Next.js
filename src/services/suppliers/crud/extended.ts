@@ -14,6 +14,7 @@ import { db } from '@/config/firebase';
 import { SupplierStatus } from '@/types/supplier/base.types';
 import { SupplierBaseCrud } from './base';
 import { SupplierSoftDeleteData } from './types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -40,7 +41,7 @@ export class SupplierExtendedOperations {
 
       await SupplierBaseCrud.update(id, updateData as any);
     } catch (error) {
-      console.error(`Error soft deleting supplier ${id}:`, error);
+      log.error(`Error soft deleting supplier ${id}:`, { data: error }, 'extended');
       throw error;
     }
   }
@@ -58,7 +59,7 @@ export class SupplierExtendedOperations {
       const snapshot = await getDocs(q);
       return snapshot.size;
     } catch (error) {
-      console.error('Error getting active supplier count:', error);
+      log.error('Error getting active supplier count:', { data: error }, 'extended');
       return 0;
     }
   }
@@ -76,7 +77,7 @@ export class SupplierExtendedOperations {
       const snapshot = await getDocs(q);
       return snapshot.size;
     } catch (error) {
-      console.error(`Error getting supplier count for status ${status}:`, error);
+      log.error(`Error getting supplier count for status ${status}:`, { data: error }, 'extended');
       return 0;
     }
   }
@@ -100,7 +101,7 @@ export class SupplierExtendedOperations {
       
       return snapshot.empty;
     } catch (error) {
-      console.error('Error checking code uniqueness:', error);
+      log.error('Error checking code uniqueness:', { data: error }, 'extended');
       return false;
     }
   }
@@ -124,7 +125,7 @@ export class SupplierExtendedOperations {
       
       return snapshot.empty;
     } catch (error) {
-      console.error('Error checking email uniqueness:', error);
+      log.error('Error checking email uniqueness:', { data: error }, 'extended');
       return false;
     }
   }
@@ -142,7 +143,7 @@ export class SupplierExtendedOperations {
       const snapshot = await getDocs(q);
       return snapshot.size;
     } catch (error) {
-      console.error('Error getting preferred supplier count:', error);
+      log.error('Error getting preferred supplier count:', { data: error }, 'extended');
       return 0;
     }
   }
@@ -163,7 +164,7 @@ export class SupplierExtendedOperations {
 
       await SupplierBaseCrud.update(id, updateData);
     } catch (error) {
-      console.error(`Error reactivating supplier ${id}:`, error);
+      log.error(`Error reactivating supplier ${id}:`, { data: error }, 'extended');
       throw error;
     }
   }

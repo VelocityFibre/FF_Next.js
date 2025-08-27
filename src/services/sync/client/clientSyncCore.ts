@@ -12,6 +12,7 @@ import { ClientMetricsCalculator } from './metrics';
 import { ClientClassification } from './classification';
 import { ClientDataAccess } from './dataAccess';
 import type { FirebaseClientData, SyncResult } from './types';
+import { log } from '@/lib/logger';
 
 export class ClientSyncCore {
   /**
@@ -38,7 +39,7 @@ export class ClientSyncCore {
           errorCount++;
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
           errors.push(`Client ${client.id}: ${errorMessage}`);
-          console.error(`Failed to sync client ${client.id}:`, error);
+          log.error(`Failed to sync client ${client.id}:`, { data: error }, 'clientSyncCore');
         }
       }
 
@@ -51,7 +52,7 @@ export class ClientSyncCore {
         errors: errors.length > 0 ? errors : undefined
       };
     } catch (error) {
-      console.error('Failed to sync clients:', error);
+      log.error('Failed to sync clients:', { data: error }, 'clientSyncCore');
       return {
         type: 'clients',
         success: false,
@@ -106,7 +107,7 @@ export class ClientSyncCore {
 
       await ClientDataAccess.upsertClientAnalytics(clientId, analyticsData);
     } catch (error) {
-      console.error(`Failed to sync client ${clientId}:`, error);
+      log.error(`Failed to sync client ${clientId}:`, { data: error }, 'clientSyncCore');
       throw error;
     }
   }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Installation, FilterStatus } from '../types/installation.types';
 import { calculateInstallationStats } from '../utils/installationUtils';
+import { log } from '@/lib/logger';
 
 export function useHomeInstallations() {
   const [installations, setInstallations] = useState<Installation[]>([]);
@@ -25,7 +26,7 @@ export function useHomeInstallations() {
       
       setInstallations(installations);
     } catch (error) {
-      console.error('Error loading installations:', error);
+      log.error('Error loading installations:', { data: error }, 'useHomeInstallations');
       setInstallations([]); // Ensure empty state on error
     }
   };

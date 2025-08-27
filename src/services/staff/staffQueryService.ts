@@ -6,6 +6,7 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   StaffMember,
   StaffDropdownOption,
@@ -45,7 +46,7 @@ export const staffQueryService = {
           maxProjectCount: staff.maxProjectCount || 5,
         } as StaffDropdownOption));
     } catch (error) {
-      console.error('Error getting active staff:', error);
+      log.error('Error getting active staff:', { data: error }, 'staffQueryService');
       throw new Error('Failed to fetch active staff');
     }
   },
@@ -99,7 +100,7 @@ export const staffQueryService = {
           maxProjectCount: staff.maxProjectCount || 5,
         } as StaffDropdownOption));
     } catch (error) {
-      console.error('Error getting project managers:', error);
+      log.error('Error getting project managers:', { data: error }, 'staffQueryService');
       throw new Error('Failed to fetch project managers');
     }
   },
@@ -157,7 +158,7 @@ export const staffQueryService = {
       
       return summary;
     } catch (error) {
-      console.error('Error getting staff summary:', error);
+      log.error('Error getting staff summary:', { data: error }, 'staffQueryService');
       throw new Error('Failed to fetch staff summary');
     }
   },
@@ -179,7 +180,7 @@ export const staffQueryService = {
         ...doc.data()
       } as ProjectAssignment));
     } catch (error) {
-      console.error('Error getting project assignments:', error);
+      log.error('Error getting project assignments:', { data: error }, 'staffQueryService');
       throw new Error('Failed to fetch project assignments');
     }
   },
@@ -202,7 +203,7 @@ export const staffQueryService = {
         ...doc.data()
       } as ProjectAssignment));
     } catch (error) {
-      console.error('Error getting staff assignments:', error);
+      log.error('Error getting staff assignments:', { data: error }, 'staffQueryService');
       throw new Error('Failed to fetch staff assignments');
     }
   },

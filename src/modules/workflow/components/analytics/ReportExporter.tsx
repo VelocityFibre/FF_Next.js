@@ -19,6 +19,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { WorkflowAnalytics } from '../../types/workflow.types';
+import { log } from '@/lib/logger';
 
 interface ReportExporterProps {
   analytics: WorkflowAnalytics | null;
@@ -268,7 +269,7 @@ ${data.insights.map((insight: any) => `
           break;
       }
     } catch (error) {
-      console.error('Export failed:', error);
+      log.error('Export failed:', { data: error }, 'ReportExporter');
     } finally {
       setIsExporting(false);
     }

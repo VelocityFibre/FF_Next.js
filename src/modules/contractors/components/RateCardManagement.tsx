@@ -29,6 +29,7 @@ import {
 import { RateCardApiService } from '@/services/contractor';
 import { formatDate } from '@/utils/dateHelpers';
 import { formatCurrency } from '@/lib/utils';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Main Rate Card Management Component
 export function RateCardManagement({ 
@@ -67,7 +68,7 @@ export function RateCardManagement({
         
       } catch (err) {
         setError('Failed to load rate cards');
-        console.error('Error loading rate cards:', err);
+        log.error('Error loading rate cards:', { data: err }, 'RateCardManagement');
       } finally {
         setLoading(false);
       }
@@ -103,7 +104,7 @@ export function RateCardManagement({
       setRateCards(prev => [clonedCard, ...prev]);
       onRateCardCreate?.(clonedCard);
     } catch (err) {
-      console.error('Error cloning rate card:', err);
+      log.error('Error cloning rate card:', { data: err }, 'RateCardManagement');
       setError('Failed to clone rate card');
     }
   };
@@ -124,7 +125,7 @@ export function RateCardManagement({
       ));
       onRateCardUpdate?.(updatedCard);
     } catch (err) {
-      console.error('Error archiving rate card:', err);
+      log.error('Error archiving rate card:', { data: err }, 'RateCardManagement');
       setError('Failed to archive rate card');
     }
   };
@@ -139,7 +140,7 @@ export function RateCardManagement({
       setRateCards(prev => prev.filter(card => card.id !== rateCard.id));
       onRateCardDelete?.(rateCard.id);
     } catch (err) {
-      console.error('Error deleting rate card:', err);
+      log.error('Error deleting rate card:', { data: err }, 'RateCardManagement');
       setError('Failed to delete rate card');
     }
   };
@@ -152,7 +153,7 @@ export function RateCardManagement({
       ));
       onRateCardUpdate?.(updatedCard);
     } catch (err) {
-      console.error('Error submitting for approval:', err);
+      log.error('Error submitting for approval:', { data: err }, 'RateCardManagement');
       setError('Failed to submit rate card for approval');
     }
   };

@@ -11,6 +11,7 @@ import { contractorService } from '@/services/contractorService';
 import { DocumentType, ContractorDocument } from '@/types/contractor.types';
 import { DOCUMENT_TYPE_LABELS } from '../types/documentUpload.types';
 import { validateUploadFile } from '../utils/documentUtils';
+import { log } from '@/lib/logger';
 
 export function useDocumentUpload(
   contractorId: string,
@@ -73,7 +74,7 @@ export function useDocumentUpload(
 
       toast.success('Document uploaded successfully');
     } catch (error: any) {
-      console.error('Upload error:', error);
+      log.error('Upload error:', { data: error }, 'useDocumentUpload');
       toast.error(error.message || 'Failed to upload document');
     } finally {
       setIsUploading(false);
@@ -93,7 +94,7 @@ export function useDocumentUpload(
       }
       toast.success('Document removed successfully');
     } catch (error: any) {
-      console.error('Remove error:', error);
+      log.error('Remove error:', { data: error }, 'useDocumentUpload');
       toast.error(error.message || 'Failed to remove document');
     }
   };

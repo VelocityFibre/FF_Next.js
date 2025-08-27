@@ -9,6 +9,7 @@ import { RealtimeSyncManager } from './realtimeSync';
 import { PeriodicSyncManager } from './periodicSync';
 import { FullSyncOrchestrator } from './fullSync';
 import { SyncStatisticsManager } from './statistics';
+import { log } from '@/lib/logger';
 
 export class SyncCoreOrchestrator {
   private isRunning = false;
@@ -45,7 +46,7 @@ export class SyncCoreOrchestrator {
    */
   async startSync(): Promise<void> {
     if (this.isRunning) {
-      console.warn('[SyncCore] Sync is already running');
+      log.warn('[SyncCore] Sync is already running', undefined, 'orchestrator');
       return;
     }
 
@@ -69,7 +70,7 @@ export class SyncCoreOrchestrator {
       this.handleSyncComplete(initialSyncResult);
 
     } catch (error) {
-      console.error('[SyncCore] Failed to start sync services:', error);
+      log.error('[SyncCore] Failed to start sync services:', { data: error }, 'orchestrator');
       await this.stopSync();
       throw error;
     }
@@ -80,7 +81,7 @@ export class SyncCoreOrchestrator {
    */
   async stopSync(): Promise<void> {
     if (!this.isRunning) {
-      console.warn('[SyncCore] Sync is not running');
+      log.warn('[SyncCore] Sync is not running', undefined, 'orchestrator');
       return;
     }
 

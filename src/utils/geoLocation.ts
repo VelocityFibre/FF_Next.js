@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Geolocation utilities for reverse geocoding in South Africa
  */
@@ -62,7 +64,7 @@ export async function reverseGeocode(lat: number, lng: number): Promise<Location
     };
 
   } catch (error) {
-    // console.error('Reverse geocoding failed:', error);
+    // log.error('Reverse geocoding failed:', { data: error }, 'geoLocation');
     return null;
   }
 }

@@ -5,6 +5,7 @@
 
 import { contractorImportService } from './contractorImportService';
 import { ContractorImportResult } from '@/types/contractor/import.types';
+import { log } from '@/lib/logger';
 
 // Mock the contractor service
 jest.mock('@/services/contractorService', () => ({
@@ -280,7 +281,7 @@ Test Company,John Smith,john@test.co.za,TEST/001`;
       expect(result.total).toBe(500);
       expect(duration).toBeLessThan(10000); // Should complete within 10 seconds
       
-      console.log(`Processed ${result.total} contractors in ${duration}ms`);
+      log.info(`Processed ${result.total} contractors in ${duration}ms`, undefined, 'integration');
     });
   });
 

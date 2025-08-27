@@ -6,6 +6,7 @@
 import { Supplier } from '@/types/supplier/base.types';
 import { PerformanceTrends, PerformanceBenchmarks, TrendAnalysis, BenchmarkStats } from './analyzer-types';
 import { PerformanceMetricsCalculator } from './performance-metrics';
+import { log } from '@/lib/logger';
 
 export class PerformanceAnalysisEngine {
   /**
@@ -155,7 +156,7 @@ export class PerformanceAnalysisEngine {
 
       return trends;
     } catch (error) {
-      console.error('Error generating performance trends:', error);
+      log.error('Error generating performance trends:', { data: error }, 'analyzer-engine');
       return [];
     }
   }
@@ -220,7 +221,7 @@ export class PerformanceAnalysisEngine {
         lastUpdated: new Date().toISOString()
       };
     } catch (error) {
-      console.error('Error generating performance benchmarks:', error);
+      log.error('Error generating performance benchmarks:', { data: error }, 'analyzer-engine');
       return {
         overall: this.calculateBenchmarkStats([]),
         byCategory: {},
@@ -277,7 +278,7 @@ export class PerformanceAnalysisEngine {
 
       return analyses;
     } catch (error) {
-      console.error('Error analyzing trends:', error);
+      log.error('Error analyzing trends:', { data: error }, 'analyzer-engine');
       return [];
     }
   }

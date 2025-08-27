@@ -8,6 +8,7 @@ import { ClientFormFields } from './ClientFormFields';
 import { ContactFields } from './ContactFields';
 import { AddressFields } from './AddressFields';
 import { ServiceBillingFields } from './ServiceBillingFields';
+import { log } from '@/lib/logger';
 
 export function ClientForm() {
   const navigate = useNavigate();
@@ -125,7 +126,7 @@ export function ClientForm() {
       }
       navigate('/app/clients');
     } catch (error) {
-      console.error('Error saving client:', error);
+      log.error('Error saving client:', { data: error }, 'index');
     }
   };
 

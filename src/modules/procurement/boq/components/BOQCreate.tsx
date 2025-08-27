@@ -1,11 +1,19 @@
 // import React from 'react'; // Not used in this component
 import { ProcurementErrorBoundary } from '../../components/error/ProcurementErrorBoundary';
+import type { BOQItem } from '@/types/procurement/boq.types';
+
+interface BOQCreateProps {
+  projectId: string;
+  onSave: (boqData: Partial<BOQItem>) => Promise<void>;
+  onCancel: () => void;
+  isLoading: boolean;
+}
 
 /**
  * BOQ Create Form - Following Universal Module Structure
  * This is the MASTER template that defines all BOQ fields
  */
-export function BOQCreate() {
+export function BOQCreate({ projectId: _projectId, onSave: _onSave, onCancel: _onCancel, isLoading: _isLoading }: BOQCreateProps) {
   return (
     <ProcurementErrorBoundary level="component">
       <div className="p-6">

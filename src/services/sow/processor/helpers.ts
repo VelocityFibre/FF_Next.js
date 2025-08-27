@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Helper functions for data extraction and parsing
  */
@@ -49,7 +51,7 @@ export function extractDate(row: Record<string, unknown>, possibleKeys: string[]
         return date.toISOString();
       }
     } catch (e) {
-      console.warn('Failed to parse date:', value);
+      log.warn('Failed to parse date:', { data: value }, 'helpers');
     }
   }
   return undefined;

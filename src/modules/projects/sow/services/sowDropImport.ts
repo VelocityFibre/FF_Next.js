@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { DropImportRow } from '../types/sowImport.types';
+import { log } from '@/lib/logger';
 
 export class SOWDropImportService {
   private readonly BATCH_SIZE = 500;
@@ -111,7 +112,7 @@ export class SOWDropImportService {
 
       return results;
     } catch (error) {
-      console.error('Error importing drops:', error);
+      log.error('Error importing drops:', { data: error }, 'sowDropImport');
       throw error;
     }
   }

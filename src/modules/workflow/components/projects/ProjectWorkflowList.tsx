@@ -20,6 +20,7 @@ import { WorkflowProgress } from './WorkflowProgress';
 import { WorkflowTimeline } from './WorkflowTimeline';
 import type { ProjectWorkflow } from '../../types/workflow.types';
 import { formatDate, formatDuration } from '../../../../utils/dateHelpers';
+import { log } from '@/lib/logger';
 
 interface ProjectWorkflowListProps {
   workflows: ProjectWorkflow[];
@@ -85,7 +86,7 @@ export function ProjectWorkflowList({
         setExpandedWorkflow(expandedWorkflow === workflowId ? null : workflowId);
         break;
       default:
-        console.log(`Action ${action} for workflow ${workflowId}`);
+        log.info(`Action ${action} for workflow ${workflowId}`, undefined, 'ProjectWorkflowList');
     }
   };
 

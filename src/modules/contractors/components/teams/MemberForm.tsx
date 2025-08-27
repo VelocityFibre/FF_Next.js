@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { X, User } from 'lucide-react';
 import { MemberFormData, TeamMember } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 interface MemberFormProps {
   member?: TeamMember;
@@ -58,7 +59,7 @@ export function MemberForm({ member, onSubmit, onCancel }: MemberFormProps) {
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error('Failed to save member:', error);
+      log.error('Failed to save member:', { data: error }, 'MemberForm');
     } finally {
       setIsSubmitting(false);
     }

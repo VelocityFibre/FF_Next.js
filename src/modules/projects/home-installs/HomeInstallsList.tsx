@@ -9,6 +9,7 @@ import { HomeInstall } from './types/home-install.types';
 import { HomeInstallsHeader } from './components/HomeInstallsHeader';
 import { HomeInstallsTable } from './components/HomeInstallsTable';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { log } from '@/lib/logger';
 import { 
   filterHomeInstalls, 
   exportInstallsToCSV, 
@@ -44,7 +45,7 @@ export function HomeInstallsList() {
       setInstalls(mockInstalls);
       setFilteredInstalls(mockInstalls);
     } catch (error) {
-      console.error('Error loading installations:', error);
+      log.error('Error loading installations:', { data: error }, 'HomeInstallsList');
     } finally {
       setLoading(false);
     }

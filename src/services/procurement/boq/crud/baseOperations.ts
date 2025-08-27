@@ -18,6 +18,7 @@ import {
 import { db } from '../../../../config/firebase';
 import { BOQ, BOQFormData } from '../../../../types/procurement/boq.types';
 import { BOQDataTransformers } from './dataTransformers';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'boqs';
 
@@ -37,7 +38,7 @@ export class BOQBaseOperations {
         BOQDataTransformers.transformFirestoreDoc(doc)
       );
     } catch (error) {
-      console.error('Error fetching BOQs:', error);
+      log.error('Error fetching BOQs:', { data: error }, 'baseOperations');
       throw error;
     }
   }
@@ -56,7 +57,7 @@ export class BOQBaseOperations {
       
       return BOQDataTransformers.transformFirestoreDoc(snapshot);
     } catch (error) {
-      console.error('Error fetching BOQ:', error);
+      log.error('Error fetching BOQ:', { data: error }, 'baseOperations');
       throw error;
     }
   }
@@ -77,7 +78,7 @@ export class BOQBaseOperations {
       
       return docRef.id;
     } catch (error) {
-      console.error('Error creating BOQ:', error);
+      log.error('Error creating BOQ:', { data: error }, 'baseOperations');
       throw error;
     }
   }
@@ -96,7 +97,7 @@ export class BOQBaseOperations {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating BOQ:', error);
+      log.error('Error updating BOQ:', { data: error }, 'baseOperations');
       throw error;
     }
   }
@@ -108,7 +109,7 @@ export class BOQBaseOperations {
     try {
       await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
-      console.error('Error deleting BOQ:', error);
+      log.error('Error deleting BOQ:', { data: error }, 'baseOperations');
       throw error;
     }
   }
@@ -122,7 +123,7 @@ export class BOQBaseOperations {
       const snapshot = await getDoc(docRef);
       return snapshot.exists();
     } catch (error) {
-      console.error('Error checking BOQ existence:', error);
+      log.error('Error checking BOQ existence:', { data: error }, 'baseOperations');
       return false;
     }
   }
@@ -143,7 +144,7 @@ export class BOQBaseOperations {
       
       await Promise.all(promises);
     } catch (error) {
-      console.error('Error batch updating BOQs:', error);
+      log.error('Error batch updating BOQs:', { data: error }, 'baseOperations');
       throw error;
     }
   }

@@ -6,6 +6,7 @@
 import { StaffImportRow, StaffImportResult } from '@/types/staff.types';
 import { DEFAULT_HEADER_MAPPING } from './types';
 import { processImportRows } from './rowProcessor';
+import { log } from '@/lib/logger';
 
 /**
  * Import staff from CSV file
@@ -20,7 +21,7 @@ export async function importFromCSV(file: File, overwriteExisting: boolean = tru
         const lines = text.split('\n').filter(line => line.trim());
         const headers = lines[0].split(',').map(h => h.trim());
 
-        console.log('Header mapping will be:', headers.map(h => `${h} -> ${DEFAULT_HEADER_MAPPING[h] || 'unmapped'}`));
+        log.info('Header mapping will be:', { data: headers.map(h => `${h} -> ${DEFAULT_HEADER_MAPPING[h] || 'unmapped'}` }, 'csvProcessor'););
         
         const rows: StaffImportRow[] = [];
         

@@ -3,6 +3,7 @@ import { storage } from '@/config/firebase';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import type { PhotoType } from '../types/pole.types';
 import { POLE_QUERIES } from '../queries/poleQueries';
+import { log } from '@/lib/logger';
 
 export class PhotoManagementService {
   /**
@@ -44,7 +45,7 @@ export class PhotoManagementService {
       const storageRef = ref(storage, photoUrl);
       await deleteObject(storageRef);
     } catch (error) {
-      console.warn('Failed to delete photo from storage:', error);
+      log.warn('Failed to delete photo from storage:', { data: error }, 'photoManagementService');
     }
 
     // Remove URL from database

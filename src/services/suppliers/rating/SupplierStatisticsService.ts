@@ -6,6 +6,7 @@
 import { RatingStatistics } from './types';
 import { SupplierCrudService } from '../supplier.crud';
 import { SupplierRatingManager } from './ratingManager';
+import { log } from '@/lib/logger';
 
 export class SupplierStatisticsService {
   /**
@@ -54,7 +55,7 @@ export class SupplierStatisticsService {
         categoryAverages
       };
     } catch (error) {
-      console.error('Error getting rating statistics:', error);
+      log.error('Error getting rating statistics:', { data: error }, 'SupplierStatisticsService');
       throw new Error(`Failed to get rating statistics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -93,7 +94,7 @@ export class SupplierStatisticsService {
 
       return breakdown;
     } catch (error) {
-      console.error('Error getting rating breakdown:', error);
+      log.error('Error getting rating breakdown:', { data: error }, 'SupplierStatisticsService');
       return {
         excellent: 0,
         good: 0,
@@ -120,7 +121,7 @@ export class SupplierStatisticsService {
 
       return categoryCounts;
     } catch (error) {
-      console.error('Error getting supplier count by category:', error);
+      log.error('Error getting supplier count by category:', { data: error }, 'SupplierStatisticsService');
       return {};
     }
   }
@@ -173,7 +174,7 @@ export class SupplierStatisticsService {
         lowVolumeSuppliers
       };
     } catch (error) {
-      console.error('Error getting review volume stats:', error);
+      log.error('Error getting review volume stats:', { data: error }, 'SupplierStatisticsService');
       return {
         totalReviews: 0,
         averageReviewsPerSupplier: 0,
@@ -246,7 +247,7 @@ export class SupplierStatisticsService {
 
       return distribution;
     } catch (error) {
-      console.error('Error getting performance distribution:', error);
+      log.error('Error getting performance distribution:', { data: error }, 'SupplierStatisticsService');
       return {};
     }
   }

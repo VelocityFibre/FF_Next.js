@@ -14,6 +14,7 @@ import {
 import { db } from '@/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
 import type { SubscriptionFilter } from './subscription-types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'rfqs';
 const RESPONSES_COLLECTION = 'rfq_responses';
@@ -36,7 +37,7 @@ export class RFQSubscriptionManager {
         } as RFQ);
       }
     }, (error) => {
-      console.error('Error subscribing to RFQ:', error);
+      log.error('Error subscribing to RFQ:', { data: error }, 'subscription-manager');
     });
   }
 
@@ -60,7 +61,7 @@ export class RFQSubscriptionManager {
       } as any));
       callback(responses);
     }, (error) => {
-      console.error('Error subscribing to RFQ responses:', error);
+      log.error('Error subscribing to RFQ responses:', { data: error }, 'subscription-manager');
     });
   }
 
@@ -84,7 +85,7 @@ export class RFQSubscriptionManager {
       } as RFQ));
       callback(rfqs);
     }, (error) => {
-      console.error('Error subscribing to project RFQs:', error);
+      log.error('Error subscribing to project RFQs:', { data: error }, 'subscription-manager');
     });
   }
 
@@ -108,7 +109,7 @@ export class RFQSubscriptionManager {
       } as RFQ));
       callback(rfqs);
     }, (error) => {
-      console.error('Error subscribing to RFQs by status:', error);
+      log.error('Error subscribing to RFQs by status:', { data: error }, 'subscription-manager');
     });
   }
 
@@ -138,7 +139,7 @@ export class RFQSubscriptionManager {
       } as RFQ));
       callback(rfqs);
     }, (error) => {
-      console.error('Error subscribing to all RFQs:', error);
+      log.error('Error subscribing to all RFQs:', { data: error }, 'subscription-manager');
     });
   }
 
@@ -167,7 +168,7 @@ export class RFQSubscriptionManager {
       } as RFQ));
       callback(rfqs);
     }, (error) => {
-      console.error('Error subscribing to supplier RFQs:', error);
+      log.error('Error subscribing to supplier RFQs:', { data: error }, 'subscription-manager');
     });
   }
 }

@@ -11,6 +11,7 @@ import type { NewProjectAnalytics } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';
 import { FirebaseProjectData, SyncResult } from './types';
 import { SyncUtils } from './syncUtils';
+import { log } from '@/lib/logger';
 
 /**
  * Project synchronization service
@@ -40,7 +41,7 @@ export class ProjectSync {
           errorCount++;
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
           errors.push(`Project ${project.id}: ${errorMessage}`);
-          console.error(`Failed to sync project ${project.id}:`, error);
+          log.error(`Failed to sync project ${project.id}:`, { data: error }, 'projectSync');
         }
       }
 
@@ -53,7 +54,7 @@ export class ProjectSync {
         errors: errors.length > 0 ? errors : undefined
       };
     } catch (error) {
-      console.error('Failed to sync projects:', error);
+      log.error('Failed to sync projects:', { data: error }, 'projectSync');
       return {
         type: 'projects',
         success: false,
@@ -101,7 +102,7 @@ export class ProjectSync {
 
       await this.upsertProjectAnalytics(projectId, analyticsData);
     } catch (error) {
-      console.error(`Failed to sync project ${projectId}:`, error);
+      log.error(`Failed to sync project ${projectId}:`, { data: error }, 'projectSync');
       throw error;
     }
   }
@@ -138,7 +139,7 @@ export class ProjectSync {
         errors: errors.length > 0 ? errors : undefined
       };
     } catch (error) {
-      console.error(`Failed to sync projects for client ${clientId}:`, error);
+      log.error(`Failed to sync projects for client ${clientId}:`, { data: error }, 'projectSync');
       return {
         type: 'projects',
         success: false,
@@ -162,7 +163,7 @@ export class ProjectSync {
         ...doc.data() 
       })) as FirebaseProjectData[];
     } catch (error) {
-      console.error('Failed to get client projects:', error);
+      log.error('Failed to get client projects:', { data: error }, 'projectSync');
       return [];
     }
   }
@@ -288,7 +289,7 @@ export class ProjectSync {
         avgSyncTime
       };
     } catch (error) {
-      console.error('Failed to get project sync statistics:', error);
+      log.error('Failed to get project sync statistics:', { data: error }, 'projectSync');
       return {
         totalProjects: 0,
         lastSyncTime: null,

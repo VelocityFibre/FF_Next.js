@@ -14,6 +14,7 @@ import {
   RegionAnalysis
 } from './location-types';
 import { LocationMetricsCalculator } from './location-metrics';
+import { log } from '@/lib/logger';
 
 export class GeographicAnalyzer {
   /**
@@ -26,7 +27,7 @@ export class GeographicAnalyzer {
       
       return LocationMetricsCalculator.calculateLocationDistribution(suppliers);
     } catch (error) {
-      console.error('Error getting location distribution:', error);
+      log.error('Error getting location distribution:', { data: error }, 'geographic-analyzer');
       return [];
     }
   }
@@ -41,7 +42,7 @@ export class GeographicAnalyzer {
       
       return LocationMetricsCalculator.calculateProvinceDistribution(suppliers);
     } catch (error) {
-      console.error('Error getting province distribution:', error);
+      log.error('Error getting province distribution:', { data: error }, 'geographic-analyzer');
       return [];
     }
   }
@@ -94,7 +95,7 @@ export class GeographicAnalyzer {
 
       return nearbySuppliers;
     } catch (error) {
-      console.error('Error finding suppliers near location:', error);
+      log.error('Error finding suppliers near location:', { data: error }, 'geographic-analyzer');
       return [];
     }
   }
@@ -114,7 +115,7 @@ export class GeographicAnalyzer {
         diversityScore: metrics.diversityScore
       };
     } catch (error) {
-      console.error('Error analyzing location concentration:', error);
+      log.error('Error analyzing location concentration:', { data: error }, 'geographic-analyzer');
       return {
         totalLocations: 0,
         topLocations: [],
@@ -134,7 +135,7 @@ export class GeographicAnalyzer {
       
       return LocationMetricsCalculator.getSuppliersWithoutLocation(suppliers);
     } catch (error) {
-      console.error('Error getting suppliers without location:', error);
+      log.error('Error getting suppliers without location:', { data: error }, 'geographic-analyzer');
       return [];
     }
   }
@@ -150,7 +151,7 @@ export class GeographicAnalyzer {
       
       return LocationMetricsCalculator.calculateLocationSummary(suppliers, distribution);
     } catch (error) {
-      console.error('Error generating location summary:', error);
+      log.error('Error generating location summary:', { data: error }, 'geographic-analyzer');
       return {
         totalSuppliers: 0,
         suppliersWithLocation: 0,
@@ -237,7 +238,7 @@ export class GeographicAnalyzer {
 
       return analyses.sort((a, b) => b.supplierCount - a.supplierCount);
     } catch (error) {
-      console.error('Error analyzing regional performance:', error);
+      log.error('Error analyzing regional performance:', { data: error }, 'geographic-analyzer');
       return [];
     }
   }
@@ -301,7 +302,7 @@ export class GeographicAnalyzer {
         recommendations
       };
     } catch (error) {
-      console.error('Error identifying expansion opportunities:', error);
+      log.error('Error identifying expansion opportunities:', { data: error }, 'geographic-analyzer');
       return {
         underservedRegions: [],
         growingMarkets: [],
@@ -362,7 +363,7 @@ export class GeographicAnalyzer {
         concentrationScore: Math.round(concentration.concentrationIndex * 100)
       };
     } catch (error) {
-      console.error('Error calculating location risk:', error);
+      log.error('Error calculating location risk:', { data: error }, 'geographic-analyzer');
       return {
         riskLevel: 'low',
         riskFactors: [],

@@ -4,6 +4,7 @@
  */
 
 import { ComplianceAuditResult, SupplierDocument } from './types';
+import { log } from '@/lib/logger';
 
 export class ComplianceAuditService {
   /**
@@ -91,7 +92,7 @@ export class ComplianceAuditService {
 
       return result;
     } catch (error) {
-      console.error('Error performing compliance audit:', error);
+      log.error('Error performing compliance audit:', { data: error }, 'auditService');
       throw new Error(`Failed to perform compliance audit: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -226,7 +227,7 @@ export class ComplianceAuditService {
         }
       });
     } catch (error) {
-      console.error('Error getting suppliers by compliance status:', error);
+      log.error('Error getting suppliers by compliance status:', { data: error }, 'auditService');
       return [];
     }
   }
@@ -275,7 +276,7 @@ export class ComplianceAuditService {
         }
       };
     } catch (error) {
-      console.error('Error getting compliance statistics:', error);
+      log.error('Error getting compliance statistics:', { data: error }, 'auditService');
       return {
         totalSuppliers: 0,
         complianceRate: 0,

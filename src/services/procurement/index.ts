@@ -46,6 +46,7 @@ import { boqApiService } from './boqApiService';
 import { projectAccessMiddleware } from './middleware/projectAccessMiddleware';
 import { rbacMiddleware, ProcurementPermission } from './middleware/rbacMiddleware';
 import { handleProcurementError } from './procurementErrors';
+import { log } from '@/lib/logger';
 
 // API Context interface for external integrations
 export interface ProcurementApiContext {
@@ -174,7 +175,7 @@ export const ProcurementUtils = {
       
       return permissionCheck.success && permissionCheck.data === true;
     } catch (error) {
-      console.error('[ProcurementUtils] Error checking procurement access:', error);
+      log.error('[ProcurementUtils] Error checking procurement access:', { data: error }, 'index');
       return false;
     }
   },
@@ -189,7 +190,7 @@ export const ProcurementUtils = {
 
       return Array.from(userPermissions.data!.permissions);
     } catch (error) {
-      console.error('[ProcurementUtils] Error getting user permissions:', error);
+      log.error('[ProcurementUtils] Error getting user permissions:', { data: error }, 'index');
       return [];
     }
   },

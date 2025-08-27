@@ -23,6 +23,7 @@ import { ContractorDocument } from '@/types/contractor.types';
 import { DocumentPreviewData } from './types/documentApproval.types';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface DocumentViewerProps {
   /**
@@ -142,7 +143,7 @@ export function DocumentViewer({
       setPreviewData(preview);
       
     } catch (err) {
-      console.error('Failed to load document preview:', err);
+      log.error('Failed to load document preview:', { data: err }, 'DocumentViewer');
       setError('Failed to load document preview');
       toast.error('Failed to load document preview');
     } finally {
@@ -219,7 +220,7 @@ export function DocumentViewer({
       
       toast.success('Download started');
     } catch (error) {
-      console.error('Failed to download document:', error);
+      log.error('Failed to download document:', { data: error }, 'DocumentViewer');
       toast.error('Failed to download document');
     }
   }, [document]);

@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Rate Card API Service
  * Handles all API operations for contractor rate card management system
@@ -61,10 +63,10 @@ export class ServiceTemplateApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching service templates:', error);
+      log.error('Error fetching service templates:', { data: error }, 'rateCardApiService');
       
       // Return fallback service templates for development
-      console.log('🔄 Using fallback service templates for development');
+      log.info('🔄 Using fallback service templates for development', undefined, 'rateCardApiService');
       const fallbackServices = [
         'Fibre Installation',
         'Network Maintenance', 
@@ -115,7 +117,7 @@ export class ServiceTemplateApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching service template:', error);
+      log.error('Error fetching service template:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -139,7 +141,7 @@ export class ServiceTemplateApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error creating service template:', error);
+      log.error('Error creating service template:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -163,7 +165,7 @@ export class ServiceTemplateApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error updating service template:', error);
+      log.error('Error updating service template:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -181,7 +183,7 @@ export class ServiceTemplateApiService {
         throw new Error(`Failed to delete service template: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Error deleting service template:', error);
+      log.error('Error deleting service template:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -199,7 +201,7 @@ export class ServiceTemplateApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching hierarchical templates:', error);
+      log.error('Error fetching hierarchical templates:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -241,7 +243,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching rate cards:', error);
+      log.error('Error fetching rate cards:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -260,7 +262,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching rate card:', error);
+      log.error('Error fetching rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -284,7 +286,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error creating rate card:', error);
+      log.error('Error creating rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -308,7 +310,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error updating rate card:', error);
+      log.error('Error updating rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -326,7 +328,7 @@ export class RateCardApiService {
         throw new Error(`Failed to delete rate card: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Error deleting rate card:', error);
+      log.error('Error deleting rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -354,7 +356,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error cloning rate card:', error);
+      log.error('Error cloning rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -378,7 +380,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error submitting rate card:', error);
+      log.error('Error submitting rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -402,7 +404,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error approving rate card:', error);
+      log.error('Error approving rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -426,7 +428,7 @@ export class RateCardApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error rejecting rate card:', error);
+      log.error('Error rejecting rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -447,7 +449,7 @@ export class RateItemApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching rate items:', error);
+      log.error('Error fetching rate items:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -471,7 +473,7 @@ export class RateItemApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error adding rate item:', error);
+      log.error('Error adding rate item:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -495,7 +497,7 @@ export class RateItemApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error updating rate item:', error);
+      log.error('Error updating rate item:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -513,7 +515,7 @@ export class RateItemApiService {
         throw new Error(`Failed to delete rate item: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Error deleting rate item:', error);
+      log.error('Error deleting rate item:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -537,7 +539,7 @@ export class RateItemApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error bulk updating rates:', error);
+      log.error('Error bulk updating rates:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -558,7 +560,7 @@ export class RateHistoryApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching rate history:', error);
+      log.error('Error fetching rate history:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -598,7 +600,7 @@ export class RateHistoryApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching contractor rate history:', error);
+      log.error('Error fetching contractor rate history:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -625,7 +627,7 @@ export class RateAnalyticsApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error comparing rates:', error);
+      log.error('Error comparing rates:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -643,7 +645,7 @@ export class RateAnalyticsApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching contractor analytics:', error);
+      log.error('Error fetching contractor analytics:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -674,7 +676,7 @@ export class RateAnalyticsApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching market benchmarks:', error);
+      log.error('Error fetching market benchmarks:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -701,7 +703,7 @@ export class RateCardUtilityApiService {
 
       return await response.blob();
     } catch (error) {
-      console.error('Error exporting rate cards:', error);
+      log.error('Error exporting rate cards:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -725,7 +727,7 @@ export class RateCardUtilityApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error validating rate card:', error);
+      log.error('Error validating rate card:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }
@@ -758,7 +760,7 @@ export class RateCardUtilityApiService {
 
       return await response.json();
     } catch (error) {
-      console.error('Error importing rate cards:', error);
+      log.error('Error importing rate cards:', { data: error }, 'rateCardApiService');
       throw error;
     }
   }

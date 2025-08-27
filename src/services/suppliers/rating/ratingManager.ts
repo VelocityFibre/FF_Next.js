@@ -8,6 +8,7 @@ import { db } from '@/config/firebase';
 import { SupplierRating } from '@/types/supplier/base.types';
 import { RatingUpdateData } from './types';
 import { SupplierCrudService } from '../supplier.crud';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -44,7 +45,7 @@ export class SupplierRatingManager {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error(`Error updating supplier rating for ${id}:`, error);
+      log.error(`Error updating supplier rating for ${id}:`, { data: error }, 'ratingManager');
       throw new Error(`Failed to update supplier rating: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

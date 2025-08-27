@@ -5,6 +5,7 @@
 
 import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { CategoryAnalytics } from './types';
+import { log } from '@/lib/logger';
 
 export class CategoryAnalyticsService {
   /**
@@ -30,7 +31,7 @@ export class CategoryAnalyticsService {
 
       return analytics;
     } catch (error) {
-      console.error('Error generating category analytics:', error);
+      log.error('Error generating category analytics:', { data: error }, 'categoryAnalytics');
       throw new Error(`Failed to generate category analytics: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -54,7 +55,7 @@ export class CategoryAnalyticsService {
 
       return this.generateCategoryAnalytics(category, activeSuppliers);
     } catch (error) {
-      console.error(`Error generating analytics for category ${category}:`, error);
+      log.error(`Error generating analytics for category ${category}:`, { data: error }, 'categoryAnalytics');
       return null;
     }
   }
@@ -86,7 +87,7 @@ export class CategoryAnalyticsService {
         }))
         .sort((a, b) => b.averageRating - a.averageRating);
     } catch (error) {
-      console.error('Error generating category performance comparison:', error);
+      log.error('Error generating category performance comparison:', { data: error }, 'categoryAnalytics');
       return [];
     }
   }
@@ -116,7 +117,7 @@ export class CategoryAnalyticsService {
 
       return trends.filter(trend => trend.monthlyData.length > 0);
     } catch (error) {
-      console.error('Error generating category trends:', error);
+      log.error('Error generating category trends:', { data: error }, 'categoryAnalytics');
       return [];
     }
   }
@@ -296,7 +297,7 @@ export class CategoryAnalyticsService {
           percentage: Math.round(stat.percentage * 100) / 100
         }));
     } catch (error) {
-      console.error('Error getting category distribution:', error);
+      log.error('Error getting category distribution:', { data: error }, 'categoryAnalytics');
       return [];
     }
   }

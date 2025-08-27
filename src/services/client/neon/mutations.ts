@@ -1,6 +1,7 @@
 import { sql } from '@/lib/neon';
 import { ClientFormData } from '@/types/client.types';
 import { buildMetadata, extractPaymentTerms } from './mappers';
+import { log } from '@/lib/logger';
 
 /**
  * Create a new client
@@ -61,7 +62,7 @@ export async function createClient(data: ClientFormData): Promise<string> {
     
     return result[0].id;
   } catch (error) {
-    console.error('Error creating client:', error);
+    log.error('Error creating client:', { data: error }, 'mutations');
     throw error;
   }
 }
@@ -96,7 +97,7 @@ export async function updateClient(id: string, data: Partial<ClientFormData>): P
       WHERE id = ${id}
     `;
   } catch (error) {
-    console.error('Error updating client:', error);
+    log.error('Error updating client:', { data: error }, 'mutations');
     throw error;
   }
 }
@@ -111,7 +112,7 @@ export async function deleteClient(id: string): Promise<void> {
       WHERE id = ${id}
     `;
   } catch (error) {
-    console.error('Error deleting client:', error);
+    log.error('Error deleting client:', { data: error }, 'mutations');
     throw error;
   }
 }

@@ -4,6 +4,7 @@
  */
 
 import type { WorkerMessage, WorkerResponse } from '../types';
+import { log } from '@/lib/logger';
 
 export class WorkerManager {
   private workers: Worker[] = [];
@@ -68,7 +69,7 @@ export class WorkerManager {
     };
 
     worker.onerror = (error: ErrorEvent) => {
-      console.error('Worker error:', error);
+      log.error('Worker error:', { data: error }, 'WorkerManager');
       this.handleWorkerError(worker, error);
     };
 
@@ -335,7 +336,7 @@ export class WorkerManager {
    * Handle worker error
    */
   private handleWorkerError(worker: Worker, error: ErrorEvent): void {
-    console.error('Worker error:', error);
+    log.error('Worker error:', { data: error }, 'WorkerManager');
     
     // Remove from all collections
     this.busyWorkers.delete(worker);

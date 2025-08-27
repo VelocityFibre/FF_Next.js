@@ -1,6 +1,7 @@
 import { sql } from '@/lib/neon';
 import { Client, ClientFilter, ClientSummary } from '@/types/client.types';
 import { mapDbToClient } from './mappers';
+import { log } from '@/lib/logger';
 
 /**
  * Get all clients with optional filtering
@@ -49,7 +50,7 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
     return result.map(mapDbToClient);
     
   } catch (error) {
-    console.error('Error fetching clients from Neon:', error);
+    log.error('Error fetching clients from Neon:', { data: error }, 'queries');
     return [];
   }
 }
@@ -71,7 +72,7 @@ export async function getClientById(id: string): Promise<Client | null> {
     
     return mapDbToClient(result[0]);
   } catch (error) {
-    console.error('Error fetching client by ID:', error);
+    log.error('Error fetching client by ID:', { data: error }, 'queries');
     return null;
   }
 }
@@ -89,7 +90,7 @@ export async function getActiveClients(): Promise<Client[]> {
     
     return result.map(mapDbToClient);
   } catch (error) {
-    console.error('Error fetching active clients:', error);
+    log.error('Error fetching active clients:', { data: error }, 'queries');
     return [];
   }
 }
@@ -124,7 +125,7 @@ export async function getClientSummary(): Promise<ClientSummary> {
       conversionRate: 0
     };
   } catch (error) {
-    console.error('Error fetching client summary:', error);
+    log.error('Error fetching client summary:', { data: error }, 'queries');
     return {
       totalClients: 0,
       activeClients: 0,

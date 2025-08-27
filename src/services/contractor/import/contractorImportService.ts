@@ -13,6 +13,7 @@ import type { ContractorFormData } from '@/types/contractor/form.types';
 import { ContractorImportValidator } from './contractorImportValidator';
 import { CSV_HEADER_MAPPING } from '@/constants/contractor/validation';
 import { contractorService } from '@/services/contractorService';
+import { log } from '@/lib/logger';
 
 class ContractorImportService {
   private validator = new ContractorImportValidator();
@@ -65,20 +66,20 @@ class ContractorImportService {
       
     } catch (error) {
       // Enhanced error logging to debug CSV parsing issues
-      console.error('🐛 CSV Processing Error Details:', {
+      log.error('🐛 CSV Processing Error Details:', { data: {
         error: error,
         errorMessage: error instanceof Error ? error.message : 'Unknown error',
         errorStack: error instanceof Error ? error.stack : 'No stack trace',
         fileName: file.name,
         fileSize: file.size,
         fileType: file.type
-      });
+      }, 'contractorImportService');;
       
-      // Re-throw error instead of falling back to mock data
+      // Re-throw error instead of falling back to mock data;
       throw error;
       
       // Fallback to mock data if processing fails - DISABLED FOR DEBUGGING
-      // console.error('File processing failed, using mock data:', error);
+      // log.error('File processing failed, using mock data:', { data: error }, 'contractorImportService');
       
       const mockContractors: ContractorImportRow[] = [
         {
@@ -157,13 +158,13 @@ class ContractorImportService {
    * Parse CSV file
    */
   private async parseCsvFile(file: File, options: ContractorImportOptions): Promise<Partial<ContractorImportRow>[]> {
-    console.log('🔍 CSV Parsing Debug - Starting:', { fileName: file.name, fileSize: file.size });
-    
+    log.info('🔍 CSV Parsing Debug - Starting:', { data: { fileName: file.name, fileSize: file.size }, 'contractorImportService');;
+    ;
     const text = await file.text();
-    console.log('📄 CSV Content Preview:', text.substring(0, 200) + '...');
+    log.info('📄 CSV Content Preview:', { data: text.substring(0, 200); + '...' }, 'contractorImportService');
     
     const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-    console.log('📊 CSV Lines Found:', lines.length);
+    log.info('📊 CSV Lines Found:', { data: lines.length }, 'contractorImportService');
     
     if (lines.length === 0) {
       throw new Error('The CSV file is empty.');
@@ -171,7 +172,7 @@ class ContractorImportService {
     
     // Skip comment lines (starting with #)
     const dataLines = lines.filter(line => !line.startsWith('#'));
-    console.log('🗂️ Data Lines (after filtering comments):', dataLines.length);
+    log.info('🗂️ Data Lines (after filtering comments);:', { data: dataLines.length }, 'contractorImportService');
     
     if (dataLines.length === 0) {
       throw new Error('No data found in CSV file.');
@@ -218,12 +219,12 @@ class ContractorImportService {
       }
     }
     
-    console.log('✅ CSV Parsing Complete:', { 
+    log.info('✅ CSV Parsing Complete:', { data: { 
       totalDataLines: dataLines.length - dataStartIndex, 
       recordsParsed: results.length,
       sampleRecord: results[0]
-    });
-    
+    }, 'contractorImportService');;
+    ;
     return results;
   }
 
@@ -231,10 +232,10 @@ class ContractorImportService {
    * Parse Excel file using XLSX library
    */
   private async parseExcelFile(file: File, options: ContractorImportOptions): Promise<Partial<ContractorImportRow>[]> {
-    console.log('📊 Excel Parsing Debug - Starting:', { fileName: file.name, fileSize: file.size });
+    log.info('📊 Excel Parsing Debug - Starting:', { data: { fileName: file.name, fileSize: file.size }, 'contractorImportService');;
     
     try {
-      // Dynamically import XLSX to avoid bundle issues
+      // Dynamically import XLSX to avoid bundle issues;
       const XLSX = await import('xlsx');
       
       // Read file as array buffer
@@ -242,9 +243,9 @@ class ContractorImportService {
       
       // Parse workbook
       const workbook = XLSX.read(buffer, { type: 'array' });
-      console.log('📋 Excel Workbook:', { sheetNames: workbook.SheetNames });
+      log.info('📋 Excel Workbook:', { data: { sheetNames: workbook.SheetNames }, 'contractorImportService');;
       
-      // Get first sheet
+      // Get first sheet;
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
       
@@ -255,11 +256,11 @@ class ContractorImportService {
         blankrows: false // Skip blank rows
       }) as string[][];
       
-      console.log('📄 Excel Data Preview:', {
+      log.info('📄 Excel Data Preview:', {
         totalRows: jsonData.length,
         firstRow: jsonData[0],
-        sampleData: jsonData.slice(0, 3)
-      });
+        sampleData: jsonData.slice(0, 3);
+      }, 'contractorImportService');
       
       if (jsonData.length === 0) {
         throw new Error('The Excel file appears to be empty.');
@@ -276,12 +277,12 @@ class ContractorImportService {
         headers = Object.keys(CSV_HEADER_MAPPING);
       }
       
-      console.log('📝 Excel Headers:', headers);
-      console.log('🗂️ Header Mapping Test:', headers.map(h => ({ 
+      log.info('📝 Excel Headers:', { data: headers }, 'contractorImportService');
+      log.info('🗂️ Header Mapping Test:', { data: headers.map(h => ({ 
         original: h, 
         cleaned: h.replace('*', '').trim(),
         mapped: this.mapCsvHeader(h) 
-      })));
+      })) }, 'contractorImportService');
       
       const results: Partial<ContractorImportRow>[] = [];
       
@@ -291,8 +292,8 @@ class ContractorImportService {
         
         // Debug first row mapping
         if (i === dataStartIndex) {
-          console.log('🔍 First Row Mapping Debug:');
-          console.log('Raw values:', values);
+          log.info('🔍 First Row Mapping Debug:', undefined, 'contractorImportService');
+          log.info('Raw values:', { data: values }, 'contractorImportService');
         }
         
         headers.forEach((header, index) => {
@@ -304,9 +305,9 @@ class ContractorImportService {
             if (i === dataStartIndex) {
               if (mappedField === 'phone') {
                 const normalized = this.normalizePhoneNumber(value);
-                console.log(`  "${header}" -> "${mappedField}" = "${value}" -> "${normalized}"`);
+                log.info(`  "${header}" -> "${mappedField}" = "${value}" -> "${normalized}"`, undefined, 'contractorImportService');
               } else {
-                console.log(`  "${header}" -> "${mappedField}" = "${value}"`);
+                log.info(`  "${header}" -> "${mappedField}" = "${value}"`, undefined, 'contractorImportService');
               }
             }
             
@@ -326,7 +327,7 @@ class ContractorImportService {
         
         // Debug first row result
         if (i === dataStartIndex) {
-          console.log('📊 First Row Result:', rowData);
+          log.info('📊 First Row Result:', { data: rowData }, 'contractorImportService');
         }
         
         if (Object.keys(rowData).length > 0) {
@@ -334,16 +335,16 @@ class ContractorImportService {
         }
       }
       
-      console.log('✅ Excel Parsing Complete:', { 
+      log.info('✅ Excel Parsing Complete:', { data: { 
         totalDataRows: jsonData.length - dataStartIndex, 
         recordsParsed: results.length,
         sampleRecord: results[0]
-      });
-      
+      }, 'contractorImportService');;
+      ;
       return results;
       
     } catch (error) {
-      console.error('❌ Excel parsing failed:', error);
+      log.error('❌ Excel parsing failed:', { data: error }, 'contractorImportService');
       throw new Error(`Failed to parse Excel file: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -495,7 +496,7 @@ class ContractorImportService {
     }
     
     // For debugging - log unrecognized formats
-    console.log(`📞 Phone normalization: "${value}" -> "${cleaned}" (unrecognized format, keeping original)`);
+    log.info(`📞 Phone normalization: "${value}" -> "${cleaned}" (unrecognized format, keeping original, undefined, 'contractorImportService');`);
     
     // Return original if we can't recognize the format
     return value;
@@ -509,19 +510,19 @@ class ContractorImportService {
     options: ContractorImportOptions
   ): Promise<ContractorImportResult> {
     const startTime = Date.now();
-    console.log('🚀 Starting real database import of contractors...');
+    log.info('🚀 Starting real database import of contractors...', undefined, 'contractorImportService');
     
     const validContractors = data.contractors.filter(c => c.isValid);
     const invalidContractors = data.contractors.filter(c => !c.isValid);
     const duplicates = data.contractors.filter(c => c.isDuplicate);
     
-    console.log('📊 Import Summary:', {
+    log.info('📊 Import Summary:', { data: {
       total: data.contractors.length,
       valid: validContractors.length,
       invalid: invalidContractors.length,
       duplicates: duplicates.length
-    });
-    
+    }, 'contractorImportService');;
+    ;
     const importedIds: string[] = [];
     const errors: Array<{row: number; message: string; data: any}> = [];
     
@@ -543,24 +544,24 @@ class ContractorImportService {
         // Skip duplicates if mode is set to skip
         if (contractor.isDuplicate && options.mode === 'skipDuplicates') {
           duplicatesSkipped++;
-          console.log(`⏭️ Skipping duplicate: ${contractor.companyName}`);
+          log.info(`⏭️ Skipping duplicate: ${contractor.companyName}`, undefined, 'contractorImportService');
           continue;
         }
         
         // Convert import format to ContractorFormData
         const contractorData: ContractorFormData = this.convertToFormData(contractor);
         
-        console.log(`💾 Creating contractor: ${contractorData.companyName}`);
+        log.info(`💾 Creating contractor: ${contractorData.companyName}`, undefined, 'contractorImportService');
         
         // Create contractor in database
         const contractorId = await contractorService.create(contractorData);
         importedIds.push(contractorId);
         successCount++;
         
-        console.log(`✅ Successfully created contractor with ID: ${contractorId}`);
+        log.info(`✅ Successfully created contractor with ID: ${contractorId}`, undefined, 'contractorImportService');
         
       } catch (error) {
-        console.error(`❌ Failed to create contractor ${contractor.companyName}:`, error);
+        log.error(`❌ Failed to create contractor ${contractor.companyName}:`, { data: error }, 'contractorImportService');
         errors.push({
           row: contractor.rowNumber,
           message: error instanceof Error ? error.message : 'Unknown error during creation',
@@ -578,7 +579,7 @@ class ContractorImportService {
       duration: Date.now() - startTime
     };
     
-    console.log('🎉 Import completed:', result);
+    log.info('🎉 Import completed:', { data: result }, 'contractorImportService');
     return result;
   }
 
@@ -785,7 +786,7 @@ class ContractorImportService {
    */
   async exportToExcel(): Promise<void> {
     // Mock export functionality
-    console.log('Export to Excel functionality will be implemented');
+    log.info('Export to Excel functionality will be implemented', undefined, 'contractorImportService');
   }
 }
 

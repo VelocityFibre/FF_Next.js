@@ -29,6 +29,7 @@ import { ComparisonTools } from '../analytics/ComparisonTools';
 import { LiveDashboard } from '../analytics/LiveDashboard';
 import { ReportExporter } from '../analytics/ReportExporter';
 import { useWorkflowPortal } from '../../hooks/useWorkflowPortal';
+import { log } from '@/lib/logger';
 
 interface DateRange {
   from: string;
@@ -84,7 +85,7 @@ export function AnalyticsTab() {
       setAnalytics(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
-      console.error('Analytics loading error:', err);
+      log.error('Analytics loading error:', { data: err }, 'AnalyticsTab');
     } finally {
       setLoading(false);
     }

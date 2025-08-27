@@ -12,6 +12,7 @@ import { ProjectDetailsStep } from './steps/ProjectDetailsStep';
 import { ReviewStep } from './steps/ReviewStep';
 import type { FormData } from './types';
 import { ProjectPriority } from '../../types/project.types';
+import { log } from '@/lib/logger';
 
 export function ProjectCreationWizard() {
   const navigate = useNavigate();
@@ -53,12 +54,12 @@ export function ProjectCreationWizard() {
       const _formData = form.getValues();
       // TODO: Implement project creation when Neon integration is ready
       // const project = await createProject.mutateAsync(formData);
-      // console.log('Project created successfully:', project);
+      // log.info('Project created successfully:', { data: project }, 'ProjectCreationWizard');
       
       // For now, just navigate back
       navigate('/app/projects');
     } catch (error) {
-      console.error('Failed to create project:', error);
+      log.error('Failed to create project:', { data: error }, 'ProjectCreationWizard');
       alert(`Failed to create project: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };

@@ -17,6 +17,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   RFQ, 
   RFQFormData, 
@@ -56,7 +57,7 @@ export class RFQCrud {
         ...doc.data()
       } as RFQ));
     } catch (error) {
-      console.error('Error fetching RFQs:', error);
+      log.error('Error fetching RFQs:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -78,7 +79,7 @@ export class RFQCrud {
         ...snapshot.data()
       } as RFQ;
     } catch (error) {
-      console.error('Error fetching RFQ:', error);
+      log.error('Error fetching RFQ:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -116,7 +117,7 @@ export class RFQCrud {
       const docRef = await addDoc(collection(db, COLLECTION_NAME), rfq);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating RFQ:', error);
+      log.error('Error creating RFQ:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -140,7 +141,7 @@ export class RFQCrud {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating RFQ:', error);
+      log.error('Error updating RFQ:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -152,7 +153,7 @@ export class RFQCrud {
     try {
       await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
-      console.error('Error deleting RFQ:', error);
+      log.error('Error deleting RFQ:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -170,7 +171,7 @@ export class RFQCrud {
       
       await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
     } catch (error) {
-      console.error('Error updating RFQ status:', error);
+      log.error('Error updating RFQ status:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -206,7 +207,7 @@ export class RFQCrud {
         ...doc.data()
       } as RFQ));
     } catch (error) {
-      console.error('Error fetching active RFQs:', error);
+      log.error('Error fetching active RFQs:', { data: error }, 'rfqCrud');
       throw error;
     }
   }
@@ -220,7 +221,7 @@ export class RFQCrud {
       const snapshot = await getDoc(docRef);
       return snapshot.exists();
     } catch (error) {
-      console.error('Error checking RFQ existence:', error);
+      log.error('Error checking RFQ existence:', { data: error }, 'rfqCrud');
       return false;
     }
   }

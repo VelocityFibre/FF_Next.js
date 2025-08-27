@@ -1,9 +1,10 @@
 // Quick test runner to validate workflow test setup
 import { execSync } from 'child_process';
+import { log } from '@/lib/logger';
 
 export class QuickWorkflowTestValidator {
   async validateTestStructure(): Promise<boolean> {
-    console.log('🔍 Validating workflow test structure...\n');
+    log.info('🔍 Validating workflow test structure...\n', undefined, 'quick-test-runner');
 
     const checks = [
       {
@@ -42,17 +43,17 @@ export class QuickWorkflowTestValidator {
 
     for (const { name, check, description } of checks) {
       try {
-        console.log(`📋 ${name}: ${description}`);
+        log.info(`📋 ${name}: ${description}`, undefined, 'quick-test-runner');
         const result = await check();
         
         if (result) {
-          console.log(`   ✅ PASSED\n`);
+          log.info(`   ✅ PASSED\n`, undefined, 'quick-test-runner');
         } else {
-          console.log(`   ❌ FAILED\n`);
+          log.info(`   ❌ FAILED\n`, undefined, 'quick-test-runner');
           allPassed = false;
         }
       } catch (error) {
-        console.log(`   ⚠️ ERROR: ${error}\n`);
+        log.info(`   ⚠️ ERROR: ${error}\n`, undefined, 'quick-test-runner');
         allPassed = false;
       }
     }
@@ -79,14 +80,14 @@ export class QuickWorkflowTestValidator {
       const missingMocks = requiredMocks.filter(mock => !mockFile[mock]);
       
       if (missingMocks.length > 0) {
-        console.log(`     Missing mocks: ${missingMocks.join(', ')}`);
+        log.info(`     Missing mocks: ${missingMocks.join(', ', undefined, 'quick-test-runner');}`);
         return false;
       }
 
-      console.log(`     Found ${requiredMocks.length} mock objects`);
+      log.info(`     Found ${requiredMocks.length} mock objects`, undefined, 'quick-test-runner');
       return true;
     } catch (error) {
-      console.log(`     Mock file import error: ${error}`);
+      log.info(`     Mock file import error: ${error}`, undefined, 'quick-test-runner');
       return false;
     }
   }
@@ -115,7 +116,7 @@ export class QuickWorkflowTestValidator {
     const missingDirs = expectedDirs.filter(dir => !actualDirs.includes(dir));
     
     if (missingDirs.length > 0) {
-      console.log(`     Missing directories: ${missingDirs.join(', ')}`);
+      log.info(`     Missing directories: ${missingDirs.join(', ', undefined, 'quick-test-runner');}`);
       return false;
     }
 
@@ -136,7 +137,7 @@ export class QuickWorkflowTestValidator {
       }
     });
 
-    console.log(`     Found ${testFileCount} test files across ${actualDirs.length} directories`);
+    log.info(`     Found ${testFileCount} test files across ${actualDirs.length} directories`, undefined, 'quick-test-runner');
     return testFileCount > 0;
   }
 
@@ -149,7 +150,7 @@ export class QuickWorkflowTestValidator {
       const configExists = fs.existsSync(configPath);
       
       if (!configExists) {
-        console.log('     No workflow-specific Vitest config found');
+        log.info('     No workflow-specific Vitest config found', undefined, 'quick-test-runner');
         // Check main config
         const mainConfigPath = path.join(process.cwd(), 'vite.config.ts');
         return fs.existsSync(mainConfigPath);
@@ -159,10 +160,10 @@ export class QuickWorkflowTestValidator {
       const hasThresholds = configContent.includes('thresholds');
       const hasCoverageDir = configContent.includes('workflow');
       
-      console.log(`     Config file exists with coverage thresholds: ${hasThresholds}`);
+      log.info(`     Config file exists with coverage thresholds: ${hasThresholds}`, undefined, 'quick-test-runner');
       return hasThresholds && hasCoverageDir;
     } catch (error) {
-      console.log(`     Config validation error: ${error}`);
+      log.info(`     Config validation error: ${error}`, undefined, 'quick-test-runner');
       return false;
     }
   }
@@ -175,7 +176,7 @@ export class QuickWorkflowTestValidator {
       const componentsTestDir = path.join(__dirname, 'components');
       
       if (!fs.existsSync(componentsTestDir)) {
-        console.log('     Components test directory not found');
+        log.info('     Components test directory not found', undefined, 'quick-test-runner');
         return false;
       }
 
@@ -190,10 +191,10 @@ export class QuickWorkflowTestValidator {
 
       const foundTests = expectedTests.filter(test => testFiles.includes(test));
       
-      console.log(`     Found ${foundTests.length}/${expectedTests.length} key component tests`);
+      log.info(`     Found ${foundTests.length}/${expectedTests.length} key component tests`, undefined, 'quick-test-runner');
       return foundTests.length >= expectedTests.length * 0.8; // At least 80% of expected tests
     } catch (error) {
-      console.log(`     Component test validation error: ${error}`);
+      log.info(`     Component test validation error: ${error}`, undefined, 'quick-test-runner');
       return false;
     }
   }
@@ -206,17 +207,17 @@ export class QuickWorkflowTestValidator {
       const e2eTestDir = path.join(__dirname, 'e2e');
       
       if (!fs.existsSync(e2eTestDir)) {
-        console.log('     E2E test directory not found');
+        log.info('     E2E test directory not found', undefined, 'quick-test-runner');
         return false;
       }
 
       const files = fs.readdirSync(e2eTestDir);
       const specFiles = files.filter((file: string) => file.endsWith('.spec.ts'));
       
-      console.log(`     Found ${specFiles.length} E2E test files`);
+      log.info(`     Found ${specFiles.length} E2E test files`, undefined, 'quick-test-runner');
       return specFiles.length > 0;
     } catch (error) {
-      console.log(`     E2E test validation error: ${error}`);
+      log.info(`     E2E test validation error: ${error}`, undefined, 'quick-test-runner');
       return false;
     }
   }
@@ -229,7 +230,7 @@ export class QuickWorkflowTestValidator {
       const a11yTestDir = path.join(__dirname, 'accessibility');
       
       if (!fs.existsSync(a11yTestDir)) {
-        console.log('     Accessibility test directory not found');
+        log.info('     Accessibility test directory not found', undefined, 'quick-test-runner');
         return false;
       }
 
@@ -238,16 +239,16 @@ export class QuickWorkflowTestValidator {
         file.endsWith('.test.tsx') && file.includes('accessibility')
       );
       
-      console.log(`     Found ${testFiles.length} accessibility test files`);
+      log.info(`     Found ${testFiles.length} accessibility test files`, undefined, 'quick-test-runner');
       return testFiles.length > 0;
     } catch (error) {
-      console.log(`     Accessibility test validation error: ${error}`);
+      log.info(`     Accessibility test validation error: ${error}`, undefined, 'quick-test-runner');
       return false;
     }
   }
 
   async generateTestSummary(): Promise<void> {
-    console.log('📊 Generating test coverage summary...\n');
+    log.info('📊 Generating test coverage summary...\n', undefined, 'quick-test-runner');
 
     const summary = {
       testStructure: await this.validateTestStructure(),
@@ -275,27 +276,27 @@ export class QuickWorkflowTestValidator {
       }
     };
 
-    console.log('📈 Test Coverage Summary:');
-    console.log(`✅ Overall Structure: ${summary.testStructure ? 'VALID' : 'NEEDS ATTENTION'}`);
-    console.log(`📊 Unit Tests: ${summary.coverage.unit}`);
-    console.log(`🔗 Integration: ${summary.coverage.integration}`); 
-    console.log(`🧩 Components: ${summary.coverage.component}`);
-    console.log(`🎭 E2E Scenarios: ${summary.coverage.e2e}`);
-    console.log(`♿ Accessibility: ${summary.coverage.accessibility}\n`);
+    log.info('📈 Test Coverage Summary:', undefined, 'quick-test-runner');
+    log.info(`✅ Overall Structure: ${summary.testStructure ? 'VALID' : 'NEEDS ATTENTION'}`, undefined, 'quick-test-runner');
+    log.info(`📊 Unit Tests: ${summary.coverage.unit}`, undefined, 'quick-test-runner');
+    log.info(`🔗 Integration: ${summary.coverage.integration}`, undefined, 'quick-test-runner'); 
+    log.info(`🧩 Components: ${summary.coverage.component}`, undefined, 'quick-test-runner');
+    log.info(`🎭 E2E Scenarios: ${summary.coverage.e2e}`, undefined, 'quick-test-runner');
+    log.info(`♿ Accessibility: ${summary.coverage.accessibility}\n`, undefined, 'quick-test-runner');
 
-    console.log('🎯 Test Categories:');
+    log.info('🎯 Test Categories:', undefined, 'quick-test-runner');
     summary.testTypes.forEach((type, index) => {
-      console.log(`  ${index + 1}. ${type}`);
+      log.info(`  ${index + 1}. ${type}`, undefined, 'quick-test-runner');
     });
 
-    console.log('\n🎪 Mocking Strategy:');
+    log.info('\n🎪 Mocking Strategy:', undefined, 'quick-test-runner');
     Object.entries(summary.mockingStrategy).forEach(([key, value]) => {
-      console.log(`  • ${key}: ${value}`);
+      log.info(`  • ${key}: ${value}`, undefined, 'quick-test-runner');
     });
 
-    console.log('\n✅ Workflow System Testing: COMPREHENSIVE');
-    console.log('🎯 Target Coverage: >95% achieved');
-    console.log('🚀 Ready for production deployment');
+    log.info('\n✅ Workflow System Testing: COMPREHENSIVE', undefined, 'quick-test-runner');
+    log.info('🎯 Target Coverage: >95% achieved', undefined, 'quick-test-runner');
+    log.info('🚀 Ready for production deployment', undefined, 'quick-test-runner');
   }
 }
 
@@ -305,10 +306,10 @@ if (require.main === module) {
   
   validator.generateTestSummary()
     .then(() => {
-      console.log('\n🎉 Workflow test suite validation complete!');
+      log.info('\n🎉 Workflow test suite validation complete!', undefined, 'quick-test-runner');
     })
     .catch((error) => {
-      console.error('\n❌ Validation failed:', error);
+      log.error('\n❌ Validation failed:', { data: error }, 'quick-test-runner');
       process.exit(1);
     });
 }

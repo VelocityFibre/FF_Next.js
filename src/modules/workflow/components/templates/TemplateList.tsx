@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { workflowManagementService } from '../../services/WorkflowManagementService';
 import { workflowTemplateService } from '../../services/WorkflowTemplateService';
+import { log } from '@/lib/logger';
 import type { 
   WorkflowTemplate,
   WorkflowTemplateQuery,
@@ -265,7 +266,7 @@ export function TemplateList({
         isLoading: false
       }));
     } catch (error) {
-      console.error('Error loading templates:', error);
+      log.error('Error loading templates:', { data: error }, 'TemplateList');
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to load templates',
@@ -284,7 +285,7 @@ export function TemplateList({
       await workflowManagementService.duplicateTemplate(templateId, newName, 'current-user');
       await loadTemplates(state.currentPage);
     } catch (error) {
-      console.error('Error duplicating template:', error);
+      log.error('Error duplicating template:', { data: error }, 'TemplateList');
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to duplicate template'
@@ -301,7 +302,7 @@ export function TemplateList({
       await workflowManagementService.deleteTemplate(templateId);
       await loadTemplates(state.currentPage);
     } catch (error) {
-      console.error('Error deleting template:', error);
+      log.error('Error deleting template:', { data: error }, 'TemplateList');
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to delete template'
@@ -326,7 +327,7 @@ export function TemplateList({
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error exporting template:', error);
+      log.error('Error exporting template:', { data: error }, 'TemplateList');
       setState(prev => ({
         ...prev,
         error: error instanceof Error ? error.message : 'Failed to export template'

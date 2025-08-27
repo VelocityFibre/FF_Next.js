@@ -10,6 +10,7 @@ import { DocumentManager } from './documentManager';
 import { ComplianceCalculator } from './complianceCalculator';
 import { RequirementsManager } from './requirementsManager';
 import { ComplianceReportGenerator } from './reportGenerator';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -37,7 +38,7 @@ export class ComplianceCore {
       });
 
     } catch (error) {
-      console.error('Error updating compliance:', error);
+      log.error('Error updating compliance:', { data: error }, 'core');
       throw new Error(`Failed to update compliance: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -115,7 +116,7 @@ export class ComplianceCore {
       await this.updateCompliance(supplierId, updatedCompliance);
 
     } catch (error) {
-      console.error('Error updating compliance after document change:', error);
+      log.error('Error updating compliance after document change:', { data: error }, 'core');
       // Don't throw here to avoid breaking the main operation
     }
   }
@@ -199,7 +200,7 @@ export class ComplianceCore {
         return aMinDays - bMinDays;
       });
     } catch (error) {
-      console.error('Error getting suppliers with expiring documents:', error);
+      log.error('Error getting suppliers with expiring documents:', { data: error }, 'core');
       return [];
     }
   }

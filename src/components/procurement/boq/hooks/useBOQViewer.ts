@@ -7,6 +7,7 @@ import { BOQItem, BOQWithItems } from '@/types/procurement/boq.types';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import { procurementApiService } from '@/services/procurement/boqApiExtensions';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 import {
   FilterState,
   EditingItem,
@@ -50,7 +51,7 @@ export const useBOQViewer = (
       const data = await procurementApiService.getBOQWithItems(context, boqId);
       setBOQData(data);
     } catch (error) {
-      console.error('Failed to load BOQ data:', error);
+      log.error('Failed to load BOQ data:', { data: error }, 'useBOQViewer');
       toast.error('Failed to load BOQ data');
     } finally {
       setIsLoading(false);
@@ -215,7 +216,7 @@ export const useBOQViewer = (
       toast.success('Item updated successfully');
       onItemUpdate?.(updatedItem);
     } catch (error) {
-      console.error('Failed to save item:', error);
+      log.error('Failed to save item:', { data: error }, 'useBOQViewer');
       toast.error('Failed to save item');
     } finally {
       setIsSaving(false);

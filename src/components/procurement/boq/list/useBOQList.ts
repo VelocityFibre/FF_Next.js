@@ -7,6 +7,7 @@ import { BOQ } from '@/types/procurement/boq.types';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import { procurementApiService } from '@/services/procurement/boqApiExtensions';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 import {
   FilterState,
   SortField,
@@ -37,7 +38,7 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
       const data = await procurementApiService.getBOQsByProject(context, context.projectId);
       setBOQs(data);
     } catch (error) {
-      console.error('Failed to load BOQs:', error);
+      log.error('Failed to load BOQs:', { data: error }, 'useBOQList');
       toast.error('Failed to load BOQs');
     } finally {
       setIsLoading(false);
@@ -168,7 +169,7 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
 
       toast.success('BOQ downloaded successfully');
     } catch (error) {
-      console.error('Failed to download BOQ:', error);
+      log.error('Failed to download BOQ:', { data: error }, 'useBOQList');
       toast.error('Failed to download BOQ');
     }
     setActionMenuOpen(null);
@@ -180,7 +181,7 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
       setBOQs(prev => prev.map(b => b.id === boq.id ? { ...b, status: 'archived' } : b));
       toast.success('BOQ archived successfully');
     } catch (error) {
-      console.error('Failed to archive BOQ:', error);
+      log.error('Failed to archive BOQ:', { data: error }, 'useBOQList');
       toast.error('Failed to archive BOQ');
     }
     setActionMenuOpen(null);
@@ -196,7 +197,7 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
       setBOQs(prev => prev.filter(b => b.id !== boq.id));
       toast.success('BOQ deleted successfully');
     } catch (error) {
-      console.error('Failed to delete BOQ:', error);
+      log.error('Failed to delete BOQ:', { data: error }, 'useBOQList');
       toast.error('Failed to delete BOQ');
     }
     setActionMenuOpen(null);

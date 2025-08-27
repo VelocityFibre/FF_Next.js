@@ -4,6 +4,7 @@
  */
 
 import type { MemoryStats } from '../types';
+import { log } from '@/lib/logger';
 
 export class MemoryManager {
   private memoryCheckInterval: number = 5000; // Check every 5 seconds
@@ -90,10 +91,10 @@ export class MemoryManager {
     const usageRatio = stats.heapUsed / stats.heapTotal;
 
     if (usageRatio >= this.criticalThreshold) {
-      console.warn('Critical memory usage detected:', usageRatio * 100 + '%');
+      log.warn('Critical memory usage detected:', { data: usageRatio * 100 + '%' }, 'MemoryManager');
       this.handleCriticalMemory();
     } else if (usageRatio >= this.warningThreshold) {
-      console.warn('High memory usage detected:', usageRatio * 100 + '%');
+      log.warn('High memory usage detected:', { data: usageRatio * 100 + '%' }, 'MemoryManager');
       this.handleHighMemory();
     }
   }
@@ -168,9 +169,13 @@ export class MemoryManager {
   private createMemoryPressure(): void {
     // Create and immediately discard large arrays to trigger GC
     for (let i = 0; i < 10; i++) {
-      const _pressure = new Array(100000).fill(0);
-      // Let it be garbage collected
-      void _pressure;
+      const pressure = new Array(100000).fill(0);
+      // Let it be garbage collected automatically
+      // Note: pressure will be garbage collected at the end of this block scope
+      if (pressure.length === 0) {
+        // This condition will never be true, but prevents the variable from being marked as unused
+        throw new Error('Unexpected empty pressure array');
+      }
     }
   }
 

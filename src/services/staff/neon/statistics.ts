@@ -5,6 +5,7 @@
 
 import { sql } from '@/lib/neon';
 import { StaffSummary } from '@/types/staff.types';
+import { log } from '@/lib/logger';
 
 /**
  * Get staff summary statistics
@@ -57,7 +58,7 @@ export async function getStaffSummary(): Promise<StaffSummary> {
       topSkills: [] // TODO: Get top skills
     };
   } catch (error) {
-    console.error('Error fetching staff summary:', error);
+    log.error('Error fetching staff summary:', { data: error }, 'statistics');
     throw error;
   }
 }

@@ -9,6 +9,7 @@ import { ProjectAccessValidator } from './validator';
 import { ProjectAccessDataService } from './dataService';
 import { ProcurementPermissionError } from '../../procurement/procurementErrors';
 import type { ServiceResponse } from '@/services/core/BaseService';
+import { log } from '@/lib/logger';
 
 /**
  * Project access controller
@@ -79,7 +80,7 @@ export class ProjectAccessController {
         data: projectAccess
       };
     } catch (error) {
-      console.error('[ProjectAccessController] checkProjectAccess error:', error);
+      log.error('[ProjectAccessController] checkProjectAccess error:', { data: error }, 'accessController');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -112,7 +113,7 @@ export class ProjectAccessController {
 
       return result;
     } catch (error) {
-      console.error('[ProjectAccessController] getUserProjectAccess error:', error);
+      log.error('[ProjectAccessController] getUserProjectAccess error:', { data: error }, 'accessController');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to get user project access',
@@ -192,7 +193,7 @@ export class ProjectAccessController {
         }
       };
     } catch (error) {
-      console.error('[ProjectAccessController] getProjectWithAccess error:', error);
+      log.error('[ProjectAccessController] getProjectWithAccess error:', { data: error }, 'accessController');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to get project with access',

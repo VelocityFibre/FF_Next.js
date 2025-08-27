@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'rfqs';
 
@@ -40,7 +41,7 @@ export class RFQFilterEngine {
       } as RFQ));
       callback(rfqs);
     }, (error) => {
-      console.error('Error subscribing to upcoming deadlines:', error);
+      log.error('Error subscribing to upcoming deadlines:', { data: error }, 'filter-engine');
     });
   }
 
@@ -74,7 +75,7 @@ export class RFQFilterEngine {
       } as any));
       callback(activities);
     }, (error) => {
-      console.error('Error subscribing to activity feed:', error);
+      log.error('Error subscribing to activity feed:', { data: error }, 'filter-engine');
     });
   }
 

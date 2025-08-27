@@ -7,6 +7,7 @@ import { BOQ, BOQItemMappingStatusType } from '@/types/procurement/boq.types';
 import { procurementApiService } from '@/services/procurement/boqApiExtensions';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 import {
   ExceptionWithItem,
   FilterState,
@@ -67,7 +68,7 @@ export function useBOQMapping(boqId: string, onMappingComplete?: (count: number)
 
       setExceptions(enhancedExceptions);
     } catch (error) {
-      console.error('Failed to load mapping data:', error);
+      log.error('Failed to load mapping data:', { data: error }, 'useBOQMapping');
       toast.error('Failed to load mapping data');
     } finally {
       setIsLoading(false);
@@ -174,7 +175,7 @@ export function useBOQMapping(boqId: string, onMappingComplete?: (count: number)
       toast.success('Mapping approved successfully');
       onMappingComplete?.(1);
     } catch (error) {
-      console.error('Failed to approve mapping:', error);
+      log.error('Failed to approve mapping:', { data: error }, 'useBOQMapping');
       toast.error('Failed to approve mapping');
     } finally {
       setIsProcessing(false);
@@ -205,7 +206,7 @@ export function useBOQMapping(boqId: string, onMappingComplete?: (count: number)
 
       toast.success('Exception dismissed');
     } catch (error) {
-      console.error('Failed to dismiss exception:', error);
+      log.error('Failed to dismiss exception:', { data: error }, 'useBOQMapping');
       toast.error('Failed to dismiss exception');
     } finally {
       setIsProcessing(false);
@@ -231,7 +232,7 @@ export function useBOQMapping(boqId: string, onMappingComplete?: (count: number)
       toast.success(`Approved ${successCount} mappings`);
       onMappingComplete?.(successCount);
     } catch (error) {
-      console.error('Batch approval failed:', error);
+      log.error('Batch approval failed:', { data: error }, 'useBOQMapping');
       toast.error('Batch approval failed');
     } finally {
       setIsProcessing(false);
@@ -250,7 +251,7 @@ export function useBOQMapping(boqId: string, onMappingComplete?: (count: number)
 
       toast.success(`Dismissed ${selectedExceptions.size} exceptions`);
     } catch (error) {
-      console.error('Batch dismiss failed:', error);
+      log.error('Batch dismiss failed:', { data: error }, 'useBOQMapping');
       toast.error('Batch dismiss failed');
     } finally {
       setIsProcessing(false);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { SOWListItem } from '../types/sow.types';
 import { SOWDocumentType, DocumentStatus } from '@/modules/projects/types/project.types';
+import { log } from '@/lib/logger';
 
 export function useSOWDocuments() {
   const [sowDocuments, setSowDocuments] = useState<SOWListItem[]>([]);
@@ -101,7 +102,7 @@ export function useSOWDocuments() {
       setSowDocuments(mockDocuments);
       setLoading(false);
     } catch (error) {
-      console.error('Error loading SOW documents:', error);
+      log.error('Error loading SOW documents:', { data: error }, 'useSOWDocuments');
       setLoading(false);
     }
   };

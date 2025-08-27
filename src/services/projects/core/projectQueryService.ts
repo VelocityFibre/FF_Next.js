@@ -6,6 +6,7 @@
 import { sql } from '@/lib/neon';
 import type { Project, ProjectFilter } from '@/types/project.types';
 import { ProjectDataMapper } from '../utils/projectDataMapper';
+import { log } from '@/lib/logger';
 
 /**
  * Project query and filtering service
@@ -21,7 +22,7 @@ export class ProjectQueryService {
 
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
-      console.error('Error fetching projects from Neon:', error);
+      log.error('Error fetching projects from Neon:', { data: error }, 'projectQueryService');
       return [];
     }
   }
@@ -48,7 +49,7 @@ export class ProjectQueryService {
       
       return ProjectDataMapper.mapToProject(result[0] as any);
     } catch (error) {
-      console.error('Error fetching project by ID:', error);
+      log.error('Error fetching project by ID:', { data: error }, 'projectQueryService');
       return null;
     }
   }
@@ -71,7 +72,7 @@ export class ProjectQueryService {
       
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
-      console.error('Error fetching projects by client:', error);
+      log.error('Error fetching projects by client:', { data: error }, 'projectQueryService');
       return [];
     }
   }
@@ -94,7 +95,7 @@ export class ProjectQueryService {
       
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
-      console.error('Error fetching projects by status:', error);
+      log.error('Error fetching projects by status:', { data: error }, 'projectQueryService');
       return [];
     }
   }
@@ -120,7 +121,7 @@ export class ProjectQueryService {
       
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
-      console.error('Error searching projects:', error);
+      log.error('Error searching projects:', { data: error }, 'projectQueryService');
       return [];
     }
   }
@@ -143,7 +144,7 @@ export class ProjectQueryService {
       
       return result.map(ProjectDataMapper.mapToProject);
     } catch (error) {
-      console.error('Error fetching active projects:', error);
+      log.error('Error fetching active projects:', { data: error }, 'projectQueryService');
       return [];
     }
   }
@@ -184,7 +185,7 @@ export class ProjectQueryService {
       
       return { projects, total };
     } catch (error) {
-      console.error('Error fetching paginated projects:', error);
+      log.error('Error fetching paginated projects:', { data: error }, 'projectQueryService');
       return { projects: [], total: 0 };
     }
   }

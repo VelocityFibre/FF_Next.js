@@ -7,6 +7,7 @@ import { neonDb } from '@/lib/neon/connection';
 import { projects } from '@/lib/neon/schema';
 import { eq, and, gte, lte, sql, count, sum, avg } from 'drizzle-orm';
 import type { ProjectOverview, ProjectTrend } from './types';
+import { log } from '@/lib/logger';
 
 export class ProjectAnalyticsService {
   /**
@@ -46,7 +47,7 @@ export class ProjectAnalyticsService {
         averageCompletionRate: Number(row.avgCompletion || 0)
       }));
     } catch (error) {
-      console.error('Failed to get project overview:', error);
+      log.error('Failed to get project overview:', { data: error }, 'projectAnalytics');
       // Return empty structure with zeros instead of throwing
       return [{
         totalProjects: 0,
@@ -99,7 +100,7 @@ export class ProjectAnalyticsService {
         totalValue: Number(row.totalBudget || 0)
       }));
     } catch (error) {
-      console.error('Failed to get project trends:', error);
+      log.error('Failed to get project trends:', { data: error }, 'projectAnalytics');
       // Return empty array instead of throwing
       return [];
     }

@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { Calendar, DollarSign, Users, FileText, Edit, TrendingUp, Clock } from 'lucide-react';
 import { ProjectAssignment, ContractorTeam } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 interface AssignmentDetailProps {
   assignment: ProjectAssignment;
@@ -50,7 +51,7 @@ export function AssignmentDetail({ assignment, teams, onUpdate }: AssignmentDeta
       onUpdate();
       setIsEditing(false);
     } catch (error) {
-      console.error('Failed to update progress:', error);
+      log.error('Failed to update progress:', { data: error }, 'AssignmentDetail');
     }
   };
 

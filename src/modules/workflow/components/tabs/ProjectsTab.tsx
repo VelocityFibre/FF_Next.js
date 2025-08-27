@@ -18,6 +18,7 @@ import { WorkflowAssignmentModal } from '../projects/WorkflowAssignmentModal';
 import { WorkflowAnalytics } from '../projects/WorkflowAnalytics';
 import { useWorkflowPortal } from '../../hooks/useWorkflowPortal';
 import type { ProjectWorkflow, ProjectWorkflowQuery, WorkflowTemplate } from '../../types/workflow.types';
+import { log } from '@/lib/logger';
 
 export function ProjectsTab() {
   const { projectWorkflows, templates, loadProjectWorkflows, loadTemplates } = useWorkflowPortal();
@@ -212,8 +213,8 @@ export function ProjectsTab() {
           <ProjectWorkflowList 
             workflows={filteredWorkflows}
             onAssignWorkflow={handleAssignToProject}
-            onEditWorkflow={(id) => console.log('Edit workflow:', id)}
-            onViewDetails={(id) => console.log('View details:', id)}
+            onEditWorkflow={(id) => log.info('Edit workflow:', { data: id }, 'ProjectsTab');}
+            onViewDetails={(id) => log.info('View details:', { data: id }, 'ProjectsTab');}
           />
         ) : (
           <WorkflowAnalytics />
@@ -228,7 +229,7 @@ export function ProjectsTab() {
           projectId={selectedProject}
           templates={templates}
           onAssign={(workflowData) => {
-            console.log('Assigning workflow:', workflowData);
+            log.info('Assigning workflow:', { data: workflowData }, 'ProjectsTab');
             setIsAssignmentModalOpen(false);
           }}
         />

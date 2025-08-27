@@ -5,6 +5,7 @@
 
 import { BOQCrud } from '../crud';
 import { BOQ } from '../../../../types/procurement/boq.types';
+import { log } from '@/lib/logger';
 
 /**
  * BOQ Budget and Risk Analysis Calculator
@@ -72,7 +73,7 @@ export class BOQBudgetCalculator {
         }
       };
     } catch (error) {
-      console.error('Error calculating project budget:', error);
+      log.error('Error calculating project budget:', { data: error }, 'budget-calculator');
       throw error;
     }
   }

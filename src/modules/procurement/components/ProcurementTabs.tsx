@@ -1,5 +1,5 @@
 // 🟢 WORKING: Comprehensive procurement tabs with badges and state management
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { 
   BarChart3,
   FileText, 

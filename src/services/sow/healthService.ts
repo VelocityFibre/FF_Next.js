@@ -4,6 +4,7 @@
  */
 
 import { createNeonClient } from '@/lib/neon-sql';
+import { log } from '@/lib/logger';
 
 const { sql, query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
@@ -22,7 +23,7 @@ export class SOWHealthService {
         timestamp: result[0].current_time 
       };
     } catch (error) {
-      console.error('Neon health check failed:', error);
+      log.error('Neon health check failed:', { data: error }, 'healthService');
       return { 
         connected: false, 
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -58,7 +59,7 @@ export class SOWHealthService {
         tables: results
       };
     } catch (error) {
-      console.error('Error checking project tables:', error);
+      log.error('Error checking project tables:', { data: error }, 'healthService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -92,7 +93,7 @@ export class SOWHealthService {
         }
       };
     } catch (error) {
-      console.error('Error getting project stats:', error);
+      log.error('Error getting project stats:', { data: error }, 'healthService');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',

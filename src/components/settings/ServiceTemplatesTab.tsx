@@ -27,6 +27,7 @@ import {
   ServiceTemplatesTabProps 
 } from '@/types/contractor';
 import { ServiceTemplateApiService } from '@/services/contractor';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Main component
 export function ServiceTemplatesTab({ 
@@ -65,7 +66,7 @@ export function ServiceTemplatesTab({
       
     } catch (err) {
       setError('Failed to load service templates');
-      console.error('Error loading templates:', err);
+      log.error('Error loading templates:', { data: err }, 'ServiceTemplatesTab');
     } finally {
       setLoading(false);
     }
@@ -146,7 +147,7 @@ export function ServiceTemplatesTab({
       setShowCreateModal(false);
       onServiceTemplateCreate?.(newTemplate);
     } catch (err) {
-      console.error('Error creating template:', err);
+      log.error('Error creating template:', { data: err }, 'ServiceTemplatesTab');
       setError('Failed to create service template');
     }
   };
@@ -159,7 +160,7 @@ export function ServiceTemplatesTab({
       setShowEditModal(false);
       onServiceTemplateUpdate?.(updatedTemplate);
     } catch (err) {
-      console.error('Error updating template:', err);
+      log.error('Error updating template:', { data: err }, 'ServiceTemplatesTab');
       setError('Failed to update service template');
     }
   };
@@ -184,7 +185,7 @@ export function ServiceTemplatesTab({
       setTemplates(prev => prev.filter(t => t.id !== id));
       onServiceTemplateDelete?.(id);
     } catch (err) {
-      console.error('Error deleting template:', err);
+      log.error('Error deleting template:', { data: err }, 'ServiceTemplatesTab');
       setError('Failed to delete service template');
     }
   };

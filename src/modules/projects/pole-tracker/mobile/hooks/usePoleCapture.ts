@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { PoleData, DropData, PoleStatus } from '../../types/pole-tracker.types';
 import { PoleFormData, PhotoCapture, REQUIRED_PHOTOS } from '../types/poleCapture.types';
+import { log } from '@/lib/logger';
 
 export function usePoleCapture(projectId: string) {
   const [formData, setFormData] = useState<PoleFormData>({
@@ -37,7 +38,7 @@ export function usePoleCapture(projectId: string) {
           setIsCapturingGPS(false);
         },
         (error) => {
-          console.error('GPS error:', error);
+          log.error('GPS error:', { data: error }, 'usePoleCapture');
           setIsCapturingGPS(false);
           alert('Unable to get GPS location. Please enable location services.');
         },

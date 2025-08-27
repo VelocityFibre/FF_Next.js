@@ -4,6 +4,7 @@
  */
 
 import { sql } from '@/lib/neon';
+import { log } from '@/lib/logger';
 import type { 
   MonthlyTrend, 
   BudgetAnalysis, 
@@ -53,7 +54,7 @@ export class ProjectTrendAnalytics {
         started: parseInt(row.started) || 0
       }));
     } catch (error) {
-      console.error('Error fetching monthly completion trends:', error);
+      log.error('Error fetching monthly completion trends:', { data: error }, 'trend-analytics');
       return [];
     }
   }
@@ -92,7 +93,7 @@ export class ProjectTrendAnalytics {
         }))
       };
     } catch (error) {
-      console.error('Error fetching budget analysis:', error);
+      log.error('Error fetching budget analysis:', { data: error }, 'trend-analytics');
       return {
         totalBudget: 0,
         averageBudget: 0,
@@ -150,7 +151,7 @@ export class ProjectTrendAnalytics {
         milestones: parseInt(row.milestones) || 0
       }));
     } catch (error) {
-      console.error('Error fetching project timeline:', error);
+      log.error('Error fetching project timeline:', { data: error }, 'trend-analytics');
       return [];
     }
   }
@@ -195,7 +196,7 @@ export class ProjectTrendAnalytics {
         clientCount: parseInt(row.client_count) || 0
       }));
     } catch (error) {
-      console.error('Error fetching quarterly trends:', error);
+      log.error('Error fetching quarterly trends:', { data: error }, 'trend-analytics');
       return [];
     }
   }
@@ -265,7 +266,7 @@ export class ProjectTrendAnalytics {
         }
       };
     } catch (error) {
-      console.error('Error fetching year-over-year comparison:', error);
+      log.error('Error fetching year-over-year comparison:', { data: error }, 'trend-analytics');
       return {
         currentYear: { projects: 0, budget: 0, completed: 0 },
         previousYear: { projects: 0, budget: 0, completed: 0 },
@@ -335,7 +336,7 @@ export class ProjectTrendAnalytics {
         completionRate: parseFloat(row.completion_rate) || 0
       }));
     } catch (error) {
-      console.error('Error fetching seasonal trends:', error);
+      log.error('Error fetching seasonal trends:', { data: error }, 'trend-analytics');
       return [];
     }
   }

@@ -1,5 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { log } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -19,18 +20,18 @@ export class ChartErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    console.error('Chart Error Boundary caught error:', error);
+    log.error('Chart Error Boundary caught error:', { data: error }, 'ChartErrorBoundary');
     return { hasError: true, error };
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Chart Error details:', { error, errorInfo });
+    log.error('Chart Error details:', { data: { error, errorInfo } }, 'ChartErrorBoundary');
     
     // Check for specific forwardRef errors from recharts
     if (error.message?.includes('forwardRef') || 
         error.message?.includes('Cannot read properties of undefined') ||
         error.stack?.includes('Surface.js')) {
-      console.warn('Detected recharts forwardRef error - this is a known bundling issue');
+      log.warn('Detected recharts forwardRef error - this is a known bundling issue', undefined, 'ChartErrorBoundary');
     }
     
     this.props.onError?.(error, errorInfo);
@@ -89,12 +90,12 @@ export class ChartErrorBoundary extends Component<Props, State> {
 // Hook version for functional components
 export const useChartErrorHandler = () => {
   const handleChartError = (error: Error, errorInfo?: ErrorInfo) => {
-    console.error('Chart error caught:', error, errorInfo);
+    log.error('Chart error caught:', { data: error, errorInfo }, 'ChartErrorBoundary');
     
     // Report specific recharts/forwardRef errors
     if (error.message?.includes('forwardRef') || 
         error.message?.includes('Cannot read properties of undefined')) {
-      console.warn('Recharts forwardRef error detected - falling back to alternative visualization');
+      log.warn('Recharts forwardRef error detected - falling back to alternative visualization', undefined, 'ChartErrorBoundary');
       
       // Could dispatch to error tracking service here
       // errorTrackingService.report(error, { context: 'chart-rendering' });

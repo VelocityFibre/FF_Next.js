@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { X, Users } from 'lucide-react';
 import { TeamFormData, ContractorTeam } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 interface TeamFormProps {
   team?: ContractorTeam;
@@ -51,7 +52,7 @@ export function TeamForm({ team, onSubmit, onCancel }: TeamFormProps) {
     try {
       await onSubmit(formData);
     } catch (error) {
-      console.error('Failed to save team:', error);
+      log.error('Failed to save team:', { data: error }, 'TeamForm');
     } finally {
       setIsSubmitting(false);
     }

@@ -9,6 +9,7 @@ import { staffQueryService } from '@/services/staff/staffQueryService';
 import { clientQueryService } from '@/services/client/clientQueryService';
 import { ProjectStatus } from '@/types/project.types';
 import { sql } from '@/lib/neon';
+import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Core dashboard data types
 export interface DashboardStats {
@@ -103,7 +104,7 @@ export class DashboardStatsService {
         budgetUtilization: projectStats.budgetUtilization,
       };
     } catch (error) {
-      console.error('Error fetching dashboard statistics:', error);
+      log.error('Error fetching dashboard statistics:', { data: error }, 'dashboardStatsService');
       // Return zeros instead of mock data on error
       return this.getEmptyStats();
     }
@@ -155,7 +156,7 @@ export class DashboardStatsService {
         budgetUtilization: totalBudget > 0 ? (completedBudget / totalBudget) * 100 : 0,
       };
     } catch (error) {
-      console.error('Error getting project statistics:', error);
+      log.error('Error getting project statistics:', { data: error }, 'dashboardStatsService');
       return {
         total: 0,
         active: 0,
@@ -181,7 +182,7 @@ export class DashboardStatsService {
         openIssues: 0, // TODO: Connect to issues system when available
       };
     } catch (error) {
-      console.error('Error getting staff statistics:', error);
+      log.error('Error getting staff statistics:', { data: error }, 'dashboardStatsService');
       return {
         total: 0,
         openIssues: 0,
@@ -201,7 +202,7 @@ export class DashboardStatsService {
         activeClients: clientSummary.activeClients,
       };
     } catch (error) {
-      console.error('Error getting client statistics:', error);
+      log.error('Error getting client statistics:', { data: error }, 'dashboardStatsService');
       return {
         totalRevenue: 0,
         activeClients: 0,

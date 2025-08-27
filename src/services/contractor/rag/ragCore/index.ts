@@ -10,6 +10,7 @@ import {
 import { DataRetrieval } from './dataRetrieval';
 import { ScoreCalculation } from './scoreCalculation';
 import { ScoreUpdater } from './scoreUpdater';
+import { log } from '@/lib/logger';
 
 /**
  * Main RAG Core class - maintains backward compatibility
@@ -32,7 +33,7 @@ export class RAGCore {
       // Build complete RAG score
       return ScoreCalculation.buildRAGScore(components, recommendations);
     } catch (error) {
-      console.error('Failed to calculate RAG score:', error);
+      log.error('Failed to calculate RAG score:', { data: error }, 'index');
       throw error;
     }
   }
@@ -93,7 +94,7 @@ export class RAGCore {
       // Sort by overall score (descending)
       return rankedContractors.sort((a, b) => b.ragScore.overall - a.ragScore.overall);
     } catch (error) {
-      console.error('Failed to get ranked contractors:', error);
+      log.error('Failed to get ranked contractors:', { data: error }, 'index');
       throw error;
     }
   }
@@ -120,7 +121,7 @@ export class RAGCore {
         const ragScore = await this.calculateRAGScore(contractorId);
         ragScoresData.push({ contractorId, score: ragScore });
       } catch (error) {
-        console.error(`Failed to calculate RAG score for contractor ${contractorId}:`, error);
+        log.error(`Failed to calculate RAG score for contractor ${contractorId}:`, { data: error }, 'index');
       }
     }
 

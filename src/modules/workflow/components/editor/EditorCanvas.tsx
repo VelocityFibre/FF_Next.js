@@ -4,6 +4,7 @@ import { useWorkflowEditor } from '../../context/WorkflowEditorContext';
 import { WorkflowNode } from './WorkflowNode';
 import { NodeConnection } from './NodeConnection';
 import type { EditorPosition } from '../../context/WorkflowEditorContext';
+import { log } from '@/lib/logger';
 
 interface CanvasTransform {
   scale: number;
@@ -225,7 +226,7 @@ export function EditorCanvas() {
       
       addNode(type, snappedPos, parentId);
     } catch (error) {
-      console.error('Failed to handle drop:', error);
+      log.error('Failed to handle drop:', { data: error }, 'EditorCanvas');
     }
   }, [screenToCanvas, snapToGrid, addNode]);
 

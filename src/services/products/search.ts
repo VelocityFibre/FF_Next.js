@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { Product, ProductAvailability } from './types';
+import { log } from '@/lib/logger';
 
 const PRODUCTS_COLLECTION = 'products';
 
@@ -46,7 +47,7 @@ export class ProductSearchService {
         product.brand?.toLowerCase().includes(term)
       );
     } catch (error) {
-      console.error('Error searching products:', error);
+      log.error('Error searching products:', { data: error }, 'search');
       throw error;
     }
   }
@@ -69,7 +70,7 @@ export class ProductSearchService {
         ...doc.data()
       } as Product));
     } catch (error) {
-      console.error('Error fetching supplier products:', error);
+      log.error('Error fetching supplier products:', { data: error }, 'search');
       throw error;
     }
   }
@@ -95,7 +96,7 @@ export class ProductSearchService {
         ...doc.data()
       } as Product));
     } catch (error) {
-      console.error('Error fetching available products:', error);
+      log.error('Error fetching available products:', { data: error }, 'search');
       throw error;
     }
   }
@@ -118,7 +119,7 @@ export class ProductSearchService {
         ...doc.data()
       } as Product));
     } catch (error) {
-      console.error('Error fetching category products:', error);
+      log.error('Error fetching category products:', { data: error }, 'search');
       throw error;
     }
   }
@@ -141,7 +142,7 @@ export class ProductSearchService {
         ...doc.data()
       } as Product));
     } catch (error) {
-      console.error('Error fetching low stock products:', error);
+      log.error('Error fetching low stock products:', { data: error }, 'search');
       throw error;
     }
   }

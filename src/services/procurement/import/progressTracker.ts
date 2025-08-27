@@ -4,6 +4,7 @@
  */
 
 import type { ImportProgress, ProgressCallback } from './importTypes';
+import { log } from '@/lib/logger';
 
 export class ProgressTracker {
   private callback: ProgressCallback = () => {};
@@ -22,7 +23,7 @@ export class ProgressTracker {
       this.callback(progress);
     } catch (error) {
       // Ignore callback errors to prevent import interruption
-      console.warn('Progress callback error:', error);
+      log.warn('Progress callback error:', { data: error }, 'progressTracker');
     }
   }
 

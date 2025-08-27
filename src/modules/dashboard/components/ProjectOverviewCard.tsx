@@ -3,6 +3,7 @@ import { FolderOpen, Calendar, MapPin, Users, Clock, AlertTriangle } from 'lucid
 import { cn } from '@/utils/cn';
 import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
 import { Project } from '@/types/project.types';
+import { log } from '@/lib/logger';
 
 interface DisplayProject {
   id: string;
@@ -114,7 +115,7 @@ export function ProjectOverviewCard({
         try {
           return mapProjectToDisplay(project);
         } catch (error) {
-          console.error(`Error mapping project at index ${index}:`, error, project);
+          log.error(`Error mapping project at index ${index}:`, { data: error, project }, 'ProjectOverviewCard');
           // Return a safe fallback project
           return {
             id: project?.id || `error-project-${index}`,
@@ -133,7 +134,7 @@ export function ProjectOverviewCard({
       });
       setProjects(displayProjects);
     } catch (error) {
-      console.error('Error loading projects:', error);
+      log.error('Error loading projects:', { data: error }, 'ProjectOverviewCard');
       setProjects([]); // Show empty state on error
     } finally {
       setIsLoading(false);

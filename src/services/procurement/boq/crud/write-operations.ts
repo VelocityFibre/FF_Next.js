@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../../config/firebase';
 import { BOQFormData, BOQStatusType, BOQ } from '../../../../types/procurement/boq.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'boqs';
 
@@ -52,7 +53,7 @@ export class BOQWriteOperations {
       } as any);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating BOQ:', error);
+      log.error('Error creating BOQ:', { data: error }, 'write-operations');
       throw error;
     }
   }
@@ -71,7 +72,7 @@ export class BOQWriteOperations {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating BOQ:', error);
+      log.error('Error updating BOQ:', { data: error }, 'write-operations');
       throw error;
     }
   }
@@ -83,7 +84,7 @@ export class BOQWriteOperations {
     try {
       await deleteDoc(doc(db, COLLECTION_NAME, id));
     } catch (error) {
-      console.error('Error deleting BOQ:', error);
+      log.error('Error deleting BOQ:', { data: error }, 'write-operations');
       throw error;
     }
   }
@@ -109,7 +110,7 @@ export class BOQWriteOperations {
       
       await updateDoc(doc(db, COLLECTION_NAME, id), updateData);
     } catch (error) {
-      console.error('Error updating BOQ status:', error);
+      log.error('Error updating BOQ status:', { data: error }, 'write-operations');
       throw error;
     }
   }
@@ -130,7 +131,7 @@ export class BOQWriteOperations {
       
       await Promise.all(promises);
     } catch (error) {
-      console.error('Error batch updating BOQs:', error);
+      log.error('Error batch updating BOQs:', { data: error }, 'write-operations');
       throw error;
     }
   }

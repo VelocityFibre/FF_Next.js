@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 // import { Navigate, useLocation } from 'react-router-dom';
 // import { useAuth } from '@/contexts/AuthContext';
 import { Permission, UserRole } from '@/types/auth.types';
+import { log } from '@/lib/logger';
 // import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 interface ProtectedRouteProps {
@@ -124,7 +125,7 @@ function UnauthorizedComponent({
     try {
       await signOut();
     } catch (error) {
-      console.error('Error signing out:', error);
+      log.error('Error signing out:', { data: error }, 'ProtectedRoute');
     }
   };
 

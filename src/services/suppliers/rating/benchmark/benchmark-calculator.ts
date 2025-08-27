@@ -4,6 +4,7 @@
  */
 
 import { SupplierCrudService } from '../../supplier.crud';
+import { log } from '@/lib/logger';
 import { 
   PerformanceMetrics, 
   BenchmarkData, 
@@ -37,7 +38,7 @@ export class BenchmarkCalculator {
         categoryBenchmarks
       };
     } catch (error) {
-      console.error('Error calculating benchmarks:', error);
+      log.error('Error calculating benchmarks:', { data: error }, 'benchmark-calculator');
       return this.getEmptyBenchmarkData();
     }
   }
@@ -185,7 +186,7 @@ export class BenchmarkCalculator {
         sampleSize: categorySuppliers.length
       };
     } catch (error) {
-      console.error(`Error getting category statistics for ${category}:`, error);
+      log.error(`Error getting category statistics for ${category}:`, { data: error }, 'benchmark-calculator');
       return {
         category,
         suppliers: [],

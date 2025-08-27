@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Batch Processor
  * Handles batch processing of multiple supplier scorecards
@@ -41,7 +43,7 @@ export class ScorecardBatchProcessor {
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
           failures.push({ supplierId, error: errorMessage });
-          console.warn(`Failed to generate scorecard for supplier ${supplierId}:`, error);
+          log.warn(`Failed to generate scorecard for supplier ${supplierId}:`, { data: error }, 'batch-processor');
           return null;
         }
       });
@@ -61,7 +63,7 @@ export class ScorecardBatchProcessor {
     filteredScorecards = this.sortScorecards(filteredScorecards, sortBy);
 
     if (failures.length > 0) {
-      console.warn(`Generated ${scorecards.length} scorecards with ${failures.length} failures`);
+      log.warn(`Generated ${scorecards.length} scorecards with ${failures.length} failures`, undefined, 'batch-processor');
     }
 
     return filteredScorecards;

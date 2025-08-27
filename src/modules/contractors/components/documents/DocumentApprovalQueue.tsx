@@ -30,6 +30,7 @@ import { DocumentFilters } from './DocumentFilters';
 import { ComplianceTracker } from './ComplianceTracker';
 import { BatchApprovalModal } from './BatchApprovalModal';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface DocumentApprovalQueueProps {
   /**
@@ -124,7 +125,7 @@ export function DocumentApprovalQueue({
       onStatsUpdate?.(stats);
       
     } catch (err) {
-      console.error('Failed to load documents:', err);
+      log.error('Failed to load documents:', { data: err }, 'DocumentApprovalQueue');
       setError('Failed to load documents. Please try again.');
       toast.error('Failed to load documents');
     } finally {
@@ -315,7 +316,7 @@ export function DocumentApprovalQueue({
       toast.success(`Document ${action === 'approve' ? 'approved' : 'rejected'} successfully`);
       
     } catch (error) {
-      console.error('Failed to process document:', error);
+      log.error('Failed to process document:', { data: error }, 'DocumentApprovalQueue');
       toast.error(`Failed to ${action} document`);
     } finally {
       setProcessingDocuments(prev => {
@@ -345,7 +346,7 @@ export function DocumentApprovalQueue({
       toast.success(`${request.documentIds.length} documents ${request.action === 'approve' ? 'approved' : 'rejected'}`);
       
     } catch (error) {
-      console.error('Failed to process batch approval:', error);
+      log.error('Failed to process batch approval:', { data: error }, 'DocumentApprovalQueue');
       toast.error('Failed to process batch approval');
     } finally {
       setIsProcessing(false);

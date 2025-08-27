@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { ThemeName, ThemeContextType, ThemePreference } from '@/types/theme.types';
 import { getTheme, DEFAULT_THEME, AVAILABLE_THEMES } from '@/config/themes';
+import { log } from '@/lib/logger';
 
 // Storage keys
 const THEME_STORAGE_KEY = 'fibreflow-theme-preference';
@@ -54,7 +55,7 @@ export function ThemeProvider({
       
       return preference;
     } catch (error) {
-      console.warn('Failed to load theme preference:', error);
+      log.warn('Failed to load theme preference:', { data: error }, 'ThemeContext');
       return null;
     }
   }, []);
@@ -64,7 +65,7 @@ export function ThemeProvider({
     try {
       localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(preference));
     } catch (error) {
-      console.warn('Failed to save theme preference:', error);
+      log.warn('Failed to save theme preference:', { data: error }, 'ThemeContext');
     }
   }, []);
 
@@ -127,7 +128,7 @@ export function ThemeProvider({
   // Set theme and save preference
   const setTheme = useCallback((theme: ThemeName) => {
     if (!AVAILABLE_THEMES.includes(theme)) {
-      console.warn(`Invalid theme: ${theme}. Using default theme.`);
+      log.warn(`Invalid theme: ${theme}. Using default theme.`, undefined, 'ThemeContext');
       theme = DEFAULT_THEME;
     }
 

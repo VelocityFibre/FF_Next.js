@@ -5,6 +5,7 @@
 
 import { sql } from '@/lib/neon';
 import type { ProjectFormData } from '@/types/project.types';
+import { log } from '@/lib/logger';
 
 /**
  * Project CRUD operations service
@@ -43,7 +44,7 @@ export class ProjectCRUDService {
       
       return result[0].id;
     } catch (error) {
-      console.error('Error creating project:', error);
+      log.error('Error creating project:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -72,7 +73,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error updating project:', error);
+      log.error('Error updating project:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -88,7 +89,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error deleting project:', error);
+      log.error('Error deleting project:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -103,7 +104,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error hard deleting project:', error);
+      log.error('Error hard deleting project:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -119,7 +120,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error updating project status:', error);
+      log.error('Error updating project status:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -135,7 +136,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error updating project progress:', error);
+      log.error('Error updating project progress:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -151,7 +152,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error updating project budget:', error);
+      log.error('Error updating project budget:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -167,7 +168,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error restoring project:', error);
+      log.error('Error restoring project:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -183,7 +184,7 @@ export class ProjectCRUDService {
         WHERE id = ANY(${projectIds})
       `;
     } catch (error) {
-      console.error('Error bulk updating project status:', error);
+      log.error('Error bulk updating project status:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -199,7 +200,7 @@ export class ProjectCRUDService {
         WHERE id = ${projectId}
       `;
     } catch (error) {
-      console.error('Error assigning project to client:', error);
+      log.error('Error assigning project to client:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }
@@ -222,7 +223,7 @@ export class ProjectCRUDService {
         WHERE id = ${id}
       `;
     } catch (error) {
-      console.error('Error updating project dates:', error);
+      log.error('Error updating project dates:', { data: error }, 'projectCRUDService');
       throw error;
     }
   }

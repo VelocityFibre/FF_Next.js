@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Supplier Scorecard Generator - Legacy Compatibility Layer
  * @deprecated Use modular components from './scorecard-generator' instead
@@ -53,7 +55,7 @@ export class ScorecardGenerator {
 
       return scorecard;
     } catch (error) {
-      console.error('Error generating supplier scorecard:', error);
+      log.error('Error generating supplier scorecard:', { data: error }, 'scorecardGenerator');
       throw new Error(`Failed to generate scorecard: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -70,7 +72,7 @@ export class ScorecardGenerator {
         const scorecard = await this.generateSupplierScorecard(supplierId);
         scorecards.push(scorecard);
       } catch (error) {
-        console.warn(`Failed to generate scorecard for supplier ${supplierId}:`, error);
+        log.warn(`Failed to generate scorecard for supplier ${supplierId}:`, { data: error }, 'scorecardGenerator');
       }
     }
 

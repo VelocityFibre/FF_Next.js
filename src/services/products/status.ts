@@ -6,6 +6,7 @@
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { ProductAvailability } from './types';
+import { log } from '@/lib/logger';
 
 const PRODUCTS_COLLECTION = 'products';
 
@@ -23,7 +24,7 @@ export class ProductStatusService {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error updating product availability:', error);
+      log.error('Error updating product availability:', { data: error }, 'status');
       throw error;
     }
   }
@@ -46,7 +47,7 @@ export class ProductStatusService {
       
       await updateDoc(doc(db, PRODUCTS_COLLECTION, id), updateData);
     } catch (error) {
-      console.error('Error discontinuing product:', error);
+      log.error('Error discontinuing product:', { data: error }, 'status');
       throw error;
     }
   }
@@ -63,7 +64,7 @@ export class ProductStatusService {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error activating product:', error);
+      log.error('Error activating product:', { data: error }, 'status');
       throw error;
     }
   }
@@ -79,7 +80,7 @@ export class ProductStatusService {
         updatedAt: Timestamp.now()
       });
     } catch (error) {
-      console.error('Error deactivating product:', error);
+      log.error('Error deactivating product:', { data: error }, 'status');
       throw error;
     }
   }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GitBranch } from 'lucide-react';
+import { log } from '@/lib/logger';
 
 interface StaffMember {
   id: string;
@@ -27,7 +28,7 @@ export function HierarchyTab() {
       const hierarchyTree = buildHierarchyTree(allStaff);
       setHierarchy(hierarchyTree);
     } catch (error) {
-      console.error('Error fetching hierarchy:', error);
+      log.error('Error fetching hierarchy:', { data: error }, 'HierarchyTab');
     } finally {
       setLoading(false);
     }

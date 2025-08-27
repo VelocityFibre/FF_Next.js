@@ -11,6 +11,7 @@ import {
 } from '@/types/staff.types';
 import { extractUniqueManagers, sortByManagerHierarchy, findManagerByName } from './managerResolver';
 import { parseDate, parseSkills } from './parsers';
+import { log } from '@/lib/logger';
 
 /**
  * Process imported rows and create/update staff
@@ -28,7 +29,7 @@ export async function processImportRows(
   
   // Extract all manager names first
   const managerNames = extractUniqueManagers(rows);
-  console.log('📊 Unique managers found:', Array.from(managerNames));
+  log.info('📊 Unique managers found:', { data: Array.from(managerNames }, 'rowProcessor'););
   
   // Sort rows to process managers first
   const sortedRows = sortByManagerHierarchy(rows, managerNames);
@@ -78,7 +79,7 @@ export async function processImportRows(
       
       // Validate employeeId - this is critical for database constraint
       if (!row.employeeId || row.employeeId.trim() === '') {
-        console.log(`Row ${rowNumber} missing employeeId. Available fields:`, Object.keys(row));
+        log.info(`Row ${rowNumber} missing employeeId. Available fields:`, { data: Object.keys(row }, 'rowProcessor'););
 
         errors.push({
           row: rowNumber,
@@ -119,11 +120,11 @@ export async function processImportRows(
       // COMPREHENSIVE DEBUG LOGGING - IMPORT SERVICE TRACING
 
 
-      console.log('Manager lookup result:', {
+      log.info('Manager lookup result:', { data: {
         managerName: row.managerName,
         resolvedUuid: reportsTo,
         reportsToType: typeof reportsTo,
-        reportsToValue: JSON.stringify(reportsTo)
+        reportsToValue: JSON.stringify(reportsTo }, 'rowProcessor');}
       });
       
       // Parse start date if provided
@@ -166,7 +167,7 @@ export async function processImportRows(
       };
       
       // Import the staff member using createOrUpdate to handle both new and existing
-      console.log(`📝 Creating or updating staff member: ${formData.name} (Employee ID: ${formData.employeeId})`);
+      log.info(`📝 Creating or updating staff member: ${formData.name} (Employee ID: ${formData.employeeId}, undefined, 'rowProcessor');`);
       const staffMember = await staffService.createOrUpdate(formData);
       
       if (staffMember) {
@@ -182,7 +183,7 @@ export async function processImportRows(
         });
       }
     } catch (error) {
-      console.error(`❌ Error processing row ${rowNumber}:`, error);
+      log.error(`❌ Error processing row ${rowNumber}:`, { data: error }, 'rowProcessor');
       failed++;
       errors.push({
         row: rowNumber,

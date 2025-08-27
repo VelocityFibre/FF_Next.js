@@ -4,6 +4,7 @@
  */
 
 import type { DateFormatOptions } from './types';
+import { log } from '@/lib/logger';
 
 export class DateFormatter {
   private defaultLocale = 'en-US';
@@ -41,7 +42,7 @@ export class DateFormatter {
 
       return new Intl.DateTimeFormat(locale, formatOptions).format(dateObj);
     } catch (error) {
-      console.warn('Date formatting failed:', error);
+      log.warn('Date formatting failed:', { data: error }, 'dateFormatter');
       return dateObj.toLocaleDateString();
     }
   }

@@ -33,6 +33,7 @@ import { procurementReportsService } from '@/services/procurement/reports/procur
 import { exportReport } from './utils/exportUtils';
 import { SupplierPerformanceReport } from './components/SupplierPerformanceReport';
 import { SpendAnalysisReport } from './components/SpendAnalysisReport';
+import { log } from '@/lib/logger';
 import type {
   CostSavingsReport,
   SupplierPerformanceReport as SupplierPerformanceReportData,
@@ -140,7 +141,7 @@ const ReportsAnalyticsPage: React.FC = () => {
       setCycleTimeData(cycleTime);
       setBudgetVarianceData(budgetVariance);
     } catch (error) {
-      console.error('Error loading report data:', error);
+      log.error('Error loading report data:', { data: error }, 'ReportsAnalyticsPage');
     } finally {
       setLoading(false);
     }
@@ -196,7 +197,7 @@ const ReportsAnalyticsPage: React.FC = () => {
       
       await exportReport(activeTab, data, { format });
     } catch (error) {
-      console.error('Export error:', error);
+      log.error('Export error:', { data: error }, 'ReportsAnalyticsPage');
       alert('Export failed. Please try again.');
     }
   };

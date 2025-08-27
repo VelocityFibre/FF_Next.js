@@ -5,6 +5,7 @@
 
 import { createNeonClient } from '@/lib/neon-sql';
 import { SOWTableType } from './types';
+import { log } from '@/lib/logger';
 
 const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
@@ -34,7 +35,7 @@ export class SOWSchemaService {
 
       return { success: true };
     } catch (error) {
-      console.error('Error initializing Neon tables:', error);
+      log.error('Error initializing Neon tables:', { data: error }, 'schema');
       throw error;
     }
   }

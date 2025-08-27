@@ -4,6 +4,7 @@
  */
 
 import { CatalogMatcher, CatalogItem } from '../../../../lib/utils/catalogMatcher';
+import { log } from '@/lib/logger';
 
 export class BOQImportCatalogManager {
   private catalogMatcher?: CatalogMatcher;
@@ -28,7 +29,7 @@ export class BOQImportCatalogManager {
       });
       this.isLoaded = true;
     } catch (error) {
-      console.error('Error loading catalog items:', error);
+      log.error('Error loading catalog items:', { data: error }, 'catalogManager');
       this.catalogItems = [];
       this.isLoaded = false;
     }

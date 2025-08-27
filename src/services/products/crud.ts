@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { Product, ProductFormData, ProductFilter } from './types';
+import { log } from '@/lib/logger';
 
 const PRODUCTS_COLLECTION = 'products';
 
@@ -48,7 +49,7 @@ export class ProductCrudService {
         ...doc.data()
       } as Product));
     } catch (error) {
-      console.error('Error fetching products:', error);
+      log.error('Error fetching products:', { data: error }, 'crud');
       throw error;
     }
   }
@@ -70,7 +71,7 @@ export class ProductCrudService {
         ...snapshot.data()
       } as Product;
     } catch (error) {
-      console.error('Error fetching product:', error);
+      log.error('Error fetching product:', { data: error }, 'crud');
       throw error;
     }
   }
@@ -96,7 +97,7 @@ export class ProductCrudService {
       const docRef = await addDoc(collection(db, PRODUCTS_COLLECTION), product);
       return docRef.id;
     } catch (error) {
-      console.error('Error creating product:', error);
+      log.error('Error creating product:', { data: error }, 'crud');
       throw error;
     }
   }
@@ -115,7 +116,7 @@ export class ProductCrudService {
       
       await updateDoc(docRef, updateData);
     } catch (error) {
-      console.error('Error updating product:', error);
+      log.error('Error updating product:', { data: error }, 'crud');
       throw error;
     }
   }
@@ -127,7 +128,7 @@ export class ProductCrudService {
     try {
       await deleteDoc(doc(db, PRODUCTS_COLLECTION, id));
     } catch (error) {
-      console.error('Error deleting product:', error);
+      log.error('Error deleting product:', { data: error }, 'crud');
       throw error;
     }
   }

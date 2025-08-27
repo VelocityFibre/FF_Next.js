@@ -11,6 +11,7 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { AssignmentForm } from './AssignmentForm';
 import { AssignmentDetail } from './AssignmentDetail';
 import toast from 'react-hot-toast';
+import { log } from '@/lib/logger';
 
 interface AssignmentManagementProps {
   contractorId: string;
@@ -44,7 +45,7 @@ export function AssignmentManagement({ contractorId, contractorName }: Assignmen
       setAssignments(assignmentsData);
       setTeams(teamsData);
     } catch (error) {
-      console.error('Failed to load assignment data:', error);
+      log.error('Failed to load assignment data:', { data: error }, 'AssignmentManagement');
       toast.error('Failed to load assignment data');
     } finally {
       setIsLoading(false);

@@ -15,6 +15,7 @@ import {
 } from './ClientDetailSections';
 import { useAuth } from '@/contexts/AuthContext';
 import { Permission } from '@/types/auth.types';
+import { log } from '@/lib/logger';
 
 export function ClientDetail() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export function ClientDetail() {
       await deleteMutation.mutateAsync(id);
       navigate('/app/clients');
     } catch (error) {
-      console.error('Failed to delete client:', error);
+      log.error('Failed to delete client:', { data: error }, 'ClientDetail');
     }
   };
 

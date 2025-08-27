@@ -1,3 +1,5 @@
+import { log } from '@/lib/logger';
+
 /**
  * Manager Resolver
  * Handles manager lookup and resolution for staff imports
@@ -36,7 +38,7 @@ export async function findManagerByName(managerName: string): Promise<string | n
     
     return null;
   } catch (error) {
-    console.error('Error looking up manager by name:', error);
+    log.error('Error looking up manager by name:', { data: error }, 'managerResolver');
     return null;
   }
 }

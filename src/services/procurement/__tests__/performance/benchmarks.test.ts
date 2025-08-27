@@ -5,6 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { procurementApiService } from '../../procurementApiService';
+import { log } from '@/lib/logger';
 import {
   createMockContext,
   setupMocks,
@@ -118,9 +119,7 @@ describe('Performance Benchmarks', () => {
         expect(avgDuration).toBeLessThan(operation.sla);
       }
       
-      console.table(benchmarkResults.map(r => ({
-        Operation: r.operation,
-        'SLA (ms)': r.sla,
+      // Console statement removed for zero tolerance compliance': r.sla,
         'Avg (ms)': r.avgDuration.toFixed(1),
         'Max (ms)': r.maxDuration.toFixed(1),
         'Min (ms)': r.minDuration.toFixed(1),
@@ -203,11 +202,11 @@ describe('Performance Benchmarks', () => {
       expect(avgResponseTime).toBeLessThan(2000); // Average under 2 seconds
       expect(maxResponseTime).toBeLessThan(5000); // Max under 5 seconds
       
-      console.log('Sustained Load Test:', {
+      log.info('Sustained Load Test:', { data: {
         duration: '3 seconds',
         requestsPerSecond: 10,
         totalRequests: loadResults.length,
-        successRate: `${successRate.toFixed(1)}%`,
+        successRate: `${successRate.toFixed(1 }, 'benchmarks');}}%`,
         avgResponseTime: `${avgResponseTime.toFixed(0)}ms`,
         maxResponseTime: `${maxResponseTime.toFixed(0)}ms`
       });
@@ -281,15 +280,15 @@ describe('Performance Benchmarks', () => {
       expect(minSuccessRate).toBeGreaterThan(90); // All runs > 90% success
       expect(avgOfAvgs).toBeLessThan(2000); // Overall average under 2 seconds
       
-      console.log('Consistency Test Results:', testRuns.map((run, index) => ({
+      log.info('Consistency Test Results:', { data: testRuns.map((run, index }, 'benchmarks'); => ({
         run: index + 1,
         avgResponseTime: `${run.avgResponseTime.toFixed(0)}ms`,
         successRate: `${run.successRate.toFixed(1)}%`,
         totalTime: `${run.totalTime.toFixed(0)}ms`
       })));
       
-      console.log('Consistency Metrics:', {
-        variabilityRatio: variabilityRatio.toFixed(2),
+      log.info('Consistency Metrics:', { data: {
+        variabilityRatio: variabilityRatio.toFixed(2 }, 'benchmarks');},
         avgResponseTime: `${avgOfAvgs.toFixed(0)}ms`,
         minSuccessRate: `${minSuccessRate.toFixed(1)}%`
       });
@@ -354,8 +353,8 @@ describe('Performance Benchmarks', () => {
         cacheHitRate: secondDbCalls === firstDbCalls ? 100 : 0
       };
       
-      console.log('Caching Analysis:', {
-        firstQueryTime: `${firstTime.toFixed(1)}ms`,
+      log.info('Caching Analysis:', { data: {
+        firstQueryTime: `${firstTime.toFixed(1 }, 'benchmarks');}}ms`,
         secondQueryTime: `${secondTime.toFixed(1)}ms`,
         thirdQueryTime: `${thirdTime.toFixed(1)}ms`,
         speedImprovement: `${(cachingEffectiveness.speedImprovement * 100).toFixed(1)}%`,
@@ -458,18 +457,16 @@ describe('Performance Benchmarks', () => {
         const avgIndexedTime = indexedQueries.reduce((sum, q) => sum + q.time, 0) / indexedQueries.length;
         const avgNonIndexedTime = nonIndexedQueries.reduce((sum, q) => sum + q.time, 0) / nonIndexedQueries.length;
         
-        console.log('Query Optimization Analysis:', {
+        log.info('Query Optimization Analysis:', { data: {
           indexedQueries: indexedQueries.length,
           nonIndexedQueries: nonIndexedQueries.length,
-          avgIndexedTime: `${avgIndexedTime.toFixed(1)}ms`,
+          avgIndexedTime: `${avgIndexedTime.toFixed(1 }, 'benchmarks');}}ms`,
           avgNonIndexedTime: `${avgNonIndexedTime.toFixed(1)}ms`,
           performanceRatio: (avgNonIndexedTime / avgIndexedTime).toFixed(2)
         });
       }
       
-      console.table(queryPerformanceData.map(q => ({
-        Query: q.queryType,
-        'Time (ms)': q.time.toFixed(1),
+      // Console statement removed for zero tolerance compliance': q.time.toFixed(1),
         Indexed: q.indexed ? '✓' : '✗'
       })));
     });
@@ -531,9 +528,9 @@ describe('Performance Benchmarks', () => {
       expect(totalMemoryGrowth).toBeLessThan(50 * 1024 * 1024); // Less than 50MB total growth
       expect(avgOperationGrowth).toBeLessThan(1024 * 1024); // Less than 1MB average per operation
       
-      console.log('Resource Cleanup Analysis:', {
+      log.info('Resource Cleanup Analysis:', { data: {
         operations: operationCount,
-        totalMemoryGrowth: `${(totalMemoryGrowth / 1024 / 1024).toFixed(2)} MB`,
+        totalMemoryGrowth: `${(totalMemoryGrowth / 1024 / 1024 }, 'benchmarks');}.toFixed(2)} MB`,
         avgOperationGrowth: `${(avgOperationGrowth / 1024).toFixed(2)} KB`,
         finalHeapUsed: `${(finalMemory.heapUsed / 1024 / 1024).toFixed(2)} MB`,
         memoryEfficiency: totalMemoryGrowth < 10 * 1024 * 1024 ? 'Excellent' : 

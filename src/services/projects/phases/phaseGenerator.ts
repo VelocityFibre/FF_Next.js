@@ -5,6 +5,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { log } from '@/lib/logger';
 import { 
   FIBER_PROJECT_PHASES,
   PhaseStatus,
@@ -56,7 +57,7 @@ export async function generateProjectPhases(projectId: string, projectType: stri
     
     await batch.commit();
   } catch (error) {
-    console.error('Error generating project phases:', error);
+    log.error('Error generating project phases:', { data: error }, 'phaseGenerator');
     throw new Error('Failed to generate project phases');
   }
 }

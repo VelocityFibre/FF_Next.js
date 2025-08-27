@@ -7,6 +7,7 @@ import { projectAccessMiddleware } from '../../projectAccessMiddleware';
 import { PermissionChecker, UserPermissionCache } from '../permissionChecker';
 import { PermissionCacheManager } from '../cacheManager';
 import type { ServiceResponse } from '@/services/core/BaseService';
+import { log } from '@/lib/logger';
 
 /**
  * User permission management operations
@@ -68,7 +69,7 @@ export class UserPermissionManager {
         data: userPermissionCache
       };
     } catch (error) {
-      console.error('[UserPermissionManager] getUserPermissions error:', error);
+      log.error('[UserPermissionManager] getUserPermissions error:', { data: error }, 'userPermissionManager');
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to get user permissions',

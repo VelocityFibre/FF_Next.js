@@ -2,6 +2,7 @@
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { log } from '@/lib/logger';
 
 interface CoverageReport {
   total: {
@@ -95,7 +96,7 @@ export class WorkflowTestRunner {
    * Run all workflow tests and generate coverage report
    */
   async runAllTests(): Promise<void> {
-    console.log('🚀 Starting comprehensive workflow system test suite...\n');
+    log.info('🚀 Starting comprehensive workflow system test suite...\n', undefined, 'test-coverage-runner');
 
     try {
       // Run unit tests with coverage
@@ -113,10 +114,10 @@ export class WorkflowTestRunner {
       // Generate reports
       await this.generateReports();
       
-      console.log('✅ All tests completed successfully!');
+      log.info('✅ All tests completed successfully!', undefined, 'test-coverage-runner');
       
     } catch (error) {
-      console.error('❌ Test execution failed:', error);
+      log.error('❌ Test execution failed:', { data: error }, 'test-coverage-runner');
       process.exit(1);
     }
   }
@@ -125,7 +126,7 @@ export class WorkflowTestRunner {
    * Run unit tests for all modules
    */
   private async runUnitTests(): Promise<void> {
-    console.log('📋 Running unit tests...');
+    log.info('📋 Running unit tests...', undefined, 'test-coverage-runner');
     
     const testCommands = [
       'npx vitest run --config vitest.config.workflow.ts --reporter=verbose',
@@ -139,7 +140,7 @@ export class WorkflowTestRunner {
         cwd: process.cwd()
       });
       
-      console.log('✅ Unit tests passed\n');
+      log.info('✅ Unit tests passed\n', undefined, 'test-coverage-runner');
     } catch (error) {
       throw new Error(`Unit tests failed: ${error}`);
     }
@@ -149,7 +150,7 @@ export class WorkflowTestRunner {
    * Run integration tests
    */
   private async runIntegrationTests(): Promise<void> {
-    console.log('🔗 Running integration tests...');
+    log.info('🔗 Running integration tests...', undefined, 'test-coverage-runner');
     
     const integrationTests = [
       'src/modules/workflow/__tests__/services/**/*.test.ts',
@@ -163,18 +164,18 @@ export class WorkflowTestRunner {
           cwd: process.cwd()
         });
       } catch (error) {
-        console.warn(`⚠️ Integration test pattern ${testPattern} not found or failed`);
+        log.warn(`⚠️ Integration test pattern ${testPattern} not found or failed`, undefined, 'test-coverage-runner');
       }
     }
     
-    console.log('✅ Integration tests completed\n');
+    log.info('✅ Integration tests completed\n', undefined, 'test-coverage-runner');
   }
 
   /**
    * Run component tests
    */
   private async runComponentTests(): Promise<void> {
-    console.log('🧩 Running component tests...');
+    log.info('🧩 Running component tests...', undefined, 'test-coverage-runner');
     
     const componentTestPattern = 'src/modules/workflow/__tests__/components/**/*.test.tsx';
     
@@ -184,7 +185,7 @@ export class WorkflowTestRunner {
         cwd: process.cwd()
       });
       
-      console.log('✅ Component tests passed\n');
+      log.info('✅ Component tests passed\n', undefined, 'test-coverage-runner');
     } catch (error) {
       throw new Error(`Component tests failed: ${error}`);
     }
@@ -194,7 +195,7 @@ export class WorkflowTestRunner {
    * Analyze test coverage and verify thresholds
    */
   private async analyzeCoverage(): Promise<void> {
-    console.log('📊 Analyzing test coverage...');
+    log.info('📊 Analyzing test coverage...', undefined, 'test-coverage-runner');
     
     try {
       const coveragePath = join(process.cwd(), 'coverage', 'workflow', 'coverage-final.json');
@@ -204,11 +205,11 @@ export class WorkflowTestRunner {
       const overall = coverageData.total;
       const thresholds = this.coverageThresholds.overall;
       
-      console.log('\n📈 Coverage Summary:');
-      console.log(`Lines: ${overall.lines.pct.toFixed(1)}% (threshold: ${thresholds.lines}%)`);
-      console.log(`Statements: ${overall.statements.pct.toFixed(1)}% (threshold: ${thresholds.statements}%)`);
-      console.log(`Functions: ${overall.functions.pct.toFixed(1)}% (threshold: ${thresholds.functions}%)`);
-      console.log(`Branches: ${overall.branches.pct.toFixed(1)}% (threshold: ${thresholds.branches}%)`);
+      log.info('\n📈 Coverage Summary:', undefined, 'test-coverage-runner');
+      log.info(`Lines: ${overall.lines.pct.toFixed(1, undefined, 'test-coverage-runner');}% (threshold: ${thresholds.lines}%)`);
+      log.info(`Statements: ${overall.statements.pct.toFixed(1, undefined, 'test-coverage-runner');}% (threshold: ${thresholds.statements}%)`);
+      log.info(`Functions: ${overall.functions.pct.toFixed(1, undefined, 'test-coverage-runner');}% (threshold: ${thresholds.functions}%)`);
+      log.info(`Branches: ${overall.branches.pct.toFixed(1, undefined, 'test-coverage-runner');}% (threshold: ${thresholds.branches}%)`);
       
       // Check if coverage meets thresholds
       const failures: string[] = [];
@@ -230,15 +231,15 @@ export class WorkflowTestRunner {
       }
       
       if (failures.length > 0) {
-        console.error('\n❌ Coverage thresholds not met:');
-        failures.forEach(failure => console.error(`  • ${failure}`));
+        log.error('\n❌ Coverage thresholds not met:', undefined, 'test-coverage-runner');
+        failures.forEach(failure => log.error(`  • ${failure}`, undefined, 'test-coverage-runner'););
         throw new Error('Coverage thresholds not met');
       }
       
       // Analyze module-specific coverage
       await this.analyzeModuleCoverage(coverageData);
       
-      console.log('\n✅ Coverage analysis passed');
+      log.info('\n✅ Coverage analysis passed', undefined, 'test-coverage-runner');
       
     } catch (error) {
       throw new Error(`Coverage analysis failed: ${error}`);
@@ -249,10 +250,10 @@ export class WorkflowTestRunner {
    * Analyze coverage for specific modules
    */
   private async analyzeModuleCoverage(coverageData: CoverageReport): Promise<void> {
-    console.log('\n🎯 Module-specific coverage analysis:');
+    log.info('\n🎯 Module-specific coverage analysis:', undefined, 'test-coverage-runner');
     
     for (const suite of this.testSuites) {
-      console.log(`\n${suite.name}:`);
+      log.info(`\n${suite.name}:`, undefined, 'test-coverage-runner');
       
       const moduleFiles = Object.keys(coverageData.files).filter(file => 
         suite.files.some(pattern => {
@@ -265,7 +266,7 @@ export class WorkflowTestRunner {
       );
       
       if (moduleFiles.length === 0) {
-        console.log(`  ⚠️ No files found matching patterns`);
+        log.info(`  ⚠️ No files found matching patterns`, undefined, 'test-coverage-runner');
         continue;
       }
       
@@ -291,10 +292,10 @@ export class WorkflowTestRunner {
         branches: moduleCoverage.branches / fileCount
       };
       
-      console.log(`  Lines: ${avgCoverage.lines.toFixed(1)}%`);
-      console.log(`  Statements: ${avgCoverage.statements.toFixed(1)}%`);
-      console.log(`  Functions: ${avgCoverage.functions.toFixed(1)}%`);
-      console.log(`  Branches: ${avgCoverage.branches.toFixed(1)}%`);
+      log.info(`  Lines: ${avgCoverage.lines.toFixed(1, undefined, 'test-coverage-runner');}%`);
+      log.info(`  Statements: ${avgCoverage.statements.toFixed(1, undefined, 'test-coverage-runner');}%`);
+      log.info(`  Functions: ${avgCoverage.functions.toFixed(1, undefined, 'test-coverage-runner');}%`);
+      log.info(`  Branches: ${avgCoverage.branches.toFixed(1, undefined, 'test-coverage-runner');}%`);
       
       // Check against expected coverage
       const expected = suite.expectedCoverage;
@@ -314,9 +315,9 @@ export class WorkflowTestRunner {
       }
       
       if (warnings.length > 0) {
-        console.log(`  ⚠️ Below expected: ${warnings.join(', ')}`);
+        log.info(`  ⚠️ Below expected: ${warnings.join(', ', undefined, 'test-coverage-runner');}`);
       } else {
-        console.log(`  ✅ Meets expected coverage`);
+        log.info(`  ✅ Meets expected coverage`, undefined, 'test-coverage-runner');
       }
     }
   }
@@ -325,7 +326,7 @@ export class WorkflowTestRunner {
    * Generate comprehensive test reports
    */
   private async generateReports(): Promise<void> {
-    console.log('\n📄 Generating test reports...');
+    log.info('\n📄 Generating test reports...', undefined, 'test-coverage-runner');
     
     const reportData = {
       timestamp: new Date().toISOString(),
@@ -361,10 +362,10 @@ export class WorkflowTestRunner {
     const markdownPath = join(process.cwd(), 'WORKFLOW_TEST_REPORT.md');
     writeFileSync(markdownPath, markdownReport);
     
-    console.log(`✅ Reports generated:`);
-    console.log(`  • JSON: ${reportPath}`);
-    console.log(`  • Markdown: ${markdownPath}`);
-    console.log(`  • HTML: coverage/workflow/index.html`);
+    log.info(`✅ Reports generated:`, undefined, 'test-coverage-runner');
+    log.info(`  • JSON: ${reportPath}`, undefined, 'test-coverage-runner');
+    log.info(`  • Markdown: ${markdownPath}`, undefined, 'test-coverage-runner');
+    log.info(`  • HTML: coverage/workflow/index.html`, undefined, 'test-coverage-runner');
   }
 
   /**
@@ -490,7 +491,7 @@ npm run test:e2e:workflow
    * Run quick smoke tests
    */
   async runSmokeTests(): Promise<void> {
-    console.log('🔥 Running smoke tests...');
+    log.info('🔥 Running smoke tests...', undefined, 'test-coverage-runner');
     
     const smokeTests = [
       'src/modules/workflow/__tests__/context/*.test.tsx',
@@ -508,7 +509,7 @@ npm run test:e2e:workflow
       }
     }
     
-    console.log('✅ Smoke tests passed');
+    log.info('✅ Smoke tests passed', undefined, 'test-coverage-runner');
   }
 }
 

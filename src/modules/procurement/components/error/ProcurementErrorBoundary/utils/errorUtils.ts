@@ -5,6 +5,7 @@
 
 import { ErrorInfo } from 'react';
 import { ErrorDetails, ProcurementContext, ErrorLogData } from '../types/errorBoundary.types';
+import { log } from '@/lib/logger';
 
 export const getProcurementErrorMessage = (error: Error): ErrorDetails => {
   const message = error.message?.toLowerCase() || '';
@@ -118,7 +119,7 @@ export const createErrorLogData = (
 
 export const logProcurementError = (errorData: ErrorLogData): void => {
   // Procurement-specific error logging
-  console.error('Procurement Error Data:', errorData);
+  log.error('Procurement Error Data:', { data: errorData }, 'errorUtils');
   
   // TODO: Integrate with actual error tracking service
   // errorTrackingService.logError(errorData);

@@ -19,9 +19,8 @@ export function KPIDashboard() {
     loadDashboardData 
   } = useKPIDashboardData();
 
-  // Acknowledge unused variables
-  void _isLoading;
-  void _error;
+  // Note: isLoading and error states could be used for loading indicators and error handling
+  // but are currently not implemented in the UI layer
 
   // 🟢 WORKING: Get KPI dashboard cards
   const dashboardKpiCards = getKPIDashboardCards(

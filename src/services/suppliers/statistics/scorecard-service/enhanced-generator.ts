@@ -5,6 +5,7 @@
 
 import { Supplier } from '@/types/supplier/base.types';
 import { ProductCategory } from '@/types/supplier/common.types';
+import { log } from '@/lib/logger';
 import type { 
   ScorecardGenerationResult, 
   EnhancedScorecardResult 
@@ -116,7 +117,7 @@ export class ScorecardEnhancedGenerator {
         topRegionalSuppliers
       };
     } catch (error) {
-      console.error('Error calculating regional benchmarks:', error);
+      log.error('Error calculating regional benchmarks:', { data: error }, 'enhanced-generator');
       return {
         regionalPercentile: 50,
         regionalAverage: 0,
@@ -185,7 +186,7 @@ export class ScorecardEnhancedGenerator {
         categoryLeaders
       };
     } catch (error) {
-      console.error(`Error calculating category benchmarks for ${category}:`, error);
+      log.error(`Error calculating category benchmarks for ${category}:`, { data: error }, 'enhanced-generator');
       return {
         category,
         categoryPercentile: 50,

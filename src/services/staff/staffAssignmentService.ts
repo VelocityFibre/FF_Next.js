@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { ProjectAssignment } from '@/types/staff.types';
+import { log } from '@/lib/logger';
 
 /**
  * Project assignment operations for staff
@@ -35,7 +36,7 @@ export const staffAssignmentService = {
       
       return docRef.id;
     } catch (error) {
-      console.error('Error assigning staff to project:', error);
+      log.error('Error assigning staff to project:', { data: error }, 'staffAssignmentService');
       throw new Error('Failed to assign staff to project');
     }
   },
@@ -66,7 +67,7 @@ export const staffAssignmentService = {
         }
       }
     } catch (error) {
-      console.error('Error updating assignment:', error);
+      log.error('Error updating assignment:', { data: error }, 'staffAssignmentService');
       throw new Error('Failed to update assignment');
     }
   },
@@ -92,7 +93,7 @@ export const staffAssignmentService = {
         updatedAt: Timestamp.now(),
       });
     } catch (error) {
-      console.error('Error updating staff project count:', error);
+      log.error('Error updating staff project count:', { data: error }, 'staffAssignmentService');
       throw new Error('Failed to update staff project count');
     }
   },
@@ -135,7 +136,7 @@ export const staffAssignmentService = {
       
       return availableStaff;
     } catch (error) {
-      console.error('Error getting available staff:', error);
+      log.error('Error getting available staff:', { data: error }, 'staffAssignmentService');
       throw new Error('Failed to get available staff');
     }
   }

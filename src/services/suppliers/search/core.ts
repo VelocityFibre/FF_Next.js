@@ -15,6 +15,7 @@ import { SupplierQueryBuilder } from './queryBuilder';
 import { SupplierFilterProcessor } from './filters';
 import { SupplierSortingService } from './sorting';
 import { SupplierScoringService } from './scoring';
+import { log } from '@/lib/logger';
 
 export class SupplierSearchCore {
   /**
@@ -37,7 +38,7 @@ export class SupplierSearchCore {
       
       return suppliers;
     } catch (error) {
-      console.error('Error searching suppliers:', error);
+      log.error('Error searching suppliers:', { data: error }, 'core');
       throw new Error(`Failed to search suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -59,7 +60,7 @@ export class SupplierSearchCore {
       
       return searchResults.slice(0, maxResults);
     } catch (error) {
-      console.error('Error searching suppliers by name:', error);
+      log.error('Error searching suppliers by name:', { data: error }, 'core');
       throw new Error(`Failed to search suppliers by name: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -74,7 +75,7 @@ export class SupplierSearchCore {
     try {
       return await SupplierQueryBuilder.queryByCategory(category, options);
     } catch (error) {
-      console.error(`Error fetching suppliers by category ${category}:`, error);
+      log.error(`Error fetching suppliers by category ${category}:`, { data: error }, 'core');
       throw new Error(`Failed to fetch suppliers by category: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -88,7 +89,7 @@ export class SupplierSearchCore {
       const suppliers = await SupplierQueryBuilder.getBaseSupplierSet({ status: 'active' });
       return SupplierFilterProcessor.filterByLocation(suppliers, location);
     } catch (error) {
-      console.error(`Error fetching suppliers by location ${location}:`, error);
+      log.error(`Error fetching suppliers by location ${location}:`, { data: error }, 'core');
       throw new Error(`Failed to fetch suppliers by location: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -102,7 +103,7 @@ export class SupplierSearchCore {
     try {
       return await SupplierQueryBuilder.queryPreferredSuppliers(options);
     } catch (error) {
-      console.error('Error fetching preferred suppliers:', error);
+      log.error('Error fetching preferred suppliers:', { data: error }, 'core');
       throw new Error(`Failed to fetch preferred suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -122,7 +123,7 @@ export class SupplierSearchCore {
       // Score and rank suppliers
       return SupplierScoringService.scoreForRFQ(filteredSuppliers, criteria);
     } catch (error) {
-      console.error('Error searching suppliers for RFQ:', error);
+      log.error('Error searching suppliers for RFQ:', { data: error }, 'core');
       throw new Error(`Failed to search suppliers for RFQ: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

@@ -14,6 +14,7 @@ import {
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { ErrorActions } from './components/ErrorActions';
 import { TechnicalDetails } from './components/TechnicalDetails';
+import { log } from '@/lib/logger';
 
 export class ProcurementErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public override state: ErrorBoundaryState = {
@@ -33,7 +34,7 @@ export class ProcurementErrorBoundary extends Component<ErrorBoundaryProps, Erro
   }
 
   public override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Procurement Module Error:', error, errorInfo);
+    log.error('Procurement Module Error:', { data: error, errorInfo }, 'ProcurementErrorBoundary');
     
     const context = getProcurementContext();
     const errorData = createErrorLogData(error, errorInfo, context);

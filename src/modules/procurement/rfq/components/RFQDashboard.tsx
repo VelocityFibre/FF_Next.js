@@ -24,6 +24,7 @@ import { ProcurementErrorBoundary } from '../../components/error/ProcurementErro
 import { RFQOperations } from '@/services/procurement/api/rfqOperations';
 import { ProcurementApiService } from '@/services/procurement/api/ProcurementApiService';
 import { RFQStatus, RFQStatusType } from '@/types/procurement/rfq';
+import { log } from '@/lib/logger';
 
 interface RFQStatsData {
   totalRFQs: number;
@@ -49,11 +50,16 @@ interface RFQListItem {
   daysRemaining: number;
 }
 
-export function RFQDashboard() {
+interface RFQDashboardProps {
+  projectId: string;
+  searchTerm: string;
+  statusFilter: 'all' | 'draft' | 'sent' | 'responded' | 'closed';
+  onCreateRFQ: () => void;
+}
+
+export function RFQDashboard({ projectId, searchTerm, statusFilter, onCreateRFQ }: RFQDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<RFQStatusType | 'all'>('all');
   const [rfqStats, setRFQStats] = useState<RFQStatsData>({
     totalRFQs: 0,
     activeRFQs: 0,
@@ -144,7 +150,7 @@ export function RFQDashboard() {
         setMockData();
       }
     } catch (err) {
-      console.error('Error loading RFQ data:', err);
+      log.error('Error loading RFQ data:', { data: err }, 'RFQDashboard');
       setError('Failed to load RFQ data. Using mock data for demonstration.');
       setMockData();
     } finally {
@@ -262,7 +268,7 @@ export function RFQDashboard() {
   const filteredRFQs = recentRFQs.filter(rfq => {
     const matchesSearch = rfq.rfqNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          rfq.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'all' || rfq.status === filterStatus;
+    const matchesFilter = statusFilter === 'all' || rfq.status === statusFilter;
     return matchesSearch && matchesFilter;
   });
 
@@ -487,13 +493,13 @@ export function RFQDashboard() {
                     type="text"
                     placeholder="Search RFQs..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {/* Search handled by parent */}}
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
                   />
                 </div>
                 <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value as RFQStatusType | 'all')}
+                  value={statusFilter}
+                  onChange={(e) => {/* Filter handled by parent */}}
                   className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="all">All Status</option>
@@ -607,7 +613,7 @@ export function RFQDashboard() {
                 <FileText className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">No RFQs found</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  {searchTerm || filterStatus !== 'all' 
+                  {searchTerm || statusFilter !== 'all' 
                     ? 'Try adjusting your search or filter criteria.'
                     : 'Get started by creating your first RFQ.'}
                 </p>

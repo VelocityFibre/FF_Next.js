@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
+import { log } from '@/lib/logger';
 
 const COLLECTION_NAME = 'suppliers';
 
@@ -44,7 +45,7 @@ export class SupplierQueryBuilder {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error getting base supplier set:', error);
+      log.error('Error getting base supplier set:', { data: error }, 'queryBuilder');
       throw new Error(`Failed to get suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -84,7 +85,7 @@ export class SupplierQueryBuilder {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error(`Error querying suppliers by category ${category}:`, error);
+      log.error(`Error querying suppliers by category ${category}:`, { data: error }, 'queryBuilder');
       throw new Error(`Failed to query suppliers by category: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -124,7 +125,7 @@ export class SupplierQueryBuilder {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error querying preferred suppliers:', error);
+      log.error('Error querying preferred suppliers:', { data: error }, 'queryBuilder');
       throw new Error(`Failed to query preferred suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -152,7 +153,7 @@ export class SupplierQueryBuilder {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error querying suppliers by name:', error);
+      log.error('Error querying suppliers by name:', { data: error }, 'queryBuilder');
       throw new Error(`Failed to query suppliers by name: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -175,7 +176,7 @@ export class SupplierQueryBuilder {
         ...doc.data()
       } as Supplier));
     } catch (error) {
-      console.error('Error getting top rated suppliers:', error);
+      log.error('Error getting top rated suppliers:', { data: error }, 'queryBuilder');
       throw new Error(`Failed to get top rated suppliers: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

@@ -50,7 +50,7 @@ export class RFQResponses {
       
       return docRef.id;
     } catch (error) {
-      console.error('Error submitting RFQ response:', error);
+      log.error('Error submitting RFQ response:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -72,7 +72,7 @@ export class RFQResponses {
         ...doc.data()
       }));
     } catch (error) {
-      console.error('Error fetching RFQ responses:', error);
+      log.error('Error fetching RFQ responses:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -101,7 +101,7 @@ export class RFQResponses {
       
       // TODO: Notify selected and non-selected suppliers
     } catch (error) {
-      console.error('Error selecting RFQ response:', error);
+      log.error('Error selecting RFQ response:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -120,7 +120,7 @@ export class RFQResponses {
       
       // TODO: Notify supplier about rejection
     } catch (error) {
-      console.error('Error rejecting RFQ response:', error);
+      log.error('Error rejecting RFQ response:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -196,7 +196,7 @@ export class RFQResponses {
         analysis
       };
     } catch (error) {
-      console.error('Error comparing RFQ responses:', error);
+      log.error('Error comparing RFQ responses:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -218,7 +218,7 @@ export class RFQResponses {
         ...snapshot.data()
       };
     } catch (error) {
-      console.error('Error fetching RFQ response:', error);
+      log.error('Error fetching RFQ response:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -235,7 +235,7 @@ export class RFQResponses {
         statusUpdatedBy: 'current-user-id' // TODO: Get from auth context
       });
     } catch (error) {
-      console.error('Error updating response status:', error);
+      log.error('Error updating response status:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -257,7 +257,7 @@ export class RFQResponses {
         ...doc.data()
       }));
     } catch (error) {
-      console.error('Error fetching supplier responses:', error);
+      log.error('Error fetching supplier responses:', { data: error }, 'rfqResponses');
       throw error;
     }
   }
@@ -284,3 +284,4 @@ export class RFQResponses {
 
 // Import getDoc function
 import { getDoc } from 'firebase/firestore';
+import { log } from '@/lib/logger';

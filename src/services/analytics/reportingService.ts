@@ -8,6 +8,7 @@ import { projectAnalyticsService } from './projectAnalytics';
 import { financialAnalyticsService } from './financialAnalytics';
 import { kpiAnalyticsService } from './kpiAnalytics';
 import { clientAnalyticsService } from './clientAnalytics';
+import { log } from '@/lib/logger';
 
 export class ReportingService {
   /**
@@ -37,7 +38,7 @@ export class ReportingService {
         period: { from: dateFrom, to: dateTo },
       };
     } catch (error) {
-      console.error('Failed to generate executive summary:', error);
+      log.error('Failed to generate executive summary:', { data: error }, 'reportingService');
       throw error;
     }
   }
