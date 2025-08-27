@@ -150,7 +150,7 @@ export const parseBuildOutput = (buildOutput: string): ChunkAnalysis[] => {
 
     const category = categorizeChunk(name);
     const isOverLimit = size > CHUNK_SIZE_LIMITS[category];
-    const suggestions = [];
+    const suggestions: string[] = [];
 
     const chunk: ChunkAnalysis = {
       name,

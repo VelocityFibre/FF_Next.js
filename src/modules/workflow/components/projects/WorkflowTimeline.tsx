@@ -1,19 +1,17 @@
 // 🟢 WORKING: WorkflowTimeline component - Gantt-style timeline visualization for workflows
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
   Calendar,
   Clock,
   CheckCircle2,
-  Circle,
   AlertCircle,
-  Play,
-  Pause
+  Play
 } from 'lucide-react';
 
 import type { ProjectWorkflow, WorkflowPhase } from '../../types/workflow.types';
-import { formatDate } from '../../../../utils/dateHelpers';
+// formatDate imported but not used - using date formatting inline
 
 interface WorkflowTimelineProps {
   workflows: ProjectWorkflow[];
@@ -47,7 +45,7 @@ export function WorkflowTimeline({
   onWorkflowSelect 
 }: WorkflowTimelineProps) {
   const [timelineData, setTimelineData] = useState<TimelineData | null>(null);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
   const [zoomLevel, setZoomLevel] = useState(1); // 1 = normal, 2 = zoomed in
 
   useEffect(() => {
@@ -139,7 +137,7 @@ export function WorkflowTimeline({
     };
   };
 
-  const getPhaseStatus = (workflow: ProjectWorkflow, phase: WorkflowPhase, phaseIndex: number) => {
+  const getPhaseStatus = (workflow: ProjectWorkflow, _phase: WorkflowPhase, phaseIndex: number) => {
     const currentPhaseIndex = (workflow.template?.phases || []).findIndex(p => p.id === workflow.currentPhaseId);
     
     if (phaseIndex < currentPhaseIndex) return 'completed';
@@ -236,7 +234,7 @@ export function WorkflowTimeline({
 
         {/* Workflow Rows */}
         <div style={{ minWidth: Math.max(totalWidth + 300, 800) }}>
-          {workflows.map((workflow, workflowIndex) => (
+          {workflows.map((workflow) => (
             <div
               key={workflow.id}
               className={`flex border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 ${

@@ -73,7 +73,7 @@ class HotReloadOptimizer {
 
     this.debounceTimeout = window.setTimeout(() => {
       // Apply all CSS updates at once
-      modules.forEach((module, index) => {
+      modules.forEach((_module, index) => {
         this.recordHMRUpdate(`css-batch-${index}`, {
           updateTime: performance.now(),
           moduleCount: modules.length,
@@ -95,7 +95,7 @@ class HotReloadOptimizer {
         /.*\/pages\/.*\.tsx?$/,
       ];
 
-      componentPatterns.forEach((pattern) => {
+      componentPatterns.forEach((_pattern) => {
         // This would typically be handled by React Fast Refresh
         // but we can add additional optimizations here
       });
@@ -107,20 +107,20 @@ class HotReloadOptimizer {
       // Listen to HMR events
       import.meta.hot.on('vite:beforeUpdate', (payload) => {
         const startTime = performance.now();
-        this.updateQueue.add(payload.path || 'unknown');
+        this.updateQueue.add((payload as any).path || 'unknown');
         
         // Record the update start
-        this.recordHMRUpdate(payload.path || 'unknown', {
+        this.recordHMRUpdate((payload as any).path || 'unknown', {
           updateTime: startTime,
           moduleCount: payload.updates?.length || 1,
           dependencyChain: [],
-          updateType: this.getUpdateType(payload.path || '')
+          updateType: this.getUpdateType((payload as any).path || '')
         });
       });
 
       import.meta.hot.on('vite:afterUpdate', (payload) => {
         const endTime = performance.now();
-        const path = payload.path || 'unknown';
+        const path = (payload as any).path || 'unknown';
         
         if (this.updateQueue.has(path)) {
           const existing = this.metrics.get(path);

@@ -1,23 +1,20 @@
 // 🟢 WORKING: Projects tab component - complete project workflow management interface
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Plus, 
   Search, 
-  Filter, 
   Calendar,
   Clock,
   CheckCircle2,
   AlertCircle,
-  Users,
-  BarChart3,
-  Settings
+  BarChart3
 } from 'lucide-react';
 
 import { ProjectWorkflowList } from '../projects/ProjectWorkflowList';
 import { WorkflowAssignmentModal } from '../projects/WorkflowAssignmentModal';
 import { WorkflowAnalytics } from '../projects/WorkflowAnalytics';
 import { useWorkflowPortal } from '../../hooks/useWorkflowPortal';
-import type { ProjectWorkflow, ProjectWorkflowQuery, WorkflowTemplate } from '../../types/workflow.types';
+// Type imports removed - using inline types
 import { log } from '@/lib/logger';
 
 export function ProjectsTab() {

@@ -6,7 +6,7 @@
 
 import { StaffImportRow, StaffImportResult, StaffMember } from '@/types/staff.types';
 import { processImportRows } from './rowProcessor';
-import { SecureExcelProcessor } from '@/lib/excel/secureExcelProcessor';
+import { SecureExcelProcessor } from '@/excel/secureExcelProcessor';
 import { log } from '@/lib/logger';
 import { safeToDate } from '@/utils/dateHelpers';
 
@@ -176,7 +176,7 @@ export async function importStaffFromExcelSecure(
     
     log.info('Secure staff import completed', {
       totalRows: result.data.length,
-      successful: importResult.successful,
+      successful: importResult.success,
       failed: importResult.failed,
       errors: importResult.errors.length,
       processingTime,
@@ -239,8 +239,8 @@ export async function exportStaffToExcelSecure(staff: StaffMember[]): Promise<Bl
       'Contract Type': member.contractType || '',
       'Working Hours': member.workingHours || '',
       'Skills': member.skills || '',
-      'Created At': new Date(member.createdAt).toLocaleDateString(),
-      'Updated At': new Date(member.updatedAt).toLocaleDateString()
+      'Created At': safeToDate(member.createdAt).toLocaleDateString(),
+      'Updated At': safeToDate(member.updatedAt).toLocaleDateString()
     }));
     
     // Use secure Excel processor with streaming for large exports

@@ -1,7 +1,7 @@
 // 🟢 WORKING: Workflow Portal Context for state management
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { workflowManagementService } from '../services/WorkflowManagementService';
-import { workflowTemplateService } from '../services/WorkflowTemplateService';
+// WorkflowTemplateService import removed - using workflowManagementService
 import { log } from '@/lib/logger';
 import type { 
   WorkflowPortalContext as IWorkflowPortalContext,

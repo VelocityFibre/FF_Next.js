@@ -1,5 +1,5 @@
 // 🟢 WORKING: ExecutionLogs component - displays workflow execution audit trail
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Clock,
   User,
@@ -9,9 +9,7 @@ import {
   Play,
   Pause,
   FileText,
-  Filter,
   Search,
-  Calendar,
   Download,
   RefreshCw
 } from 'lucide-react';

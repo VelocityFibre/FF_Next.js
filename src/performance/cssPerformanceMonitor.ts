@@ -29,7 +29,7 @@ declare global {
 class CSSPerformanceMonitor {
   private metrics: Map<string, CSSMetrics> = new Map();
   private observer: MutationObserver | null = null;
-  private startTime: number = performance.now();
+  // startTime removed - not used in current implementation
 
   constructor() {
     this.initializeMonitoring();

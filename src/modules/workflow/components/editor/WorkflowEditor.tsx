@@ -2,13 +2,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { 
   Save, 
-  Undo, 
-  Redo, 
   ZoomIn, 
   ZoomOut, 
   Grid3X3, 
-  MousePointer, 
-  Move3D,
   AlertTriangle,
   Check,
   Eye,
@@ -40,7 +36,6 @@ export function WorkflowEditor({ templateId, className = '' }: WorkflowEditorPro
     updateSettings,
     setActivePanel,
     toggleMinimap,
-    validateTemplate,
     clearSelection
   } = useWorkflowEditor();
 
@@ -63,6 +58,7 @@ export function WorkflowEditor({ templateId, className = '' }: WorkflowEditorPro
         event.returnValue = '';
         return '';
       }
+      return undefined;
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

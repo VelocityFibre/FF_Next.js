@@ -22,18 +22,18 @@ export function debounce<T extends (...args: any[]) => any>(
   let result: ReturnType<T> | undefined;
   
   function invokeFunc(time: number): ReturnType<T> {
-    const args = lastArgs;
+    const args = lastArgs || ([] as unknown as Parameters<T>);
     const thisArg = lastThis;
     lastArgs = lastThis = undefined;
     lastInvokeTime = time;
     result = func.apply(thisArg, args);
-    return result;
+    return result!;
   }
   
   function leadingEdge(time: number): ReturnType<T> {
     lastInvokeTime = time;
     timeoutId = setTimeout(timerExpired, delay);
-    return leading ? invokeFunc(time) : result;
+    return leading ? invokeFunc(time) : result!;
   }
   
   function remainingWait(time: number): number {
@@ -72,7 +72,7 @@ export function debounce<T extends (...args: any[]) => any>(
       return invokeFunc(time);
     }
     lastArgs = lastThis = undefined;
-    return result;
+    return result!;
   }
   
   let lastArgs: Parameters<T> | undefined;
@@ -88,14 +88,15 @@ export function debounce<T extends (...args: any[]) => any>(
       maxTimeoutId = null;
     }
     lastInvokeTime = 0;
-    lastArgs = lastCallTime = lastThis = undefined;
+    lastArgs = lastThis = undefined;
+    lastCallTime = null;
   }
   
   function flush(): ReturnType<T> | undefined {
     return timeoutId === null ? result : trailingEdge(Date.now());
   }
   
-  function debounced(...args: Parameters<T>): ReturnType<T> | undefined {
+  function debounced(this: any, ...args: Parameters<T>): ReturnType<T> | undefined {
     const time = Date.now();
     const isInvoking = shouldInvoke(time);
     

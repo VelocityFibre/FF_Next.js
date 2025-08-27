@@ -1,5 +1,5 @@
 // 🟢 WORKING: Template list component for workflow template management
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   Search, 
   Filter, 
@@ -236,7 +236,7 @@ export function TemplateList({
     sorting: { field: 'updatedAt', direction: 'desc' },
     selectedTemplates: [],
     isLoading: false,
-    error: undefined
+    error: ''
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -244,7 +244,7 @@ export function TemplateList({
 
   // Load templates
   const loadTemplates = useCallback(async (page = 1) => {
-    setState(prev => ({ ...prev, isLoading: true, error: undefined }));
+    setState(prev => ({ ...prev, isLoading: true, error: '' }));
 
     try {
       const query: WorkflowTemplateQuery = {
@@ -344,10 +344,11 @@ export function TemplateList({
   useEffect(() => {
     if (state.error) {
       const timer = setTimeout(() => {
-        setState(prev => ({ ...prev, error: undefined }));
+        setState(prev => ({ ...prev, error: '' }));
       }, 5000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [state.error]);
 
   return (

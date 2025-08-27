@@ -7,9 +7,7 @@ import * as XLSX from 'xlsx';
 import { 
   ContractorImportRow, 
   ContractorImportResult, 
-  DEFAULT_CONTRACTOR_HEADER_MAPPING,
-  ContractorExportColumn,
-  CONTRACTOR_EXPORT_COLUMNS
+  // Export-related constants removed - not used in import processing
 } from '@/types/contractor/import.types';
 import { Contractor } from '@/types/contractor/base.types';
 import { processContractorImportRows } from './rowProcessor';

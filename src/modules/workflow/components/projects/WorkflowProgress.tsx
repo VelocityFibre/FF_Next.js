@@ -1,5 +1,5 @@
 // 🟢 WORKING: WorkflowProgress component - displays workflow execution progress
-import React from 'react';
+import { useMemo } from 'react';
 import {
   CheckCircle2,
   Clock,

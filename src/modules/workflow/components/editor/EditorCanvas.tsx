@@ -132,7 +132,7 @@ export function EditorCanvas() {
   }, [isPanning, panStart, isSelecting, selectionBox, state.isDragging, state.dragState, screenToCanvas, snapToGrid, updateDrag, moveNode]);
 
   // Handle mouse up
-  const handleMouseUp = useCallback((event: React.MouseEvent) => {
+  const handleMouseUp = useCallback((_event: React.MouseEvent) => {
     if (isPanning) {
       setIsPanning(false);
       setPanStart(null);

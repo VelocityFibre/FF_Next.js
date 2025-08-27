@@ -8,8 +8,6 @@ import {
   Users, 
   FileText, 
   Settings,
-  ChevronDown,
-  ChevronRight,
   Grip
 } from 'lucide-react';
 import type { EditorNode, EditorPosition } from '../../context/WorkflowEditorContext';
@@ -268,7 +266,6 @@ const TaskNode = memo(({ data, isSelected, isDragging }: {
 export const WorkflowNode = memo(({
   node,
   position,
-  scale,
   isSelected,
   isDragging,
   onMouseDown

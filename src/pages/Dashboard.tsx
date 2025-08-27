@@ -38,7 +38,7 @@ interface QuickActionData {
 }
 
 export function Dashboard() {
-  const navigate = useNavigate();
+  // navigate removed - not used in current implementation
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = useCallback(async () => {

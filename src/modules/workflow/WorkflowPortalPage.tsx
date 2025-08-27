@@ -1,7 +1,7 @@
 // 🟢 WORKING: Main Workflow Portal with comprehensive tabbed navigation
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { AlertCircle, GitBranch, Settings, ArrowLeft } from 'lucide-react';
+import { AlertCircle, GitBranch, ArrowLeft } from 'lucide-react';
 import { WorkflowPortalProvider } from './context/WorkflowPortalContext';
 import { WorkflowTabs } from './components/WorkflowTabs';
 import { useWorkflowPortal } from './hooks/useWorkflowPortal';
@@ -15,7 +15,7 @@ interface WorkflowPortalPageProps {
 // Portal layout component
 function WorkflowPortalLayout({ children }: WorkflowPortalPageProps) {
   const navigate = useNavigate();
-  const location = useLocation();
+  // location removed - not used in current implementation
   const [searchParams, setSearchParams] = useSearchParams();
   
   const {
@@ -25,7 +25,7 @@ function WorkflowPortalLayout({ children }: WorkflowPortalPageProps) {
     templateStats,
     setActiveTab,
     setError,
-    refreshData
+    // refreshData removed - not used in current implementation
   } = useWorkflowPortal();
 
   // Handle tab changes from URL
@@ -54,7 +54,7 @@ function WorkflowPortalLayout({ children }: WorkflowPortalPageProps) {
   };
 
   // Handle template edit navigation
-  const handleTemplateEdit = (templateId: string) => {
+  const handleTemplateEdit = (_templateId: string) => {
     setActiveTab('editor');
     // TODO: Pass templateId to editor context
   };

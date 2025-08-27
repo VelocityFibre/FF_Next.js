@@ -348,7 +348,11 @@ export function ProcurementPortalPage({ children }: ProcurementPortalPageProps) 
                         startDate: new Date(),
                         endDate: new Date(),
                         priority: Priority.MEDIUM,
-                        clientId: ''
+                        clientId: '',
+                        plannedProgress: 0,
+                        actualProgress: 0,
+                        createdBy: 'system',
+                        createdAt: new Date()
                       };
                       handleProjectChange(fullProject);
                     } else {

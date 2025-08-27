@@ -15,8 +15,6 @@ import { contractorNeonService } from '../contractorNeonService';
 import { log } from '@/lib/logger';
 // Keep Firebase operations for backward compatibility/migration
 import {
-  getAllContractorsFromFirebase,
-  getContractorByIdFromFirebase,
   createContractorInFirebase,
   updateContractorInFirebase,
   deleteContractorFromFirebase
@@ -25,10 +23,8 @@ import {
   subscribeToContractors,
   subscribeToContractor
 } from './subscriptionHandlers';
-import {
-  applyClientSideFilters,
-  sortContractors
-} from './searchFilters';
+// Client-side filter utilities removed - using server-side filtering
+// sortContractors import removed - using server-side sorting
 
 /**
  * Main contractor CRUD service orchestrator

@@ -83,7 +83,7 @@ class XLSXCompatibilityLayer {
   /**
    * Convert sheet to JSON (compatible with XLSX.utils.sheet_to_json)
    */
-  static sheetToJson(worksheet: any, options: any = {}): any[] {
+  static sheetToJson(worksheet: any, _options: any = {}): any[] {
     try {
       // If this is already from our secure processor, extract the data
       if (worksheet.data && Array.isArray(worksheet.data)) {
@@ -128,7 +128,7 @@ class XLSXCompatibilityLayer {
   /**
    * Write workbook to buffer (compatible with XLSX.write)
    */
-  static async write(workbook: any, options: any = {}): Promise<ArrayBuffer> {
+  static async write(workbook: any, _options: any = {}): Promise<ArrayBuffer> {
     try {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
@@ -234,7 +234,7 @@ class XLSXMigrationUtilities {
   /**
    * Create migration plan for specific file
    */
-  static createMigrationPlan(filePath: string): {
+  static createMigrationPlan(_filePath: string): {
     priority: 'high' | 'medium' | 'low';
     effort: 'small' | 'medium' | 'large';
     steps: string[];

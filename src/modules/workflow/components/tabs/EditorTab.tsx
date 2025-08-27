@@ -1,5 +1,5 @@
 // 🟢 WORKING: Visual workflow editor tab component
-import React from 'react';
+// React import removed - using JSX without React in scope
 import { WorkflowEditorProvider } from '../../context/WorkflowEditorContext';
 import { WorkflowEditor } from '../editor';
 

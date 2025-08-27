@@ -1,24 +1,21 @@
 // 🟢 WORKING: Comprehensive workflow analytics dashboard with advanced visualizations
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   BarChart3, 
   TrendingUp, 
   Clock, 
   Target, 
-  Users, 
   Calendar,
-  Download,
-  Filter,
   RefreshCw,
   AlertTriangle,
   CheckCircle,
   PieChart as PieChartIcon,
   FileText
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card';
+import { Card, CardContent } from '@/shared/components/ui/Card';
 import { Button } from '@/shared/components/ui/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/Select';
-import { Badge } from '@/shared/components/ui/Badge';
+// Badge import removed - not used in current implementation
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/Tabs';
 import { workflowTemplateService } from '../../services/WorkflowTemplateService';
 import { WorkflowAnalytics } from '../../types/workflow.types';

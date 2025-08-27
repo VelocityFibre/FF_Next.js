@@ -1,5 +1,5 @@
 // 🟢 WORKING: ProjectWorkflowDetail component - detailed view of individual project workflow
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ArrowLeft,
   Calendar,
@@ -14,8 +14,7 @@ import {
   FileText,
   BarChart3,
   MessageSquare,
-  Edit2,
-  Trash2
+  Edit2
 } from 'lucide-react';
 
 import { WorkflowProgress } from './WorkflowProgress';
@@ -35,8 +34,7 @@ interface ProjectWorkflowDetailProps {
 export function ProjectWorkflowDetail({
   workflowId,
   onBack,
-  onEdit,
-  onDelete
+  onEdit
 }: ProjectWorkflowDetailProps) {
   const [workflow, setWorkflow] = useState<ProjectWorkflow | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'timeline' | 'logs' | 'analytics'>('overview');

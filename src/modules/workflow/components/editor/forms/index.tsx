@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, AlertCircle } from 'lucide-react';
 import { useWorkflowEditor } from '../../../context/WorkflowEditorContext';
 import { workflowManagementService } from '../../../services/WorkflowManagementService';
-import type { WorkflowCategory, StepType, TaskPriority } from '../../../types/workflow.types';
+import type { StepType, TaskPriority } from '../../../types/workflow.types';
 
 interface FormData {
   name: string;
@@ -13,7 +13,7 @@ interface FormData {
 }
 
 export function WorkflowEditorForms() {
-  const { state, stopEditingItem, refreshWorkflow } = useWorkflowEditor();
+  const { state, stopEditingItem, loadTemplate } = useWorkflowEditor();
   const [formData, setFormData] = useState<FormData>({ name: '', description: '', orderIndex: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,12 +42,12 @@ export function WorkflowEditorForms() {
     setError(null);
 
     try {
-      const isEditing = !!state.editingItem.id;
+      const isEditing = !!state.editingItem?.id;
       
-      switch (state.editingItem.type) {
+      switch (state.editingItem?.type) {
         case 'phase':
           if (isEditing) {
-            await workflowManagementService.updatePhase(state.editingItem.id!, {
+            await workflowManagementService.updatePhase(state.editingItem?.id!, {
               name: formData.name,
               description: formData.description,
               orderIndex: formData.orderIndex,
@@ -72,7 +72,7 @@ export function WorkflowEditorForms() {
 
         case 'step':
           if (isEditing) {
-            await workflowManagementService.updateStep(state.editingItem.id!, {
+            await workflowManagementService.updateStep(state.editingItem?.id!, {
               name: formData.name,
               description: formData.description,
               orderIndex: formData.orderIndex,
@@ -84,7 +84,7 @@ export function WorkflowEditorForms() {
             });
           } else {
             await workflowManagementService.createStep({
-              workflowPhaseId: state.editingItem.parentId!,
+              workflowPhaseId: state.editingItem?.parentId!,
               name: formData.name,
               description: formData.description,
               orderIndex: formData.orderIndex,
@@ -99,7 +99,7 @@ export function WorkflowEditorForms() {
 
         case 'task':
           if (isEditing) {
-            await workflowManagementService.updateTask(state.editingItem.id!, {
+            await workflowManagementService.updateTask(state.editingItem?.id!, {
               name: formData.name,
               description: formData.description,
               orderIndex: formData.orderIndex,
@@ -110,7 +110,7 @@ export function WorkflowEditorForms() {
             });
           } else {
             await workflowManagementService.createTask({
-              workflowStepId: state.editingItem.parentId!,
+              workflowStepId: state.editingItem?.parentId!,
               name: formData.name,
               description: formData.description,
               orderIndex: formData.orderIndex,
@@ -123,7 +123,10 @@ export function WorkflowEditorForms() {
           break;
       }
 
-      await refreshWorkflow();
+      // Refresh workflow by reloading current template
+      if (state.templateId) {
+        await loadTemplate(state.templateId);
+      }
       stopEditingItem();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');

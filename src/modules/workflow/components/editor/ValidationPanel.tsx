@@ -4,7 +4,6 @@ import {
   AlertTriangle, 
   CheckCircle, 
   Info, 
-  X, 
   ExternalLink,
   RefreshCw
 } from 'lucide-react';
@@ -50,8 +49,8 @@ const ValidationItem: React.FC<ValidationItemProps> = ({ item, type, onJumpTo })
           
           <p className="text-sm font-medium mb-1">{item.message}</p>
           
-          {item.field && (
-            <p className="text-xs opacity-75">Field: {item.field}</p>
+          {'field' in item && item.field && (
+            <p className="text-xs opacity-75">Field: {'field' in item ? item.field : ''}</p>
           )}
           
           {'suggestion' in item && item.suggestion && (
@@ -82,6 +81,7 @@ export function ValidationPanel() {
 
       return () => clearTimeout(validateTimeout);
     }
+    return undefined; // Explicit return for else case
   }, [state.nodes, state.templateId, validateTemplate]);
 
   // Calculate validation summary

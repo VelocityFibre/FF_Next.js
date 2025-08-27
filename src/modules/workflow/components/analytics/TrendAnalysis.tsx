@@ -341,7 +341,7 @@ export function TrendAnalysis({ analytics, dateRange: _dateRange }: TrendAnalysi
                 dataKey={metricInfo.key} 
                 stroke={metricInfo.color}
                 strokeWidth={2}
-                strokeDasharray={(data: any) => data.predicted ? "5 5" : "0"}
+                strokeDasharray="0"
                 dot={(props: any) => {
                   const { payload } = props;
                   return (

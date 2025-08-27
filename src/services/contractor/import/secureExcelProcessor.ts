@@ -10,7 +10,7 @@ import {
 } from '@/types/contractor/import.types';
 import { Contractor } from '@/types/contractor/base.types';
 import { processContractorImportRows } from './rowProcessor';
-import { SecureExcelProcessor } from '@/lib/excel/secureExcelProcessor';
+import { SecureExcelProcessor } from '@/excel/secureExcelProcessor';
 import { log } from '@/lib/logger';
 
 /**
@@ -203,7 +203,7 @@ export async function importContractorsFromExcelSecure(
     
     // Add Excel parsing errors from secure processor
     if (result.errors.length > 0) {
-      parseErrors.unshift(...result.errors.map(err => ({
+      parseErrors.unshift(...result.errors.map((err: any) => ({
         row: err.row,
         message: `Excel security validation: ${err.message}`
       })));
@@ -227,7 +227,7 @@ export async function importContractorsFromExcelSecure(
     
     log.info('Secure contractor import completed', {
       totalRows: result.data.length,
-      successful: importResult.successful,
+      successful: importResult.success,
       failed: importResult.failed,
       errors: importResult.errors.length,
       processingTime,

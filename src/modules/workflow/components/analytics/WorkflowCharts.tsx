@@ -130,7 +130,7 @@ export function WorkflowCharts({ analytics, dateRange }: WorkflowChartsProps) {
     );
   }
 
-  const CustomTooltip = ({ active, payload, label, labelKey = 'name' }: any) => {
+  const CustomTooltip = ({ active, payload, label, labelKey: _labelKey = 'name' }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border rounded-lg shadow-lg">
@@ -261,7 +261,7 @@ export function WorkflowCharts({ analytics, dateRange }: WorkflowChartsProps) {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, rate }) => `${rate}%`}
+                  label={({ name: _name, rate }) => `${rate}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="rate"

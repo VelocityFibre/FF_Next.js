@@ -1,16 +1,13 @@
 // 🟢 WORKING: WorkflowAssignmentModal component - modal for assigning workflow templates to projects
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   X,
   Search,
-  Calendar,
   User,
   Users,
-  Clock,
   FileText,
   CheckCircle2,
-  AlertTriangle,
-  Settings
+  AlertTriangle
 } from 'lucide-react';
 
 import type { 
@@ -159,11 +156,11 @@ export function WorkflowAssignmentModal({
       projectId: selectedProject.id,
       workflowTemplateId: selectedTemplate.id,
       name: workflowName,
-      startDate: startDate || undefined,
-      plannedEndDate: endDate || undefined,
-      assignedTo: assignedTo || undefined,
+      startDate: startDate || '',
+      plannedEndDate: endDate || '',
+      assignedTo: assignedTo || '',
       teamMembers: teamMembers,
-      notes: notes || undefined
+      notes: notes || ''
     };
 
     onAssign(workflowData);

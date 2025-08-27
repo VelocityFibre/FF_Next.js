@@ -1,5 +1,5 @@
 // 🟢 WORKING: Templates tab component for workflow portal
-import React from 'react';
+// React import removed - using JSX without React in scope
 import { TemplateList } from '../templates/TemplateList';
 import type { WorkflowTemplate } from '../../types/workflow.types';
 import { log } from '@/lib/logger';

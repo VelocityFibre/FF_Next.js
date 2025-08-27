@@ -1,5 +1,5 @@
 // 🟢 WORKING: ProjectWorkflowList component - displays and manages active project workflows
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Play,
   Pause,
@@ -11,7 +11,6 @@ import {
   MoreVertical,
   Eye,
   Edit2,
-  Trash2,
   AlertCircle,
   TrendingUp
 } from 'lucide-react';
@@ -19,7 +18,7 @@ import {
 import { WorkflowProgress } from './WorkflowProgress';
 import { WorkflowTimeline } from './WorkflowTimeline';
 import type { ProjectWorkflow } from '../../types/workflow.types';
-import { formatDate, formatDuration } from '../../../../utils/dateHelpers';
+import { formatDate } from '../../../../utils/dateHelpers';
 import { log } from '@/lib/logger';
 
 interface ProjectWorkflowListProps {
@@ -35,7 +34,7 @@ export function ProjectWorkflowList({
   onEditWorkflow, 
   onViewDetails 
 }: ProjectWorkflowListProps) {
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(null);
+  // Workflow selection state removed - not used in current implementation
   const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
   const [expandedWorkflow, setExpandedWorkflow] = useState<string | null>(null);
 
