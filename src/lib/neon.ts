@@ -1,11 +1,14 @@
 import { neon } from '@neondatabase/serverless';
 
 // Get the database URL from environment variables
-// Use server-side environment variables only for security (no VITE_ prefix)
 let databaseUrl: string | undefined;
 
-// Check if process is available (Node.js environment)
-if (typeof process !== 'undefined' && process.env) {
+// Try Vite environment variable first (for client-side)
+if (import.meta.env?.VITE_DATABASE_URL) {
+  databaseUrl = import.meta.env.VITE_DATABASE_URL;
+}
+// Fall back to Node.js environment variables (server-side)
+else if (typeof process !== 'undefined' && process.env) {
   databaseUrl = process.env.DATABASE_URL;
 }
 

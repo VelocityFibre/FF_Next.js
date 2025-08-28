@@ -11,8 +11,12 @@ import { log } from '@/lib/logger';
 const getDatabaseUrl = (): string => {
   let databaseUrl: string | undefined;
 
-  // Use Node.js environment variables (server-side only for security)
-  if (typeof process !== 'undefined' && process.env) {
+  // Try Vite environment variable first (for client-side)
+  if (import.meta.env?.VITE_DATABASE_URL) {
+    databaseUrl = import.meta.env.VITE_DATABASE_URL;
+  }
+  // Fall back to Node.js environment variables (server-side)
+  else if (typeof process !== 'undefined' && process.env) {
     databaseUrl = process.env.DATABASE_URL;
   }
 
