@@ -13,10 +13,6 @@
       "destination": "/index.html"
     }
   ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "VITE_DATABASE_URL": "@database_url"
-  },
   "functions": {
     "api/**/*.js": {
       "maxDuration": 10
