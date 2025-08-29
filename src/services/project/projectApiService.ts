@@ -5,16 +5,43 @@
 
 const API_BASE = '/api';
 
-interface Project {
+interface DbProject {
   id?: string;
+  project_code?: string;
   project_name: string;
   client_id?: string;
   project_type?: string;
   status?: string;
+  priority?: string;
   start_date?: string;
   end_date?: string;
   budget?: number;
   description?: string;
+  project_manager?: string;
+  team_lead?: string;
+  location?: string;
+  progress_percentage?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface Project {
+  id?: string;
+  projectCode?: string;
+  projectName: string;
+  name?: string; // Alias for projectName for backward compatibility
+  clientId?: string;
+  projectType?: string;
+  status?: string;
+  priority?: string;
+  startDate?: string;
+  endDate?: string;
+  budget?: number;
+  description?: string;
+  projectManager?: string;
+  teamLead?: string;
+  location?: string;
+  progressPercentage?: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -29,33 +56,82 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return data.data || data;
 }
 
+function transformDbToProject(dbProject: DbProject): Project {
+  return {
+    id: dbProject.id,
+    projectCode: dbProject.project_code,
+    projectName: dbProject.project_name,
+    name: dbProject.project_name, // Alias for backward compatibility
+    clientId: dbProject.client_id,
+    projectType: dbProject.project_type,
+    status: dbProject.status,
+    priority: dbProject.priority,
+    startDate: dbProject.start_date,
+    endDate: dbProject.end_date,
+    budget: dbProject.budget,
+    description: dbProject.description,
+    projectManager: dbProject.project_manager,
+    teamLead: dbProject.team_lead,
+    location: dbProject.location,
+    progressPercentage: dbProject.progress_percentage || 0,
+    created_at: dbProject.created_at,
+    updated_at: dbProject.updated_at
+  };
+}
+
+function transformProjectToDb(project: Partial<Project>): Partial<DbProject> {
+  return {
+    id: project.id,
+    project_code: project.projectCode,
+    project_name: project.projectName || project.name, // Handle both fields
+    client_id: project.clientId,
+    project_type: project.projectType,
+    status: project.status,
+    priority: project.priority,
+    start_date: project.startDate,
+    end_date: project.endDate,
+    budget: project.budget,
+    description: project.description,
+    project_manager: project.projectManager,
+    team_lead: project.teamLead,
+    location: project.location,
+    progress_percentage: project.progressPercentage
+  };
+}
+
 export const projectApiService = {
   async getAll(): Promise<Project[]> {
     const response = await fetch(`${API_BASE}/projects`);
-    return handleResponse<Project[]>(response);
+    const dbProjects = await handleResponse<DbProject[]>(response);
+    return dbProjects.map(transformDbToProject);
   },
 
   async getById(id: string): Promise<Project | null> {
     const response = await fetch(`${API_BASE}/projects?id=${id}`);
-    return handleResponse<Project | null>(response);
+    const dbProject = await handleResponse<DbProject | null>(response);
+    return dbProject ? transformDbToProject(dbProject) : null;
   },
 
   async create(projectData: Omit<Project, 'id' | 'created_at' | 'updated_at'>): Promise<Project> {
+    const dbData = transformProjectToDb(projectData);
     const response = await fetch(`${API_BASE}/projects`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(projectData)
+      body: JSON.stringify(dbData)
     });
-    return handleResponse<Project>(response);
+    const dbProject = await handleResponse<DbProject>(response);
+    return transformDbToProject(dbProject);
   },
 
   async update(id: string, updates: Partial<Project>): Promise<Project> {
+    const dbUpdates = transformProjectToDb(updates);
     const response = await fetch(`${API_BASE}/projects?id=${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      body: JSON.stringify(dbUpdates)
     });
-    return handleResponse<Project>(response);
+    const dbProject = await handleResponse<DbProject>(response);
+    return transformDbToProject(dbProject);
   },
 
   async delete(id: string): Promise<{ success: boolean; message: string }> {
@@ -73,7 +149,7 @@ export const projectApiService = {
 
   async getProjectsByClient(clientId: string): Promise<Project[]> {
     const projects = await this.getAll();
-    return projects.filter(p => p.client_id === clientId);
+    return projects.filter(p => p.clientId === clientId);
   },
 
   async getProjectSummary(): Promise<{

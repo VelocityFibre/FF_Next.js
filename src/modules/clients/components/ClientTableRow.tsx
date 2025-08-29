@@ -81,10 +81,10 @@ export function ClientTableRow({ client, onDelete }: ClientTableRowProps) {
       <td className="px-4 py-4">
         <div className="text-sm">
           <p className="text-gray-900 font-medium">
-            {formatCurrency(client.totalProjectValue)}
+            {formatCurrency(client.totalProjectValue || 0)}
           </p>
           <p className="text-xs text-gray-500">
-            {client.paymentTerms.replace('_', ' ')}
+            {client.paymentTerms ? client.paymentTerms.replace('_', ' ') : 'Net 30'}
           </p>
         </div>
       </td>
