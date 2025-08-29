@@ -8,11 +8,27 @@ import { neonTables } from './schema';
 import { log } from '@/lib/logger';
 import { getNeonConnection, executeQuery } from './connectionPool';
 
-// Use the pooled connection with better error handling
-const sql = getNeonConnection();
+// Lazy initialization to prevent connection attempts in browser
+let sql: ReturnType<typeof getNeonConnection> | null = null;
+let _neonDb: ReturnType<typeof drizzle> | null = null;
 
-// Create Drizzle instance
-export const neonDb = drizzle(sql, { schema: neonTables });
+// Get SQL connection lazily
+function getSql() {
+  if (!sql) {
+    sql = getNeonConnection();
+  }
+  return sql;
+}
+
+// Create Drizzle instance lazily
+export const neonDb = new Proxy({} as ReturnType<typeof drizzle>, {
+  get(target, prop) {
+    if (!_neonDb) {
+      _neonDb = drizzle(getSql(), { schema: neonTables });
+    }
+    return _neonDb[prop as keyof typeof _neonDb];
+  }
+});
 
 // Alias for backward compatibility
 export const db = neonDb;
@@ -20,7 +36,7 @@ export const db = neonDb;
 // Connection test utility
 export async function testNeonConnection(): Promise<boolean> {
   try {
-    await sql`SELECT NOW() as current_time`;
+    await getSql()`SELECT NOW() as current_time`;
 
     return true;
   } catch (error) {
@@ -57,8 +73,8 @@ export const neonUtils = {
    */
   async getInfo(): Promise<any> {
     try {
-      const versionResult = await sql`SELECT VERSION() as version`;
-      const sizeResult = await sql`
+      const versionResult = await getSql()`SELECT VERSION() as version`;
+      const sizeResult = await getSql()`
         SELECT 
           pg_size_pretty(pg_database_size(current_database())) as database_size,
           current_database() as database_name,
@@ -85,7 +101,7 @@ export const neonUtils = {
    */
   async getTableStats(): Promise<any> {
     try {
-      const result = await sql`
+      const result = await getSql()`
         SELECT 
           schemaname,
           tablename,
@@ -111,7 +127,7 @@ export const neonUtils = {
   async rawQuery(query: string): Promise<any> {
     try {
       // Use template literal format for Neon
-      return await sql([query] as any as TemplateStringsArray);
+      return await getSql()([query] as any as TemplateStringsArray);
     } catch (error) {
       log.error('Raw query failed:', { data: error }, 'connection');
       throw error;

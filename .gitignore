@@ -92,3 +92,4 @@ storybook-static
 .vitenul
 
 /generated/prisma
+.vercel

@@ -9,9 +9,18 @@ import { log } from '@/lib/logger';
 
 // Get the database URL with fallback
 const getDatabaseUrl = (): string => {
+  // Check if we're in the browser
+  const isBrowser = typeof window !== 'undefined';
+  
+  if (isBrowser) {
+    // In browser, return a dummy URL - we should use API routes instead
+    console.warn('Database connection attempted from browser - use API routes instead');
+    return 'postgresql://dummy@localhost/dummy';
+  }
+
   let databaseUrl: string | undefined;
 
-  // Try Vite environment variable first (for client-side)
+  // Try Vite environment variable first (for server-side build)
   if (import.meta.env?.VITE_DATABASE_URL) {
     databaseUrl = import.meta.env.VITE_DATABASE_URL;
   }

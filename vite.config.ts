@@ -17,5 +17,14 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
       }
     }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://ff-react-neon-h3x4.vercel.app',
+        changeOrigin: true,
+        secure: true,
+      }
+    }
   }
 })

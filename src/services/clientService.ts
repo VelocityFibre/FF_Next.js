@@ -1,21 +1,26 @@
 /**
  * Client Service - Main export file
- * Using Neon PostgreSQL as the primary data source
+ * Using API routes for browser, Neon for server/build
  */
 
 import { clientNeonService } from './client/clientNeonService';
+import { clientApiService } from './client/clientApiService';
 import { clientImportService } from './client/clientImportService';
 import { clientExportService } from './client/clientExportService';
 
+// Use API service in browser, Neon service for server/build
+const isBrowser = typeof window !== 'undefined';
+const baseService = isBrowser ? clientApiService : clientNeonService;
+
 export const clientService = {
-  // CRUD operations (from Neon)
-  getAll: clientNeonService.getAll,
-  getById: clientNeonService.getById,
-  create: clientNeonService.create,
-  update: clientNeonService.update,
-  delete: clientNeonService.delete,
-  getActiveClients: clientNeonService.getActiveClients,
-  getClientSummary: clientNeonService.getClientSummary,
+  // CRUD operations
+  getAll: baseService.getAll,
+  getById: baseService.getById,
+  create: baseService.create,
+  update: baseService.update,
+  delete: baseService.delete,
+  getActiveClients: baseService.getActiveClients,
+  getClientSummary: baseService.getClientSummary,
   
   // Extended operations
   getContactHistory: async () => {

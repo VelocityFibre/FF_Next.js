@@ -5,7 +5,6 @@
 
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { neonUtils } from '@/lib/neon/connection';
 import { log } from '@/lib/logger';
 
 interface DatabaseHealthIndicatorProps {
@@ -29,9 +28,14 @@ export const DatabaseHealthIndicator: React.FC<DatabaseHealthIndicatorProps> = (
     queryKey: ['database-health'],
     queryFn: async () => {
       try {
-        const pingResult = await neonUtils.ping();
+        // Use API endpoint for health check instead of direct database connection
+        const response = await fetch('/api/health');
+        const data = await response.json();
         setLastCheck(new Date());
-        return pingResult;
+        return {
+          success: data.database === 'connected',
+          timestamp: new Date().toISOString()
+        };
       } catch (error) {
         log.error('Database health check failed:', { data: error }, 'DatabaseHealthIndicator');
         throw error;

@@ -1,6 +1,7 @@
 /**
  * Core Contractor CRUD Service
  * Main orchestrator for contractor operations
+ * Using API routes for browser, Neon for server/build
  */
 
 import { Unsubscribe } from 'firebase/firestore';
@@ -12,6 +13,7 @@ import {
 } from '@/types/contractor.types';
 // Import Neon service as primary database
 import { contractorNeonService } from '../contractorNeonService';
+import { contractorApiService } from '../contractorApiService';
 import { log } from '@/lib/logger';
 // Keep Firebase operations for backward compatibility/migration
 import {
@@ -26,6 +28,10 @@ import {
 // Client-side filter utilities removed - using server-side filtering
 // sortContractors import removed - using server-side sorting
 
+// Use API service in browser, Neon service for server/build
+const isBrowser = typeof window !== 'undefined';
+const baseService = isBrowser ? contractorApiService : contractorNeonService;
+
 /**
  * Main contractor CRUD service orchestrator
  */
@@ -35,11 +41,21 @@ export class ContractorCrudCore {
    */
   async getAll(filter?: ContractorFilter): Promise<Contractor[]> {
     try {
-      // Use Neon as primary database
-      const contractors = await contractorNeonService.getAll(filter);
-      return contractors;
+      if (isBrowser) {
+        // API service doesn't support complex filtering yet, so get all and filter client-side
+        const contractors = await baseService.getAll();
+        if (!filter) return contractors;
+        
+        // Apply client-side filtering
+        return contractors.filter(contractor => {
+          if (filter.status && !filter.status.includes(contractor.status || 'active')) return false;
+          if (filter.specialization && !filter.specialization.includes(contractor.specialization || '')) return false;
+          return true;
+        });
+      }
+      return contractorNeonService.getAll(filter);
     } catch (error) {
-      log.error('Error getting contractors from Neon:', { data: error }, 'contractorCrudCore');
+      log.error('Error getting contractors:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to fetch contractors');
     }
   }
@@ -49,20 +65,23 @@ export class ContractorCrudCore {
    */
   async getById(id: string): Promise<Contractor | null> {
     try {
-      // Use Neon as primary database
-      return await contractorNeonService.getById(id);
+      return await baseService.getById(id);
     } catch (error) {
-      log.error('Error getting contractor from Neon:', { data: error }, 'contractorCrudCore');
+      log.error('Error getting contractor:', { data: error }, 'contractorCrudCore');
       throw new Error('Failed to fetch contractor');
     }
   }
 
   /**
-   * Create new contractor (Neon primary)
+   * Create new contractor
    */
   async create(data: ContractorFormData): Promise<string> {
     try {
-      // Use Neon as primary database
+      if (isBrowser) {
+        const contractor = await contractorApiService.create(data as any);
+        return contractor.id || '';
+      }
+      
       const contractor = await contractorNeonService.create(data);
       
       // Sync to Firebase for backward compatibility (non-blocking)
@@ -81,10 +100,15 @@ export class ContractorCrudCore {
   }
 
   /**
-   * Update contractor (Neon primary)
+   * Update contractor
    */
   async update(id: string, data: Partial<ContractorFormData>): Promise<void> {
     try {
+      if (isBrowser) {
+        await contractorApiService.update(id, data as any);
+        return;
+      }
+      
       // Update in Neon as primary database
       await contractorNeonService.update(id, data);
       
@@ -101,10 +125,15 @@ export class ContractorCrudCore {
   }
 
   /**
-   * Delete contractor (Neon primary)
+   * Delete contractor
    */
   async delete(id: string): Promise<void> {
     try {
+      if (isBrowser) {
+        await contractorApiService.delete(id);
+        return;
+      }
+      
       // Delete from Neon as primary database
       await contractorNeonService.delete(id);
       
@@ -121,10 +150,26 @@ export class ContractorCrudCore {
   }
 
   /**
-   * Get contractor analytics from Neon
+   * Get contractor analytics
    */
   async getAnalytics(): Promise<ContractorAnalytics> {
     try {
+      if (isBrowser) {
+        // For browser, calculate analytics from API data
+        const contractors = await contractorApiService.getAll();
+        const summary = await contractorApiService.getContractorSummary();
+        
+        return {
+          totalContractors: summary.totalContractors,
+          activeContractors: summary.activeContractors,
+          averageRating: summary.averageRating,
+          averageHourlyRate: summary.averageHourlyRate,
+          topRatedContractors: await contractorApiService.getTopRatedContractors(5),
+          contractorsBySpecialization: {},
+          recentlyAdded: contractors.slice(0, 5)
+        };
+      }
+      
       const { getContractorAnalytics } = await import('../neon/statistics');
       return await getContractorAnalytics();
     } catch (error) {
@@ -173,6 +218,17 @@ export class ContractorCrudCore {
    */
   async search(searchTerm: string): Promise<Contractor[]> {
     try {
+      if (isBrowser) {
+        // For browser, filter from all contractors
+        const contractors = await contractorApiService.getAll();
+        const term = searchTerm.toLowerCase();
+        return contractors.filter(c => 
+          c.company_name?.toLowerCase().includes(term) ||
+          c.contact_person?.toLowerCase().includes(term) ||
+          c.email?.toLowerCase().includes(term)
+        );
+      }
+      
       // Use Neon service search functionality
       return await contractorNeonService.searchByName(searchTerm);
     } catch (error) {
