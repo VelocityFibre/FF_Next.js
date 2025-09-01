@@ -1,4 +1,5 @@
 import { UseFormReturn } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { ProjectPriority, ProjectStatus } from '../../../types/project.types';
 import type { FormData } from '../types';
 
@@ -73,25 +74,44 @@ export function ProjectDetailsStep({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Project Manager *
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Project Manager *
+          </label>
+          <Link 
+            to="/app/staff" 
+            target="_blank"
+            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            Manage Staff →
+          </Link>
+        </div>
         {isProjectManagersLoading ? (
           <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
             Loading project managers...
           </div>
         ) : (
-          <select
-            {...register('projectManagerId', { required: 'Project Manager is required' })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select project manager</option>
-            {projectManagers?.map(pm => (
-              <option key={pm.id} value={pm.id}>
-                {pm.name}
-              </option>
-            ))}
-          </select>
+          <>
+            <select
+              {...register('projectManagerId', { required: 'Project Manager is required' })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select project manager</option>
+              {projectManagers?.map(pm => (
+                <option key={pm.id} value={pm.id}>
+                  {pm.name}
+                </option>
+              ))}
+            </select>
+            {projectManagers.length === 0 && (
+              <p className="mt-2 text-sm text-gray-500">
+                No project managers available. 
+                <Link to="/app/staff/new" target="_blank" className="ml-1 text-blue-600 hover:text-blue-800 hover:underline">
+                  Add a staff member
+                </Link>
+              </p>
+            )}
+          </>
         )}
         {errors.projectManagerId && (
           <p className="mt-1 text-sm text-red-600">{errors.projectManagerId.message}</p>

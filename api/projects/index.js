@@ -43,13 +43,16 @@ export default async function handler(req, res) {
         const newProject = await sql`
           INSERT INTO projects (
             project_code, project_name, client_id, description, 
-            project_type, status, start_date, end_date, budget
+            project_type, status, priority, start_date, end_date, 
+            budget, project_manager, location
           )
           VALUES (
             ${projectData.project_code}, ${projectData.project_name}, 
-            ${projectData.client_id}, ${projectData.description},
+            ${projectData.client_id}::uuid, ${projectData.description},
             ${projectData.project_type}, ${projectData.status || 'planning'}, 
-            ${projectData.start_date}, ${projectData.end_date}, ${projectData.budget}
+            ${projectData.priority || 'medium'}, ${projectData.start_date}, 
+            ${projectData.end_date}, ${projectData.budget || 0},
+            ${projectData.project_manager}::uuid, ${projectData.location}
           )
           RETURNING *
         `;

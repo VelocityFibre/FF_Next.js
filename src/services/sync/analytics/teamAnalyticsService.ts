@@ -3,8 +3,7 @@
  * Provides team-wide performance analytics and insights
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { staffPerformance } from '@/lib/neon/schema';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import { log } from '@/lib/logger';
 
 /**
@@ -23,10 +22,32 @@ export class TeamAnalyticsService {
     improvementNeeded: string[];
   }> {
     try {
-      const records = await neonDb
-        .select()
-        .from(staffPerformance)
-        .orderBy(staffPerformance.periodStart);
+      // Get team analytics from API
+      const teamData = await analyticsApi.getTeamAnalytics();
+      const teams = teamData.teams || [];
+      
+      // Aggregate data from all teams
+      let totalStaff = 0;
+      let totalProductivity = 0;
+      let totalQuality = 0;
+      const topPerformers: string[] = [];
+      const improvementNeeded: string[] = [];
+      
+      teams.forEach((team: any) => {
+        totalStaff += team.size;
+        totalProductivity += team.performance.avgProductivity * team.size;
+        totalQuality += team.performance.avgQuality * team.size;
+        
+        // Find top performers from team members
+        team.members?.forEach((member: any) => {
+          if (member.performance.productivity >= 90) {
+            topPerformers.push(member.name);
+          }
+          if (member.performance.productivity < 60) {
+            improvementNeeded.push(member.name);
+          }
+        });
+      });
 
       const latestPeriodRecords = this.filterLatestPeriodRecords(records);
 

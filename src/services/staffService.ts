@@ -24,7 +24,7 @@ export const staffService = {
   // Query operations
   getActiveStaff: baseService.getActiveStaff,
   getProjectManagers: isBrowser ? 
-    () => baseService.getAll().then(staff => staff.filter(s => s.position === 'Project Manager')) :
+    () => baseService.getAll().then(staff => staff.filter(s => s.status === 'active')) :
     staffNeonService.getProjectManagers,
   getStaffSummary: baseService.getStaffSummary,
   

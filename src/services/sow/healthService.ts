@@ -1,29 +1,27 @@
 /**
  * SOW Health Service
- * Handles database health checks and connection monitoring
+ * Routes all database operations through API endpoints
  */
 
-import { createNeonClient } from '@/lib/neon-sql';
+import { sowApi } from '@/services/api/sowApi';
 import { log } from '@/lib/logger';
-
-const { sql, query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
 
 /**
  * SOW database health service
  */
 export class SOWHealthService {
   /**
-   * Check Neon database connection health
+   * Check SOW service health via API
    */
   static async checkHealth() {
     try {
-      const result = await sql`SELECT NOW() as current_time`;
+      const result = await sowApi.checkHealth();
       return { 
-        connected: true, 
-        timestamp: result[0].current_time 
+        connected: result.success === true, 
+        timestamp: result.timestamp || new Date().toISOString()
       };
     } catch (error) {
-      log.error('Neon health check failed:', { data: error }, 'healthService');
+      log.error('SOW health check failed:', { data: error }, 'healthService');
       return { 
         connected: false, 
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -32,31 +30,22 @@ export class SOWHealthService {
   }
 
   /**
-   * Check if project tables exist
+   * Check if project tables exist via API
    */
   static async checkProjectTables(projectId: string) {
     try {
-      const safeProjectId = projectId.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-      const tableNames = [
-        `sow_poles_${safeProjectId}`,
-        `sow_drops_${safeProjectId}`,
-        `sow_fibre_${safeProjectId}`
-      ];
-
-      const results = await Promise.all(
-        tableNames.map(async (tableName) => {
-          try {
-            await query(`SELECT 1 FROM ${tableName} LIMIT 1`);
-            return { table: tableName, exists: true };
-          } catch (error) {
-            return { table: tableName, exists: false };
-          }
-        })
-      );
+      // Initialize tables if needed - API will check if they exist
+      const result = await sowApi.initializeTables(projectId);
+      
+      const tables = result.tables || [];
+      const tableResults = tables.map((tableName: string) => ({
+        table: tableName,
+        exists: true
+      }));
 
       return {
-        success: true,
-        tables: results
+        success: result.success === true,
+        tables: tableResults
       };
     } catch (error) {
       log.error('Error checking project tables:', { data: error }, 'healthService');
@@ -69,27 +58,25 @@ export class SOWHealthService {
   }
 
   /**
-   * Get database statistics for a project
+   * Get database statistics for a project via API
    */
   static async getProjectStats(projectId: string) {
     try {
-      const safeProjectId = projectId.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-      const polesTable = `sow_poles_${safeProjectId}`;
-      const dropsTable = `sow_drops_${safeProjectId}`;
-      const fibreTable = `sow_fibre_${safeProjectId}`;
+      // Get SOW data to calculate stats
+      const result = await sowApi.getProjectSOWData(projectId);
+      
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Failed to fetch project data');
+      }
 
-      const stats = await Promise.all([
-        query(`SELECT COUNT(*) as count, pg_size_pretty(pg_total_relation_size('${polesTable}')) as size FROM ${polesTable}`).catch(() => ({ count: 0, size: '0 bytes' })),
-        query(`SELECT COUNT(*) as count, pg_size_pretty(pg_total_relation_size('${dropsTable}')) as size FROM ${dropsTable}`).catch(() => ({ count: 0, size: '0 bytes' })),
-        query(`SELECT COUNT(*) as count, pg_size_pretty(pg_total_relation_size('${fibreTable}')) as size FROM ${fibreTable}`).catch(() => ({ count: 0, size: '0 bytes' }))
-      ]);
+      const { poles = [], drops = [], fibre = [] } = result.data;
 
       return {
         success: true,
         stats: {
-          poles: stats[0][0] || { count: 0, size: '0 bytes' },
-          drops: stats[1][0] || { count: 0, size: '0 bytes' },
-          fibre: stats[2][0] || { count: 0, size: '0 bytes' }
+          poles: { count: poles.length, size: 'N/A' },
+          drops: { count: drops.length, size: 'N/A' },
+          fibre: { count: fibre.length, size: 'N/A' }
         }
       };
     } catch (error) {

@@ -1,123 +1,68 @@
 /**
- * CRUD Operations for Contractor Neon Database
- * Create, Read, Update, Delete operations for contractors
+ * CRUD Operations for Contractor API
+ * Updated to use API endpoints instead of direct database access
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { contractors } from '@/lib/neon/schema/contractor.schema';
-import { eq } from 'drizzle-orm';
 import type { ContractorFormData, Contractor } from '@/types/contractor.types';
-import type { NewContractor } from '@/lib/neon/schema/contractor.schema';
-import { mapToNeonContractor, mapToContractor } from './dataMappers';
+import { contractorsApi } from '@/services/api/contractorsApi';
 import { log } from '@/lib/logger';
 
 /**
- * Create new contractor in Neon database
+ * Create new contractor via API
  */
 export async function createContractor(data: ContractorFormData): Promise<Contractor> {
   try {
-    // Map form data to Neon format
-    const neonData: NewContractor = {
-      ...mapToNeonContractor(data),
-      createdAt: new Date()
-    };
-
-    const result = await neonDb
-      .insert(contractors)
-      .values(neonData)
-      .returning();
-
-    return mapToContractor(result[0]);
+    const response = await contractorsApi.createContractor(data);
+    return response.data;
   } catch (error) {
-    log.error('Error creating contractor in Neon:', { data: error }, 'crudOperations');
+    log.error('Error creating contractor via API:', { data: error }, 'crudOperations');
     throw new Error('Failed to create contractor');
   }
 }
 
 /**
- * Update existing contractor in Neon database
+ * Update existing contractor via API
  */
 export async function updateContractor(id: string, data: Partial<ContractorFormData>): Promise<Contractor> {
   try {
-    // Map form data to Neon format
-    const neonData = mapToNeonContractor(data);
-
-    const result = await neonDb
-      .update(contractors)
-      .set(neonData)
-      .where(eq(contractors.id, id))
-      .returning();
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
-    }
-
-    return mapToContractor(result[0]);
+    const response = await contractorsApi.updateContractor(id, data);
+    return response.data;
   } catch (error) {
-    log.error('Error updating contractor in Neon:', { data: error }, 'crudOperations');
+    log.error('Error updating contractor via API:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor');
   }
 }
 
 /**
- * Delete contractor from Neon database (soft delete)
+ * Delete contractor via API (soft delete)
  */
 export async function deleteContractor(id: string): Promise<void> {
   try {
-    const result = await neonDb
-      .update(contractors)
-      .set({ 
-        isActive: false,
-        updatedAt: new Date()
-      })
-      .where(eq(contractors.id, id))
-      .returning({ id: contractors.id });
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
-    }
+    await contractorsApi.deleteContractor(id, false);
   } catch (error) {
-    log.error('Error deleting contractor in Neon:', { data: error }, 'crudOperations');
+    log.error('Error deleting contractor via API:', { data: error }, 'crudOperations');
     throw new Error('Failed to delete contractor');
   }
 }
 
 /**
- * Hard delete contractor from Neon database
+ * Hard delete contractor via API
  */
 export async function hardDeleteContractor(id: string): Promise<void> {
   try {
-    const result = await neonDb
-      .delete(contractors)
-      .where(eq(contractors.id, id))
-      .returning({ id: contractors.id });
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
-    }
+    await contractorsApi.deleteContractor(id, true);
   } catch (error) {
-    log.error('Error hard deleting contractor in Neon:', { data: error }, 'crudOperations');
+    log.error('Error hard deleting contractor via API:', { data: error }, 'crudOperations');
     throw new Error('Failed to permanently delete contractor');
   }
 }
 
 /**
- * Update contractor status
+ * Update contractor status via API
  */
 export async function updateContractorStatus(id: string, status: string): Promise<void> {
   try {
-    const result = await neonDb
-      .update(contractors)
-      .set({ 
-        status,
-        updatedAt: new Date()
-      })
-      .where(eq(contractors.id, id))
-      .returning({ id: contractors.id });
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
-    }
+    await contractorsApi.updateContractor(id, { status });
   } catch (error) {
     log.error('Error updating contractor status:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor status');
@@ -125,22 +70,11 @@ export async function updateContractorStatus(id: string, status: string): Promis
 }
 
 /**
- * Update contractor compliance status
+ * Update contractor compliance status via API
  */
 export async function updateContractorCompliance(id: string, complianceStatus: string): Promise<void> {
   try {
-    const result = await neonDb
-      .update(contractors)
-      .set({ 
-        complianceStatus,
-        updatedAt: new Date()
-      })
-      .where(eq(contractors.id, id))
-      .returning({ id: contractors.id });
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
-    }
+    await contractorsApi.updateContractor(id, { complianceStatus });
   } catch (error) {
     log.error('Error updating contractor compliance:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor compliance');
@@ -148,7 +82,7 @@ export async function updateContractorCompliance(id: string, complianceStatus: s
 }
 
 /**
- * Update contractor RAG scores
+ * Update contractor RAG scores via API
  */
 export async function updateContractorRAG(id: string, ragScores: {
   ragOverall?: string;
@@ -158,17 +92,16 @@ export async function updateContractorRAG(id: string, ragScores: {
   ragSafety?: string;
 }): Promise<void> {
   try {
-    const result = await neonDb
-      .update(contractors)
-      .set({ 
-        ...ragScores,
-        updatedAt: new Date()
-      })
-      .where(eq(contractors.id, id))
-      .returning({ id: contractors.id });
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
+    // Use the RAG API for proper score updates with history tracking
+    for (const [key, value] of Object.entries(ragScores)) {
+      if (value) {
+        const scoreType = key.replace('rag', '').toLowerCase();
+        await contractorsApi.updateRAGScore(id, {
+          scoreType,
+          newScore: value,
+          reason: 'Manual update'
+        });
+      }
     }
   } catch (error) {
     log.error('Error updating contractor RAG scores:', { data: error }, 'crudOperations');
@@ -177,7 +110,7 @@ export async function updateContractorRAG(id: string, ragScores: {
 }
 
 /**
- * Update contractor project statistics
+ * Update contractor project statistics via API
  */
 export async function updateContractorProjectStats(id: string, stats: {
   totalProjects?: number;
@@ -186,18 +119,7 @@ export async function updateContractorProjectStats(id: string, stats: {
   cancelledProjects?: number;
 }): Promise<void> {
   try {
-    const result = await neonDb
-      .update(contractors)
-      .set({ 
-        ...stats,
-        updatedAt: new Date()
-      })
-      .where(eq(contractors.id, id))
-      .returning({ id: contractors.id });
-
-    if (result.length === 0) {
-      throw new Error('Contractor not found');
-    }
+    await contractorsApi.updateContractor(id, stats);
   } catch (error) {
     log.error('Error updating contractor project stats:', { data: error }, 'crudOperations');
     throw new Error('Failed to update contractor project statistics');

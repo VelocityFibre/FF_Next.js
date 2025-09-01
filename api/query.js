@@ -18,25 +18,56 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
-  const { table, filters, limit = 100 } = req.body;
-  
-  if (!table) {
-    return res.status(400).json({ success: false, error: 'Table name required' });
-  }
-  
-  // Whitelist allowed tables for security
-  const allowedTables = [
-    'clients', 'projects', 'staff', 'users', 'contractors', 
-    'tasks', 'sow', 'poles', 'drops', 'meetings', 'action_items',
-    'daily_progress', 'fiber_stringing', 'home_installations'
-  ];
-  
-  if (!allowedTables.includes(table)) {
-    return res.status(403).json({ success: false, error: 'Table not allowed' });
-  }
+  const { table, filters, limit = 100, query, params = [] } = req.body;
   
   try {
     let result;
+    
+    // Support raw queries (for complex queries from services)
+    if (query) {
+      if (params.length === 0) {
+        // No parameters, use template literal
+        result = await sql([query]);
+      } else {
+        // With parameters - construct a safe query
+        let processedQuery = query;
+        params.forEach((param, index) => {
+          // Replace $1, $2, etc. with actual values
+          const placeholder = `$${index + 1}`;
+          if (typeof param === 'string') {
+            processedQuery = processedQuery.replace(placeholder, `'${param.replace(/'/g, "''")}'`);
+          } else if (param === null) {
+            processedQuery = processedQuery.replace(placeholder, 'NULL');
+          } else {
+            processedQuery = processedQuery.replace(placeholder, String(param));
+          }
+        });
+        result = await sql([processedQuery]);
+      }
+      
+      return res.status(200).json({
+        success: true,
+        data: result,
+        rowCount: result.length
+      });
+    }
+    
+    // Support simple table queries (existing functionality)
+    if (!table) {
+      return res.status(400).json({ success: false, error: 'Table name or query required' });
+    }
+    
+    // Whitelist allowed tables for security
+    const allowedTables = [
+      'clients', 'projects', 'staff', 'users', 'contractors', 
+      'tasks', 'sow', 'poles', 'drops', 'meetings', 'action_items',
+      'daily_progress', 'fiber_stringing', 'home_installations',
+      'sow_poles', 'sow_drops', 'sow_fibre'
+    ];
+    
+    if (!allowedTables.includes(table)) {
+      return res.status(403).json({ success: false, error: 'Table not allowed' });
+    }
     
     if (filters && Object.keys(filters).length > 0) {
       // Build a safe query with parameterized values
@@ -54,6 +85,6 @@ export default async function handler(req, res) {
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     console.error('Query API Error:', error);
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: error.message, data: [] });
   }
 }

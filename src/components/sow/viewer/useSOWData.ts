@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { neonSOWService } from '@/services/neonSOWService';
+import { apiSOWService } from '@/services/sow/apiSOWService';
 
 export function useSOWData(projectId: string) {
   const [data, setData] = useState<any>(null);
@@ -15,7 +15,7 @@ export function useSOWData(projectId: string) {
     setError(null);
     
     try {
-      const result = await neonSOWService.getProjectSOWData(projectId);
+      const result = await apiSOWService.getProjectSOWData(projectId);
       
       if (result.success) {
         setData(result.data);

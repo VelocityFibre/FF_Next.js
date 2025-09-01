@@ -1,199 +1,109 @@
 /**
- * Contractor Query Builders for Neon PostgreSQL
- * Builds and executes database queries for contractors
+ * Query Builders for Contractor API
+ * Updated to use API endpoints instead of direct database queries
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { contractors } from '@/lib/neon/schema/contractor.schema';
-import { eq, and, or, like, desc, asc, count, isNotNull } from 'drizzle-orm';
+import { contractorsApi } from '@/services/api/contractorsApi';
 import type { ContractorFilter } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 /**
- * Query contractors with filters
+ * Query contractors with filters via API
  */
-export async function queryContractorsWithFilters(filter?: ContractorFilter) {
-  const conditions = [];
-  
-  // Always filter active contractors unless explicitly requested
-  if (filter?.includeInactive !== true) {
-    conditions.push(eq(contractors.isActive, true));
+export async function queryContractorsWithFilters(filter?: ContractorFilter): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getContractors(filter);
+    return response.data || [];
+  } catch (error) {
+    log.error('Error querying contractors with filters:', { data: error }, 'queryBuilders');
+    throw error;
   }
-  
-  // Search by company name or contact person
-  if (filter?.search) {
-    conditions.push(
-      or(
-        like(contractors.companyName, `%${filter.search}%`),
-        like(contractors.contactPerson, `%${filter.search}%`),
-        like(contractors.email, `%${filter.search}%`)
-      )
-    );
-  }
-  
-  // Filter by status
-  if (filter?.status) {
-    if (Array.isArray(filter.status)) {
-      conditions.push(or(...filter.status.map(s => eq(contractors.status, s))));
-    } else {
-      conditions.push(eq(contractors.status, filter.status));
-    }
-  }
-  
-  // Filter by business type
-  if (filter?.businessType) {
-    if (Array.isArray(filter.businessType)) {
-      conditions.push(or(...filter.businessType.map(bt => eq(contractors.businessType, bt))));
-    } else {
-      conditions.push(eq(contractors.businessType, filter.businessType));
-    }
-  }
-  
-  // Filter by province
-  if (filter?.province) {
-    if (Array.isArray(filter.province)) {
-      conditions.push(or(...filter.province.map(p => eq(contractors.province, p))));
-    } else {
-      conditions.push(eq(contractors.province, filter.province));
-    }
-  }
-  
-  // Filter by compliance status
-  if (filter?.complianceStatus) {
-    if (Array.isArray(filter.complianceStatus)) {
-      conditions.push(or(...filter.complianceStatus.map(cs => eq(contractors.complianceStatus, cs))));
-    } else {
-      conditions.push(eq(contractors.complianceStatus, filter.complianceStatus));
-    }
-  }
-  
-  // Filter by RAG overall rating
-  if (filter?.ragOverall) {
-    if (Array.isArray(filter.ragOverall)) {
-      conditions.push(or(...filter.ragOverall.map(r => eq(contractors.ragOverall, r))));
-    } else {
-      conditions.push(eq(contractors.ragOverall, filter.ragOverall));
-    }
-  }
-  
-  // Build the base query
-  let query = neonDb.select().from(contractors);
-  
-  // Apply all conditions
-  if (conditions.length > 0) {
-    query = query.where(and(...conditions));
-  }
-  
-  // Apply sorting
-  if (filter?.sortBy) {
-    const column = contractors[filter.sortBy as keyof typeof contractors];
-    if (column) {
-      query = query.orderBy(
-        filter.sortOrder === 'desc' ? desc(column) : asc(column)
-      );
-    }
-  } else {
-    // Default sort by company name
-    query = query.orderBy(asc(contractors.companyName));
-  }
-  
-  // Apply pagination
-  if (filter?.limit) {
-    query = query.limit(filter.limit);
-  }
-  
-  if (filter?.offset) {
-    query = query.offset(filter.offset);
-  }
-  
-  return await query;
 }
 
 /**
- * Query contractor by ID
+ * Query contractor by ID via API
  */
-export async function queryContractorById(id: string) {
-  return await neonDb
-    .select()
-    .from(contractors)
-    .where(eq(contractors.id, id));
+export async function queryContractorById(id: string): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getContractor(id);
+    return response.data ? [response.data] : [];
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return [];
+    }
+    log.error('Error querying contractor by ID:', { data: error }, 'queryBuilders');
+    throw error;
+  }
 }
 
 /**
- * Query active contractors for dropdowns
+ * Query active contractors via API
  */
-export async function queryActiveContractors() {
-  return await neonDb
-    .select({
-      id: contractors.id,
-      companyName: contractors.companyName,
-      contactPerson: contractors.contactPerson,
-      status: contractors.status
-    })
-    .from(contractors)
-    .where(
-      and(
-        eq(contractors.isActive, true),
-        eq(contractors.status, 'approved')
-      )
-    )
-    .orderBy(asc(contractors.companyName));
+export async function queryActiveContractors(): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getContractors({
+      status: 'active',
+      isActive: true
+    });
+    return response.data || [];
+  } catch (error) {
+    log.error('Error querying active contractors:', { data: error }, 'queryBuilders');
+    throw error;
+  }
 }
 
 /**
- * Query contractor statistics
+ * Query contractors by team via API
  */
-export async function queryContractorStats() {
-  const result = await neonDb
-    .select({
-      totalContractors: count(),
-      activeContractors: count(contractors.isActive),
-    })
-    .from(contractors);
-    
-  return result[0];
+export async function queryContractorsByTeam(teamId: string): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getContractors({ teamId });
+    return response.data || [];
+  } catch (error) {
+    log.error('Error querying contractors by team:', { data: error }, 'queryBuilders');
+    throw error;
+  }
 }
 
 /**
- * Query contractors by RAG status for performance analysis
+ * Search contractors via API
  */
-export async function queryContractorsByRAG() {
-  return await neonDb
-    .select({
-      ragOverall: contractors.ragOverall,
-      count: count()
-    })
-    .from(contractors)
-    .where(eq(contractors.isActive, true))
-    .groupBy(contractors.ragOverall);
+export async function searchContractors(searchTerm: string): Promise<any[]> {
+  try {
+    const response = await contractorsApi.searchContractors({
+      searchTerm,
+      page: 1,
+      limit: 100
+    });
+    return response.data || [];
+  } catch (error) {
+    log.error('Error searching contractors:', { data: error }, 'queryBuilders');
+    throw error;
+  }
 }
 
 /**
- * Query contractors by business type
+ * Query contractors by RAG status via API
  */
-export async function queryContractorsByBusinessType() {
-  return await neonDb
-    .select({
-      businessType: contractors.businessType,
-      count: count()
-    })
-    .from(contractors)
-    .where(eq(contractors.isActive, true))
-    .groupBy(contractors.businessType);
+export async function queryContractorsByRAG(ragStatus: string): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getContractors({ ragOverall: ragStatus });
+    return response.data || [];
+  } catch (error) {
+    log.error('Error querying contractors by RAG:', { data: error }, 'queryBuilders');
+    throw error;
+  }
 }
 
 /**
- * Query contractors by province
+ * Query contractors by compliance status via API
  */
-export async function queryContractorsByProvince() {
-  return await neonDb
-    .select({
-      province: contractors.province,
-      count: count()
-    })
-    .from(contractors)
-    .where(and(
-      eq(contractors.isActive, true),
-      isNotNull(contractors.province)
-    ))
-    .groupBy(contractors.province);
+export async function queryContractorsByCompliance(complianceStatus: string): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getContractors({ complianceStatus });
+    return response.data || [];
+  } catch (error) {
+    log.error('Error querying contractors by compliance:', { data: error }, 'queryBuilders');
+    throw error;
+  }
 }

@@ -3,7 +3,7 @@
  * Core project summary and statistics calculations
  */
 
-import { sql } from '@/lib/neon';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import { log } from '@/lib/logger';
 import type { 
   ProjectSummary, 
@@ -18,35 +18,8 @@ export class ProjectSummaryAnalytics {
    */
   static async getProjectSummary(query?: AnalyticsQuery): Promise<ProjectSummary> {
     try {
-      // Build dynamic conditions using proper SQL fragments
-      let conditions = sql`status NOT IN ('archived', 'cancelled', 'deleted')`;
-      
-      if (query?.startDate) {
-        conditions = sql`${conditions} AND created_at >= ${query.startDate.toISOString()}`;
-      }
-      if (query?.endDate) {
-        conditions = sql`${conditions} AND created_at <= ${query.endDate.toISOString()}`;
-      }
-      if (query?.clientId) {
-        conditions = sql`${conditions} AND client_id = ${query.clientId}`;
-      }
-      if (query?.status && query.status.length > 0) {
-        conditions = sql`${conditions} AND status = ANY(${query.status})`;
-      }
-      if (query?.includeInactive) {
-        conditions = sql`TRUE`;
-      }
-      
-      const result = await sql`
-        SELECT 
-          COUNT(*) as total_projects,
-          COUNT(CASE WHEN status = 'ACTIVE' THEN 1 END) as active_projects,
-          COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END) as completed_projects,
-          COUNT(CASE WHEN status = 'ON_HOLD' THEN 1 END) as on_hold_projects,
-          AVG(progress) as avg_progress
-        FROM projects
-        WHERE ${conditions}
-      `;
+      const summary = await analyticsApi.getProjectSummary();
+      const overview = summary.overview;
       
       return {
         totalProjects: parseInt(result[0].total_projects),

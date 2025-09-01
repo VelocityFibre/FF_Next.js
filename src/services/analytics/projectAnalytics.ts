@@ -3,9 +3,7 @@
  * Handles project performance and trend analysis
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { projects } from '@/lib/neon/schema';
-import { eq, and, gte, lte, sql, count, sum, avg } from 'drizzle-orm';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import type { ProjectOverview, ProjectTrend } from './types';
 import { log } from '@/lib/logger';
 
@@ -15,37 +13,20 @@ export class ProjectAnalyticsService {
    */
   async getProjectOverview(projectId?: string): Promise<ProjectOverview[]> {
     try {
-      const baseQuery = neonDb
-        .select({
-          totalProjects: count(projects.id),
-          totalBudget: sum(projects.budget),
-          spentBudget: sum(projects.actualCost),
-          avgCompletion: avg(projects.progressPercentage),
-          activeProjects: sql<number>`COUNT(CASE WHEN ${projects.status} = 'active' THEN 1 END)`,
-          completedProjects: sql<number>`COUNT(CASE WHEN ${projects.status} = 'completed' THEN 1 END)`,
-          delayedProjects: sql<number>`COUNT(CASE WHEN ${projects.status} = 'active' AND ${projects.endDate} < CURRENT_DATE THEN 1 END)`,
-        })
-        .from(projects);
-
-      let results;
-      if (projectId) {
-        results = await baseQuery.where(eq(projects.id, projectId));
-      } else {
-        results = await baseQuery;
-      }
-
-      // Return real data from database with proper fallbacks to 0
-      return results.map(row => ({
-        totalProjects: row.totalProjects || 0,
-        totalBudget: Number(row.totalBudget || 0),
-        spentBudget: Number(row.spentBudget || 0),
-        avgCompletion: Number(row.avgCompletion || 0),
-        activeProjects: row.activeProjects || 0,
-        completedProjects: row.completedProjects || 0,
-        delayedProjects: row.delayedProjects || 0,
-        totalValue: Number(row.totalBudget || 0),
-        averageCompletionRate: Number(row.avgCompletion || 0)
-      }));
+      const summary = await analyticsApi.getProjectSummary(projectId);
+      
+      // Convert API response to ProjectOverview format
+      return [{
+        totalProjects: summary.overview.totalProjects,
+        totalBudget: summary.overview.totalBudget,
+        spentBudget: summary.overview.spentBudget,
+        avgCompletion: summary.overview.avgCompletion,
+        activeProjects: summary.overview.activeProjects,
+        completedProjects: summary.overview.completedProjects,
+        delayedProjects: summary.overview.delayedProjects,
+        totalValue: summary.overview.totalValue,
+        averageCompletionRate: summary.overview.averageCompletionRate
+      }];
     } catch (error) {
       log.error('Failed to get project overview:', { data: error }, 'projectAnalytics');
       // Return empty structure with zeros instead of throwing
@@ -68,37 +49,14 @@ export class ProjectAnalyticsService {
    */
   async getProjectTrends(dateFrom: Date, dateTo: Date): Promise<ProjectTrend[]> {
     try {
-      const results = await neonDb
-        .select({
-          month: sql<string>`DATE_TRUNC('month', ${projects.createdAt})`,
-          newProjects: sql<number>`COUNT(CASE WHEN ${projects.createdAt} >= DATE_TRUNC('month', ${projects.createdAt}) THEN 1 END)`,
-          completedProjects: sql<number>`COUNT(CASE WHEN ${projects.status} = 'completed' THEN 1 END)`,
-          activeProjects: sql<number>`COUNT(CASE WHEN ${projects.status} = 'active' THEN 1 END)`,
-          avgCompletion: avg(projects.progressPercentage),
-          totalBudget: sum(projects.budget),
-        })
-        .from(projects)
-        .where(
-          and(
-            gte(projects.createdAt, dateFrom),
-            lte(projects.createdAt, dateTo)
-          )
-        )
-        .groupBy(sql`DATE_TRUNC('month', ${projects.createdAt})`)
-        .orderBy(sql`DATE_TRUNC('month', ${projects.createdAt})`);
-
-      // Return real data from database
-      return results.map(row => ({
-        period: row.month,
-        date: row.month,
-        month: row.month,
-        newProjects: row.newProjects || 0,
-        completedProjects: row.completedProjects || 0,
-        activeProjects: row.activeProjects || 0,
-        avgCompletion: Number(row.avgCompletion || 0),
-        totalBudget: Number(row.totalBudget || 0),
-        totalValue: Number(row.totalBudget || 0)
-      }));
+      const trends = await analyticsApi.getProjectTrends('', {
+        type: 'monthly',
+        startDate: dateFrom.toISOString(),
+        endDate: dateTo.toISOString()
+      });
+      
+      // Convert API response to ProjectTrend format
+      return trends.trends || [];
     } catch (error) {
       log.error('Failed to get project trends:', { data: error }, 'projectAnalytics');
       // Return empty array instead of throwing

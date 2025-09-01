@@ -22,8 +22,31 @@ export default async function handler(req, res) {
           const client = await sql`SELECT * FROM clients WHERE id = ${req.query.id}`;
           res.status(200).json({ success: true, data: client[0] || null });
         } else {
-          const clients = await sql`SELECT * FROM clients ORDER BY created_at DESC`;
-          res.status(200).json({ success: true, data: clients });
+          // Handle filtering
+          let result;
+          const { status, search } = req.query;
+          
+          if (status) {
+            result = await sql`
+              SELECT * FROM clients
+              WHERE status = ${status}
+              ORDER BY name ASC
+            `;
+          } else if (search) {
+            const searchPattern = `%${search}%`;
+            result = await sql`
+              SELECT * FROM clients
+              WHERE name ILIKE ${searchPattern}
+                OR contact_person ILIKE ${searchPattern}
+                OR email ILIKE ${searchPattern}
+                OR contact_email ILIKE ${searchPattern}
+              ORDER BY name ASC
+            `;
+          } else {
+            result = await sql`SELECT * FROM clients ORDER BY name ASC`;
+          }
+          
+          res.status(200).json({ success: true, data: result });
         }
         break;
 

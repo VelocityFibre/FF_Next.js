@@ -23,6 +23,7 @@ import {
   TasksDashboard,
   SOWDashboard,
   SOWListPage,
+  SOWImportPage,
   OneMapDashboard,
   NokiaEquipmentDashboard,
   DailyProgressDashboard,
@@ -31,7 +32,8 @@ import {
   ReportsDashboard,
   Settings,
   SuppliersPortalPage,
-  WorkflowPortalPage
+  WorkflowPortalPage,
+  MigrationStatus
 } from '../lazyImports';
 
 export const moduleRoutes = [
@@ -207,6 +209,14 @@ export const moduleRoutes = [
       </Suspense>
     ),
   },
+  {
+    path: 'sow/import',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <SOWImportPage />
+      </Suspense>
+    ),
+  },
   // Field Operations
   {
     path: 'onemap',
@@ -289,6 +299,15 @@ export const moduleRoutes = [
     element: (
       <Suspense fallback={<Loading />}>
         <WorkflowPortalPage />
+      </Suspense>
+    ),
+  },
+  // Migration Status
+  {
+    path: 'migration-status',
+    element: (
+      <Suspense fallback={<Loading />}>
+        <MigrationStatus />
       </Suspense>
     ),
   },

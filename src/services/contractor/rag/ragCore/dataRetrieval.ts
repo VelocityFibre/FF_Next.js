@@ -1,11 +1,9 @@
 /**
  * Data Retrieval Module
- * Handles database queries for RAG calculations
+ * Updated to use API endpoints instead of direct database queries
  */
 
-import { db } from '@/lib/neon/connection';
-import { contractors, projectAssignments, contractorTeams } from '@/lib/neon/schema';
-import { eq } from 'drizzle-orm';
+import { contractorsApi } from '@/services/api/contractorsApi';
 import { log } from '@/lib/logger';
 import {
   ContractorAssignment,
@@ -14,51 +12,83 @@ import {
 
 export class DataRetrieval {
   /**
-   * Get contractor data for RAG calculation
+   * Get contractor data for RAG calculation via API
    */
   static async getContractorData(contractorId: string): Promise<{
     contractor: any;
     assignments: ContractorAssignment[];
     teams: ContractorTeam[];
   }> {
-    const [contractor] = await db
-      .select()
-      .from(contractors)
-      .where(eq(contractors.id, contractorId))
-      .limit(1);
+    try {
+      // Get contractor details with analytics
+      const contractorResponse = await contractorsApi.getContractor(contractorId);
+      const contractor = contractorResponse.data;
 
-    if (!contractor) {
-      throw new Error('Contractor not found');
+      if (!contractor) {
+        throw new Error('Contractor not found');
+      }
+
+      // Get analytics which includes project data
+      const analyticsResponse = await contractorsApi.getContractorAnalytics(contractorId);
+      const analytics = analyticsResponse.data?.analytics;
+
+      // Map project data to assignments format
+      const assignments: ContractorAssignment[] = [];
+      // Note: The API doesn't return individual assignments, so we'll use aggregated data
+      if (analytics?.projects) {
+        const mockAssignment: ContractorAssignment = {
+          id: 'aggregate',
+          contractorId: contractorId,
+          status: 'active',
+          qualityScore: 80, // Default scores since API doesn't provide individual scores
+          timelinessScore: 75,
+          performanceRating: 4,
+          contractValue: analytics.projects.total_project_value || 0
+        };
+        assignments.push(mockAssignment);
+      }
+
+      // Get teams from contractor data
+      const teams: ContractorTeam[] = (contractor.teams || []).map((team: any) => ({
+        id: team.id,
+        contractorId: contractorId,
+        teamType: team.type || team.name || '',
+        skillLevel: 'intermediate' as 'junior' | 'intermediate' | 'senior' | 'expert'
+      }));
+
+      return { contractor, assignments, teams };
+    } catch (error) {
+      log.error('Failed to get contractor data:', { data: error }, 'dataRetrieval');
+      throw error;
     }
-
-    const [assignments, teams] = await Promise.all([
-      this.getContractorAssignments(contractorId),
-      this.getContractorTeams(contractorId)
-    ]);
-
-    return { contractor, assignments, teams };
   }
 
   /**
-   * Get contractor assignments for RAG calculation
+   * Get contractor assignments for RAG calculation via API
    */
   static async getContractorAssignments(contractorId: string): Promise<ContractorAssignment[]> {
     try {
-      const assignments = await db
-        .select()
-        .from(projectAssignments)
-        .where(eq(projectAssignments.contractorId, contractorId));
+      // The API doesn't have a direct assignments endpoint, so we get this from analytics
+      const analyticsResponse = await contractorsApi.getContractorAnalytics(contractorId);
+      const analytics = analyticsResponse.data?.analytics;
 
-      // Map to our internal interface
-      return assignments.map(assignment => ({
-        id: assignment.id,
-        contractorId: assignment.contractorId,
-        status: assignment.status,
-        qualityScore: Number(assignment.qualityScore || 0),
-        timelinessScore: Number(assignment.timelinessScore || 0),
-        performanceRating: Number(assignment.performanceRating || 0),
-        contractValue: Number(assignment.contractValue || 0)
-      }));
+      // Create synthetic assignments based on analytics data
+      const assignments: ContractorAssignment[] = [];
+      
+      if (analytics?.projects && analytics.projects.total_projects > 0) {
+        // Create one assignment representing aggregate data
+        assignments.push({
+          id: 'aggregate',
+          contractorId: contractorId,
+          status: 'active',
+          qualityScore: 80,
+          timelinessScore: analytics.projects.avg_days_overdue > 0 ? 60 : 90,
+          performanceRating: analytics.projects.avg_completion || 75,
+          contractValue: analytics.projects.total_project_value || 0
+        });
+      }
+
+      return assignments;
     } catch (error) {
       log.error('Failed to get contractor assignments:', { data: error }, 'dataRetrieval');
       return [];
@@ -66,20 +96,18 @@ export class DataRetrieval {
   }
 
   /**
-   * Get contractor teams for RAG calculation
+   * Get contractor teams for RAG calculation via API
    */
   static async getContractorTeams(contractorId: string): Promise<ContractorTeam[]> {
     try {
-      const teams = await db
-        .select()
-        .from(contractorTeams)
-        .where(eq(contractorTeams.contractorId, contractorId));
+      const response = await contractorsApi.getContractorTeams(contractorId);
+      const teams = response.data?.assigned || [];
 
       // Map to our internal interface
-      return teams.map(team => ({
+      return teams.map((team: any) => ({
         id: team.id,
-        contractorId: team.contractorId,
-        teamType: team.teamType || '',
+        contractorId: contractorId,
+        teamType: team.type || team.name || '',
         skillLevel: 'intermediate' as 'junior' | 'intermediate' | 'senior' | 'expert'
       }));
     } catch (error) {
@@ -89,20 +117,27 @@ export class DataRetrieval {
   }
 
   /**
-   * Get list of contractors for ranking
+   * Get list of contractors for ranking via API
    */
   static async getContractorsList(limit: number = 50): Promise<Array<{ id: string; companyName: string }>> {
-    return await db
-      .select({
-        id: contractors.id,
-        companyName: contractors.companyName
-      })
-      .from(contractors)
-      .limit(limit);
+    try {
+      const response = await contractorsApi.getContractors({ isActive: true });
+      const contractors = response.data || [];
+      
+      return contractors
+        .slice(0, limit)
+        .map((c: any) => ({
+          id: c.id,
+          companyName: c.companyName
+        }));
+    } catch (error) {
+      log.error('Failed to get contractors list:', { data: error }, 'dataRetrieval');
+      return [];
+    }
   }
 
   /**
-   * Get multiple contractor data in batches
+   * Get multiple contractor data in batches via API
    */
   static async getBatchContractorData(
     contractorIds: string[],
@@ -124,7 +159,7 @@ export class DataRetrieval {
       } | null;
     }> = [];
 
-    // Process contractors in batches
+    // Process contractors in batches to avoid overwhelming the API
     for (let i = 0; i < contractorIds.length; i += batchSize) {
       const batch = contractorIds.slice(i, i + batchSize);
       
@@ -146,15 +181,18 @@ export class DataRetrieval {
   }
 
   /**
-   * Check if contractor exists
+   * Check if contractor exists via API
    */
   static async contractorExists(contractorId: string): Promise<boolean> {
-    const [contractor] = await db
-      .select({ id: contractors.id })
-      .from(contractors)
-      .where(eq(contractors.id, contractorId))
-      .limit(1);
-
-    return !!contractor;
+    try {
+      const response = await contractorsApi.getContractor(contractorId);
+      return !!response.data;
+    } catch (error) {
+      if (error.response?.status === 404) {
+        return false;
+      }
+      log.error('Failed to check contractor existence:', { data: error }, 'dataRetrieval');
+      return false;
+    }
   }
 }

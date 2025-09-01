@@ -22,7 +22,7 @@
  * This legacy layer maintains backward compatibility while the codebase transitions.
  */
 
-import { NeonSOWService as ModularSOWService } from './sow/neonSOWService';
+import { apiSOWService } from './sow/apiSOWService';
 import { NeonPoleData, NeonDropData, NeonFibreData } from './sow/types';
 
 // Re-export types for backward compatibility
@@ -31,10 +31,10 @@ export type { NeonPoleData, NeonDropData, NeonFibreData };
 /**
  * @deprecated Use the new modular NeonSOWService from '@/services/sow' instead
  * 
- * Legacy SOW service class that delegates to the new modular architecture
+ * Legacy SOW service class that delegates to the API-based service
  */
 export class NeonSOWService {
-  private service = new ModularSOWService();
+  private service = apiSOWService;
 
   /**
    * @deprecated Use SOWSchemaService.initializeTables() instead

@@ -4,11 +4,7 @@
  * ZERO mock data - all statistics from actual database sources
  */
 
-import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
-import { staffQueryService } from '@/services/staff/staffQueryService';
-import { clientQueryService } from '@/services/client/clientQueryService';
-import { ProjectStatus } from '@/types/project.types';
-import { sql } from '@/lib/neon';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import { log } from '@/lib/logger';
 
 // 🟢 WORKING: Core dashboard data types
@@ -49,59 +45,33 @@ export interface DashboardTrends {
 export class DashboardStatsService {
   
   /**
-   * Get comprehensive dashboard statistics from database
+   * Get comprehensive dashboard statistics from API
    */
   static async getDashboardStats(): Promise<DashboardStats> {
     try {
-      // Get parallel data from all sources
-      const [
-        projectStats,
-        staffStats,
-        clientStats,
-        infrastructureStats,
-        procurementStats
-      ] = await Promise.all([
-        this.getProjectStatistics(),
-        this.getStaffStatistics(),
-        this.getClientStatistics(),
-        this.getInfrastructureStatistics(),
-        this.getProcurementStatistics()
-      ]);
-
+      const stats = await analyticsApi.getDashboardStats();
+      
       return {
-        // Project statistics (from Neon database)
-        totalProjects: projectStats.total,
-        activeProjects: projectStats.active,
-        completedProjects: projectStats.completed,
-        completedTasks: projectStats.completedTasks,
-
-        // Staff statistics (from Firebase)
-        teamMembers: staffStats.total,
-        openIssues: staffStats.openIssues,
-
-        // Infrastructure statistics (from Neon if available, otherwise 0)
-        polesInstalled: infrastructureStats.poles,
-        dropsCompleted: infrastructureStats.drops,
-        fiberInstalled: infrastructureStats.fiber,
-
-        // Financial statistics (calculated from projects/clients)
-        totalRevenue: clientStats.totalRevenue,
-
-        // Contractor statistics (from database if available, otherwise 0)
-        contractorsActive: procurementStats.contractorsActive,
-        contractorsPending: procurementStats.contractorsPending,
-
-        // Procurement statistics (from database if available, otherwise 0)
-        boqsActive: procurementStats.boqsActive,
-        rfqsActive: procurementStats.rfqsActive,
-        supplierActive: procurementStats.suppliersActive,
-        reportsGenerated: procurementStats.reportsGenerated,
-
-        // Performance metrics (calculated or 0 if not available)
-        performanceScore: projectStats.performanceScore,
-        qualityScore: projectStats.qualityScore,
-        onTimeDelivery: projectStats.onTimeDelivery,
-        budgetUtilization: projectStats.budgetUtilization,
+        totalProjects: stats.totalProjects,
+        activeProjects: stats.activeProjects,
+        completedProjects: stats.completedProjects,
+        completedTasks: stats.completedTasks,
+        teamMembers: stats.teamMembers,
+        openIssues: stats.openIssues,
+        polesInstalled: stats.polesInstalled,
+        dropsCompleted: stats.dropsCompleted,
+        fiberInstalled: stats.fiberInstalled,
+        totalRevenue: stats.totalRevenue,
+        contractorsActive: stats.contractorsActive,
+        contractorsPending: stats.contractorsPending,
+        boqsActive: stats.boqsActive,
+        rfqsActive: stats.rfqsActive,
+        supplierActive: stats.supplierActive,
+        reportsGenerated: stats.reportsGenerated,
+        performanceScore: stats.performanceScore,
+        qualityScore: stats.qualityScore,
+        onTimeDelivery: stats.onTimeDelivery,
+        budgetUtilization: stats.budgetUtilization,
       };
     } catch (error) {
       log.error('Error fetching dashboard statistics:', { data: error }, 'dashboardStatsService');
@@ -111,7 +81,7 @@ export class DashboardStatsService {
   }
 
   /**
-   * Get project statistics from Neon database
+   * @deprecated Use API endpoint instead
    */
   private static async getProjectStatistics() {
     try {
@@ -171,7 +141,7 @@ export class DashboardStatsService {
   }
 
   /**
-   * Get staff statistics from Firebase
+   * @deprecated Use API endpoint instead
    */
   private static async getStaffStatistics() {
     try {
@@ -191,7 +161,7 @@ export class DashboardStatsService {
   }
 
   /**
-   * Get client statistics from Firebase
+   * @deprecated Use API endpoint instead
    */
   private static async getClientStatistics() {
     try {
@@ -211,7 +181,7 @@ export class DashboardStatsService {
   }
 
   /**
-   * Get infrastructure statistics from database
+   * @deprecated Use API endpoint instead
    */
   private static async getInfrastructureStatistics() {
     try {
@@ -244,7 +214,7 @@ export class DashboardStatsService {
   }
 
   /**
-   * Get procurement statistics from database
+   * @deprecated Use API endpoint instead
    */
   private static async getProcurementStatistics() {
     try {
@@ -328,25 +298,50 @@ export class DashboardStatsService {
   }
 
   /**
-   * Generate trend data (simplified for now)
+   * Generate trend data from API
    */
   static async getDashboardTrends(): Promise<DashboardTrends> {
-    // This would require historical data comparison
-    // For now, return stable trends to avoid mock data
-    const stats = await this.getDashboardStats();
-    
-    const trends: DashboardTrends = {};
-    
-    // All trends are stable with 0% change (no historical data yet)
-    Object.entries(stats).forEach(([key, value]) => {
-      trends[key] = {
-        value: typeof value === 'number' ? value : 0,
-        direction: 'stable',
-        percentage: 0,
-      };
-    });
-    
-    return trends;
+    try {
+      // Get trends for last 30 days
+      const endDate = new Date().toISOString();
+      const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      
+      const trendsData = await analyticsApi.getDashboardTrends(startDate, endDate, 'monthly');
+      
+      // Convert API response to DashboardTrends format
+      const trends: DashboardTrends = {};
+      const stats = await this.getDashboardStats();
+      
+      // Map trends from API response
+      Object.entries(stats).forEach(([key, value]) => {
+        const trend = trendsData.projects?.trends?.[key] || 
+                     trendsData.revenue?.trends?.[key] || 
+                     trendsData.staff?.trends?.[key];
+        
+        trends[key] = {
+          value: typeof value === 'number' ? value : 0,
+          direction: trend || 'stable',
+          percentage: 0, // Calculate from trend data if available
+        };
+      });
+      
+      return trends;
+    } catch (error) {
+      log.error('Error fetching dashboard trends:', { data: error }, 'dashboardStatsService');
+      // Fallback to stable trends
+      const stats = await this.getDashboardStats();
+      const trends: DashboardTrends = {};
+      
+      Object.entries(stats).forEach(([key, value]) => {
+        trends[key] = {
+          value: typeof value === 'number' ? value : 0,
+          direction: 'stable',
+          percentage: 0,
+        };
+      });
+      
+      return trends;
+    }
   }
 
   /**

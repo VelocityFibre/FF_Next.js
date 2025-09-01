@@ -132,7 +132,7 @@ export function StaffList() {
         utilizationRate={Math.round(summary?.utilizationRate || 0)}
         showFilters={showFilters}
         setShowFilters={setShowFilters}
-        onAddStaff={() => navigate('/app/staff/create')}
+        onAddStaff={() => navigate('/app/staff/new')}
         onImport={() => setShowImport(true)}
         onSettings={() => navigate('/app/staff/settings')}
         onExport={handleExport}

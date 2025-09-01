@@ -1,224 +1,105 @@
 /**
- * Contractor Statistics for Neon Database
- * Provides summary statistics and analytics for contractors
+ * Statistics functions for Contractor API
+ * Updated to use API endpoints instead of direct database queries
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { contractors } from '@/lib/neon/schema/contractor.schema';
-import { count, eq, and, avg, sum } from 'drizzle-orm';
+import { contractorsApi } from '@/services/api/contractorsApi';
 import type { ContractorAnalytics } from '@/types/contractor.types';
 import { log } from '@/lib/logger';
 
 /**
- * Get contractor summary statistics
+ * Get contractor summary statistics via API
  */
-export async function getContractorSummary() {
+export async function getContractorSummary(): Promise<ContractorAnalytics> {
   try {
-    // Get basic counts
-    const totalContractors = await neonDb
-      .select({ count: count() })
-      .from(contractors);
-
-    const activeContractors = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.isActive, true));
-
-    const approvedContractors = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true),
-        eq(contractors.status, 'approved')
-      ));
-
-    const pendingContractors = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true),
-        eq(contractors.status, 'pending')
-      ));
-
-    // Calculate utilization rate (approved / total active)
-    const total = activeContractors[0]?.count || 0;
-    const approved = approvedContractors[0]?.count || 0;
-    const utilizationRate = total > 0 ? Math.round((approved / total) * 100) : 0;
-
-    return {
-      totalContractors: totalContractors[0]?.count || 0,
-      activeContractors: total,
-      approvedContractors: approved,
-      pendingContractors: pendingContractors[0]?.count || 0,
-      utilizationRate
-    };
+    const response = await contractorsApi.getOverallAnalytics();
+    return response.data;
   } catch (error) {
-    log.error('Error getting contractor summary:', { data: error }, 'statistics');
-    throw new Error('Failed to get contractor summary');
+    log.error('Error fetching contractor summary:', { data: error }, 'statistics');
+    throw error;
   }
 }
 
 /**
- * Get contractor analytics
+ * Get contractor statistics by date range via API
  */
-export async function getContractorAnalytics(): Promise<ContractorAnalytics> {
+export async function getContractorStatsByDateRange(
+  dateFrom: string, 
+  dateTo: string
+): Promise<ContractorAnalytics> {
   try {
-    const summary = await getContractorSummary();
-    
-    // Get RAG distribution
-    const ragDistribution = await neonDb
-      .select({
-        ragOverall: contractors.ragOverall,
-        count: count()
-      })
-      .from(contractors)
-      .where(eq(contractors.isActive, true))
-      .groupBy(contractors.ragOverall);
-
-    // Get business type distribution
-    const businessTypeDistribution = await neonDb
-      .select({
-        businessType: contractors.businessType,
-        count: count()
-      })
-      .from(contractors)
-      .where(eq(contractors.isActive, true))
-      .groupBy(contractors.businessType);
-
-    // Get province distribution
-    const provinceDistribution = await neonDb
-      .select({
-        province: contractors.province,
-        count: count()
-      })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true),
-        // Only count contractors with provinces
-      ))
-      .groupBy(contractors.province);
-
-    // Get performance averages
-    const performanceStats = await neonDb
-      .select({
-        avgPerformance: avg(contractors.performanceScore),
-        avgSafety: avg(contractors.safetyScore),
-        avgQuality: avg(contractors.qualityScore),
-        avgTimeliness: avg(contractors.timelinessScore)
-      })
-      .from(contractors)
-      .where(eq(contractors.isActive, true));
-
-    // Get project statistics
-    const projectStats = await neonDb
-      .select({
-        totalProjects: sum(contractors.totalProjects),
-        completedProjects: sum(contractors.completedProjects),
-        activeProjects: sum(contractors.activeProjects)
-      })
-      .from(contractors)
-      .where(eq(contractors.isActive, true));
-
-    return {
-      summary,
-      ragDistribution: ragDistribution.map(r => ({
-        label: r.ragOverall || 'unknown',
-        value: r.count,
-        color: r.ragOverall === 'green' ? '#10b981' : 
-               r.ragOverall === 'amber' ? '#f59e0b' : '#ef4444'
-      })),
-      businessTypeDistribution: businessTypeDistribution.map(b => ({
-        label: b.businessType || 'unknown',
-        value: b.count
-      })),
-      provinceDistribution: provinceDistribution.map(p => ({
-        label: p.province || 'unknown',
-        value: p.count
-      })),
-      performanceAverages: {
-        performance: performanceStats[0]?.avgPerformance ? 
-          Math.round(parseFloat(performanceStats[0].avgPerformance.toString())) : 0,
-        safety: performanceStats[0]?.avgSafety ? 
-          Math.round(parseFloat(performanceStats[0].avgSafety.toString())) : 0,
-        quality: performanceStats[0]?.avgQuality ? 
-          Math.round(parseFloat(performanceStats[0].avgQuality.toString())) : 0,
-        timeliness: performanceStats[0]?.avgTimeliness ? 
-          Math.round(parseFloat(performanceStats[0].avgTimeliness.toString())) : 0
-      },
-      projectTotals: {
-        total: projectStats[0]?.totalProjects ? 
-          parseInt(projectStats[0].totalProjects.toString()) : 0,
-        completed: projectStats[0]?.completedProjects ? 
-          parseInt(projectStats[0].completedProjects.toString()) : 0,
-        active: projectStats[0]?.activeProjects ? 
-          parseInt(projectStats[0].activeProjects.toString()) : 0
-      }
-    };
+    const response = await contractorsApi.getOverallAnalytics({
+      dateFrom,
+      dateTo
+    });
+    return response.data;
   } catch (error) {
-    log.error('Error getting contractor analytics:', { data: error }, 'statistics');
-    throw new Error('Failed to get contractor analytics');
+    log.error('Error fetching contractor stats by date:', { data: error }, 'statistics');
+    throw error;
   }
 }
 
 /**
- * Get contractors by status count
+ * Get individual contractor analytics via API
  */
-export async function getContractorsByStatus() {
+export async function getContractorAnalytics(contractorId: string): Promise<ContractorAnalytics> {
   try {
-    return await neonDb
-      .select({
-        status: contractors.status,
-        count: count()
-      })
-      .from(contractors)
-      .where(eq(contractors.isActive, true))
-      .groupBy(contractors.status);
+    const response = await contractorsApi.getContractorAnalytics(contractorId);
+    return response.data;
   } catch (error) {
-    log.error('Error getting contractors by status:', { data: error }, 'statistics');
-    throw new Error('Failed to get contractors by status');
+    log.error('Error fetching contractor analytics:', { data: error }, 'statistics');
+    throw error;
   }
 }
 
 /**
- * Get compliance statistics
+ * Get contractor distribution by a specific field via API
  */
-export async function getComplianceStats() {
+export async function getContractorDistribution(groupBy: string): Promise<any> {
   try {
-    const compliantCount = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true),
-        eq(contractors.complianceStatus, 'compliant')
-      ));
-
-    const nonCompliantCount = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true),
-        eq(contractors.complianceStatus, 'non-compliant')
-      ));
-
-    const pendingCount = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true),
-        eq(contractors.complianceStatus, 'pending')
-      ));
-
-    const total = compliantCount[0]?.count + nonCompliantCount[0]?.count + pendingCount[0]?.count;
-    const complianceRate = total > 0 ? Math.round((compliantCount[0]?.count / total) * 100) : 0;
-
-    return {
-      compliant: compliantCount[0]?.count || 0,
-      nonCompliant: nonCompliantCount[0]?.count || 0,
-      pending: pendingCount[0]?.count || 0,
-      complianceRate
-    };
+    const response = await contractorsApi.getOverallAnalytics({ groupBy });
+    return response.data.distribution;
   } catch (error) {
-    log.error('Error getting compliance stats:', { data: error }, 'statistics');
-    throw new Error('Failed to get compliance statistics');
+    log.error('Error fetching contractor distribution:', { data: error }, 'statistics');
+    throw error;
+  }
+}
+
+/**
+ * Get contractor onboarding funnel statistics via API
+ */
+export async function getOnboardingFunnelStats(): Promise<any> {
+  try {
+    const response = await contractorsApi.getOverallAnalytics();
+    return response.data.onboardingFunnel;
+  } catch (error) {
+    log.error('Error fetching onboarding funnel stats:', { data: error }, 'statistics');
+    throw error;
+  }
+}
+
+/**
+ * Get contractor growth trends via API
+ */
+export async function getContractorGrowthTrends(): Promise<any> {
+  try {
+    const response = await contractorsApi.getOverallAnalytics();
+    return response.data.growthTrends;
+  } catch (error) {
+    log.error('Error fetching growth trends:', { data: error }, 'statistics');
+    throw error;
+  }
+}
+
+/**
+ * Get top performing contractors via API
+ */
+export async function getTopPerformingContractors(limit: number = 10): Promise<any[]> {
+  try {
+    const response = await contractorsApi.getOverallAnalytics();
+    return response.data.topPerformers?.slice(0, limit) || [];
+  } catch (error) {
+    log.error('Error fetching top performers:', { data: error }, 'statistics');
+    throw error;
   }
 }

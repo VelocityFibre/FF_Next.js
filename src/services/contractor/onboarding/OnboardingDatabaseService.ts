@@ -1,16 +1,14 @@
 /**
  * Onboarding Database Service
- * Handles all database operations for onboarding
+ * Updated to use API endpoints instead of direct database access
  */
 
-import { db } from '@/lib/neon/connection';
-import { contractors } from '@/lib/neon/schema';
-import { eq } from 'drizzle-orm';
+import { contractorsApi } from '@/services/api/contractorsApi';
 import { log } from '@/lib/logger';
 
 export class OnboardingDatabaseService {
   /**
-   * Update contractor status in database
+   * Update contractor status via API
    */
   async updateContractorStatus(
     contractorId: string, 
@@ -18,14 +16,10 @@ export class OnboardingDatabaseService {
     isActive: boolean
   ): Promise<void> {
     try {
-      await db
-        .update(contractors)
-        .set({ 
-          status,
-          isActive,
-          updatedAt: new Date()
-        })
-        .where(eq(contractors.id, contractorId));
+      await contractorsApi.updateContractor(contractorId, { 
+        status,
+        isActive
+      });
     } catch (error) {
       log.error('Failed to update contractor status:', { data: error }, 'OnboardingDatabaseService');
       throw error;
@@ -33,16 +27,14 @@ export class OnboardingDatabaseService {
   }
 
   /**
-   * Get all active contractor IDs
+   * Get all active contractor IDs via API
    */
   async getAllActiveContractorIds(): Promise<string[]> {
     try {
-      const result = await db
-        .select({ id: contractors.id })
-        .from(contractors)
-        .where(eq(contractors.isActive, true));
-      
-      return result.map(r => r.id);
+      const response = await contractorsApi.getContractors({ 
+        isActive: true 
+      });
+      return (response.data || []).map(c => c.id);
     } catch (error) {
       log.error('Failed to get contractor IDs:', { data: error }, 'OnboardingDatabaseService');
       return [];
@@ -50,34 +42,28 @@ export class OnboardingDatabaseService {
   }
 
   /**
-   * Get contractor by ID
+   * Get contractor by ID via API
    */
   async getContractorById(contractorId: string): Promise<any | null> {
     try {
-      const result = await db
-        .select()
-        .from(contractors)
-        .where(eq(contractors.id, contractorId))
-        .limit(1);
-      
-      return result.length > 0 ? result[0] : null;
+      const response = await contractorsApi.getContractor(contractorId);
+      return response.data || null;
     } catch (error) {
+      if (error.response?.status === 404) {
+        return null;
+      }
       log.error('Failed to get contractor by ID:', { data: error }, 'OnboardingDatabaseService');
       return null;
     }
   }
 
   /**
-   * Get contractors by status
+   * Get contractors by status via API
    */
   async getContractorsByStatus(status: string): Promise<any[]> {
     try {
-      const result = await db
-        .select()
-        .from(contractors)
-        .where(eq(contractors.status, status));
-      
-      return result;
+      const response = await contractorsApi.getContractors({ status });
+      return response.data || [];
     } catch (error) {
       log.error('Failed to get contractors by status:', { data: error }, 'OnboardingDatabaseService');
       return [];
@@ -85,20 +71,16 @@ export class OnboardingDatabaseService {
   }
 
   /**
-   * Update contractor onboarding data
+   * Update contractor onboarding data via API
    */
   async updateOnboardingData(
     contractorId: string, 
     onboardingProgress: number
   ): Promise<void> {
     try {
-      await db
-        .update(contractors)
-        .set({ 
-          onboardingProgress,
-          updatedAt: new Date()
-        })
-        .where(eq(contractors.id, contractorId));
+      await contractorsApi.updateContractor(contractorId, { 
+        onboardingProgress 
+      });
     } catch (error) {
       log.error('Failed to update onboarding data:', { data: error }, 'OnboardingDatabaseService');
       throw error;
@@ -106,17 +88,12 @@ export class OnboardingDatabaseService {
   }
 
   /**
-   * Get contractor onboarding data
+   * Get contractor onboarding data via API
    */
   async getOnboardingData(contractorId: string): Promise<any | null> {
     try {
-      const result = await db
-        .select({ onboardingProgress: contractors.onboardingProgress })
-        .from(contractors)
-        .where(eq(contractors.id, contractorId))
-        .limit(1);
-      
-      return result.length > 0 ? result[0].onboardingProgress : null;
+      const response = await contractorsApi.getOnboardingStatus(contractorId);
+      return response.data || null;
     } catch (error) {
       log.error('Failed to get onboarding data:', { data: error }, 'OnboardingDatabaseService');
       return null;
@@ -124,7 +101,7 @@ export class OnboardingDatabaseService {
   }
 
   /**
-   * Log onboarding event
+   * Log onboarding event via API
    */
   async logOnboardingEvent(
     contractorId: string,
@@ -132,15 +109,20 @@ export class OnboardingDatabaseService {
     details: any
   ): Promise<void> {
     try {
-      // In production, this would log to an events table
-
+      // This would be handled by the onboarding status update
+      const onboardingResponse = await contractorsApi.getOnboardingStatus(contractorId);
+      if (onboardingResponse.data && onboardingResponse.data.id) {
+        await contractorsApi.updateOnboardingStatus(onboardingResponse.data.id, {
+          notes: `${event}: ${JSON.stringify(details)}`
+        });
+      }
     } catch (error) {
       log.error('Failed to log onboarding event:', { data: error }, 'OnboardingDatabaseService');
     }
   }
 
   /**
-   * Get onboarding statistics from database
+   * Get onboarding statistics via API
    */
   async getOnboardingStats(): Promise<{
     total: number;
@@ -151,9 +133,11 @@ export class OnboardingDatabaseService {
     rejected: number;
   }> {
     try {
-      // In production, this would aggregate from database
-      // For now, return mock data
-      return {
+      const response = await contractorsApi.getOverallAnalytics();
+      const onboardingFunnel = response.data?.onboardingFunnel || [];
+      
+      // Map the funnel data to our stats format
+      const stats = {
         total: 0,
         notStarted: 0,
         inProgress: 0,
@@ -161,6 +145,31 @@ export class OnboardingDatabaseService {
         approved: 0,
         rejected: 0
       };
+
+      onboardingFunnel.forEach(stage => {
+        switch (stage.stage) {
+          case 'Started':
+            stats.total = stage.count;
+            break;
+          case 'In Progress':
+            stats.inProgress = stage.count;
+            break;
+          case 'Completed':
+            stats.completed = stage.count;
+            stats.approved = stage.count; // Assuming completed means approved
+            break;
+          case 'Rejected':
+            stats.rejected = stage.count;
+            break;
+        }
+      });
+
+      // Calculate not started
+      const allContractorsResponse = await contractorsApi.getContractors();
+      const totalContractors = allContractorsResponse.total || 0;
+      stats.notStarted = totalContractors - stats.total;
+
+      return stats;
     } catch (error) {
       log.error('Failed to get onboarding stats:', { data: error }, 'OnboardingDatabaseService');
       return {

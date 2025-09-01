@@ -1,32 +1,51 @@
 /**
  * Score Updater Module
- * Handles updating RAG scores in the database
+ * Updated to use API endpoints instead of direct database access
  */
 
-import { db } from '@/lib/neon/connection';
-import { contractors } from '@/lib/neon/schema';
-import { eq } from 'drizzle-orm';
+import { contractorsApi } from '@/services/api/contractorsApi';
 import { RAGScore } from '../types';
 import { log } from '@/lib/logger';
 
 export class ScoreUpdater {
   /**
-   * Update contractor RAG score in database
+   * Update contractor RAG score via API
    */
   static async updateContractorRAGScore(contractorId: string, ragScore: RAGScore): Promise<void> {
     try {
-      await db
-        .update(contractors)
-        .set({
-          ragOverall: ragScore.risk === 'low' ? 'green' : ragScore.risk === 'medium' ? 'amber' : 'red',
-          ragFinancial: ragScore.financial >= 80 ? 'green' : ragScore.financial >= 60 ? 'amber' : 'red',
-          ragCompliance: ragScore.reliability >= 80 ? 'green' : ragScore.reliability >= 60 ? 'amber' : 'red',
-          ragPerformance: ragScore.performance >= 80 ? 'green' : ragScore.performance >= 60 ? 'amber' : 'red',
-          ragSafety: ragScore.capabilities >= 80 ? 'green' : ragScore.capabilities >= 60 ? 'amber' : 'red',
-          updatedAt: new Date(),
-          updatedBy: 'rag-service'
-        })
-        .where(eq(contractors.id, contractorId));
+      // Update each score component via API
+      const scoreUpdates = [
+        {
+          scoreType: 'overall',
+          newScore: this.riskToRAGStatus(ragScore.risk),
+          reason: 'Automated RAG calculation'
+        },
+        {
+          scoreType: 'financial',
+          newScore: this.scoreToRAGStatus(ragScore.financial),
+          reason: 'Financial assessment update'
+        },
+        {
+          scoreType: 'compliance',
+          newScore: this.scoreToRAGStatus(ragScore.reliability),
+          reason: 'Compliance/reliability assessment'
+        },
+        {
+          scoreType: 'performance',
+          newScore: this.scoreToRAGStatus(ragScore.performance),
+          reason: 'Performance assessment update'
+        },
+        {
+          scoreType: 'safety',
+          newScore: this.scoreToRAGStatus(ragScore.capabilities),
+          reason: 'Safety/capabilities assessment'
+        }
+      ];
+
+      // Update scores sequentially to maintain consistency
+      for (const update of scoreUpdates) {
+        await contractorsApi.updateRAGScore(contractorId, update);
+      }
     } catch (error) {
       log.error('Failed to update contractor RAG score:', { data: error }, 'scoreUpdater');
       throw error;
@@ -34,7 +53,7 @@ export class ScoreUpdater {
   }
 
   /**
-   * Bulk update RAG scores for multiple contractors
+   * Bulk update RAG scores for multiple contractors via API
    */
   static async bulkUpdateRAGScores(
     ragScores: Array<{ contractorId: string; score: RAGScore }>
@@ -45,14 +64,15 @@ export class ScoreUpdater {
     let updated = 0;
     const failed: string[] = [];
 
-    // Process updates in batches to avoid overwhelming the database
-    const batchSize = 10;
+    // Process updates in batches to avoid overwhelming the API
+    const batchSize = 5; // Smaller batch size for API calls
     for (let i = 0; i < ragScores.length; i += batchSize) {
       const batch = ragScores.slice(i, i + batchSize);
       
       const batchPromises = batch.map(async ({ contractorId, score }) => {
         try {
-          await this.updateContractorRAGScore(contractorId, score);
+          // Use the calculate endpoint for bulk updates
+          await contractorsApi.calculateRAGScore(contractorId, ['all']);
           return { success: true, contractorId };
         } catch (error) {
           log.error(`Failed to update RAG score for contractor ${contractorId}:`, { data: error }, 'scoreUpdater');
@@ -69,6 +89,11 @@ export class ScoreUpdater {
           failed.push(result.contractorId);
         }
       });
+
+      // Add a small delay between batches to avoid rate limiting
+      if (i + batchSize < ragScores.length) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
     }
 
     return { updated, failed };
@@ -128,7 +153,7 @@ export class ScoreUpdater {
     oldScore: RAGScore | null,
     newScore: RAGScore
   ): Promise<void> {
-    // In a production system, you would log to an audit table
+    // The API handles audit logging internally
     log.info('RAG Score Update:', { data: {
       contractorId,
       timestamp: new Date().toISOString(),
@@ -140,5 +165,30 @@ export class ScoreUpdater {
         capabilities: { from: oldScore?.capabilities || 0, to: newScore.capabilities }
       }
     } }, 'scoreUpdater');
+  }
+
+  /**
+   * Trigger RAG score recalculation via API
+   */
+  static async triggerRecalculation(contractorId: string): Promise<void> {
+    try {
+      await contractorsApi.calculateRAGScore(contractorId, ['all']);
+    } catch (error) {
+      log.error('Failed to trigger RAG recalculation:', { data: error }, 'scoreUpdater');
+      throw error;
+    }
+  }
+
+  /**
+   * Get current RAG scores via API
+   */
+  static async getCurrentScores(contractorId: string): Promise<any> {
+    try {
+      const response = await contractorsApi.getRAGScores(contractorId, false);
+      return response.data?.current?.scores || null;
+    } catch (error) {
+      log.error('Failed to get current RAG scores:', { data: error }, 'scoreUpdater');
+      return null;
+    }
   }
 }

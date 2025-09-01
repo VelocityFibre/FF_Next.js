@@ -87,6 +87,7 @@ export const TasksDashboard = lazy(() => import('@/modules/tasks/TasksDashboard'
 // SOW Module
 export const SOWDashboard = lazy(() => import('@/modules/sow/SOWDashboard').then(m => ({ default: m.SOWDashboard })));
 export const SOWListPage = lazy(() => import('@/modules/sow/SOWListPage').then(m => ({ default: m.SOWListPage })));
+export const SOWImportPage = lazy(() => import('@/modules/sow/SOWImportPage').then(m => ({ default: m.SOWImportPage })));
 
 // Field Operations
 export const OneMapDashboard = lazy(() => import('@/modules/onemap/OneMapDashboard').then(m => ({ default: m.OneMapDashboard })));
@@ -121,6 +122,9 @@ export const SOWManagement = lazy(() => import('@/modules/projects/sow/SOWManage
 
 // Workflow Module
 export const WorkflowPortalPage = lazy(() => import('@/modules/workflow/WorkflowPortalPage'));
+
+// Migration Status
+export const MigrationStatus = lazy(() => import('@/pages/MigrationStatus'));
 
 // Project pages
 export const Projects = lazy(() => import('@/pages/Projects').then(m => ({ default: m.Projects })));

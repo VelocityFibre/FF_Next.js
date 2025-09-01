@@ -43,7 +43,7 @@ const quickActions: QuickActionItem[] = [
     title: 'Add Staff',
     description: 'Register new team member',
     icon: UserPlus,
-    route: '/app/staff/create',
+    route: '/app/staff/new',
     requiredPermissions: [Permission.STAFF_CREATE],
     variant: 'secondary',
   },

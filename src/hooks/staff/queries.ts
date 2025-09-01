@@ -44,11 +44,11 @@ export function useProjectManagers() {
 /**
  * Hook to fetch a single staff member by ID
  */
-export function useStaffMember(id: string) {
+export function useStaffMember(id: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: staffKeys.detail(id),
     queryFn: () => staffService.getById(id),
-    enabled: !!id,
+    enabled: options?.enabled !== false && !!id,
   });
 }
 

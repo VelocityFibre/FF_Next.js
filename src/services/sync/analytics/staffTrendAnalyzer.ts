@@ -3,9 +3,7 @@
  * Analyzes performance trends and patterns for staff members
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { staffPerformance } from '@/lib/neon/schema';
-import { eq } from 'drizzle-orm';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import { log } from '@/lib/logger';
 
 /**
@@ -22,12 +20,12 @@ export class StaffTrendAnalyzer {
     overallTrend: 'positive' | 'neutral' | 'concerning';
   }> {
     try {
-      // Get historical performance data
-      const records = await neonDb
-        .select()
-        .from(staffPerformance)
-        .where(eq(staffPerformance.staffId, staffId))
-        .orderBy(staffPerformance.periodStart);
+      // Get historical performance data from API
+      const performance = await analyticsApi.getStaffPerformance(staffId, {
+        type: 'monthly'
+      });
+      
+      const records = performance.history || [];
 
       if (records.length < 2) {
         return this.getDefaultTrends();

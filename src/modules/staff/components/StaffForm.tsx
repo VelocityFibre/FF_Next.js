@@ -25,7 +25,7 @@ export function StaffForm() {
   const { id } = useParams<{ id: string }>();
   const isEditing = !!id;
 
-  const { data: staff, isLoading } = useStaffMember(id || '');
+  const { data: staff, isLoading } = useStaffMember(id || '', { enabled: !!id });
   const createMutation = useCreateStaff();
   const updateMutation = useUpdateStaff();
 

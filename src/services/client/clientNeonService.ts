@@ -1,30 +1,19 @@
 /**
- * Client Neon Service - Modular Architecture
- * Delegates to specific modules for cleaner separation of concerns
+ * Client Neon Service - API-based Architecture
+ * Routes all database operations through API endpoints
  */
 
-// ClientFormData type available in client.types.ts if needed
-import { 
-  getAllClients, 
-  getClientById, 
-  getActiveClients, 
-  getClientSummary 
-} from './neon/queries';
-import { 
-  createClient, 
-  updateClient, 
-  deleteClient 
-} from './neon/mutations';
+import { clientApi } from '../api/clientApi';
 
 export const clientNeonService = {
   // Query operations
-  getAll: getAllClients,
-  getById: getClientById,
-  getActiveClients,
-  getClientSummary,
+  getAll: clientApi.getAll,
+  getById: clientApi.getById,
+  getActiveClients: clientApi.getActiveClients,
+  getClientSummary: clientApi.getClientSummary,
   
   // Mutation operations
-  create: createClient,
-  update: updateClient,
-  delete: deleteClient
+  create: clientApi.create,
+  update: clientApi.update,
+  delete: clientApi.delete
 };

@@ -1,43 +1,45 @@
 /**
- * BOQ API Extensions - Legacy Compatibility Layer
+ * BOQ API Extensions - Client-Side Compatibility Layer
  * 
- * @deprecated This file has been split into specialized modules for better maintainability.
+ * This file provides client-side API access for procurement operations.
+ * It wraps the API endpoints to provide a consistent interface for frontend components.
  * 
- * New modular structure:
- * - types.ts: Type definitions and interfaces
- * - mockData.ts: REMOVED - Mock data no longer available
- * - boqOperations.ts: Core CRUD operations for BOQs
- * - itemOperations.ts: CRUD operations for BOQ items
- * - exceptionOperations.ts: CRUD operations for BOQ exceptions
- * - apiService.ts: Main service orchestrator
- * 
- * For new code, import from the modular structure:
- * ```typescript
- * import { BOQApiExtensions, procurementApiService } from '@/services/procurement/boqApi';
- * // or
- * import { BOQOperations, BOQItemOperations } from '@/services/procurement/boqApi';
- * ```
- * 
- * This legacy layer maintains backward compatibility while the codebase transitions.
+ * IMPORTANT: This service uses HTTP API calls and should only be used in the browser.
+ * Do not import database-connected services in frontend code.
  */
 
 import { 
-  BOQApiExtensions as ModularBOQApiExtensions,
-  procurementApiService as modularProcurementApiService 
-} from './boqApi';
+  ProcurementClientService,
+  procurementApiService as clientProcurementApiService 
+} from './client/procurementClientService';
 
 /**
- * @deprecated Use the new modular BOQApiExtensions from '@/services/procurement/boqApi' instead
- * 
- * Legacy API extensions class that delegates to the new modular architecture
+ * Client-side BOQ API extensions
+ * Provides methods for BOQ operations via API endpoints
  */
-export class BOQApiExtensions extends ModularBOQApiExtensions {}
+export class BOQApiExtensions {
+  static getBOQWithItems = ProcurementClientService.getBOQWithItems;
+  static getBOQsByProject = ProcurementClientService.getBOQsByProject;
+  static getBOQ = ProcurementClientService.getBOQ;
+  static updateBOQ = ProcurementClientService.updateBOQ;
+  static deleteBOQ = ProcurementClientService.deleteBOQ;
+  static createBOQ = ProcurementClientService.createBOQ;
+  static getBOQItems = ProcurementClientService.getBOQItems;
+  static getBOQItem = ProcurementClientService.getBOQItem;
+  static createBOQItem = ProcurementClientService.createBOQItem;
+  static updateBOQItem = ProcurementClientService.updateBOQItem;
+  static deleteBOQItem = ProcurementClientService.deleteBOQItem;
+  static getBOQExceptions = ProcurementClientService.getBOQExceptions;
+  static getBOQException = ProcurementClientService.getBOQException;
+  static createBOQException = ProcurementClientService.createBOQException;
+  static updateBOQException = ProcurementClientService.updateBOQException;
+  static deleteException = ProcurementClientService.deleteException;
+}
 
 /**
- * @deprecated Use the new modular procurementApiService from '@/services/procurement/boqApi' instead
- * 
- * Legacy service instance that delegates to the new modular architecture
+ * Client-side procurement API service
+ * Use this for all frontend procurement operations
  */
-export const procurementApiService = modularProcurementApiService;
+export const procurementApiService = clientProcurementApiService;
 
 export default BOQApiExtensions;

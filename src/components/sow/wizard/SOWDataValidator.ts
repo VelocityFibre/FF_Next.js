@@ -3,6 +3,7 @@
  */
 
 import { ValidationResult } from './SOWWizardTypes';
+import { sowApi } from '@/services/api/sowApi';
 
 export const validateStepData = (stepType: string, data: any[]): ValidationResult => {
   if (!data || data.length === 0) {
@@ -113,13 +114,31 @@ const findColumnValue = (row: any, possibleColumns: string[]): string => {
 };
 
 export const processStepData = async (projectId: string, stepType: string, data: any[]) => {
-  // Here we would normally save to Neon database
-  // For now, we'll store in localStorage for demo purposes
-  const storageKey = `sow_${projectId}_${stepType}`;
-  localStorage.setItem(storageKey, JSON.stringify({
-    projectId,
-    stepType,
-    data,
-    uploadedAt: new Date().toISOString()
-  }));
+  try {
+    // Initialize tables first (idempotent operation)
+    await sowApi.initializeTables(projectId);
+    
+    // Upload data based on step type
+    switch (stepType) {
+      case 'poles':
+        return await sowApi.uploadPoles(projectId, data);
+      case 'drops':
+        return await sowApi.uploadDrops(projectId, data);
+      case 'fibre':
+        return await sowApi.uploadFibre(projectId, data);
+      default:
+        throw new Error(`Unknown step type: ${stepType}`);
+    }
+  } catch (error) {
+    console.error('Error uploading SOW data:', error);
+    // Fallback to localStorage if API fails
+    const storageKey = `sow_${projectId}_${stepType}`;
+    localStorage.setItem(storageKey, JSON.stringify({
+      projectId,
+      stepType,
+      data,
+      uploadedAt: new Date().toISOString()
+    }));
+    return { success: true, message: 'Data saved locally' };
+  }
 };

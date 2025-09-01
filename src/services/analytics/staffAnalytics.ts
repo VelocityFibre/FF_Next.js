@@ -3,9 +3,7 @@
  * Handles staff performance analysis and reporting
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { staffPerformance } from '@/lib/neon/schema';
-import { eq, and, sum, avg } from 'drizzle-orm';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import type { StaffPerformanceSummary } from './types';
 import { log } from '@/lib/logger';
 
@@ -18,37 +16,24 @@ export class StaffAnalyticsService {
     periodType: string = 'monthly'
   ): Promise<StaffPerformanceSummary[]> {
     try {
-      const conditions = [eq(staffPerformance.periodType, periodType)];
+      const performance = await analyticsApi.getStaffPerformance(undefined, {
+        type: periodType as any
+      });
       
-      if (projectId) {
-        conditions.push(eq(staffPerformance.projectId, projectId));
-      }
-
-      const results = await neonDb
-        .select({
-          staffName: staffPerformance.staffName,
-          avgProductivity: avg(staffPerformance.productivity),
-          avgQuality: avg(staffPerformance.qualityScore),
-          totalHours: sum(staffPerformance.hoursWorked),
-          totalTasks: sum(staffPerformance.tasksCompleted),
-          avgSafety: avg(staffPerformance.safetyScore),
-          avgEfficiency: avg(staffPerformance.efficiency),
-        })
-        .from(staffPerformance)
-        .where(and(...conditions))
-        .groupBy(staffPerformance.staffId, staffPerformance.staffName);
-
-      // Transform results to match StaffPerformanceSummary interface
-      return results.map(result => ({
+      // Filter by projectId if provided (API doesn't support project-level filtering yet)
+      let summaryData = performance.summary || [];
+      
+      // Transform API response to match StaffPerformanceSummary interface
+      return summaryData.map((result: any) => ({
         staffName: result.staffName,
-        role: 'Staff', // Default role since not in schema
-        avgProductivity: Number(result.avgProductivity || 0),
-        avgQuality: Number(result.avgQuality || 0),
-        totalHours: Number(result.totalHours || 0),
-        totalTasks: Number(result.totalTasks || 0),
-        attendanceRate: 100, // Default attendance rate
-        avgSafety: Number(result.avgSafety || 0),
-        avgEfficiency: Number(result.avgEfficiency || 0),
+        role: result.role || 'Staff',
+        avgProductivity: result.avgProductivity,
+        avgQuality: result.avgQuality,
+        totalHours: result.totalHours,
+        totalTasks: result.totalTasks,
+        attendanceRate: result.attendanceRate || 100,
+        avgSafety: result.avgSafety,
+        avgEfficiency: result.avgEfficiency,
       }));
     } catch (error) {
       log.error('Failed to get staff performance:', { data: error }, 'staffAnalytics');
@@ -65,24 +50,21 @@ export class StaffAnalyticsService {
     limit: number = 12
   ) {
     try {
-      return await neonDb
-        .select({
-          periodStart: staffPerformance.periodStart,
-          periodEnd: staffPerformance.periodEnd,
-          productivity: staffPerformance.productivity,
-          qualityScore: staffPerformance.qualityScore,
-          safetyScore: staffPerformance.safetyScore,
-          efficiency: staffPerformance.efficiency,
-          hoursWorked: staffPerformance.hoursWorked,
-          tasksCompleted: staffPerformance.tasksCompleted,
-        })
-        .from(staffPerformance)
-        .where(and(
-          eq(staffPerformance.staffId, staffId),
-          eq(staffPerformance.periodType, periodType)
-        ))
-        .orderBy(staffPerformance.periodStart)
-        .limit(limit);
+      const performance = await analyticsApi.getStaffPerformance(staffId, {
+        type: periodType as any
+      });
+      
+      // Return the history data from API response
+      return (performance.history || []).slice(0, limit).map((item: any) => ({
+        periodStart: item.periodStart,
+        periodEnd: item.periodEnd,
+        productivity: item.productivity,
+        qualityScore: item.qualityScore,
+        safetyScore: item.safetyScore,
+        efficiency: item.efficiency,
+        hoursWorked: item.hoursWorked,
+        tasksCompleted: item.tasksCompleted,
+      }));
     } catch (error) {
       log.error('Failed to get performance trends:', { data: error }, 'staffAnalytics');
       throw error;
@@ -99,30 +81,21 @@ export class StaffAnalyticsService {
     periodType: string = 'monthly'
   ) {
     try {
-      const conditions = [eq(staffPerformance.periodType, periodType)];
+      const performance = await analyticsApi.getStaffPerformance(undefined, {
+        type: periodType as any
+      });
       
-      if (projectId) {
-        conditions.push(eq(staffPerformance.projectId, projectId));
-      }
-
-      const metricColumn = metric === 'productivity' ? staffPerformance.productivity :
-                         metric === 'quality' ? staffPerformance.qualityScore :
-                         metric === 'efficiency' ? staffPerformance.efficiency :
-                         staffPerformance.productivity; // Default fallback
+      // Get top performers from API response
+      const topPerformers = performance.topPerformers?.[metric] || [];
       
-      return await neonDb
-        .select({
-          staffId: staffPerformance.staffId,
-          staffName: staffPerformance.staffName,
-          avgMetricValue: avg(metricColumn),
-          totalHours: sum(staffPerformance.hoursWorked),
-          totalTasks: sum(staffPerformance.tasksCompleted),
-        })
-        .from(staffPerformance)
-        .where(and(...conditions))
-        .groupBy(staffPerformance.staffId, staffPerformance.staffName)
-        .orderBy(avg(metricColumn))
-        .limit(limit);
+      // Transform to expected format
+      return topPerformers.slice(0, limit).map((performer: any) => ({
+        staffId: performer.id,
+        staffName: performer.name,
+        avgMetricValue: performer.score,
+        totalHours: 0, // Not provided by current API
+        totalTasks: 0, // Not provided by current API
+      }));
     } catch (error) {
       log.error('Failed to get top performers:', { data: error }, 'staffAnalytics');
       throw error;

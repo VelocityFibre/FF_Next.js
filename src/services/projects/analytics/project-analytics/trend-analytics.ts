@@ -3,7 +3,7 @@
  * Time-based trends and timeline analysis
  */
 
-import { sql } from '@/lib/neon';
+import { analyticsApi } from '@/services/api/analyticsApi';
 import { log } from '@/lib/logger';
 import type { 
   MonthlyTrend, 
@@ -18,16 +18,20 @@ export class ProjectTrendAnalytics {
    */
   static async getMonthlyCompletionTrends(months: number = 12): Promise<MonthlyTrend[]> {
     try {
-      const result = await sql`
-        WITH months AS (
-          SELECT 
-            DATE_TRUNC('month', CURRENT_DATE - INTERVAL '${months} months' + INTERVAL (i || ' months')) as month
-          FROM generate_series(0, ${months - 1}) as i
-        )
-        SELECT 
-          TO_CHAR(m.month, 'YYYY-MM') as month,
-          COALESCE(completed.count, 0) as completed,
-          COALESCE(started.count, 0) as started
+      const endDate = new Date().toISOString();
+      const startDate = new Date();
+      startDate.setMonth(startDate.getMonth() - months);
+      
+      const trends = await analyticsApi.getProjectTrends('', {
+        type: 'monthly',
+        startDate: startDate.toISOString(),
+        endDate
+      });
+      
+      return trends.trends?.map((t: any) => ({
+        month: t.month,
+        completed: t.completedProjects,
+        started: t.newProjects
         FROM months m
         LEFT JOIN (
           SELECT 
