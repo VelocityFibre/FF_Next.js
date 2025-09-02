@@ -55,11 +55,16 @@ export function useProjectsData(filter?: ProjectFilter) {
 
   // Filter projects by search term
   const getFilteredProjects = (searchTerm: string) => {
-    return projects.filter(project =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (project.clientName || '').toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return projects.filter(project => {
+      // Handle both 'name' and 'project_name' fields for compatibility
+      const projectName = (project.name || project.project_name || '');
+      const projectCode = (project.code || project.project_code || '');
+      const clientName = (project.clientName || project.client_name || '');
+      
+      return projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        projectCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        clientName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
   };
 
   const handleDeleteProject = async (id: string) => {

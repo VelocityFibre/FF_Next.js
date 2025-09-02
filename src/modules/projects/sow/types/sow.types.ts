@@ -17,6 +17,14 @@ export interface SOW {
   createdDate: string;
   lastModified: string;
   createdBy: string;
+  importedData?: {
+    poles: number;
+    drops: number;
+    houses: number;
+    spares: number;
+    fibre: number;
+    fibreDistance: number;
+  };
 }
 
 export interface SOWMilestone {

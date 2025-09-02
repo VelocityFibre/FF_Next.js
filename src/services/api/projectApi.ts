@@ -120,13 +120,20 @@ export const projectApi = {
    */
   async getActiveProjects(): Promise<Project[]> {
     try {
-      const response = await fetch(`${API_BASE}/projects?status=ACTIVE,IN_PROGRESS`);
+      // Get all projects that are not completed, archived, or cancelled
+      const response = await fetch(`${API_BASE}/projects`);
       if (!response.ok) {
         throw new Error(`Failed to fetch active projects: ${response.status}`);
       }
 
       const result = await response.json();
-      return result.data || [];
+      // Filter out completed, archived, and cancelled projects on the client side
+      const activeProjects = (result.data || []).filter((project: Project) => {
+        const inactiveStatuses = ['completed', 'archived', 'cancelled', 'on_hold'];
+        return !inactiveStatuses.includes(project.status?.toLowerCase() || '');
+      });
+      
+      return activeProjects;
     } catch (error) {
       log.error('Error fetching active projects:', { error }, 'projectApi');
       return [];

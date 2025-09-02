@@ -71,7 +71,14 @@ export function SOWTable({ sows }: SOWTableProps) {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="text-sm text-neutral-900">{sow.projectName}</div>
+                  <div>
+                    <div className="text-sm text-neutral-900">{sow.projectName}</div>
+                    {sow.importedData && (
+                      <div className="text-xs text-neutral-500 mt-1">
+                        {sow.importedData.poles} poles • {sow.importedData.houses} houses • {sow.importedData.spares} spares • {sow.importedData.fibre} fibre
+                      </div>
+                    )}
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-neutral-900">{sow.clientName}</div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
 // Import split components
@@ -13,10 +13,57 @@ export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploa
   const [currentStep, setCurrentStep] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<string | null>(null);
+  const [isCheckingStatus, setIsCheckingStatus] = useState(true);
 
   const [steps, setSteps] = useState<SOWUploadStep[]>(INITIAL_STEPS);
 
   const currentStepData = steps[currentStep];
+
+  // Check import status on mount and set initial step
+  useEffect(() => {
+    const checkImportStatus = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/api/sow/import-status/${projectId}`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.data && result.data.length > 0) {
+            // Update steps based on import status
+            const updatedSteps = [...INITIAL_STEPS];
+            let lastCompletedStep = -1;
+            
+            result.data.forEach((status: any) => {
+              const stepIndex = updatedSteps.findIndex(s => s.id === status.step_type);
+              if (stepIndex !== -1 && status.status === 'completed') {
+                updatedSteps[stepIndex].completed = true;
+                updatedSteps[stepIndex].data = { recordCount: status.records_imported };
+                lastCompletedStep = stepIndex;
+              }
+            });
+            
+            setSteps(updatedSteps);
+            
+            // Set current step to next incomplete step
+            if (lastCompletedStep >= 0 && lastCompletedStep < updatedSteps.length - 1) {
+              setCurrentStep(lastCompletedStep + 1);
+              setUploadProgress(`Resuming from step ${lastCompletedStep + 2}: ${updatedSteps[lastCompletedStep + 1].title}`);
+              setTimeout(() => setUploadProgress(null), 3000);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking import status:', error);
+      } finally {
+        setIsCheckingStatus(false);
+      }
+    };
+
+    if (projectId) {
+      checkImportStatus();
+    } else {
+      setIsCheckingStatus(false);
+    }
+  }, [projectId]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -41,19 +88,47 @@ export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploa
         return;
       }
 
-      // Update step with file and data
-      const updatedSteps = [...steps];
-      updatedSteps[currentStep] = {
-        ...currentStepData,
-        file,
-        data: 'processedData' in validationResult ? validationResult.processedData : [],
-        completed: true
-      };
-      setSteps(updatedSteps);
-
-      // Process and store data
+      // Process and store data BEFORE marking as complete
       if ('processedData' in validationResult) {
-        await processStepData(projectId, currentStepData.id, validationResult.processedData);
+        try {
+          setUploadProgress(`Saving ${validationResult.processedData.length} ${currentStepData.id} to database...`);
+          
+          const saveResult = await processStepData(projectId, currentStepData.id, validationResult.processedData);
+          
+          // Only mark as successful if data was actually saved
+          if (!saveResult || !saveResult.success) {
+            throw new Error('Database save failed');
+          }
+          
+          console.log(`Successfully saved ${validationResult.processedData.length} ${currentStepData.id} to database`);
+          setUploadProgress(null);
+          
+          // NOW update step as completed after successful save
+          const updatedSteps = [...steps];
+          updatedSteps[currentStep] = {
+            ...currentStepData,
+            file,
+            data: validationResult.processedData,
+            completed: true
+          };
+          setSteps(updatedSteps);
+        } catch (saveError) {
+          // If save fails, don't mark the step as completed
+          setUploadError(`Failed to save to database: ${saveError.message}`);
+          setUploadProgress(null);
+          setIsUploading(false);
+          return;
+        }
+      } else {
+        // If no data to process (e.g., for other step types), just mark as complete
+        const updatedSteps = [...steps];
+        updatedSteps[currentStep] = {
+          ...currentStepData,
+          file,
+          data: [],
+          completed: true
+        };
+        setSteps(updatedSteps);
       }
 
       setIsUploading(false);
@@ -86,6 +161,19 @@ export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploa
     }
   };
 
+  if (isCheckingStatus) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="flex items-center space-x-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="text-lg">Checking import status for {projectName}...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
@@ -107,6 +195,7 @@ export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploa
           currentStepData={currentStepData}
           isUploading={isUploading}
           uploadError={uploadError}
+          uploadProgress={uploadProgress}
           onFileUpload={handleFileUpload}
         />
 

@@ -30,33 +30,9 @@ export class ProjectTrendAnalytics {
       
       return trends.trends?.map((t: any) => ({
         month: t.month,
-        completed: t.completedProjects,
-        started: t.newProjects
-        FROM months m
-        LEFT JOIN (
-          SELECT 
-            DATE_TRUNC('month', updated_at) as month,
-            COUNT(*) as count
-          FROM projects
-          WHERE status = 'COMPLETED' AND status NOT IN ('archived', 'cancelled', 'deleted')
-          GROUP BY DATE_TRUNC('month', updated_at)
-        ) completed ON m.month = completed.month
-        LEFT JOIN (
-          SELECT 
-            DATE_TRUNC('month', start_date) as month,
-            COUNT(*) as count
-          FROM projects
-          WHERE start_date IS NOT NULL AND status NOT IN ('archived', 'cancelled', 'deleted')
-          GROUP BY DATE_TRUNC('month', start_date)
-        ) started ON m.month = started.month
-        ORDER BY m.month
-      `;
-      
-      return result.map(row => ({
-        month: row.month,
-        completed: parseInt(row.completed) || 0,
-        started: parseInt(row.started) || 0
-      }));
+        completed: t.completedProjects || 0,
+        started: t.newProjects || 0
+      })) || [];
     } catch (error) {
       log.error('Error fetching monthly completion trends:', { data: error }, 'trend-analytics');
       return [];
@@ -68,33 +44,16 @@ export class ProjectTrendAnalytics {
    */
   static async getBudgetAnalysis(query?: AnalyticsQuery): Promise<BudgetAnalysis> {
     try {
-      const whereClause = query ? this.buildWhereClause(query) : "status NOT IN ('archived', 'cancelled', 'deleted')";
-      
-      const summaryResult = await sql`
-        SELECT 
-          COALESCE(SUM(budget), 0) as total_budget,
-          COALESCE(AVG(budget), 0) as average_budget
-        FROM projects
-        WHERE (${whereClause}) AND budget IS NOT NULL
-      `;
-      
-      const statusResult = await sql`
-        SELECT 
-          status,
-          COALESCE(SUM(budget), 0) as total_budget
-        FROM projects
-        WHERE (${whereClause}) AND budget IS NOT NULL
-        GROUP BY status
-        ORDER BY total_budget DESC
-      `;
+      const budgetData = await analyticsApi.getBudgetAnalysis(
+        query?.projectId,
+        query?.clientId,
+        query?.department
+      );
       
       return {
-        totalBudget: parseFloat(summaryResult[0].total_budget) || 0,
-        averageBudget: parseFloat(summaryResult[0].average_budget) || 0,
-        budgetByStatus: statusResult.map(row => ({
-          status: row.status,
-          totalBudget: parseFloat(row.total_budget) || 0
-        }))
+        totalBudget: budgetData.totalBudget || 0,
+        averageBudget: budgetData.averageBudget || 0,
+        budgetByStatus: budgetData.budgetByStatus || []
       };
     } catch (error) {
       log.error('Error fetching budget analysis:', { data: error }, 'trend-analytics');
@@ -111,49 +70,22 @@ export class ProjectTrendAnalytics {
    */
   static async getProjectTimeline(weeksAhead: number = 52): Promise<TimelineData[]> {
     try {
-      const result = await sql`
-        WITH dates AS (
-          SELECT generate_series(
-            CURRENT_DATE,
-            CURRENT_DATE + INTERVAL '${weeksAhead} weeks',
-            INTERVAL '1 week'
-          )::date as date
-        )
-        SELECT 
-          d.date::text as date,
-          COALESCE(starting.count, 0) as projects_starting,
-          COALESCE(ending.count, 0) as projects_ending,
-          COALESCE(milestones.count, 0) as milestones
-        FROM dates d
-        LEFT JOIN (
-          SELECT start_date::date as date, COUNT(*) as count
-          FROM projects
-          WHERE start_date IS NOT NULL AND status NOT IN ('archived', 'cancelled', 'deleted')
-          GROUP BY start_date::date
-        ) starting ON d.date = starting.date
-        LEFT JOIN (
-          SELECT end_date::date as date, COUNT(*) as count
-          FROM projects
-          WHERE end_date IS NOT NULL AND status NOT IN ('archived', 'cancelled', 'deleted')
-          GROUP BY end_date::date
-        ) ending ON d.date = ending.date
-        LEFT JOIN (
-          SELECT milestone_date::date as date, COUNT(*) as count
-          FROM project_milestones pm
-          JOIN projects p ON pm.project_id = p.id
-          WHERE milestone_date IS NOT NULL AND p.status NOT IN ('archived', 'cancelled', 'deleted')
-          GROUP BY milestone_date::date
-        ) milestones ON d.date = milestones.date
-        ORDER BY d.date
-        LIMIT ${weeksAhead}
-      `;
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + (weeksAhead * 7));
       
-      return result.map(row => ({
-        date: row.date,
-        projectsStarting: parseInt(row.projects_starting) || 0,
-        projectsEnding: parseInt(row.projects_ending) || 0,
-        milestones: parseInt(row.milestones) || 0
-      }));
+      const trendsData = await analyticsApi.getProjectTrends('', {
+        type: 'weekly',
+        startDate: new Date().toISOString(),
+        endDate: endDate.toISOString()
+      });
+      
+      // Transform API response to timeline data
+      return trendsData.timeline?.map((item: any) => ({
+        date: item.date,
+        projectsStarting: item.projectsStarting || 0,
+        projectsEnding: item.projectsEnding || 0,
+        milestones: item.milestones || 0
+      })) || [];
     } catch (error) {
       log.error('Error fetching project timeline:', { data: error }, 'trend-analytics');
       return [];
@@ -171,34 +103,22 @@ export class ProjectTrendAnalytics {
     clientCount: number;
   }>> {
     try {
-      const result = await sql`
-        WITH quarters AS (
-          SELECT 
-            DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '${quarters * 3} months' + INTERVAL (i * 3 || ' months')) as quarter_start,
-            DATE_TRUNC('quarter', CURRENT_DATE - INTERVAL '${quarters * 3} months' + INTERVAL ((i * 3 + 3) || ' months')) - INTERVAL '1 day' as quarter_end
-          FROM generate_series(0, ${quarters - 1}) as i
-        )
-        SELECT 
-          TO_CHAR(q.quarter_start, 'YYYY') || ' Q' || EXTRACT(quarter FROM q.quarter_start) as quarter,
-          COUNT(CASE WHEN p.status = 'COMPLETED' THEN 1 END) as projects_completed,
-          COALESCE(SUM(p.budget), 0) as total_budget,
-          COALESCE(AVG(p.progress), 0) as average_progress,
-          COUNT(DISTINCT p.client_id) as client_count
-        FROM quarters q
-        LEFT JOIN projects p ON p.created_at >= q.quarter_start 
-          AND p.created_at <= q.quarter_end 
-          AND p.status NOT IN ('archived', 'cancelled', 'deleted')
-        GROUP BY q.quarter_start
-        ORDER BY q.quarter_start
-      `;
+      const startDate = new Date();
+      startDate.setMonth(startDate.getMonth() - (quarters * 3));
       
-      return result.map(row => ({
-        quarter: row.quarter,
-        projectsCompleted: parseInt(row.projects_completed) || 0,
-        totalBudget: parseFloat(row.total_budget) || 0,
-        averageProgress: parseFloat(row.average_progress) || 0,
-        clientCount: parseInt(row.client_count) || 0
-      }));
+      const trendsData = await analyticsApi.getProjectTrends('', {
+        type: 'quarterly',
+        startDate: startDate.toISOString(),
+        endDate: new Date().toISOString()
+      });
+      
+      return trendsData.quarters?.map((q: any) => ({
+        quarter: q.quarter,
+        projectsCompleted: q.projectsCompleted || 0,
+        totalBudget: q.totalBudget || 0,
+        averageProgress: q.averageProgress || 0,
+        clientCount: q.clientCount || 0
+      })) || [];
     } catch (error) {
       log.error('Error fetching quarterly trends:', { data: error }, 'trend-analytics');
       return [];
@@ -229,35 +149,30 @@ export class ProjectTrendAnalytics {
       const currentYear = new Date().getFullYear();
       const previousYear = currentYear - 1;
 
-      const [currentResult, previousResult] = await Promise.all([
-        sql`
-          SELECT 
-            COUNT(*) as projects,
-            COALESCE(SUM(budget), 0) as budget,
-            COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END) as completed
-          FROM projects
-          WHERE EXTRACT(year FROM created_at) = ${currentYear} AND status NOT IN ('archived', 'cancelled', 'deleted')
-        `,
-        sql`
-          SELECT 
-            COUNT(*) as projects,
-            COALESCE(SUM(budget), 0) as budget,
-            COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END) as completed
-          FROM projects
-          WHERE EXTRACT(year FROM created_at) = ${previousYear} AND status NOT IN ('archived', 'cancelled', 'deleted')
-        `
-      ]);
+      // Get data for current year
+      const currentYearData = await analyticsApi.getProjectTrends('', {
+        type: 'yearly',
+        startDate: `${currentYear}-01-01`,
+        endDate: `${currentYear}-12-31`
+      });
+
+      // Get data for previous year
+      const previousYearData = await analyticsApi.getProjectTrends('', {
+        type: 'yearly',
+        startDate: `${previousYear}-01-01`,
+        endDate: `${previousYear}-12-31`
+      });
 
       const current = {
-        projects: parseInt(currentResult[0].projects),
-        budget: parseFloat(currentResult[0].budget),
-        completed: parseInt(currentResult[0].completed)
+        projects: currentYearData.summary?.totalProjects || 0,
+        budget: currentYearData.summary?.totalBudget || 0,
+        completed: currentYearData.summary?.completedProjects || 0
       };
 
       const previous = {
-        projects: parseInt(previousResult[0].projects),
-        budget: parseFloat(previousResult[0].budget),
-        completed: parseInt(previousResult[0].completed)
+        projects: previousYearData.summary?.totalProjects || 0,
+        budget: previousYearData.summary?.totalBudget || 0,
+        completed: previousYearData.summary?.completedProjects || 0
       };
 
       return {
@@ -289,56 +204,52 @@ export class ProjectTrendAnalytics {
     completionRate: number;
   }>> {
     try {
-      const result = await sql`
-        SELECT 
-          CASE 
-            WHEN EXTRACT(month FROM created_at) IN (12, 1, 2) THEN 'Winter'
-            WHEN EXTRACT(month FROM created_at) IN (3, 4, 5) THEN 'Spring'
-            WHEN EXTRACT(month FROM created_at) IN (6, 7, 8) THEN 'Summer'
-            ELSE 'Fall'
-          END as season,
-          COUNT(*) / COUNT(DISTINCT EXTRACT(year FROM created_at)) as avg_projects,
-          COALESCE(AVG(budget), 0) as avg_budget,
-          (COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::float / COUNT(*)) * 100 as completion_rate
-        FROM projects
-        WHERE status NOT IN ('archived', 'cancelled', 'deleted') AND created_at >= CURRENT_DATE - INTERVAL '3 years'
-        GROUP BY 
-          CASE 
-            WHEN EXTRACT(month FROM created_at) IN (12, 1, 2) THEN 'Winter'
-            WHEN EXTRACT(month FROM created_at) IN (3, 4, 5) THEN 'Spring'
-            WHEN EXTRACT(month FROM created_at) IN (6, 7, 8) THEN 'Summer'
-            ELSE 'Fall'
-          END
-        ORDER BY 
-          CASE 
-            WHEN CASE 
-              WHEN EXTRACT(month FROM created_at) IN (12, 1, 2) THEN 'Winter'
-              WHEN EXTRACT(month FROM created_at) IN (3, 4, 5) THEN 'Spring'
-              WHEN EXTRACT(month FROM created_at) IN (6, 7, 8) THEN 'Summer'
-              ELSE 'Fall'
-            END = 'Spring' THEN 1
-            WHEN CASE 
-              WHEN EXTRACT(month FROM created_at) IN (12, 1, 2) THEN 'Winter'
-              WHEN EXTRACT(month FROM created_at) IN (3, 4, 5) THEN 'Spring'
-              WHEN EXTRACT(month FROM created_at) IN (6, 7, 8) THEN 'Summer'
-              ELSE 'Fall'
-            END = 'Summer' THEN 2
-            WHEN CASE 
-              WHEN EXTRACT(month FROM created_at) IN (12, 1, 2) THEN 'Winter'
-              WHEN EXTRACT(month FROM created_at) IN (3, 4, 5) THEN 'Spring'
-              WHEN EXTRACT(month FROM created_at) IN (6, 7, 8) THEN 'Summer'
-              ELSE 'Fall'
-            END = 'Fall' THEN 3
-            ELSE 4
-          END
-      `;
+      // Get last 3 years of data
+      const startDate = new Date();
+      startDate.setFullYear(startDate.getFullYear() - 3);
       
-      return result.map(row => ({
-        season: row.season,
-        avgProjects: parseInt(row.avg_projects) || 0,
-        avgBudget: parseFloat(row.avg_budget) || 0,
-        completionRate: parseFloat(row.completion_rate) || 0
-      }));
+      const trendsData = await analyticsApi.getProjectTrends('', {
+        type: 'monthly',
+        startDate: startDate.toISOString(),
+        endDate: new Date().toISOString()
+      });
+      
+      // Group by season and calculate averages
+      const seasonalData: { [key: string]: { projects: number[], budgets: number[], completed: number[] } } = {
+        'Winter': { projects: [], budgets: [], completed: [] },
+        'Spring': { projects: [], budgets: [], completed: [] },
+        'Summer': { projects: [], budgets: [], completed: [] },
+        'Fall': { projects: [], budgets: [], completed: [] }
+      };
+      
+      trendsData.trends?.forEach((month: any) => {
+        const monthNum = new Date(month.month).getMonth() + 1;
+        let season = '';
+        
+        if ([12, 1, 2].includes(monthNum)) season = 'Winter';
+        else if ([3, 4, 5].includes(monthNum)) season = 'Spring';
+        else if ([6, 7, 8].includes(monthNum)) season = 'Summer';
+        else season = 'Fall';
+        
+        seasonalData[season].projects.push(month.totalProjects || 0);
+        seasonalData[season].budgets.push(month.averageBudget || 0);
+        seasonalData[season].completed.push(month.completedProjects || 0);
+      });
+      
+      return Object.entries(seasonalData).map(([season, data]) => {
+        const avgProjects = data.projects.reduce((a, b) => a + b, 0) / (data.projects.length || 1);
+        const avgBudget = data.budgets.reduce((a, b) => a + b, 0) / (data.budgets.length || 1);
+        const totalProjects = data.projects.reduce((a, b) => a + b, 0);
+        const totalCompleted = data.completed.reduce((a, b) => a + b, 0);
+        const completionRate = totalProjects > 0 ? (totalCompleted / totalProjects) * 100 : 0;
+        
+        return {
+          season,
+          avgProjects: Math.round(avgProjects),
+          avgBudget: Math.round(avgBudget * 100) / 100,
+          completionRate: Math.round(completionRate * 10) / 10
+        };
+      });
     } catch (error) {
       log.error('Error fetching seasonal trends:', { data: error }, 'trend-analytics');
       return [];

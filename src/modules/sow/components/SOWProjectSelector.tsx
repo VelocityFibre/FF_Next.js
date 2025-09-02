@@ -18,30 +18,34 @@ export function SOWProjectSelector({ onProjectSelect, className = '' }: SOWProje
 
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Load projects from database
-  useEffect(() => {
-    const loadProjects = async () => {
-      setIsLoadingProjects(true);
-      try {
-        const projects = await ProjectQueryService.getActiveProjects();
-        setAllProjects(projects);
-      } catch (error) {
-        log.error('Error loading projects:', { data: error }, 'SOWProjectSelector');
-        setAllProjects([]);
-      } finally {
-        setIsLoadingProjects(false);
-      }
-    };
+  const loadProjects = async () => {
+    setIsLoadingProjects(true);
+    setLoadError(null);
+    try {
+      const projects = await ProjectQueryService.getActiveProjects();
+      setAllProjects(projects);
+    } catch (error) {
+      log.error('Error loading projects:', { data: error }, 'SOWProjectSelector');
+      setAllProjects([]);
+      setLoadError('Failed to load projects. Please try again.');
+    } finally {
+      setIsLoadingProjects(false);
+    }
+  };
 
+  useEffect(() => {
     loadProjects();
   }, []);
 
   // Filter projects based on search
-  const filteredProjects = allProjects.filter(project =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProjects = allProjects.filter(project => {
+    if (!project || !project.name || !project.code) return false;
+    return project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           project.code.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -56,6 +60,12 @@ export function SOWProjectSelector({ onProjectSelect, className = '' }: SOWProje
   }, []);
 
   const handleProjectSelect = (project: Project) => {
+    // Validate project before selection
+    if (!project?.id || !project?.name) {
+      log.warn('Invalid project data', { project }, 'SOWProjectSelector');
+      return;
+    }
+
     setSelectedProject(project);
     onProjectSelect(project);
     setIsOpen(false);
@@ -142,6 +152,16 @@ export function SOWProjectSelector({ onProjectSelect, className = '' }: SOWProje
             ) : searchTerm ? (
               <div className="px-4 py-6 text-center text-gray-500 text-sm">
                 No projects found matching "{searchTerm}"
+              </div>
+            ) : loadError ? (
+              <div className="px-4 py-6 text-center">
+                <p className="text-red-600 text-sm mb-2">{loadError}</p>
+                <button
+                  onClick={loadProjects}
+                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Retry
+                </button>
               </div>
             ) : (
               <div className="px-4 py-6 text-center text-gray-500 text-sm">

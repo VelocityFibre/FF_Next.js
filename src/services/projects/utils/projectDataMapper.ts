@@ -182,11 +182,13 @@ export class ProjectDataMapper {
   static validateProject(project: Partial<Project>): string[] {
     const errors: string[] = [];
     
-    if (!project.name || project.name.trim().length === 0) {
+    const projectName = project.name || project.project_name;
+    if (!projectName || projectName.trim().length === 0) {
       errors.push('Project name is required');
     }
     
-    if (!project.code || project.code.trim().length === 0) {
+    const projectCode = project.code || project.project_code;
+    if (!projectCode || projectCode.trim().length === 0) {
       errors.push('Project code is required');
     }
     

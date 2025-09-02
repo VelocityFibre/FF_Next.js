@@ -1,5 +1,28 @@
 /**
  * SOW Upload Data Validation Logic
+ *
+ * Expected Column Names for Different Data Types:
+ *
+ * POLES:
+ * - pole_number (or pole number, pole_id, pole id, pole_no, pole#, etc.)
+ * - latitude (or lat, coord_lat)
+ * - longitude (or lng, long, coord_lng)
+ * - max_drops (optional, or capacity, max_capacity)
+ * - status (optional)
+ *
+ * DROPS:
+ * - drop_number (or drop number, drop_id, drop id, drop_no, drop#, etc.)
+ * - pole_number (or pole number, pole_id, pole id, pole_no, etc.)
+ * - address (or installation_address, location)
+ * - status (optional)
+ *
+ * FIBRE:
+ * - segment_id (or segment id, cable_id, cable id)
+ * - from_point (or from point, start_point, start point)
+ * - to_point (or to point, end_point, end point)
+ * - distance (or length, cable_length, metres, meters)
+ * - cable_type (optional, or type)
+ * - status (optional)
  */
 
 import { ValidationResult } from './SOWWizardTypes';
@@ -25,22 +48,75 @@ export const validateStepData = (stepType: string, data: any[]): ValidationResul
 const validatePolesData = (data: any[]): ValidationResult => {
   const requiredFields = ['pole_number', 'latitude', 'longitude'];
   const firstRow = data[0];
-  
-  const missingFields = requiredFields.filter(field => 
-    !Object.keys(firstRow).some(key => key.toLowerCase().includes(field.replace('_', '').toLowerCase()))
-  );
+
+  if (!firstRow) {
+    return { isValid: false, error: 'File appears to be empty or has no data rows' };
+  }
+
+  const availableColumns = Object.keys(firstRow).map(key => key.toLowerCase().trim());
+
+  const missingFields = requiredFields.filter(field => {
+    // Special handling for each required field with more variants
+    if (field === 'pole_number') {
+      // Check for label_1, label, pole_number, etc.
+      return !availableColumns.some(col => 
+        col === 'label_1' || 
+        col === 'label' ||
+        col.includes('pole') ||
+        col.includes('pole_number') ||
+        col.includes('pole number')
+      );
+    } else if (field === 'latitude') {
+      // Check for lat, latitude, etc.
+      return !availableColumns.some(col => 
+        col === 'lat' ||
+        col.includes('latitude') ||
+        col.includes('coord_lat')
+      );
+    } else if (field === 'longitude') {
+      // Check for lon, lng, longitude, etc.
+      return !availableColumns.some(col => 
+        col === 'lon' ||
+        col === 'lng' ||
+        col.includes('longitude') ||
+        col.includes('coord_lng')
+      );
+    }
+    
+    const fieldVariants = [
+      field,
+      field.replace('_', ''),
+      field.replace('_', ' '),
+      field.replace('_', '-'),
+      field.replace('_', '.')
+    ];
+
+    return !fieldVariants.some(variant =>
+      availableColumns.some(col => col.includes(variant.toLowerCase()))
+    );
+  });
 
   if (missingFields.length > 0) {
-    return { 
-      isValid: false, 
-      error: `Missing required columns for poles: ${missingFields.join(', ')}` 
+    const suggestions = {
+      pole_number: 'Try: label_1, label, pole_number, pole_no, pole#, pole_id, pole number',
+      latitude: 'Try: lat, latitude, coord_lat',
+      longitude: 'Try: lon, lng, longitude, long, coord_lng'
+    };
+
+    const suggestionText = missingFields.map(field =>
+      `${field} (${suggestions[field as keyof typeof suggestions] || 'check column headers'})`
+    ).join('; ');
+
+    return {
+      isValid: false,
+      error: `Missing required columns for poles: ${missingFields.join(', ')}. ${suggestionText}. Available columns: ${availableColumns.join(', ')}`
     };
   }
 
   const processedData = data.map(row => ({
-    pole_number: findColumnValue(row, ['pole_number', 'pole number', 'pole_id', 'pole id']),
-    latitude: parseFloat(findColumnValue(row, ['latitude', 'lat', 'coord_lat'])) || 0,
-    longitude: parseFloat(findColumnValue(row, ['longitude', 'lng', 'long', 'coord_lng'])) || 0,
+    pole_number: findColumnValue(row, ['label_1', 'label', 'pole_number', 'pole number', 'pole_id', 'pole id']),
+    latitude: parseFloat(findColumnValue(row, ['lat', 'latitude', 'coord_lat'])) || 0,
+    longitude: parseFloat(findColumnValue(row, ['lon', 'lng', 'longitude', 'long', 'coord_lng'])) || 0,
     max_drops: parseInt(findColumnValue(row, ['max_drops', 'capacity', 'max_capacity'])) || 12,
     current_drops: 0,
     status: findColumnValue(row, ['status']) || 'planned'
@@ -50,24 +126,81 @@ const validatePolesData = (data: any[]): ValidationResult => {
 };
 
 const validateDropsData = (data: any[]): ValidationResult => {
-  const requiredFields = ['drop_number', 'pole_number', 'address'];
   const firstRow = data[0];
-  
-  const missingFields = requiredFields.filter(field => 
-    !Object.keys(firstRow).some(key => key.toLowerCase().includes(field.replace('_', '').toLowerCase()))
-  );
+
+  if (!firstRow) {
+    return { isValid: false, error: 'File appears to be empty or has no data rows' };
+  }
+
+  const availableColumns = Object.keys(firstRow).map(key => key.toLowerCase().trim());
+
+  // Check for Lawley format (label, strtfeat, endfeat)
+  const isLawleyFormat = availableColumns.includes('label') && 
+                          availableColumns.includes('strtfeat') && 
+                          availableColumns.includes('endfeat');
+
+  if (isLawleyFormat) {
+    // Process Lawley format
+    const processedData = data.map(row => ({
+      drop_number: findColumnValue(row, ['label', 'drop_number', 'drop number', 'drop_id']),
+      pole_number: findColumnValue(row, ['strtfeat', 'pole_number', 'pole number', 'pole_id']),
+      address: findColumnValue(row, ['endfeat', 'address', 'installation_address', 'location']) || 
+               findColumnValue(row, ['comments', 'notes']) || '',
+      cable_length: findColumnValue(row, ['dim2', 'length', 'distance']) || '',
+      status: findColumnValue(row, ['status']) || 'planned',
+      metadata: {
+        type: findColumnValue(row, ['type']),
+        subtype: findColumnValue(row, ['subtyp']),
+        spec: findColumnValue(row, ['spec']),
+        capacity: findColumnValue(row, ['cblcpty']),
+        pon_no: findColumnValue(row, ['pon_no']),
+        zone_no: findColumnValue(row, ['zone_no']),
+        municipality: findColumnValue(row, ['mun']),
+        created_date: findColumnValue(row, ['datecrtd']),
+        created_by: findColumnValue(row, ['crtdby'])
+      }
+    })).filter(item => item.drop_number);
+
+    console.log(`Processed ${processedData.length} drops in Lawley format`);
+    return { isValid: true, processedData };
+  }
+
+  // Try standard format validation
+  const requiredFields = ['drop_number', 'pole_number'];
+  const missingFields = requiredFields.filter(field => {
+    const fieldVariants = [
+      field,
+      field.replace('_', ''),
+      field.replace('_', ' '),
+      field.replace('_', '-'),
+      field.replace('_', '.')
+    ];
+
+    return !fieldVariants.some(variant =>
+      availableColumns.some(col => col.includes(variant.toLowerCase()))
+    );
+  });
 
   if (missingFields.length > 0) {
-    return { 
-      isValid: false, 
-      error: `Missing required columns for drops: ${missingFields.join(', ')}` 
+    const suggestions = {
+      drop_number: 'Try: label, drop_number, drop_no, drop#, drop_id, drop number',
+      pole_number: 'Try: strtfeat, pole_number, pole_no, pole#, pole_id, pole number'
+    };
+
+    const suggestionText = missingFields.map(field =>
+      `${field} (${suggestions[field as keyof typeof suggestions] || 'check column headers'})`
+    ).join('; ');
+
+    return {
+      isValid: false,
+      error: `Missing required columns for drops: ${missingFields.join(', ')}. ${suggestionText}. Available columns: ${availableColumns.join(', ')}`
     };
   }
 
   const processedData = data.map(row => ({
-    drop_number: findColumnValue(row, ['drop_number', 'drop number', 'drop_id', 'drop id']),
-    pole_number: findColumnValue(row, ['pole_number', 'pole number', 'pole_id', 'pole id']),
-    address: findColumnValue(row, ['address', 'installation_address', 'location']),
+    drop_number: findColumnValue(row, ['drop_number', 'drop number', 'drop_id', 'drop id', 'label']),
+    pole_number: findColumnValue(row, ['pole_number', 'pole number', 'pole_id', 'pole id', 'strtfeat']),
+    address: findColumnValue(row, ['address', 'installation_address', 'location', 'endfeat']) || '',
     status: findColumnValue(row, ['status']) || 'planned'
   })).filter(item => item.drop_number);
 
@@ -75,70 +208,162 @@ const validateDropsData = (data: any[]): ValidationResult => {
 };
 
 const validateFibreData = (data: any[]): ValidationResult => {
-  const requiredFields = ['segment_id', 'from_point', 'to_point', 'distance'];
   const firstRow = data[0];
-  
-  const missingFields = requiredFields.filter(field => 
-    !Object.keys(firstRow).some(key => key.toLowerCase().includes(field.replace('_', '').toLowerCase()))
-  );
+
+  if (!firstRow) {
+    return { isValid: false, error: 'File appears to be empty or has no data rows' };
+  }
+
+  const availableColumns = Object.keys(firstRow).map(key => key.toLowerCase().trim());
+
+  // Check for Lawley format (label, cable size, length)
+  const isLawleyFormat = availableColumns.includes('label') && 
+                          availableColumns.includes('length') && 
+                          availableColumns.includes('cable size');
+
+  if (isLawleyFormat) {
+    // Process Lawley format
+    const processedData = data.map(row => {
+      const label = findColumnValue(row, ['label', 'segment_id']);
+      // Extract from/to points from label (format: LAW.PF.96F.MH.A001-MH.A109)
+      let fromPoint = '';
+      let toPoint = '';
+      if (label && label.includes('-')) {
+        const parts = label.split('-');
+        fromPoint = parts[0].split('.').slice(-1)[0]; // Get last part before dash
+        toPoint = parts[1]; // Everything after dash
+      }
+      
+      return {
+        segment_id: label,
+        from_point: fromPoint,
+        to_point: toPoint,
+        distance: parseFloat(findColumnValue(row, ['length', 'distance'])) || 0,
+        cable_type: findColumnValue(row, ['cable size', 'cable_size']) || 'standard',
+        cable_size: findColumnValue(row, ['cable size', 'cable_size']) || '',
+        layer: findColumnValue(row, ['layer']) || '',
+        pon_no: parseInt(findColumnValue(row, ['pon_no'])) || 0,
+        zone_no: parseInt(findColumnValue(row, ['zone_no'])) || 0,
+        contractor: findColumnValue(row, ['contractor', 'Contractor']) || '',
+        complete: findColumnValue(row, ['complete', 'Complete']) || '',
+        status: findColumnValue(row, ['complete', 'Complete']) === 'Yes' ? 'completed' : 'planned',
+        metadata: {
+          string_completed: findColumnValue(row, ['String Com']),
+          date_completed: findColumnValue(row, ['Date Comp'])
+        }
+      };
+    }).filter(item => item.segment_id && item.distance >= 0);
+
+    console.log(`Processed ${processedData.length} fibre segments in Lawley format`);
+    return { isValid: true, processedData };
+  }
+
+  // Try standard format validation
+  const requiredFields = ['segment_id', 'distance'];
+  const missingFields = requiredFields.filter(field => {
+    const fieldVariants = [
+      field,
+      field.replace('_', ''),
+      field.replace('_', ' '),
+      field.replace('_', '-'),
+      field.replace('_', '.')
+    ];
+
+    return !fieldVariants.some(variant =>
+      availableColumns.some(col => col.includes(variant.toLowerCase()))
+    );
+  });
 
   if (missingFields.length > 0) {
-    return { 
-      isValid: false, 
-      error: `Missing required columns for fibre: ${missingFields.join(', ')}` 
+    const suggestions = {
+      segment_id: 'Try: label, segment_id, segment id, cable_id, cable id',
+      distance: 'Try: length, distance, cable_length, metres, meters'
+    };
+
+    const suggestionText = missingFields.map(field =>
+      `${field} (${suggestions[field as keyof typeof suggestions] || 'check column headers'})`
+    ).join('; ');
+
+    return {
+      isValid: false,
+      error: `Missing required columns for fibre: ${missingFields.join(', ')}. ${suggestionText}. Available columns: ${availableColumns.join(', ')}`
     };
   }
 
   const processedData = data.map(row => ({
-    segment_id: findColumnValue(row, ['segment_id', 'segment id', 'cable_id', 'cable id']),
-    from_point: findColumnValue(row, ['from_point', 'from point', 'start_point', 'start point']),
-    to_point: findColumnValue(row, ['to_point', 'to point', 'end_point', 'end point']),
+    segment_id: findColumnValue(row, ['segment_id', 'segment id', 'cable_id', 'cable id', 'label']),
+    from_point: findColumnValue(row, ['from_point', 'from point', 'start_point', 'start point']) || '',
+    to_point: findColumnValue(row, ['to_point', 'to point', 'end_point', 'end point']) || '',
     distance: parseFloat(findColumnValue(row, ['distance', 'length', 'cable_length', 'metres', 'meters'])) || 0,
-    cable_type: findColumnValue(row, ['cable_type', 'type']) || 'standard',
+    cable_type: findColumnValue(row, ['cable_type', 'type', 'cable size']) || 'standard',
     status: findColumnValue(row, ['status']) || 'planned'
-  })).filter(item => item.segment_id && item.distance > 0);
+  })).filter(item => item.segment_id);
 
   return { isValid: true, processedData };
 };
 
 const findColumnValue = (row: any, possibleColumns: string[]): string => {
   for (const col of possibleColumns) {
-    const key = Object.keys(row).find(k => 
-      k.toLowerCase().replace(/[_\s]/g, '') === col.toLowerCase().replace(/[_\s]/g, '')
-    );
-    if (key && row[key] !== undefined && row[key] !== null) {
-      return String(row[key]).trim();
+    // Create multiple variations of the column name to match
+    const variations = [
+      col,
+      col.replace(/_/g, ""),
+      col.replace(/_/g, " "),
+      col.replace(/_/g, "-"),
+      col.replace(/_/g, "."),
+      col.replace(/number/g, "no"),
+      col.replace(/number/g, "num"),
+      col.replace(/number/g, "#"),
+      col.replace(/latitude/g, "lat"),
+      col.replace(/longitude/g, "lng"),
+      col.replace(/longitude/g, "long")
+    ];
+
+    for (const variant of variations) {
+      const key = Object.keys(row).find(k =>
+        k.toLowerCase().replace(/[_\s-\.]/g, "") === variant.toLowerCase().replace(/[_\s-\.]/g, "")
+      );
+      if (key && row[key] !== undefined && row[key] !== null && row[key] !== "") {
+        return String(row[key]).trim();
+      }
     }
   }
-  return '';
+  return "";
 };
 
 export const processStepData = async (projectId: string, stepType: string, data: any[]) => {
   try {
     // Initialize tables first (idempotent operation)
-    await sowApi.initializeTables(projectId);
+    const initResult = await sowApi.initializeTables(projectId);
+    if (!initResult.success) {
+      throw new Error('Failed to initialize database tables');
+    }
     
     // Upload data based on step type
+    let result;
     switch (stepType) {
       case 'poles':
-        return await sowApi.uploadPoles(projectId, data);
+        result = await sowApi.uploadPoles(projectId, data);
+        break;
       case 'drops':
-        return await sowApi.uploadDrops(projectId, data);
+        result = await sowApi.uploadDrops(projectId, data);
+        break;
       case 'fibre':
-        return await sowApi.uploadFibre(projectId, data);
+        result = await sowApi.uploadFibre(projectId, data);
+        break;
       default:
         throw new Error(`Unknown step type: ${stepType}`);
     }
+    
+    // Check if the result indicates success
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to save data to database');
+    }
+    
+    return result;
   } catch (error) {
     console.error('Error uploading SOW data:', error);
-    // Fallback to localStorage if API fails
-    const storageKey = `sow_${projectId}_${stepType}`;
-    localStorage.setItem(storageKey, JSON.stringify({
-      projectId,
-      stepType,
-      data,
-      uploadedAt: new Date().toISOString()
-    }));
-    return { success: true, message: 'Data saved locally' };
+    // DO NOT fallback to localStorage - throw the error instead
+    throw new Error(`Failed to save ${stepType} data: ${error.message}`);
   }
 };

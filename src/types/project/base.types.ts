@@ -7,7 +7,10 @@ import { Timestamp } from 'firebase/firestore';
 export interface Project {
   id: string;
   name: string;
+  project_name?: string; // Database field for compatibility
   code: string;
+  project_code?: string; // Database field for compatibility
+  client_name?: string; // Database field for compatibility
   description?: string;
   projectType: ProjectType;
   clientId?: string;

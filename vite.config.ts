@@ -21,9 +21,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://ff-react-neon-h3x4.vercel.app',
+        target: 'http://localhost:3001',
         changeOrigin: true,
-        secure: true,
+        secure: false,
       }
     }
   }

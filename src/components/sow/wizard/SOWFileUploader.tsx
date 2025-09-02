@@ -2,20 +2,22 @@
  * SOW File Upload Component
  */
 
-import { Upload, CheckCircle, AlertCircle, FileSpreadsheet } from 'lucide-react';
+import { Upload, CheckCircle, AlertCircle, FileSpreadsheet, Loader2 } from 'lucide-react';
 import { SOWUploadStep } from './SOWWizardTypes';
 
 interface SOWFileUploaderProps {
   currentStepData: SOWUploadStep;
   isUploading: boolean;
   uploadError: string | null;
+  uploadProgress: string | null;
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function SOWFileUploader({ 
   currentStepData, 
   isUploading, 
-  uploadError, 
+  uploadError,
+  uploadProgress, 
   onFileUpload 
 }: SOWFileUploaderProps) {
   const isCurrentStepComplete = currentStepData.completed;
@@ -56,12 +58,16 @@ export function SOWFileUploader({
               htmlFor="file-upload" 
               className={`cursor-pointer ${isUploading ? 'cursor-not-allowed opacity-50' : ''}`}
             >
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              {isUploading ? (
+                <Loader2 className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-spin" />
+              ) : (
+                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              )}
               <p className="text-gray-600">
                 {isUploading ? 'Processing file...' : 'Click to upload Excel file'}
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                Supports .xlsx, .xls, and .csv files
+                {uploadProgress ? uploadProgress : 'Supports .xlsx, .xls, and .csv files'}
               </p>
             </label>
           </div>
@@ -72,6 +78,19 @@ export function SOWFileUploader({
               <div>
                 <p className="text-red-800 font-medium">Upload Error</p>
                 <p className="text-red-700 text-sm mt-1">{uploadError}</p>
+              </div>
+            </div>
+          )}
+
+          {uploadProgress && !uploadError && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center">
+                <Loader2 className="w-5 h-5 text-blue-600 mr-2 animate-spin" />
+                <div>
+                  <p className="text-blue-800 font-medium">Processing</p>
+                  <p className="text-blue-700 text-sm mt-1">{uploadProgress}</p>
+                  <p className="text-blue-600 text-xs mt-2">This may take a few minutes for large datasets...</p>
+                </div>
               </div>
             </div>
           )}
