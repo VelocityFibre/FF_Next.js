@@ -24,7 +24,7 @@ export function SOWUploadWizard({ projectId, projectName, onComplete }: SOWUploa
   useEffect(() => {
     const checkImportStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/sow/import-status/${projectId}`);
+        const response = await fetch(`/api/sow/import-status/${projectId}`);
         if (response.ok) {
           const result = await response.json();
           if (result.data && result.data.length > 0) {

@@ -16,7 +16,7 @@ export function useSOWData() {
       setLoading(true);
       
       // Fetch all projects first
-      const projectsResponse = await fetch('http://localhost:3001/api/projects');
+      const projectsResponse = await fetch('/api/projects');
       const projectsResult = await projectsResponse.json();
       const projects = projectsResult.data || [];
       
@@ -25,10 +25,10 @@ export function useSOWData() {
         try {
           // Fetch poles, drops, and fibre data for each project
           const [polesRes, dropsRes, fibreRes, statusRes] = await Promise.all([
-            fetch(`http://localhost:3001/api/sow/poles?projectId=${project.id}`),
-            fetch(`http://localhost:3001/api/sow/drops?projectId=${project.id}`),
-            fetch(`http://localhost:3001/api/sow/fibre?projectId=${project.id}`),
-            fetch(`http://localhost:3001/api/sow/import-status/${project.id}`)
+            fetch(`/api/sow/poles?projectId=${project.id}`),
+            fetch(`/api/sow/drops?projectId=${project.id}`),
+            fetch(`/api/sow/fibre?projectId=${project.id}`),
+            fetch(`/api/sow/import-status/${project.id}`)
           ]);
           
           const [polesData, dropsData, fibreData, statusData] = await Promise.all([
