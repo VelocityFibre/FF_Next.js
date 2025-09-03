@@ -79,12 +79,47 @@ export default async function handler(req, res) {
         break;
 
       case 'DELETE':
-        // Delete project
+        // Delete project and related SOW data
         if (!req.query.id) {
           return res.status(400).json({ success: false, error: 'Project ID required' });
         }
-        await sql`DELETE FROM projects WHERE id = ${req.query.id}`;
-        res.status(200).json({ success: true, message: 'Project deleted successfully' });
+        
+        const projectId = req.query.id;
+        
+        // Delete related SOW data first (to avoid foreign key constraints)
+        try {
+          await sql`DELETE FROM sow_drops WHERE project_id = ${projectId}::uuid`;
+        } catch (e) {
+          // Table might not exist, continue
+        }
+        
+        try {
+          await sql`DELETE FROM sow_poles WHERE project_id = ${projectId}::uuid`;
+        } catch (e) {
+          // Table might not exist, continue
+        }
+        
+        try {
+          await sql`DELETE FROM sow_fibre WHERE project_id = ${projectId}::uuid`;
+        } catch (e) {
+          // Table might not exist, continue
+        }
+        
+        try {
+          await sql`DELETE FROM sow_project_summary WHERE project_id = ${projectId}::uuid`;
+        } catch (e) {
+          // Table might not exist, continue
+        }
+        
+        try {
+          await sql`DELETE FROM sow_import_status WHERE project_id = ${projectId}::uuid`;
+        } catch (e) {
+          // Table might not exist, continue
+        }
+        
+        // Now delete the project
+        await sql`DELETE FROM projects WHERE id = ${projectId}`;
+        res.status(200).json({ success: true, message: 'Project and related data deleted successfully' });
         break;
 
       default:
