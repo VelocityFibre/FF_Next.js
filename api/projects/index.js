@@ -86,40 +86,66 @@ export default async function handler(req, res) {
         
         const projectId = req.query.id;
         
-        // Delete related SOW data first (to avoid foreign key constraints)
         try {
-          await sql`DELETE FROM sow_drops WHERE project_id = ${projectId}::uuid`;
-        } catch (e) {
-          // Table might not exist, continue
+          // Delete related SOW data first (to avoid foreign key constraints)
+          // Try to delete from each table, ignore if table doesn't exist
+          
+          try {
+            await sql`DELETE FROM sow_drops WHERE project_id = ${projectId}`;
+            console.log('Deleted SOW drops data');
+          } catch (e) {
+            // Table might not exist or no data, continue
+            console.log('No drops data to delete');
+          }
+          
+          try {
+            await sql`DELETE FROM sow_poles WHERE project_id = ${projectId}`;
+            console.log('Deleted SOW poles data');
+          } catch (e) {
+            // Table might not exist or no data, continue
+            console.log('No poles data to delete');
+          }
+          
+          try {
+            await sql`DELETE FROM sow_fibre WHERE project_id = ${projectId}`;
+            console.log('Deleted SOW fibre data');
+          } catch (e) {
+            // Table might not exist or no data, continue
+            console.log('No fibre data to delete');
+          }
+          
+          try {
+            await sql`DELETE FROM sow_project_summary WHERE project_id = ${projectId}`;
+            console.log('Deleted SOW project summary');
+          } catch (e) {
+            // Table might not exist or no data, continue
+            console.log('No project summary to delete');
+          }
+          
+          try {
+            await sql`DELETE FROM sow_import_status WHERE project_id = ${projectId}`;
+            console.log('Deleted SOW import status');
+          } catch (e) {
+            // Table might not exist or no data, continue
+            console.log('No import status to delete');
+          }
+          
+          // Now delete the project
+          const result = await sql`DELETE FROM projects WHERE id = ${projectId} RETURNING id`;
+          
+          if (result.length === 0) {
+            return res.status(404).json({ success: false, error: 'Project not found' });
+          }
+          
+          res.status(200).json({ 
+            success: true, 
+            message: 'Project and related data deleted successfully',
+            deletedId: result[0].id 
+          });
+        } catch (error) {
+          console.error('Delete project error:', error);
+          throw error; // Let the outer catch handle it
         }
-        
-        try {
-          await sql`DELETE FROM sow_poles WHERE project_id = ${projectId}::uuid`;
-        } catch (e) {
-          // Table might not exist, continue
-        }
-        
-        try {
-          await sql`DELETE FROM sow_fibre WHERE project_id = ${projectId}::uuid`;
-        } catch (e) {
-          // Table might not exist, continue
-        }
-        
-        try {
-          await sql`DELETE FROM sow_project_summary WHERE project_id = ${projectId}::uuid`;
-        } catch (e) {
-          // Table might not exist, continue
-        }
-        
-        try {
-          await sql`DELETE FROM sow_import_status WHERE project_id = ${projectId}::uuid`;
-        } catch (e) {
-          // Table might not exist, continue
-        }
-        
-        // Now delete the project
-        await sql`DELETE FROM projects WHERE id = ${projectId}`;
-        res.status(200).json({ success: true, message: 'Project and related data deleted successfully' });
         break;
 
       default:
