@@ -27,6 +27,21 @@ export const sowApi = {
       },
       body: JSON.stringify({ projectId, poles }),
     });
+    
+    // Check if response is OK and is JSON
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('Upload poles failed:', response.status, text);
+      throw new Error(`Upload failed: ${response.status} - ${text.substring(0, 100)}`);
+    }
+    
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('Non-JSON response:', text.substring(0, 200));
+      throw new Error('Server returned non-JSON response');
+    }
+    
     return response.json();
   },
 
@@ -49,6 +64,21 @@ export const sowApi = {
       },
       body: JSON.stringify({ projectId, drops }),
     });
+    
+    // Check if response is OK and is JSON
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('Upload drops failed:', response.status, text);
+      throw new Error(`Upload failed: ${response.status} - ${text.substring(0, 100)}`);
+    }
+    
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('Non-JSON response:', text.substring(0, 200));
+      throw new Error('Server returned non-JSON response');
+    }
+    
     return response.json();
   },
 

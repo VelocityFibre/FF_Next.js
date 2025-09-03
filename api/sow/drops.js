@@ -59,15 +59,15 @@ export default async function handler(req, res) {
 
       case 'POST':
         // Upload drops data
-        return await handleUploadDrops(req, res);
+        return await handleUploadDrops(req, res, sql);
 
       case 'PUT':
         // Update single drop
-        return await handleUpdateDrop(req, res);
+        return await handleUpdateDrop(req, res, sql);
 
       case 'DELETE':
         // Delete drop(s)
-        return await handleDeleteDrops(req, res);
+        return await handleDeleteDrops(req, res, sql);
 
       default:
         res.status(405).json({ success: false, error: 'Method not allowed' });
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function handleUploadDrops(req, res) {
+async function handleUploadDrops(req, res, sql) {
   const { projectId, drops } = req.body;
   
   if (!projectId || !drops || !Array.isArray(drops)) {
@@ -88,99 +88,162 @@ async function handleUploadDrops(req, res) {
     });
   }
 
+  const BATCH_SIZE = 500; // More conservative batch size for API use
+  
   try {
     let insertedCount = 0;
     let updatedCount = 0;
     const errors = [];
     const processedDrops = [];
-
-    for (const drop of drops) {
+    
+    // Filter valid drops
+    const validDrops = drops.filter(drop => {
+      if (!drop.drop_number) {
+        errors.push({
+          drop_number: drop.drop_number || 'unknown',
+          error: 'Drop number is required'
+        });
+        return false;
+      }
+      return true;
+    });
+    
+    console.log(`Processing ${validDrops.length} valid drops in batches of ${BATCH_SIZE}`);
+    
+    // Process in batches
+    for (let i = 0; i < validDrops.length; i += BATCH_SIZE) {
+      const batch = validDrops.slice(i, i + BATCH_SIZE);
+      const batchStart = Date.now();
+      
       try {
-        // Validate required fields
-        if (!drop.drop_number) {
-          errors.push({
-            drop_number: drop.drop_number || 'unknown',
-            error: 'Drop number is required'
-          });
+        // Build multi-value INSERT query (more efficient than UNNEST)
+        const values = [];
+        const placeholders = [];
+        
+        let valueIndex = 1;
+        batch.forEach((drop, rowIndex) => {
+          // Handle various Excel column mapping patterns
+          const dropNumber = drop.drop_number || drop.drop || drop['Drop Number'] || drop.label || '';
+          const poleNumber = drop.pole_number || drop.pole || drop['Pole Number'] || drop.pole_ref || null;
+          const latitude = parseFloat(drop.latitude || drop.lat || drop.Lat) || null;
+          const longitude = parseFloat(drop.longitude || drop.lon || drop.Lon) || null;
+          const ponNo = drop.pon_no || drop['PON No'] || drop.pon || null;
+          const zoneNo = drop.zone_no || drop['Zone No'] || drop.zone || null;
+          const cableLength = parseFloat(drop.cable_length || drop.length || drop['Cable Length']) || null;
+          const cableCapacity = parseInt(drop.cable_capacity || drop.capacity) || null;
+          const createdDate = drop.created_date || drop.datecrtd ? new Date(drop.created_date || drop.datecrtd) : null;
+          const createdBy = drop.created_by || drop.creator || null;
+          
+          // Build placeholders for this row (19 columns)
+          const rowPlaceholders = [];
+          for (let j = 0; j < 19; j++) {
+            rowPlaceholders.push(`$${valueIndex++}`);
+          }
+          placeholders.push(`(${rowPlaceholders.join(', ')})`);
+          
+          // Add values matching sow_drops table structure
+          values.push(
+            projectId,                                    // project_id
+            dropNumber,                                   // drop_number
+            poleNumber,                                   // pole_number
+            drop.cable_type || null,                     // cable_type
+            drop.cable_spec || null,                     // cable_spec
+            cableLength,                                 // cable_length
+            cableCapacity,                               // cable_capacity
+            drop.start_point || null,                    // start_point
+            drop.end_point || null,                      // end_point
+            latitude,                                    // latitude
+            longitude,                                   // longitude
+            drop.address || null,                        // address
+            ponNo,                                       // pon_no
+            zoneNo,                                      // zone_no
+            drop.municipality || null,                   // municipality
+            drop.status || 'planned',                    // status
+            createdDate,                                 // created_date
+            createdBy,                                   // created_by
+            JSON.stringify(drop.raw_data || drop)       // raw_data (store original data)
+          );
+        });
+        
+        if (placeholders.length === 0) {
           continue;
         }
-
-        // Check if drop already exists
-        const existing = await sql`
-          SELECT id FROM sow_drops 
-          WHERE project_id = ${projectId}::uuid 
-          AND drop_number = ${drop.drop_number}
+        
+        // Execute efficient multi-value INSERT
+        const query = `
+          INSERT INTO sow_drops (
+            project_id, drop_number, pole_number, cable_type, cable_spec,
+            cable_length, cable_capacity, start_point, end_point,
+            latitude, longitude, address, pon_no, zone_no,
+            municipality, status, created_date, created_by, raw_data
+          ) VALUES ${placeholders.join(', ')}
+          ON CONFLICT (project_id, drop_number) DO UPDATE SET
+            pole_number = EXCLUDED.pole_number,
+            cable_type = EXCLUDED.cable_type,
+            cable_spec = EXCLUDED.cable_spec,
+            cable_length = EXCLUDED.cable_length,
+            cable_capacity = EXCLUDED.cable_capacity,
+            start_point = EXCLUDED.start_point,
+            end_point = EXCLUDED.end_point,
+            latitude = EXCLUDED.latitude,
+            longitude = EXCLUDED.longitude,
+            address = EXCLUDED.address,
+            pon_no = EXCLUDED.pon_no,
+            zone_no = EXCLUDED.zone_no,
+            municipality = EXCLUDED.municipality,
+            status = EXCLUDED.status,
+            created_date = EXCLUDED.created_date,
+            created_by = EXCLUDED.created_by,
+            raw_data = EXCLUDED.raw_data,
+            updated_at = NOW()
+          RETURNING id, drop_number, project_id,
+            CASE WHEN xmax = 0 THEN 'inserted' ELSE 'updated' END as operation
         `;
-
-        if (existing.length > 0) {
-          // Update existing drop
-          const updated = await sql`
-            UPDATE sow_drops 
-            SET pole_number = ${drop.pole_number},
-                cable_type = ${drop.cable_type},
-                cable_spec = ${drop.cable_spec},
-                cable_length = ${drop.cable_length},
-                cable_capacity = ${drop.cable_capacity},
-                start_point = ${drop.start_point},
-                end_point = ${drop.end_point},
-                latitude = ${drop.latitude},
-                longitude = ${drop.longitude},
-                address = ${drop.address},
-                pon_no = ${drop.pon_no},
-                zone_no = ${drop.zone_no},
-                municipality = ${drop.municipality},
-                status = ${drop.status || 'planned'},
-                created_date = ${drop.created_date},
-                created_by = ${drop.created_by},
-                raw_data = ${JSON.stringify(drop.raw_data || {})},
-                updated_at = NOW()
-            WHERE project_id = ${projectId}::uuid 
-            AND drop_number = ${drop.drop_number}
-            RETURNING *
-          `;
-          updatedCount++;
-          processedDrops.push(updated[0]);
-        } else {
-          // Insert new drop
-          const inserted = await sql`
-            INSERT INTO sow_drops (
-              project_id, drop_number, pole_number, cable_type, cable_spec,
-              cable_length, cable_capacity, start_point, end_point,
-              latitude, longitude, address, pon_no, zone_no,
-              municipality, status, created_date, created_by, raw_data
-            )
-            VALUES (
-              ${projectId}::uuid, ${drop.drop_number}, ${drop.pole_number},
-              ${drop.cable_type}, ${drop.cable_spec}, ${drop.cable_length},
-              ${drop.cable_capacity}, ${drop.start_point}, ${drop.end_point},
-              ${drop.latitude}, ${drop.longitude}, ${drop.address},
-              ${drop.pon_no}, ${drop.zone_no}, ${drop.municipality},
-              ${drop.status || 'planned'}, ${drop.created_date},
-              ${drop.created_by}, ${JSON.stringify(drop.raw_data || {})}
-            )
-            RETURNING *
-          `;
-          insertedCount++;
-          processedDrops.push(inserted[0]);
-        }
-      } catch (error) {
-        errors.push({
-          drop_number: drop.drop_number,
-          error: error.message
+        
+        const result = await sql(query, values);
+        
+        // Count inserts vs updates
+        result.forEach(row => {
+          if (row.operation === 'inserted') {
+            insertedCount++;
+          } else {
+            updatedCount++;
+          }
+          processedDrops.push(row);
+        });
+        
+        const batchTime = ((Date.now() - batchStart) / 1000).toFixed(2);
+        const rate = Math.round(result.length / parseFloat(batchTime));
+        console.log(`✅ Batch ${Math.floor(i / BATCH_SIZE) + 1}: ${result.length} drops in ${batchTime}s (${rate}/sec)`);
+        
+      } catch (batchError) {
+        console.error(`Batch error at index ${i}:`, batchError);
+        // Add all drops from failed batch to errors
+        batch.forEach(drop => {
+          errors.push({
+            drop_number: drop.drop_number,
+            error: batchError.message
+          });
         });
       }
     }
 
-    // Update project summary
-    const summary = await sql`
-      UPDATE sow_project_summary 
-      SET total_drops = (
-        SELECT COUNT(*) FROM sow_drops WHERE project_id = ${projectId}::uuid
-      ),
-      last_updated = NOW()
-      WHERE project_id = ${projectId}::uuid
-      RETURNING *
-    `;
+    // Update project summary if table exists
+    let summary = null;
+    try {
+      const summaryResult = await sql`
+        UPDATE sow_project_summary 
+        SET total_drops = (
+          SELECT COUNT(*) FROM sow_drops WHERE project_id = ${projectId}::uuid
+        ),
+        last_updated = NOW()
+        WHERE project_id = ${projectId}::uuid
+        RETURNING *
+      `;
+      summary = summaryResult[0];
+    } catch (summaryError) {
+      console.log('Project summary update skipped:', summaryError.message);
+    }
 
     res.status(200).json({ 
       success: true, 
@@ -189,7 +252,7 @@ async function handleUploadDrops(req, res) {
       updated: updatedCount,
       errors: errors,
       processedDrops: processedDrops,
-      summary: summary[0]
+      summary: summary
     });
   } catch (error) {
     console.error('Error uploading drops:', error);
@@ -197,7 +260,7 @@ async function handleUploadDrops(req, res) {
   }
 }
 
-async function handleUpdateDrop(req, res) {
+async function handleUpdateDrop(req, res, sql) {
   const { id } = req.query;
   const updates = req.body;
   
@@ -236,7 +299,7 @@ async function handleUpdateDrop(req, res) {
   }
 }
 
-async function handleDeleteDrops(req, res) {
+async function handleDeleteDrops(req, res, sql) {
   const { id, projectId, dropNumbers } = req.query;
   
   try {

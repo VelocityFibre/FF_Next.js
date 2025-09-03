@@ -68,15 +68,15 @@ export default async function handler(req, res) {
 
       case 'POST':
         // Upload fibre data
-        return await handleUploadFibre(req, res);
+        return await handleUploadFibre(req, res, sql);
 
       case 'PUT':
         // Update single fibre segment
-        return await handleUpdateFibre(req, res);
+        return await handleUpdateFibre(req, res, sql);
 
       case 'DELETE':
         // Delete fibre segment(s)
-        return await handleDeleteFibre(req, res);
+        return await handleDeleteFibre(req, res, sql);
 
       default:
         res.status(405).json({ success: false, error: 'Method not allowed' });
@@ -87,7 +87,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function handleUploadFibre(req, res) {
+async function handleUploadFibre(req, res, sql) {
   const { projectId, fibre } = req.body;
   
   if (!projectId || !fibre || !Array.isArray(fibre)) {
@@ -97,94 +97,152 @@ async function handleUploadFibre(req, res) {
     });
   }
 
+  const BATCH_SIZE = 500; // More conservative batch size for API use
+  
   try {
     let insertedCount = 0;
     let updatedCount = 0;
     const errors = [];
     const processedSegments = [];
-
-    for (const segment of fibre) {
+    
+    // Filter valid fibre segments
+    const validSegments = fibre.filter(segment => {
+      if (!segment.segment_id) {
+        errors.push({
+          segment_id: segment.segment_id || 'unknown',
+          error: 'Segment ID is required'
+        });
+        return false;
+      }
+      return true;
+    });
+    
+    console.log(`Processing ${validSegments.length} valid fibre segments in batches of ${BATCH_SIZE}`);
+    
+    // Process in batches
+    for (let i = 0; i < validSegments.length; i += BATCH_SIZE) {
+      const batch = validSegments.slice(i, i + BATCH_SIZE);
+      const batchStart = Date.now();
+      
       try {
-        // Validate required fields
-        if (!segment.segment_id) {
-          errors.push({
-            segment_id: segment.segment_id || 'unknown',
-            error: 'Segment ID is required'
-          });
+        // Build multi-value INSERT query (more efficient than UNNEST)
+        const values = [];
+        const placeholders = [];
+        
+        let valueIndex = 1;
+        batch.forEach((segment, rowIndex) => {
+          // Handle various Excel column mapping patterns
+          const segmentId = segment.segment_id || segment.segment || segment['Segment ID'] || segment.id || '';
+          const cableSize = segment.cable_size || segment.size || segment['Cable Size'] || null;
+          const layer = segment.layer || segment.Layer || null;
+          const distance = parseFloat(segment.distance || segment.length || segment.Length) || null;
+          const ponNo = segment.pon_no || segment['PON No'] || segment.pon || null;
+          const zoneNo = segment.zone_no || segment['Zone No'] || segment.zone || null;
+          const stringCompleted = segment.string_completed || segment.completed || null;
+          const dateCompleted = segment.date_completed || segment.completed_date ? new Date(segment.date_completed || segment.completed_date) : null;
+          const contractor = segment.contractor || segment.Contractor || null;
+          const isComplete = segment.is_complete || segment.complete || false;
+          
+          // Build placeholders for this row (13 columns)
+          const rowPlaceholders = [];
+          for (let j = 0; j < 13; j++) {
+            rowPlaceholders.push(`$${valueIndex++}`);
+          }
+          placeholders.push(`(${rowPlaceholders.join(', ')})`);
+          
+          // Add values matching sow_fibre table structure
+          values.push(
+            projectId,                                    // project_id
+            segmentId,                                    // segment_id
+            cableSize,                                    // cable_size
+            layer,                                        // layer
+            distance,                                     // distance
+            ponNo,                                        // pon_no
+            zoneNo,                                       // zone_no
+            stringCompleted,                              // string_completed
+            dateCompleted,                                // date_completed
+            contractor,                                   // contractor
+            segment.status || 'planned',                 // status
+            isComplete,                                   // is_complete
+            JSON.stringify(segment.raw_data || segment)  // raw_data (store original data)
+          );
+        });
+        
+        if (placeholders.length === 0) {
           continue;
         }
-
-        // Check if fibre segment already exists
-        const existing = await sql`
-          SELECT id FROM sow_fibre 
-          WHERE project_id = ${projectId}::uuid 
-          AND segment_id = ${segment.segment_id}
+        
+        // Execute efficient multi-value INSERT
+        const query = `
+          INSERT INTO sow_fibre (
+            project_id, segment_id, cable_size, layer, distance,
+            pon_no, zone_no, string_completed, date_completed,
+            contractor, status, is_complete, raw_data
+          ) VALUES ${placeholders.join(', ')}
+          ON CONFLICT (project_id, segment_id) DO UPDATE SET
+            cable_size = EXCLUDED.cable_size,
+            layer = EXCLUDED.layer,
+            distance = EXCLUDED.distance,
+            pon_no = EXCLUDED.pon_no,
+            zone_no = EXCLUDED.zone_no,
+            string_completed = EXCLUDED.string_completed,
+            date_completed = EXCLUDED.date_completed,
+            contractor = EXCLUDED.contractor,
+            status = EXCLUDED.status,
+            is_complete = EXCLUDED.is_complete,
+            raw_data = EXCLUDED.raw_data,
+            updated_at = NOW()
+          RETURNING id, segment_id, project_id,
+            CASE WHEN xmax = 0 THEN 'inserted' ELSE 'updated' END as operation
         `;
-
-        if (existing.length > 0) {
-          // Update existing fibre segment
-          const updated = await sql`
-            UPDATE sow_fibre 
-            SET cable_size = ${segment.cable_size},
-                layer = ${segment.layer},
-                distance = ${segment.length || segment.distance},
-                pon_no = ${segment.pon_no},
-                zone_no = ${segment.zone_no},
-                string_completed = ${segment.string_completed},
-                date_completed = ${segment.date_completed},
-                contractor = ${segment.contractor},
-                status = ${segment.status || 'planned'},
-                is_complete = ${segment.is_complete || false},
-                raw_data = ${JSON.stringify(segment.raw_data || {})},
-                updated_at = NOW()
-            WHERE project_id = ${projectId}::uuid 
-            AND segment_id = ${segment.segment_id}
-            RETURNING *
-          `;
-          updatedCount++;
-          processedSegments.push(updated[0]);
-        } else {
-          // Insert new fibre segment
-          const inserted = await sql`
-            INSERT INTO sow_fibre (
-              project_id, segment_id, cable_size, layer, distance,
-              pon_no, zone_no, string_completed, date_completed,
-              contractor, status, is_complete, raw_data
-            )
-            VALUES (
-              ${projectId}::uuid, ${segment.segment_id}, ${segment.cable_size},
-              ${segment.layer}, ${segment.length || segment.distance},
-              ${segment.pon_no}, ${segment.zone_no}, ${segment.string_completed},
-              ${segment.date_completed}, ${segment.contractor},
-              ${segment.status || 'planned'}, ${segment.is_complete || false},
-              ${JSON.stringify(segment.raw_data || {})}
-            )
-            RETURNING *
-          `;
-          insertedCount++;
-          processedSegments.push(inserted[0]);
-        }
-      } catch (error) {
-        errors.push({
-          segment_id: segment.segment_id,
-          error: error.message
+        
+        const result = await sql(query, values);
+        
+        // Count inserts vs updates
+        result.forEach(row => {
+          if (row.operation === 'inserted') {
+            insertedCount++;
+          } else {
+            updatedCount++;
+          }
+          processedSegments.push(row);
+        });
+        
+        const batchTime = ((Date.now() - batchStart) / 1000).toFixed(2);
+        const rate = Math.round(result.length / parseFloat(batchTime));
+        console.log(`✅ Batch ${Math.floor(i / BATCH_SIZE) + 1}: ${result.length} fibre segments in ${batchTime}s (${rate}/sec)`);
+        
+      } catch (batchError) {
+        console.error(`Batch error at index ${i}:`, batchError);
+        // Add all segments from failed batch to errors
+        batch.forEach(segment => {
+          errors.push({
+            segment_id: segment.segment_id,
+            error: batchError.message
+          });
         });
       }
     }
 
-    // Update project summary
-    const summary = await sql`
-      UPDATE sow_project_summary 
-      SET total_fibre_segments = (
-        SELECT COUNT(*) FROM sow_fibre WHERE project_id = ${projectId}::uuid
-      ),
-      total_fibre_length = (
-        SELECT COALESCE(SUM(distance), 0) FROM sow_fibre WHERE project_id = ${projectId}::uuid
-      ),
-      last_updated = NOW()
-      WHERE project_id = ${projectId}::uuid
-      RETURNING *
-    `;
+    // Update project summary if table exists
+    let summary = null;
+    try {
+      const summaryResult = await sql`
+        UPDATE sow_project_summary 
+        SET total_fibre_segments = (
+          SELECT COUNT(*) FROM sow_fibre WHERE project_id = ${projectId}::uuid
+        ),
+        total_fibre_length = (
+          SELECT COALESCE(SUM(distance), 0) FROM sow_fibre WHERE project_id = ${projectId}::uuid
+        ),
+        last_updated = NOW()
+        WHERE project_id = ${projectId}::uuid
+        RETURNING *
+      `;
+      summary = summaryResult[0];
+    } catch (summaryError) {
+      console.log('Project summary update skipped:', summaryError.message);
+    }
 
     res.status(200).json({ 
       success: true, 
@@ -193,7 +251,7 @@ async function handleUploadFibre(req, res) {
       updated: updatedCount,
       errors: errors,
       processedSegments: processedSegments,
-      summary: summary[0]
+      summary: summary
     });
   } catch (error) {
     console.error('Error uploading fibre:', error);
@@ -201,7 +259,7 @@ async function handleUploadFibre(req, res) {
   }
 }
 
-async function handleUpdateFibre(req, res) {
+async function handleUpdateFibre(req, res, sql) {
   const { id } = req.query;
   const updates = req.body;
   
@@ -249,7 +307,7 @@ async function handleUpdateFibre(req, res) {
   }
 }
 
-async function handleDeleteFibre(req, res) {
+async function handleDeleteFibre(req, res, sql) {
   const { id, projectId, segmentIds } = req.query;
   
   try {

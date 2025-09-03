@@ -53,7 +53,11 @@ const validatePolesData = (data: any[]): ValidationResult => {
     return { isValid: false, error: 'File appears to be empty or has no data rows' };
   }
 
+  // Log original columns for debugging
+  console.log('Original columns from Excel:', Object.keys(firstRow));
+  
   const availableColumns = Object.keys(firstRow).map(key => key.toLowerCase().trim());
+  console.log('Normalized columns:', availableColumns);
 
   const missingFields = requiredFields.filter(field => {
     // Special handling for each required field with more variants

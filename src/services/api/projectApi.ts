@@ -6,7 +6,7 @@
 import { Project, ProjectFilter, ProjectFormData } from '@/types/project.types';
 import { log } from '@/lib/logger';
 
-const API_BASE = import.meta.env.DEV ? 'http://localhost:5173/api' : '/api';
+const API_BASE = '/api';
 
 export const projectApi = {
   /**
@@ -127,11 +127,26 @@ export const projectApi = {
       }
 
       const result = await response.json();
-      // Filter out completed, archived, and cancelled projects on the client side
-      const activeProjects = (result.data || []).filter((project: Project) => {
-        const inactiveStatuses = ['completed', 'archived', 'cancelled', 'on_hold'];
-        return !inactiveStatuses.includes(project.status?.toLowerCase() || '');
-      });
+      // Transform and filter the projects
+      const activeProjects = (result.data || [])
+        .map((p: any) => ({
+          ...p,
+          id: p.id,
+          name: p.project_name || p.name,
+          code: p.project_code || p.code,
+          clientId: p.client_id || p.clientId,
+          clientName: p.client_name || p.clientName,
+          projectType: p.project_type || p.projectType,
+          startDate: p.start_date || p.startDate,
+          endDate: p.end_date || p.endDate,
+          projectManager: p.project_manager || p.projectManager,
+          description: p.description,
+          status: p.status
+        }))
+        .filter((project: any) => {
+          const inactiveStatuses = ['completed', 'archived', 'cancelled', 'on_hold'];
+          return !inactiveStatuses.includes(project.status?.toLowerCase() || '');
+        });
       
       return activeProjects;
     } catch (error) {

@@ -30,20 +30,19 @@ export default async function handler(req, res) {
             result = await sql`
               SELECT * FROM clients
               WHERE status = ${status}
-              ORDER BY name ASC
+              ORDER BY company_name ASC
             `;
           } else if (search) {
             const searchPattern = `%${search}%`;
             result = await sql`
               SELECT * FROM clients
-              WHERE name ILIKE ${searchPattern}
+              WHERE company_name ILIKE ${searchPattern}
                 OR contact_person ILIKE ${searchPattern}
                 OR email ILIKE ${searchPattern}
-                OR contact_email ILIKE ${searchPattern}
-              ORDER BY name ASC
+              ORDER BY company_name ASC
             `;
           } else {
-            result = await sql`SELECT * FROM clients ORDER BY name ASC`;
+            result = await sql`SELECT * FROM clients ORDER BY company_name ASC`;
           }
           
           res.status(200).json({ success: true, data: result });

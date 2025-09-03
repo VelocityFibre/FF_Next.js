@@ -52,15 +52,15 @@ export default async function handler(req, res) {
 
       case 'POST':
         // Upload poles data
-        return await handleUploadPoles(req, res);
+        return await handleUploadPoles(req, res, sql);
 
       case 'PUT':
         // Update single pole
-        return await handleUpdatePole(req, res);
+        return await handleUpdatePole(req, res, sql);
 
       case 'DELETE':
         // Delete pole(s)
-        return await handleDeletePoles(req, res);
+        return await handleDeletePoles(req, res, sql);
 
       default:
         res.status(405).json({ success: false, error: 'Method not allowed' });
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function handleUploadPoles(req, res) {
+async function handleUploadPoles(req, res, sql) {
   const { projectId, poles } = req.body;
   
   if (!projectId || !poles || !Array.isArray(poles)) {
@@ -81,108 +81,158 @@ async function handleUploadPoles(req, res) {
     });
   }
 
+  const BATCH_SIZE = 500; // More conservative batch size for API use
+  
   try {
     let insertedCount = 0;
     let updatedCount = 0;
     const errors = [];
     const processedPoles = [];
-
-    for (const pole of poles) {
+    
+    // Filter valid poles
+    const validPoles = poles.filter(pole => {
+      // Check for pole number in various possible field names
+      const poleNumber = pole.pole_number || pole.label_1 || pole.Label_1 || pole['Pole Number'] || pole.pole || pole.label;
+      if (!poleNumber) {
+        errors.push({
+          pole_number: pole.pole_number || pole.label_1 || 'unknown',
+          error: 'Pole number is required'
+        });
+        return false;
+      }
+      return true;
+    });
+    
+    console.log(`Processing ${validPoles.length} valid poles in batches of ${BATCH_SIZE}`);
+    
+    // Process in batches using multi-value INSERT (more efficient than UNNEST)
+    for (let i = 0; i < validPoles.length; i += BATCH_SIZE) {
+      const batch = validPoles.slice(i, i + BATCH_SIZE);
+      const batchStart = Date.now();
+      
       try {
-        // Validate required fields
-        if (!pole.pole_number) {
-          errors.push({
-            pole_number: pole.pole_number || 'unknown',
-            error: 'Pole number is required'
-          });
+        // Build multi-value INSERT query
+        const values = [];
+        const placeholders = [];
+        
+        let valueIndex = 1;
+        batch.forEach((pole, rowIndex) => {
+          // Handle various Excel column mapping patterns
+          const poleNumber = pole.pole_number || pole.label_1 || pole.Label_1 || pole['Pole Number'] || pole.pole;
+          const latitude = parseFloat(pole.latitude || pole.lat || pole.Lat) || null;
+          const longitude = parseFloat(pole.longitude || pole.lon || pole.Lon) || null;
+          const owner = pole.owner || pole.cmpownr || null;
+          const ponNo = parseInt(pole.pon_no || pole['PON No'] || pole.pon) || null;
+          const zoneNo = parseInt(pole.zone_no || pole['Zone No'] || pole.zone) || null;
+          const createdDate = pole.created_date || pole.datecrtd ? new Date(pole.created_date || pole.datecrtd) : null;
+          const createdBy = pole.created_by || pole.cmpownr || null;
+          
+          // Build placeholders for this row (18 columns)
+          const rowPlaceholders = [];
+          for (let j = 0; j < 18; j++) {
+            rowPlaceholders.push(`$${valueIndex++}`);
+          }
+          placeholders.push(`(${rowPlaceholders.join(', ')})`);
+          
+          // Add values matching sow_poles table structure
+          values.push(
+            projectId,                                    // project_id
+            poleNumber,                                   // pole_number
+            latitude,                                     // latitude
+            longitude,                                    // longitude
+            pole.status || 'pending',                    // status
+            pole.pole_type || null,                      // pole_type
+            pole.pole_spec || null,                      // pole_spec
+            parseFloat(pole.height) || null,             // height
+            parseFloat(pole.diameter) || null,           // diameter
+            owner,                                       // owner
+            ponNo,                                       // pon_no
+            zoneNo,                                      // zone_no
+            pole.address || null,                        // address
+            pole.municipality || null,                   // municipality
+            createdDate,                                 // created_date
+            createdBy,                                   // created_by
+            pole.comments || null,                       // comments
+            JSON.stringify(pole.raw_data || pole)       // raw_data (store original data)
+          );
+        });
+        
+        if (placeholders.length === 0) {
           continue;
         }
-
-        // Check if pole already exists
-        const existing = await sql`
-          SELECT id FROM sow_poles 
-          WHERE project_id = ${projectId}::uuid 
-          AND pole_number = ${pole.pole_number}
+        
+        // Execute efficient multi-value INSERT
+        const query = `
+          INSERT INTO sow_poles (
+            project_id, pole_number, latitude, longitude, status,
+            pole_type, pole_spec, height, diameter, owner,
+            pon_no, zone_no, address, municipality,
+            created_date, created_by, comments, raw_data
+          ) VALUES ${placeholders.join(', ')}
+          ON CONFLICT (project_id, pole_number) DO UPDATE SET
+            latitude = EXCLUDED.latitude,
+            longitude = EXCLUDED.longitude,
+            status = EXCLUDED.status,
+            pole_type = EXCLUDED.pole_type,
+            pole_spec = EXCLUDED.pole_spec,
+            height = EXCLUDED.height,
+            diameter = EXCLUDED.diameter,
+            owner = EXCLUDED.owner,
+            pon_no = EXCLUDED.pon_no,
+            zone_no = EXCLUDED.zone_no,
+            address = EXCLUDED.address,
+            municipality = EXCLUDED.municipality,
+            created_date = EXCLUDED.created_date,
+            created_by = EXCLUDED.created_by,
+            comments = EXCLUDED.comments,
+            raw_data = EXCLUDED.raw_data,
+            updated_at = NOW()
+          RETURNING id, pole_number
         `;
-
-        if (existing.length > 0) {
-          // Update existing pole
-          const updated = await sql`
-            UPDATE sow_poles 
-            SET latitude = ${pole.latitude},
-                longitude = ${pole.longitude},
-                status = ${pole.status || 'pending'},
-                pole_type = ${pole.pole_type},
-                pole_spec = ${pole.pole_spec},
-                height = ${pole.height},
-                diameter = ${pole.diameter},
-                owner = ${pole.owner},
-                pon_no = ${pole.pon_no},
-                zone_no = ${pole.zone_no},
-                address = ${pole.address},
-                municipality = ${pole.municipality},
-                created_date = ${pole.created_date},
-                created_by = ${pole.created_by},
-                comments = ${pole.comments},
-                raw_data = ${JSON.stringify(pole.raw_data || {})},
-                updated_at = NOW()
-            WHERE project_id = ${projectId}::uuid 
-            AND pole_number = ${pole.pole_number}
-            RETURNING *
-          `;
-          updatedCount++;
-          processedPoles.push(updated[0]);
-        } else {
-          // Insert new pole
-          const inserted = await sql`
-            INSERT INTO sow_poles (
-              project_id, pole_number, latitude, longitude, status,
-              pole_type, pole_spec, height, diameter, owner,
-              pon_no, zone_no, address, municipality,
-              created_date, created_by, comments, raw_data
-            )
-            VALUES (
-              ${projectId}::uuid, ${pole.pole_number}, ${pole.latitude}, 
-              ${pole.longitude}, ${pole.status || 'pending'},
-              ${pole.pole_type}, ${pole.pole_spec}, ${pole.height}, 
-              ${pole.diameter}, ${pole.owner},
-              ${pole.pon_no}, ${pole.zone_no}, ${pole.address}, 
-              ${pole.municipality}, ${pole.created_date}, 
-              ${pole.created_by}, ${pole.comments}, 
-              ${JSON.stringify(pole.raw_data || {})}
-            )
-            RETURNING *
-          `;
-          insertedCount++;
-          processedPoles.push(inserted[0]);
-        }
-      } catch (error) {
-        errors.push({
-          pole_number: pole.pole_number,
-          error: error.message
+        
+        const result = await sql(query, values);
+        insertedCount += result.length;
+        processedPoles.push(...result);
+        
+        const batchTime = ((Date.now() - batchStart) / 1000).toFixed(2);
+        const rate = Math.round(result.length / parseFloat(batchTime));
+        console.log(`✅ Batch ${Math.floor(i / BATCH_SIZE) + 1}: ${result.length} poles in ${batchTime}s (${rate}/sec)`);
+        
+      } catch (batchError) {
+        console.error(`Batch error at index ${i}:`, batchError);
+        // Add all poles from failed batch to errors
+        batch.forEach(pole => {
+          errors.push({
+            pole_number: pole.pole_number,
+            error: batchError.message
+          });
         });
       }
     }
 
-    // Update project summary
-    const summary = await sql`
-      UPDATE sow_project_summary 
-      SET total_poles = (
-        SELECT COUNT(*) FROM sow_poles WHERE project_id = ${projectId}::uuid
-      ),
-      last_updated = NOW()
-      WHERE project_id = ${projectId}::uuid
-      RETURNING *
-    `;
+    // Update project summary if table exists
+    try {
+      const summary = await sql`
+        UPDATE sow_project_summary 
+        SET total_poles = (
+          SELECT COUNT(*) FROM sow_poles WHERE project_id = ${projectId}::uuid
+        ),
+        last_updated = NOW()
+        WHERE project_id = ${projectId}::uuid
+        RETURNING *
+      `;
+    } catch (summaryError) {
+      console.log('Project summary update skipped:', summaryError.message);
+    }
 
     res.status(200).json({ 
       success: true, 
       message: `Poles upload completed`,
       inserted: insertedCount,
-      updated: updatedCount,
+      updated: 0, // We can't distinguish inserts from updates with ON CONFLICT
       errors: errors,
-      processedPoles: processedPoles,
-      summary: summary[0]
+      totalProcessed: processedPoles.length,
+      summary: null
     });
   } catch (error) {
     console.error('Error uploading poles:', error);
@@ -190,7 +240,7 @@ async function handleUploadPoles(req, res) {
   }
 }
 
-async function handleUpdatePole(req, res) {
+async function handleUpdatePole(req, res, sql) {
   const { id } = req.query;
   const updates = req.body;
   
@@ -228,7 +278,7 @@ async function handleUpdatePole(req, res) {
   }
 }
 
-async function handleDeletePoles(req, res) {
+async function handleDeletePoles(req, res, sql) {
   const { id, projectId, poleNumbers } = req.query;
   
   try {
