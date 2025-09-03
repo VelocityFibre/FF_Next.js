@@ -88,12 +88,12 @@ export default async function handler(req, res) {
 }
 
 async function handleUploadFibre(req, res, sql) {
-  const { projectId, fibre } = req.body;
+  const { projectId, fibres } = req.body;
   
-  if (!projectId || !fibre || !Array.isArray(fibre)) {
+  if (!projectId || !fibres || !Array.isArray(fibres)) {
     return res.status(400).json({ 
       success: false, 
-      error: 'Project ID and fibre array required' 
+      error: 'Project ID and fibres array required' 
     });
   }
 
@@ -106,7 +106,7 @@ async function handleUploadFibre(req, res, sql) {
     const processedSegments = [];
     
     // Filter valid fibre segments
-    const validSegments = fibre.filter(segment => {
+    const validSegments = fibres.filter(segment => {
       if (!segment.segment_id) {
         errors.push({
           segment_id: segment.segment_id || 'unknown',
