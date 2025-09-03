@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { staffService } from '@/services/staffService';
 import { StaffImport } from '@/components/staff/StaffImport';
@@ -15,7 +15,7 @@ import { StaffFilter, StaffMember } from '@/types/staff.types';
 import { log } from '@/lib/logger';
 
 export function StaffList() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [showImport, setShowImport] = useState(false);
   const [filter, setFilter] = useState<StaffFilter>({});
@@ -132,9 +132,9 @@ export function StaffList() {
         utilizationRate={Math.round(summary?.utilizationRate || 0)}
         showFilters={showFilters}
         setShowFilters={setShowFilters}
-        onAddStaff={() => navigate('/app/staff/new')}
+        onAddStaff={() => router.push('/app/staff/new')}
         onImport={() => setShowImport(true)}
-        onSettings={() => navigate('/app/staff/settings')}
+        onSettings={() => router.push('/app/staff/settings'))
         onExport={handleExport}
       />
 
@@ -150,8 +150,8 @@ export function StaffList() {
 
       <StaffTable
         staff={staff}
-        onView={(staff: StaffMember) => navigate(`/app/staff/${staff.id}`)}
-        onEdit={(staff: StaffMember) => navigate(`/app/staff/edit/${staff.id}`)}
+        onView={(staff: StaffMember) => router.push(`/app/staff/${staff.id}`)}
+        onEdit={(staff: StaffMember) => router.push(`/app/staff/edit/${staff.id}`))
         onDelete={handleDelete}
       />
 
@@ -159,7 +159,7 @@ export function StaffList() {
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">No staff members found</p>
           <button
-            onClick={() => navigate('/app/staff/create')}
+            onClick={() => router.push('/app/staff/create')}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Add First Staff Member

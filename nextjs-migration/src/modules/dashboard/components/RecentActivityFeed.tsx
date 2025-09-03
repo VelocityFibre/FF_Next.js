@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Recent Activity Feed - Legacy Compatibility Layer
  * @deprecated Use modular components from './activity' instead

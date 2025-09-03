@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Save, User } from 'lucide-react';
 import { useStaffMember, useCreateStaff, useUpdateStaff } from '@/hooks/useStaff';
 import { 
@@ -21,8 +21,8 @@ import { Timestamp } from 'firebase/firestore';
 import { log } from '@/lib/logger';
 
 export function StaffForm() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const { id } = router.query as { id: string };
   const isEditing = !!id;
 
   const { data: staff, isLoading } = useStaffMember(id || '', { enabled: !!id });
@@ -108,7 +108,7 @@ export function StaffForm() {
       } else {
         await createMutation.mutateAsync(formData);
       }
-      navigate('/app/staff');
+      router.push('/app/staff');
     } catch (error) {
       log.error('Failed to save staff member:', { data: error }, 'StaffForm');
     }
@@ -139,7 +139,7 @@ export function StaffForm() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <button
-          onClick={() => navigate('/app/staff')}
+          onClick={() => router.push('/app/staff')}
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
@@ -190,7 +190,7 @@ export function StaffForm() {
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => navigate('/app/staff')}
+              onClick={() => router.push('/app/staff')}
               className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Cancel

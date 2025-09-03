@@ -1,5 +1,5 @@
 import { UseFormReturn } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ProjectPriority, ProjectStatus } from '../../../types/project.types';
 import type { FormData } from '../types';
 
@@ -79,7 +79,7 @@ export function ProjectDetailsStep({
             Project Manager *
           </label>
           <Link 
-            to="/app/staff" 
+            href="/staff" 
             target="_blank"
             className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
           >
@@ -106,7 +106,7 @@ export function ProjectDetailsStep({
             {projectManagers.length === 0 && (
               <p className="mt-2 text-sm text-gray-500">
                 No project managers available. 
-                <Link to="/app/staff/new" target="_blank" className="ml-1 text-blue-600 hover:text-blue-800 hover:underline">
+                <Link href="/staff/new" target="_blank" className="ml-1 text-blue-600 hover:text-blue-800 hover:underline">
                   Add a staff member
                 </Link>
               </p>

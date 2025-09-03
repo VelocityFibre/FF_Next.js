@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { useState, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/router';
 // import { useTheme } from '@/contexts/ThemeContext'; // Ready for future use
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
@@ -13,7 +13,11 @@ interface PageMeta {
   actions?: React.ReactNode;
 }
 
-export function AppLayout() {
+interface AppLayoutProps {
+  children: ReactNode;
+}
+
+export function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     // Load sidebar state from localStorage
@@ -21,7 +25,7 @@ export function AppLayout() {
     return saved ? JSON.parse(saved) : false;
   });
   
-  const location = useLocation();
+  const router = useRouter();
   const { currentUser, loading } = useAuth();
   // Theme hook ready for future use
   // const { theme } = useTheme();
@@ -34,11 +38,11 @@ export function AppLayout() {
   // Close mobile sidebar when route changes
   useEffect(() => {
     setSidebarOpen(false);
-  }, [location.pathname]);
+  }, [router.pathname]);
 
   // Get page metadata based on current route
   const getPageMeta = (): PageMeta => {
-    const path = location.pathname;
+    const path = router.pathname;
     const segments = path.split('/').filter(Boolean);
     
     // Dashboard
@@ -265,7 +269,7 @@ export function AppLayout() {
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto bg-[var(--ff-background-primary)]">
           <div className="min-h-full">
-            <Outlet />
+            {children}
           </div>
         </main>
         

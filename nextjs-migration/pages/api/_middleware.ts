@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server';
+
+/**
+ * API Middleware for logging and request/response handling
+ */
+export async function middleware(request: NextRequest) {
+  const start = Date.now();
+  const { pathname, search } = request.nextUrl;
+  
+  // Log incoming request
+  console.log(`[API] ${request.method} ${pathname}${search} - Started`);
+
+  try {
+    // Get user authentication
+    const { userId } = getAuth(request as any);
+    
+    // Add user context to headers if authenticated
+    if (userId) {
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set('X-User-Id', userId);
+      requestHeaders.set('X-Request-Id', `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+      
+      // Clone request with new headers
+      const modifiedRequest = new Request(request, {
+        headers: requestHeaders,
+      });
+      
+      request = modifiedRequest as unknown as NextRequest;
+    }
+
+    // Continue to the API handler
+    const response = NextResponse.next();
+    
+    // Add CORS headers
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-User-Id, X-Request-Id');
+    
+    // Add timing information
+    const duration = Date.now() - start;
+    response.headers.set('X-Response-Time', `${duration}ms`);
+    
+    // Log completed request
+    console.log(`[API] ${request.method} ${pathname}${search} - Completed in ${duration}ms`);
+    
+    return response;
+  } catch (error) {
+    const duration = Date.now() - start;
+    console.error(`[API] ${request.method} ${pathname}${search} - Error in ${duration}ms:`, error);
+    
+    return NextResponse.json(
+      { 
+        error: 'Internal server error',
+        timestamp: new Date().toISOString(),
+        path: pathname,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export const config = {
+  matcher: [
+    // Match all API routes
+    '/api/:path*',
+    // Exclude static files and images
+    '/((?!_next/static|favicon.ico).*)',
+  ],
+};

@@ -1,11 +1,11 @@
 import { MapPin, Camera, Upload, BarChart3, CheckCircle, AlertTriangle, Users, Plus, UtilityPole } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { StatCard } from '../../../components/dashboard/StatCard';
 import { DashboardHeader } from '../../../components/dashboard/DashboardHeader';
 
 export function PoleTrackerDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
@@ -21,42 +21,42 @@ export function PoleTrackerDashboard() {
       description: 'Register a new pole installation',
       icon: Plus,
       color: '#3b82f6',
-      onClick: () => navigate('/app/pole-tracker/new'),
+      onClick: () => router.push('/pole-tracker/new'),
     },
     {
       title: 'Pole Map',
       description: 'View all poles on map',
       icon: MapPin,
       color: '#10b981',
-      onClick: () => navigate('/app/pole-tracker/map'),
+      onClick: () => router.push('/pole-tracker/map'),
     },
     {
       title: 'Photo Capture',
       description: 'Upload pole installation photos',
       icon: Camera,
       color: '#8b5cf6',
-      onClick: () => navigate('/app/pole-tracker/photos'),
+      onClick: () => router.push('/pole-tracker/photos'),
     },
     {
       title: 'Quality Checks',
       description: 'Manage quality validations',
       icon: CheckCircle,
       color: '#f59e0b',
-      onClick: () => navigate('/app/pole-tracker/quality'),
+      onClick: () => router.push('/pole-tracker/quality'),
     },
     {
       title: 'Import/Export',
       description: 'Bulk data operations',
       icon: Upload,
       color: '#6366f1',
-      onClick: () => navigate('/app/pole-tracker/import-export'),
+      onClick: () => router.push('/pole-tracker/import-export'),
     },
     {
       title: 'Analytics',
       description: 'Pole installation metrics',
       icon: BarChart3,
       color: '#ec4899',
-      onClick: () => navigate('/app/pole-tracker/analytics'),
+      onClick: () => router.push('/pole-tracker/analytics'),
     },
   ];
 
@@ -68,7 +68,7 @@ export function PoleTrackerDashboard() {
       subValue: 'Total Poles',
       icon: UtilityPole, 
       color: '#2563eb',
-      route: '/app/pole-tracker/list'
+      route: '/pole-tracker/list'
     },
     { 
       title: 'Installed Today', 
@@ -77,7 +77,7 @@ export function PoleTrackerDashboard() {
       subValue: 'Today',
       icon: CheckCircle, 
       color: '#059669',
-      route: '/app/pole-tracker/list?filter=today'
+      route: '/pole-tracker/list?filter=today'
     },
     { 
       title: 'Pending QC', 
@@ -86,7 +86,7 @@ export function PoleTrackerDashboard() {
       subValue: 'Pending',
       icon: AlertTriangle, 
       color: '#d97706',
-      route: '/app/pole-tracker/quality'
+      route: '/pole-tracker/quality'
     },
     { 
       title: 'Active Teams', 
@@ -95,7 +95,7 @@ export function PoleTrackerDashboard() {
       subValue: 'Teams',
       icon: Users, 
       color: '#7c3aed',
-      route: '/app/staff'
+      route: '/staff'
     },
   ];
 
@@ -108,13 +108,13 @@ export function PoleTrackerDashboard() {
           {
             label: 'Add New Pole',
             icon: Plus as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/pole-tracker/new'),
+            onClick: () => router.push('/pole-tracker/new'),
             variant: 'primary'
           },
           {
             label: 'Import Poles',
             icon: Upload as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/pole-tracker/import'),
+            onClick: () => router.push('/pole-tracker/import'),
             variant: 'secondary'
           }
         ]}
@@ -147,7 +147,7 @@ export function PoleTrackerDashboard() {
             icon={stat.icon}
             color={stat.color}
             route={stat.route}
-            onClick={() => stat.route && navigate(stat.route)}
+            onClick={() => stat.route && router.push(stat.route)}
           />
         ))}
       </div>

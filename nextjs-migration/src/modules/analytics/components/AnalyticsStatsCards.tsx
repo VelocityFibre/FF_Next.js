@@ -1,3 +1,5 @@
+'use client';
+
 import { 
   TrendingUp, TrendingDown, Home, Wifi, Activity, 
   Users, DollarSign, CheckCircle 

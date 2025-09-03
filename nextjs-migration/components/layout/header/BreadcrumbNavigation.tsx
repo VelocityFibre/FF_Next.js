@@ -67,7 +67,7 @@ export function BreadcrumbNavigation({ breadcrumbs, title, onMenuClick }: Breadc
                     </span>
                   ) : (
                     <Link
-                      to={getBreadcrumbPath(crumb)}
+                      href={getBreadcrumbPath(crumb)}
                       className="hover:text-[var(--ff-text-primary)] transition-colors"
                     >
                       {crumb}

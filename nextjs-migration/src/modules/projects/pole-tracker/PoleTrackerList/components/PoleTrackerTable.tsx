@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { MapPin, Camera, CheckCircle, AlertTriangle } from 'lucide-react';
 import type { NeonPole } from '../../services/poleTrackerNeonService';
 import { getStatusColor, getPhaseColor, getStatusDisplayText, formatPhaseText } from '../utils/poleDisplayUtils';
@@ -8,7 +8,7 @@ interface PoleTrackerTableProps {
 }
 
 export function PoleTrackerTable({ poles }: PoleTrackerTableProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <div className="ff-table-container">
@@ -84,7 +84,7 @@ export function PoleTrackerTable({ poles }: PoleTrackerTableProps) {
               </td>
               <td className="ff-table-td">
                 <button
-                  onClick={() => navigate(`/app/pole-tracker/${pole.id}`)}
+                  onClick={() => router.push(`/pole-tracker/${pole.id}`)}
                   className="ff-link"
                 >
                   View

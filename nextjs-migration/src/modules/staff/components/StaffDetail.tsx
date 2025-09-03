@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Edit, Mail, Phone, Calendar, Briefcase, Award } from 'lucide-react';
 import { useStaffMember, useDeleteStaff } from '@/hooks/useStaff';
 import { format } from 'date-fns';
@@ -6,8 +6,8 @@ import { safeToDate } from '@/utils/dateHelpers';
 import { log } from '@/lib/logger';
 
 export function StaffDetail() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const { id } = router.query as { id: string };
   const { data: staff, isLoading, error } = useStaffMember(id || '');
   const deleteMutation = useDeleteStaff();
 
@@ -16,7 +16,7 @@ export function StaffDetail() {
     
     try {
       await deleteMutation.mutateAsync(id!);
-      navigate('/app/staff');
+      router.push('/app/staff');
     } catch (error) {
       alert('Failed to delete staff member');
     }
@@ -54,7 +54,7 @@ export function StaffDetail() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <button
-          onClick={() => navigate('/app/staff')}
+          onClick={() => router.push('/app/staff')}
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
@@ -79,7 +79,7 @@ export function StaffDetail() {
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => navigate(`/app/staff/${id}/edit`)}
+                onClick={() => router.push(`/app/staff/${id}/edit`)}
                 className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 <Edit className="w-4 h-4 mr-1" />

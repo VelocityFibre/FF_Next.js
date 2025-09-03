@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Edit, Trash2, Eye, Mail, Phone } from 'lucide-react';
 import type { Client } from '@/types/client.types';
 import { getStatusColor, getPriorityColor, getCategoryIcon, formatCurrency } from '../utils/clientUtils';
@@ -9,7 +9,7 @@ interface ClientTableRowProps {
 }
 
 export function ClientTableRow({ client, onDelete }: ClientTableRowProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <tr className="hover:bg-gray-50">
@@ -92,14 +92,14 @@ export function ClientTableRow({ client, onDelete }: ClientTableRowProps) {
       <td className="px-4 py-4">
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate(`/app/clients/${client.id}`)}
+            onClick={() => router.push(`/app/clients/${client.id}`)}
             className="p-1 text-gray-400 hover:text-blue-600"
             title="View"
           >
             <Eye className="h-4 w-4" />
           </button>
           <button
-            onClick={() => navigate(`/app/clients/${client.id}/edit`)}
+            onClick={() => router.push(`/app/clients/${client.id}/edit`)}
             className="p-1 text-gray-400 hover:text-blue-600"
             title="Edit"
           >

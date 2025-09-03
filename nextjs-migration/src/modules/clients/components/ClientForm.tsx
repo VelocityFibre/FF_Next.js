@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Save, Building } from 'lucide-react';
 import { useClient, useCreateClient, useUpdateClient } from '@/hooks/useClients';
 import { 
@@ -23,8 +23,8 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { log } from '@/lib/logger';
 
 export function ClientForm() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const { id } = router.query as { id: string };
   const isEditing = !!id;
 
   const { data: client, isLoading } = useClient(id || '');
@@ -110,7 +110,7 @@ export function ClientForm() {
       } else {
         await createMutation.mutateAsync(formData);
       }
-      navigate('/app/clients');
+      router.push('/app/clients');
     } catch (error) {
       log.error('Failed to save client:', { data: error }, 'ClientForm');
     }
@@ -146,7 +146,7 @@ export function ClientForm() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <button
-          onClick={() => navigate('/app/clients')}
+          onClick={() => router.push('/app/clients')}
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
@@ -257,7 +257,7 @@ export function ClientForm() {
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => navigate('/app/clients')}
+              onClick={() => router.push('/app/clients')}
               className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Cancel
