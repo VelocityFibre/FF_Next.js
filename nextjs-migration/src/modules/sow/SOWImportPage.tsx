@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { SOWUploadWizard } from '@/components/sow/SOWUploadWizard';
 import { SOWProjectSelector } from './components/SOWProjectSelector';
@@ -8,25 +8,25 @@ import { log } from '@/lib/logger';
 import type { Project } from '@/types/project.types';
 
 export function SOWImportPage() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const projectId = searchParams.get('projectId') || '';
-  const projectName = searchParams.get('projectName') || 'Current Project';
+  const router = useRouter();
+  const { projectId = '', projectName = 'Current Project' } = router.query;
+  const projectIdStr = typeof projectId === 'string' ? projectId : '';
+  const projectNameStr = typeof projectName === 'string' ? projectName : 'Current Project';
   const [showWizard, setShowWizard] = useState(false);
   const [selectorError, setSelectorError] = useState<string | null>(null);
   const [urlValidationError, setUrlValidationError] = useState<string | null>(null);
 
   // Validate URL parameters
   useEffect(() => {
-    const rawProjectId = searchParams.get('projectId');
-    const rawProjectName = searchParams.get('projectName');
+    const rawProjectId = projectIdStr;
+    const rawProjectName = projectNameStr;
 
     if (rawProjectId) {
       // Validate projectId format (UUID pattern)
       if (!/^[a-f0-9-]{36}$/i.test(rawProjectId)) {
         log.error('Invalid projectId in URL', { projectId: rawProjectId }, 'SOWImportPage');
         setUrlValidationError('Invalid project ID in the URL. Redirecting...');
-        setTimeout(() => navigate('/app/sow/import'), 3000); // Redirect after 3 seconds
+        setTimeout(() => router.push('/sow/import'), 3000); // Redirect after 3 seconds
         return;
       }
     }
@@ -48,26 +48,26 @@ export function SOWImportPage() {
     }
 
     setUrlValidationError(null); // Clear any previous errors
-  }, [searchParams, navigate]);
+  }, [projectIdStr, projectNameStr, router]);
 
   // Delay showing the wizard to avoid immediate database calls
   useEffect(() => {
-    if (projectId && !urlValidationError) {
+    if (projectIdStr && !urlValidationError) {
       const timer = setTimeout(() => setShowWizard(true), 100);
       return () => clearTimeout(timer);
     }
-  }, [projectId, urlValidationError]);
+  }, [projectIdStr, urlValidationError]);
 
   const handleComplete = () => {
-    if (projectId) {
-      navigate(`/app/projects/${projectId}`);
+    if (projectIdStr) {
+      router.push(`/projects/${projectIdStr}`);
     } else {
-      navigate('/app/sow');
+      router.push('/sow');
     }
   };
 
   const handleBack = () => {
-    navigate(-1);
+    router.back();
   };
 
   const handleProjectSelect = (project: Project | null) => {
@@ -83,7 +83,7 @@ export function SOWImportPage() {
       .substring(0, 100); // Limit length
 
     // Navigate to the same page with the selected project
-    navigate(`/app/sow/import?projectId=${project.id}&projectName=${encodeURIComponent(sanitizedName)}`);
+    router.push(`/sow/import?projectId=${project.id}&projectName=${encodeURIComponent(sanitizedName)}`);
   };
 
   // Fallback component if SOWProjectSelector fails
@@ -91,7 +91,7 @@ export function SOWImportPage() {
     <div className="text-center p-4 border border-gray-200 rounded-lg">
       <p className="text-gray-600 mb-2">Unable to load project selector.</p>
       <button
-        onClick={() => navigate('/app/sow')}
+        onClick={() => router.push('/sow')}
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
       >
         Return to SOW List
@@ -99,7 +99,7 @@ export function SOWImportPage() {
     </div>
   );
 
-  if (!projectId) {
+  if (!projectIdStr) {
     return (
       <ErrorBoundary
         onError={(error, errorInfo) => {
@@ -110,7 +110,7 @@ export function SOWImportPage() {
           <div className="p-6">
             <div className="mb-6">
               <button
-                onClick={() => navigate('/app/sow')}
+                onClick={() => router.push('/sow')}
                 className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -190,10 +190,10 @@ export function SOWImportPage() {
           </div>
         </div>
 
-        {showWizard && projectId && !urlValidationError && (
+        {showWizard && projectIdStr && !urlValidationError && (
           <SOWUploadWizard
-            projectId={projectId}
-            projectName={projectName}
+            projectId={projectIdStr}
+            projectName={projectNameStr}
             onComplete={handleComplete}
           />
         )}
@@ -206,7 +206,7 @@ export function SOWImportPage() {
                   <h3 className="text-lg font-medium text-red-800 mb-2">URL Validation Error</h3>
                   <p className="text-red-600">{urlValidationError}</p>
                   <button
-                    onClick={() => navigate('/app/sow/import')}
+                    onClick={() => router.push('/sow/import')}
                     className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                   >
                     Go Back to Safe Page

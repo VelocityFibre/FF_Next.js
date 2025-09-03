@@ -1,87 +1,113 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from '@clerk/nextjs/server';
+import { neon } from '@neondatabase/serverless';
 
-/**
- * Projects API Route
- * GET /api/projects - Get all projects or filtered projects
- * POST /api/projects - Create a new project
- */
+const sql = neon(process.env.DATABASE_URL!);
+
+type ProjectData = {
+  success: boolean;
+  data: any;
+  message?: string;
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ProjectData>
 ) {
+  // Check authentication
+  const { userId } = getAuth(req);
+  if (!userId) {
+    return res.status(401).json({ success: false, data: null, message: 'Unauthorized' });
+  }
+
   try {
-    // Get authentication from Clerk
-    const { userId } = getAuth(req);
-    
-    if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:3001';
-
     switch (req.method) {
-      case 'GET': {
-        // Build query string from request parameters
-        const queryString = new URLSearchParams(req.query as any).toString();
-        const url = queryString 
-          ? `${backendUrl}/api/projects?${queryString}`
-          : `${backendUrl}/api/projects`;
-
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-User-Id': userId,
-          },
-        });
-
-        if (!response.ok) {
-          const error = await response.text();
-          return res.status(response.status).json({ 
-            success: false,
-            error: error || `Failed to fetch projects: ${response.status}` 
-          });
+      case 'GET':
+        // Get all projects or single project by ID
+        if (req.query.id) {
+          const project = await sql`
+            SELECT p.*, c.company_name as client_name 
+            FROM projects p
+            LEFT JOIN clients c ON p.client_id = c.id
+            WHERE p.id = ${req.query.id}
+          `;
+          res.status(200).json({ success: true, data: project[0] || null });
+        } else {
+          const projects = await sql`
+            SELECT p.*, c.company_name as client_name 
+            FROM projects p
+            LEFT JOIN clients c ON p.client_id = c.id
+            ORDER BY p.created_at DESC
+          `;
+          res.status(200).json({ success: true, data: projects });
         }
+        break;
 
-        const result = await response.json();
-        return res.status(200).json(result);
-      }
+      case 'POST':
+        // Create new project
+        const projectData = req.body;
+        const newProject = await sql`
+          INSERT INTO projects (
+            project_code, project_name, client_id, description, 
+            project_type, status, priority, start_date, end_date, 
+            budget, project_manager, location
+          )
+          VALUES (
+            ${projectData.project_code}, ${projectData.project_name}, 
+            ${projectData.client_id}, ${projectData.description},
+            ${projectData.project_type}, ${projectData.status || 'active'},
+            ${projectData.priority || 'medium'}, ${projectData.start_date},
+            ${projectData.end_date}, ${projectData.budget},
+            ${projectData.project_manager}, ${projectData.location}
+          )
+          RETURNING *
+        `;
+        res.status(201).json({ success: true, data: newProject[0] });
+        break;
 
-      case 'POST': {
-        const response = await fetch(`${backendUrl}/api/projects`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-User-Id': userId,
-          },
-          body: JSON.stringify({
-            ...req.body,
-            createdBy: userId,
-            updatedBy: userId,
-          }),
-        });
-
-        if (!response.ok) {
-          const error = await response.text();
-          return res.status(response.status).json({ 
-            success: false,
-            error: error || `Failed to create project: ${response.status}` 
-          });
+      case 'PUT':
+        // Update project
+        if (!req.query.id) {
+          return res.status(400).json({ success: false, data: null, message: 'Project ID required' });
         }
+        
+        const updateData = req.body;
+        const updatedProject = await sql`
+          UPDATE projects SET
+            project_name = COALESCE(${updateData.project_name}, project_name),
+            client_id = COALESCE(${updateData.client_id}, client_id),
+            description = COALESCE(${updateData.description}, description),
+            project_type = COALESCE(${updateData.project_type}, project_type),
+            status = COALESCE(${updateData.status}, status),
+            priority = COALESCE(${updateData.priority}, priority),
+            start_date = COALESCE(${updateData.start_date}, start_date),
+            end_date = COALESCE(${updateData.end_date}, end_date),
+            budget = COALESCE(${updateData.budget}, budget),
+            project_manager = COALESCE(${updateData.project_manager}, project_manager),
+            location = COALESCE(${updateData.location}, location),
+            updated_at = NOW()
+          WHERE id = ${req.query.id}
+          RETURNING *
+        `;
+        res.status(200).json({ success: true, data: updatedProject[0] });
+        break;
 
-        const result = await response.json();
-        return res.status(201).json(result);
-      }
+      case 'DELETE':
+        // Delete project
+        if (!req.query.id) {
+          return res.status(400).json({ success: false, data: null, message: 'Project ID required' });
+        }
+        
+        await sql`DELETE FROM projects WHERE id = ${req.query.id}`;
+        res.status(200).json({ success: true, data: null, message: 'Project deleted' });
+        break;
 
       default:
-        return res.status(405).json({ error: 'Method not allowed' });
+        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+        res.status(405).json({ success: false, data: null, message: `Method ${req.method} not allowed` });
     }
-  } catch (error) {
-    console.error('Projects API error:', error);
-    return res.status(500).json({ 
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error' 
-    });
+  } catch (error: any) {
+    console.error('Projects API Error:', error);
+    res.status(500).json({ success: false, data: null, message: 'Internal server error' });
   }
 }

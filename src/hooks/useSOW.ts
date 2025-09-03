@@ -114,15 +114,12 @@ export function useProjectSOW(projectId: string) {
   return useQuery({
     queryKey: ['sow', projectId],
     queryFn: async () => {
-      const sowCollection = collection(db, 'projects', projectId, 'sow');
-      const snapshot = await getDocs(sowCollection);
-      
-      const sowData: Record<string, any> = {};
-      snapshot.docs.forEach(doc => {
-        sowData[doc.id] = doc.data();
-      });
-      
-      return sowData;
+      const response = await fetch(`/api/sow/project?projectId=${projectId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch SOW data');
+      }
+      const result = await response.json();
+      return result.success ? result.data : {};
     },
     enabled: !!projectId
   });
@@ -132,12 +129,12 @@ export function useProjectPoles(projectId: string) {
   return useQuery({
     queryKey: ['poles', projectId],
     queryFn: async () => {
-      const polesCollection = collection(db, 'projects', projectId, 'poles');
-      const snapshot = await getDocs(polesCollection);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const response = await fetch(`/api/sow/poles?projectId=${projectId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch poles data');
+      }
+      const result = await response.json();
+      return result.success ? result.data : [];
     },
     enabled: !!projectId
   });
@@ -147,12 +144,12 @@ export function useProjectDrops(projectId: string) {
   return useQuery({
     queryKey: ['drops', projectId],
     queryFn: async () => {
-      const dropsCollection = collection(db, 'projects', projectId, 'drops');
-      const snapshot = await getDocs(dropsCollection);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const response = await fetch(`/api/sow/drops?projectId=${projectId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch drops data');
+      }
+      const result = await response.json();
+      return result.success ? result.data : [];
     },
     enabled: !!projectId
   });
@@ -162,12 +159,12 @@ export function useProjectFibre(projectId: string) {
   return useQuery({
     queryKey: ['fibre', projectId],
     queryFn: async () => {
-      const fibreCollection = collection(db, 'projects', projectId, 'fibre');
-      const snapshot = await getDocs(fibreCollection);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const response = await fetch(`/api/sow/fibre?projectId=${projectId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch fibre data');
+      }
+      const result = await response.json();
+      return result.success ? result.data : [];
     },
     enabled: !!projectId
   });

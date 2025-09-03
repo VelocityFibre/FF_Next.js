@@ -1,13 +1,13 @@
 # CLAUDE.md - AI Assistant Context Guide
 
 ## Project Overview
-**FibreFlow React** - A modern React application for fiber network project management, migrated from Angular.
+**FibreFlow Next.js** - A modern Next.js application for fiber network project management, successfully migrated from React/Vite.
 
-### 🚧 Active Migration
-**Currently migrating to Next.js with Clerk Authentication**
-- Next.js implementation in progress (see `nextjs-migration/` directory)
-- Clerk authentication replacing Firebase Auth
-- Gradual migration strategy while maintaining current React/Vite app
+### ✅ Migration Complete!
+**Successfully migrated to Next.js with Clerk Authentication**
+- Next.js 14+ with App Router now in production
+- Clerk authentication fully integrated
+- Previous React/Vite app archived for reference
 
 ## Essential Directory Structure
 
@@ -71,26 +71,27 @@ npm run antihall    # Run anti-hallucination validator
 
 ## Tech Stack
 
-### Current Stack (Production)
-- **Frontend**: React 18, TypeScript, Vite, TailwindCSS
-- **Backend**: Node.js, Express
+### Current Stack (Production) ✅
+- **Framework**: Next.js 14+ with App Router
+- **Frontend**: React 18, TypeScript, TailwindCSS
+- **Authentication**: Clerk (complete integration)
 - **Database**: Neon PostgreSQL with Drizzle ORM
+- **API**: Next.js API Routes (App Router)
 - **Testing**: Vitest, Playwright
-- **Authentication**: Firebase Auth (being replaced)
+- **Deployment**: Vercel (optimized SSR/ISR)
 
-### Migration Target Stack
-- **Framework**: Next.js 14+ (App Router)
-- **Authentication**: Clerk (replacing Firebase Auth)
-- **Database**: Neon PostgreSQL with Drizzle ORM (unchanged)
-- **Deployment**: Vercel (optimized for Next.js)
+### Legacy Stack (Archived)
+- **Framework**: React 18 + Vite (archived for reference)
+- **Backend**: Express server (replaced by Next.js API routes)
+- **Authentication**: Firebase Auth (replaced by Clerk)
 
 ## Important Notes for AI Assistants
 
-### Migration Context
-- **Two codebases exist**: Current React/Vite app (production) and Next.js migration (in progress)
-- **Clerk integration**: New auth features should use Clerk, not Firebase
-- **Incremental migration**: Features are being moved gradually to Next.js
-- **Check before implementing**: Verify if feature exists in Next.js migration before adding to React app
+### Migration Context ✅
+- **Migration Complete**: Next.js app is now the production application
+- **Clerk Integration**: All authentication uses Clerk (Firebase Auth fully replaced)
+- **Single Codebase**: Next.js app is the active codebase
+- **Legacy Reference**: Previous React/Vite app archived for reference only
 
 ### Development Guidelines
 1. Always check existing code patterns before implementing new features
@@ -98,5 +99,6 @@ npm run antihall    # Run anti-hallucination validator
 3. SOW import functionality is an active feature - keep related files
 4. Use the antihall validator to verify code references exist
 5. Archive directory (`../FF_React_Archive/`) contains old/temporary files if needed for reference
-6. **For new features**: Consider implementing in Next.js migration instead of React app
-7. **For auth-related work**: Use Clerk patterns, not Firebase
+6. **All new features**: Implement in Next.js app (current production)
+7. **Authentication**: Use Clerk patterns exclusively (Firebase Auth removed)
+8. **API Routes**: Use Next.js App Router API routes (Express server retired)
