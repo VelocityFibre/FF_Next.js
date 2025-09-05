@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Plus, Upload, Download } from 'lucide-react';
 
 interface ClientListHeaderProps {
@@ -8,7 +8,7 @@ interface ClientListHeaderProps {
 }
 
 export function ClientListHeader({ onImport, onExport, clientCount }: ClientListHeaderProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <div className="flex items-center justify-between">
@@ -33,7 +33,7 @@ export function ClientListHeader({ onImport, onExport, clientCount }: ClientList
           Export
         </button>
         <button
-          onClick={() => navigate('/app/clients/new')}
+          onClick={() => router.push('/app/clients/new')}
           className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
         >
           <Plus className="h-4 w-4 mr-2" />

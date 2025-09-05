@@ -1,12 +1,14 @@
+'use client';
+
 import { Calendar, FolderOpen, Users, CheckCircle, AlertTriangle, MapPin, TrendingUp } from 'lucide-react';
 import { ProjectOverviewCard } from './components/ProjectOverviewCard';
 import { RecentActivityFeed } from './components/RecentActivityFeed';
 import { QuickActions } from './components/QuickActions';
-import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
-import { useMainDashboardData } from '@/hooks/useDashboardData';
-import { getMainDashboardCards } from '@/config/dashboards/dashboardConfigs';
-import { useAuth } from '@/contexts/AuthContext';
-import { Permission } from '@/types/auth.types';
+import { StatsGrid } from '../../components/dashboard/EnhancedStatCard';
+import { useMainDashboardData } from '../../hooks/useDashboardData';
+import { getMainDashboardCards } from '../../config/dashboards/dashboardConfigs';
+import { useAuth } from '../../contexts/AuthContext';
+import { Permission } from '../../types/auth.types';
 
 // 🟢 WORKING: All data from real database sources - zero mock data
 

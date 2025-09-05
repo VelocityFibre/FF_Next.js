@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Eye, Edit, Trash2, MoreVertical } from 'lucide-react';
 import { useState } from 'react';
 
@@ -10,7 +10,7 @@ interface ProjectTableProps {
 }
 
 export function ProjectTable({ projects, isLoading, error, onDelete }: ProjectTableProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
 
   const formatDate = (dateString: string) => {
@@ -124,7 +124,7 @@ export function ProjectTable({ projects, isLoading, error, onDelete }: ProjectTa
               <tr 
                 key={project.id} 
                 className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => navigate(`/app/projects/${project.id}`)}
+                onClick={() => router.push(`/projects/${project.id}`)}
               >
                 <td className="px-4 py-4 whitespace-nowrap">
                   <div>
@@ -168,14 +168,14 @@ export function ProjectTable({ projects, isLoading, error, onDelete }: ProjectTa
                     {showActionMenu === project.id && (
                       <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
                         <button
-                          onClick={() => navigate(`/app/projects/${project.id}`)}
+                          onClick={() => router.push(`/projects/${project.id}`)}
                           className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center"
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </button>
                         <button
-                          onClick={() => navigate(`/app/projects/${project.id}/edit`)}
+                          onClick={() => router.push(`/projects/${project.id}/edit`)}
                           className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center"
                         >
                           <Edit className="h-4 w-4 mr-2" />

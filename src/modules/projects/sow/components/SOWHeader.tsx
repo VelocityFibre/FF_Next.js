@@ -1,16 +1,16 @@
 import { Upload, FileText } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 export function SOWHeader() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const projectId = searchParams.get('projectId');
+  const router = useRouter();
+  const { projectId } = router.query;
+  const projectIdStr = typeof projectId === 'string' ? projectId : '';
 
   const handleImportClick = () => {
-    const importUrl = projectId 
-      ? `/app/sow/import?projectId=${projectId}`
-      : '/app/sow/import';
-    navigate(importUrl);
+    const importUrl = projectIdStr 
+      ? `/sow/import?projectId=${projectIdStr}`
+      : '/sow/import';
+    router.push(importUrl);
   };
 
   return (

@@ -1,3 +1,5 @@
+'use client';
+
 import { BarChart3, RefreshCw } from 'lucide-react';
 import { DailyProgress } from '../types/analytics.types';
 

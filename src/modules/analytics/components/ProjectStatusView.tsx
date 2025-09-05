@@ -1,3 +1,5 @@
+'use client';
+
 import { Activity, TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
 import { ProjectMetrics } from '../types/analytics.types';
 

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Download, RefreshCw, Grid3X3 } from 'lucide-react';
 import { format } from 'date-fns';
 import { useTrackerData } from './hooks/useTrackerData';
@@ -8,7 +8,9 @@ import { TrackerFilters } from './components/TrackerFilters';
 import { TrackerTable } from './components/TrackerTable';
 
 export function UnifiedTrackerGrid() {
-  const { projectId } = useParams();
+  const router = useRouter();
+  const { projectId } = router.query;
+  const projectIdStr = typeof projectId === 'string' ? projectId : '';
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<'all' | 'pole' | 'drop' | 'fiber'>('all');
   const [selectedPhase, setSelectedPhase] = useState<string>('all');
@@ -17,7 +19,7 @@ export function UnifiedTrackerGrid() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
-  const { data: trackerData, isLoading, refetch } = useTrackerData(projectId);
+  const { data: trackerData, isLoading, refetch } = useTrackerData(projectIdStr);
 
   // Filter and sort data
   const filteredData = useMemo(() => {

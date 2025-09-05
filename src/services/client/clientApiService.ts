@@ -7,35 +7,53 @@ const API_BASE = '/api';
 
 interface DbClient {
   id?: string;
-  company_name: string;
-  contact_person?: string;
+  name: string;
   email?: string;
   phone?: string;
   address?: string;
   city?: string;
   state?: string;
-  client_type?: string;
+  postal_code?: string;
+  country?: string;
+  type?: string;
   status?: string;
-  payment_terms?: string;
-  contract_value?: number;
+  contact_person?: string;
+  contact_email?: string;
+  contact_phone?: string;
+  payment_terms?: number;
+  metadata?: any;
+  project_count?: number;
+  active_projects?: number;
+  total_revenue?: number;
   created_at?: string;
   updated_at?: string;
 }
 
 interface Client {
   id?: string;
+  name: string;
   companyName: string;
-  contactPerson?: string;
   email?: string;
   phone?: string;
   address?: string;
   city?: string;
   state?: string;
+  province?: string;
+  postalCode?: string;
+  country?: string;
+  type?: string;
   category?: string;
   status?: string;
-  paymentTerms?: string;
+  contactPerson?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  paymentTerms?: string | number;
   contractValue?: number;
   totalProjectValue?: number;
+  projectCount?: number;
+  activeProjects?: number;
+  totalRevenue?: number;
+  metadata?: any;
   created_at?: string;
   updated_at?: string;
 }
@@ -53,20 +71,23 @@ async function handleResponse<T>(response: Response): Promise<T> {
 function transformDbToClient(dbClient: DbClient): any {
   return {
     id: dbClient.id,
-    name: dbClient.company_name, // Map to 'name' for compatibility
-    companyName: dbClient.company_name,
-    contactPerson: dbClient.contact_person,
+    name: dbClient.name,
+    companyName: dbClient.name, // Alias for compatibility
     email: dbClient.email,
     phone: dbClient.phone,
     address: dbClient.address,
     city: dbClient.city || 'Johannesburg',
     province: dbClient.state || 'Gauteng',
     state: dbClient.state,
-    postalCode: '',
-    country: 'South Africa',
-    category: dbClient.client_type || 'SME',
+    postalCode: dbClient.postal_code || '',
+    country: dbClient.country || 'South Africa',
+    type: dbClient.type || 'COMPANY',
+    category: dbClient.type || 'SME',
     status: dbClient.status || 'ACTIVE',
-    paymentTerms: dbClient.payment_terms || 'NET_30',
+    contactPerson: dbClient.contact_person,
+    contactEmail: dbClient.contact_email,
+    contactPhone: dbClient.contact_phone,
+    paymentTerms: dbClient.payment_terms ? `NET_${dbClient.payment_terms}` : 'NET_30',
     creditLimit: 100000,
     creditRating: 'UNRATED',
     preferredContactMethod: 'EMAIL',
@@ -76,8 +97,12 @@ function transformDbToClient(dbClient: DbClient): any {
     industry: '',
     serviceTypes: [],
     tags: [],
-    contractValue: dbClient.contract_value,
-    totalProjectValue: dbClient.contract_value,
+    projectCount: dbClient.project_count || 0,
+    activeProjects: dbClient.active_projects || 0,
+    totalRevenue: dbClient.total_revenue || 0,
+    contractValue: dbClient.total_revenue || 0,
+    totalProjectValue: dbClient.total_revenue || 0,
+    metadata: dbClient.metadata || {},
     created_at: dbClient.created_at,
     updated_at: dbClient.updated_at
   };
@@ -86,23 +111,36 @@ function transformDbToClient(dbClient: DbClient): any {
 function transformClientToDb(client: Partial<Client>): Partial<DbClient> {
   return {
     id: client.id,
-    company_name: client.companyName,
-    contact_person: client.contactPerson,
+    name: client.name || client.companyName,
     email: client.email,
     phone: client.phone,
     address: client.address,
     city: client.city,
-    state: client.state,
-    client_type: client.category,
+    state: client.state || client.province,
+    postal_code: client.postalCode,
+    country: client.country,
+    type: client.type || client.category,
     status: client.status,
-    payment_terms: client.paymentTerms,
-    contract_value: client.contractValue
+    contact_person: client.contactPerson,
+    contact_email: client.contactEmail,
+    contact_phone: client.contactPhone,
+    payment_terms: typeof client.paymentTerms === 'string' 
+      ? parseInt(client.paymentTerms.replace(/\D/g, '')) || 30 
+      : client.paymentTerms,
+    metadata: client.metadata
   };
 }
 
 export const clientApiService = {
-  async getAll(): Promise<Client[]> {
-    const response = await fetch(`${API_BASE}/clients`);
+  async getAll(filter?: any): Promise<Client[]> {
+    const params = new URLSearchParams();
+    if (filter) {
+      if (filter.search || filter.searchTerm) params.append('search', filter.search || filter.searchTerm);
+      if (filter.status) params.append('status', filter.status);
+      if (filter.type) params.append('type', filter.type);
+    }
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+    const response = await fetch(`${API_BASE}/clients${queryString}`);
     const dbClients = await handleResponse<DbClient[]>(response);
     return dbClients.map(transformDbToClient);
   },
@@ -115,16 +153,7 @@ export const clientApiService = {
 
   async create(clientData: any): Promise<Client> {
     // Transform the form data to match the database schema
-    const dbData = {
-      company_name: clientData.name || clientData.companyName,
-      contact_person: clientData.contactPerson,
-      email: clientData.email,
-      phone: clientData.phone,
-      address: clientData.address?.street || clientData.address,
-      city: clientData.address?.city || clientData.city || 'Johannesburg',
-      state: clientData.address?.state || clientData.state || 'Gauteng',
-      status: clientData.status || 'active'
-    };
+    const dbData = transformClientToDb(clientData);
     
     const response = await fetch(`${API_BASE}/clients`, {
       method: 'POST',
@@ -137,16 +166,7 @@ export const clientApiService = {
 
   async update(id: string, updates: any): Promise<Client> {
     // Transform the form data to match the database schema
-    const dbUpdates = {
-      company_name: updates.name || updates.companyName,
-      contact_person: updates.contactPerson,
-      email: updates.email,
-      phone: updates.phone,
-      address: updates.address?.street || updates.address,
-      city: updates.address?.city || updates.city || 'Johannesburg',
-      state: updates.address?.state || updates.state || 'Gauteng',
-      status: updates.status || 'active'
-    };
+    const dbUpdates = transformClientToDb(updates);
     
     const response = await fetch(`${API_BASE}/clients?id=${id}`, {
       method: 'PUT',
@@ -176,6 +196,7 @@ export const clientApiService = {
     totalClients: number;
     activeClients: number;
     newThisMonth: number;
+    totalRevenue?: number;
   }> {
     const clients = await this.getAll();
     const now = new Date();
@@ -188,10 +209,13 @@ export const clientApiService = {
       return created.getMonth() === thisMonth && created.getFullYear() === thisYear;
     }).length;
 
+    const totalRevenue = clients.reduce((sum, c) => sum + (c.totalRevenue || 0), 0);
+
     return {
       totalClients: clients.length,
-      activeClients: clients.filter(c => c.status === 'active').length,
-      newThisMonth
+      activeClients: clients.filter(c => c.status === 'ACTIVE' || c.status === 'active').length,
+      newThisMonth,
+      totalRevenue
     };
   }
 };

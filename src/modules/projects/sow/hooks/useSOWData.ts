@@ -15,7 +15,7 @@ export function useSOWData() {
     try {
       setLoading(true);
       
-      // Fetch all projects first
+      // Fetch all projects first - using relative API path for production compatibility
       const projectsResponse = await fetch('/api/projects');
       const projectsResult = await projectsResponse.json();
       const projects = projectsResult.data || [];

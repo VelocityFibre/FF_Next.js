@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Analytics Dashboard Component - Refactored version
  * Main container using split components
@@ -5,11 +7,11 @@
 
 import React, { useState, lazy, useCallback } from 'react';
 import { Calendar, Filter, Download, RefreshCw } from 'lucide-react';
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
-import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
+import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
+import { StatsGrid } from '../../components/dashboard/EnhancedStatCard';
 import { useAnalyticsData } from './hooks/useAnalyticsData';
-import { useDashboardData } from '@/hooks/useDashboardData';
-import { getAnalyticsDashboardCards } from '@/config/dashboards/dashboardConfigs';
+import { useDashboardData } from '../../hooks/useDashboardData';
+import { getAnalyticsDashboardCards } from '../../config/dashboards/dashboardConfigs';
 import { TimeRange } from './types/analytics.types';
 
 // Lazy load heavy components

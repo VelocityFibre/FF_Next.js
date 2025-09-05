@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "neon": {
+      "command": "npx",
+      "args": ["@neondatabase/mcp-server-neon"],
+      "env": {
+        "NEON_DATABASE_URL": "${NEON_DATABASE_URL}"
+      }
+    }
+  }
+}

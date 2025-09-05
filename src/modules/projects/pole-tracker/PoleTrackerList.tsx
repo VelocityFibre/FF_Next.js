@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { Plus, Download } from 'lucide-react';
 import { DashboardHeader } from '../../../components/dashboard/DashboardHeader';
 import { usePoleTrackers } from './hooks/usePoleTracker';
@@ -11,7 +11,7 @@ import {
 } from './PoleTrackerList/index';
 
 export function PoleTrackerList() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Real data from Firebase
   const { data: poles = [], isLoading, error } = usePoleTrackers();
@@ -67,13 +67,13 @@ export function PoleTrackerList() {
           {
             label: 'Add Pole',
             icon: ({ className }: { className?: string }) => <Plus className={className} />,
-            onClick: () => navigate('/app/pole-tracker/new'),
+            onClick: () => router.push('/pole-tracker/new'),
             variant: 'primary'
           },
           {
             label: 'Import',
             icon: ({ className }: { className?: string }) => <Download className={className} />,
-            onClick: () => navigate('/app/pole-tracker/import'),
+            onClick: () => router.push('/pole-tracker/import'),
             variant: 'secondary'
           }
         ]}

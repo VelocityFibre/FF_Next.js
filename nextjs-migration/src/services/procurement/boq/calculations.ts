@@ -1,8 +1,0 @@
-/**
- * @deprecated This file has been modularized for better maintainability.
- * Import from './calculations/' directory instead.
- * This file maintained for backward compatibility.
- */
-
-// Re-export from modular structure to avoid circular imports
-export * from './calculations/index';

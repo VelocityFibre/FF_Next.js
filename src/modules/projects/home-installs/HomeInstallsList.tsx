@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { HomeInstall } from './types/home-install.types';
 import { HomeInstallsHeader } from './components/HomeInstallsHeader';
 import { HomeInstallsTable } from './components/HomeInstallsTable';
@@ -17,7 +17,7 @@ import {
 } from './utils/homeInstallsHelpers';
 
 export function HomeInstallsList() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [installs, setInstalls] = useState<HomeInstall[]>([]);
   const [filteredInstalls, setFilteredInstalls] = useState<HomeInstall[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -62,15 +62,15 @@ export function HomeInstallsList() {
   };
 
   const handleAddNew = () => {
-    navigate('/app/home-installs/new');
+    router.push('/home-installs/new');
   };
 
   const handleView = (id: string) => {
-    navigate(`/app/home-installs/${id}`);
+    router.push(`/home-installs/${id}`);
   };
 
   const handleEdit = (id: string) => {
-    navigate(`/app/home-installs/${id}/edit`);
+    router.push(`/home-installs/${id}/edit`);
   };
 
   const handleExport = () => {

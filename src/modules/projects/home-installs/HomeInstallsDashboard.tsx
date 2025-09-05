@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { log } from '@/lib/logger';
 import { 
   Home, 
@@ -26,7 +26,7 @@ interface InstallStats {
 }
 
 export function HomeInstallsDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [stats, setStats] = useState<InstallStats>({
     totalScheduled: 0,
     completedToday: 0,
@@ -96,63 +96,63 @@ export function HomeInstallsDashboard() {
       description: 'Schedule new home installations',
       icon: Calendar,
       color: 'bg-blue-500',
-      path: '/app/home-installs/schedule'
+      path: '/home-installs/schedule'
     },
     {
       title: 'Installation List',
       description: 'View and manage all installations',
       icon: Home,
       color: 'bg-green-500',
-      path: '/app/home-installs/list'
+      path: '/home-installs/list'
     },
     {
       title: 'Team Management',
       description: 'Assign teams to installations',
       icon: Users,
       color: 'bg-purple-500',
-      path: '/app/home-installs/teams'
+      path: '/home-installs/teams'
     },
     {
       title: 'Installation Map',
       description: 'View installations on map',
       icon: MapPin,
       color: 'bg-red-500',
-      path: '/app/home-installs/map'
+      path: '/home-installs/map'
     },
     {
       title: 'Equipment Tracking',
       description: 'Track ONT and router installations',
       icon: Package,
       color: 'bg-indigo-500',
-      path: '/app/home-installs/equipment'
+      path: '/home-installs/equipment'
     },
     {
       title: 'Quality Checks',
       description: 'QC forms and validation',
       icon: CheckCircle,
       color: 'bg-teal-500',
-      path: '/app/home-installs/qc'
+      path: '/home-installs/qc'
     },
     {
       title: 'Photo Evidence',
       description: 'Installation photo management',
       icon: Camera,
       color: 'bg-orange-500',
-      path: '/app/home-installs/photos'
+      path: '/home-installs/photos'
     },
     {
       title: 'Connection Tests',
       description: 'Speed and connectivity tests',
       icon: Wifi,
       color: 'bg-cyan-500',
-      path: '/app/home-installs/tests'
+      path: '/home-installs/tests'
     },
     {
       title: 'Reports',
       description: 'Installation reports and analytics',
       icon: FileText,
       color: 'bg-gray-600',
-      path: '/app/home-installs/reports'
+      path: '/home-installs/reports'
     }
   ];
 
@@ -214,7 +214,7 @@ export function HomeInstallsDashboard() {
         {navigationCards.map((card, index) => (
           <button
             key={index}
-            onClick={() => navigate(card.path)}
+            onClick={() => router.push(card.path)}
             className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow text-left"
           >
             <div className="flex items-start space-x-4">

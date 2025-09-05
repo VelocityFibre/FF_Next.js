@@ -1,16 +1,16 @@
 import { ProjectForm } from './components/ProjectForm';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 export function ProjectCreatePage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   
   const handleSubmit = () => {
     // TODO: Implement project creation
-    navigate('/app/projects');
+    router.push('/projects');
   };
   
   const handleCancel = () => {
-    navigate('/app/projects');
+    router.push('/projects');
   };
   
   return (

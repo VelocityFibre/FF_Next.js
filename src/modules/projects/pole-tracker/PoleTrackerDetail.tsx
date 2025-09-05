@@ -5,7 +5,7 @@
  * New code should import from './components' directly
  */
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ArrowLeft, Edit } from 'lucide-react';
 import { DashboardHeader } from '../../../components/dashboard/DashboardHeader';
 import { 
@@ -19,8 +19,8 @@ import {
 import { usePoleDetail } from './hooks/usePoleDetail';
 
 export function PoleTrackerDetail() {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const router = useRouter();
+  const { id } = router.query;
   const { pole, tabs, activeTab, handleTabChange } = usePoleDetail(id);
 
   return (
@@ -32,13 +32,13 @@ export function PoleTrackerDetail() {
           {
             label: 'Back to List',
             icon: ArrowLeft as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/pole-tracker'),
+            onClick: () => router.push('/pole-tracker'),
             variant: 'secondary'
           },
           {
             label: 'Edit Pole',
             icon: Edit as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate(`/app/pole-tracker/${id}/edit`),
+            onClick: () => router.push(`/pole-tracker/${id}/edit`),
             variant: 'primary'
           }
         ]}

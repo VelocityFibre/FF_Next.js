@@ -1,8 +1,8 @@
 import { FileSpreadsheet, Upload, Download, Search, CheckCircle, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 export function SOWDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const cards = [
     {
@@ -10,42 +10,42 @@ export function SOWDashboard() {
       description: 'Import SOW data from Excel',
       icon: Upload,
       color: 'bg-blue-500',
-      onClick: () => navigate('/app/sow/import'),
+      onClick: () => router.push('/sow/import'),
     },
     {
       title: 'View All SOWs',
       description: 'Browse all SOW documents',
       icon: FileSpreadsheet,
       color: 'bg-green-500',
-      onClick: () => navigate('/app/sow/list'),
+      onClick: () => router.push('/sow/list'),
     },
     {
       title: 'Export Data',
       description: 'Export SOW data to Excel',
       icon: Download,
       color: 'bg-purple-500',
-      onClick: () => navigate('/app/sow/export'),
+      onClick: () => router.push('/sow/export'),
     },
     {
       title: 'Search & Filter',
       description: 'Find specific SOW items',
       icon: Search,
       color: 'bg-orange-500',
-      onClick: () => navigate('/app/sow/search'),
+      onClick: () => router.push('/sow/search'),
     },
     {
       title: 'Approvals',
       description: 'SOWs pending approval',
       icon: CheckCircle,
       color: 'bg-indigo-500',
-      onClick: () => navigate('/app/sow/approvals'),
+      onClick: () => router.push('/sow/approvals'),
     },
     {
       title: 'Validation',
       description: 'Check SOW data integrity',
       icon: AlertCircle,
       color: 'bg-red-500',
-      onClick: () => navigate('/app/sow/validation'),
+      onClick: () => router.push('/sow/validation'),
     },
   ];
 

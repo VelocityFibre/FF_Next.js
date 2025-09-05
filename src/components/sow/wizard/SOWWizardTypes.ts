@@ -1,46 +1,46 @@
-/**
- * SOW Upload Wizard Types and Interfaces
- */
-
 export interface SOWUploadStep {
-  id: 'poles' | 'drops' | 'fibre';
+  id: 'poles' | 'fibers' | 'drops' | 'column-mapping';
   title: string;
   description: string;
-  completed: boolean;
   file?: File;
   data?: any[];
+  completed: boolean;
+  required?: boolean;
 }
 
 export interface SOWUploadWizardProps {
   projectId: string;
   projectName: string;
   onComplete: () => void;
-  onCancel: () => void;
-}
-
-export interface ValidationResult {
-  isValid: boolean;
-  error?: string;
-  processedData?: any[];
 }
 
 export const INITIAL_STEPS: SOWUploadStep[] = [
   {
+    id: 'column-mapping',
+    title: 'Column Mapping',
+    description: 'Standardize column names for database import',
+    completed: false,
+    required: true
+  },
+  {
     id: 'poles',
-    title: 'Upload Poles Data',
-    description: 'Upload Excel file containing pole information (coordinates, pole numbers, etc.)',
-    completed: false
+    title: 'Upload Poles',
+    description: 'Upload pole location and specification data',
+    completed: false,
+    required: true
+  },
+  {
+    id: 'fibers',
+    title: 'Upload Fibers',
+    description: 'Upload fiber optic cable data',
+    completed: false,
+    required: false
   },
   {
     id: 'drops',
-    title: 'Upload Drops Data',
-    description: 'Upload Excel file containing drop information (drop numbers, addresses, pole assignments)',
-    completed: false
-  },
-  {
-    id: 'fibre',
-    title: 'Upload Fibre Data',
-    description: 'Upload Excel file containing fibre information (cable lengths, trenching/stringing distances)',
-    completed: false
+    title: 'Upload Drops',
+    description: 'Upload drop connection data',
+    completed: false,
+    required: false
   }
 ];

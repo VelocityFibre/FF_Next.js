@@ -1,8 +1,8 @@
 import { CheckCircle, Clock, AlertCircle, Calendar, Users, Filter } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 export function ActionItemsDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const cards = [
     {
@@ -11,7 +11,7 @@ export function ActionItemsDashboard() {
       icon: Clock,
       color: 'bg-yellow-500',
       count: 12,
-      onClick: () => navigate('/app/action-items/pending'),
+      onClick: () => router.push('/action-items/pending'),
     },
     {
       title: 'Completed Actions',
@@ -19,7 +19,7 @@ export function ActionItemsDashboard() {
       icon: CheckCircle,
       color: 'bg-green-500',
       count: 45,
-      onClick: () => navigate('/app/action-items/completed'),
+      onClick: () => router.push('/action-items/completed'),
     },
     {
       title: 'Overdue Actions',
@@ -27,28 +27,28 @@ export function ActionItemsDashboard() {
       icon: AlertCircle,
       color: 'bg-red-500',
       count: 3,
-      onClick: () => navigate('/app/action-items/overdue'),
+      onClick: () => router.push('/action-items/overdue'),
     },
     {
       title: 'By Meeting',
       description: 'Actions grouped by meetings',
       icon: Calendar,
       color: 'bg-blue-500',
-      onClick: () => navigate('/app/action-items/by-meeting'),
+      onClick: () => router.push('/action-items/by-meeting'),
     },
     {
       title: 'By Assignee',
       description: 'Actions grouped by person',
       icon: Users,
       color: 'bg-purple-500',
-      onClick: () => navigate('/app/action-items/by-assignee'),
+      onClick: () => router.push('/action-items/by-assignee'),
     },
     {
       title: 'Filter & Search',
       description: 'Advanced filtering options',
       icon: Filter,
       color: 'bg-indigo-500',
-      onClick: () => navigate('/app/action-items/search'),
+      onClick: () => router.push('/action-items/search'),
     },
   ];
 

@@ -1,13 +1,15 @@
+'use client';
+
 import { FileText, Download, Filter, PieChart, BarChart3, TrendingUp, Clock, Plus, RefreshCw } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
-import { useReportsDashboardData } from '@/hooks/useDashboardData';
-import { getReportsDashboardCards } from '@/config/dashboards/dashboardConfigs';
+import { StatsGrid } from '../../components/dashboard/EnhancedStatCard';
+import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
+import { useReportsDashboardData } from '../../hooks/useDashboardData';
+import { getReportsDashboardCards } from '../../config/dashboards/dashboardConfigs';
 
 export function ReportsDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('all');
 
   const { 
@@ -45,7 +47,7 @@ export function ReportsDashboard() {
       icon: FileText,
       color: 'bg-blue-500',
       count: 12,
-      onClick: () => navigate('/app/reports/projects'),
+      onClick: () => router.push('/reports/projects'),
     },
     {
       title: 'Financial Reports',
@@ -53,7 +55,7 @@ export function ReportsDashboard() {
       icon: BarChart3,
       color: 'bg-green-500',
       count: 8,
-      onClick: () => navigate('/app/reports/financial'),
+      onClick: () => router.push('/reports/financial'),
     },
     {
       title: 'Performance Reports',
@@ -61,7 +63,7 @@ export function ReportsDashboard() {
       icon: TrendingUp,
       color: 'bg-purple-500',
       count: 15,
-      onClick: () => navigate('/app/reports/performance'),
+      onClick: () => router.push('/reports/performance'),
     },
     {
       title: 'Resource Reports',
@@ -69,14 +71,14 @@ export function ReportsDashboard() {
       icon: PieChart,
       color: 'bg-orange-500',
       count: 6,
-      onClick: () => navigate('/app/reports/resources'),
+      onClick: () => router.push('/reports/resources'),
     },
     {
       title: 'Custom Reports',
       description: 'Create custom report templates',
       icon: Filter,
       color: 'bg-indigo-500',
-      onClick: () => navigate('/app/reports/custom'),
+      onClick: () => router.push('/reports/custom'),
     },
     {
       title: 'Scheduled Reports',
@@ -84,7 +86,7 @@ export function ReportsDashboard() {
       icon: Clock,
       color: 'bg-pink-500',
       count: 4,
-      onClick: () => navigate('/app/reports/scheduled'),
+      onClick: () => router.push('/reports/scheduled'),
     },
   ];
 
@@ -103,13 +105,13 @@ export function ReportsDashboard() {
           {
             label: 'Create Report',
             icon: Plus as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/reports/create'),
+            onClick: () => router.push('/reports/create'),
             variant: 'primary'
           },
           {
             label: 'Export All',
             icon: Download as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/reports/export'),
+            onClick: () => router.push('/reports/export'),
             variant: 'secondary'
           },
           {

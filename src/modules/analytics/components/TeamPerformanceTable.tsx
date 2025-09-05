@@ -1,3 +1,5 @@
+'use client';
+
 import { Users, UserCheck, CheckCircle } from 'lucide-react';
 import { TeamPerformance } from '../types/analytics.types';
 

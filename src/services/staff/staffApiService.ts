@@ -8,15 +8,28 @@ const API_BASE = '/api';
 interface DbStaff {
   id?: string;
   employee_id?: string;
-  first_name: string;
-  last_name: string;
+  name: string;
   email?: string;
   phone?: string;
+  alternate_phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
   department?: string;
   position?: string;
-  hire_date?: string;
-  salary?: number;
+  type?: string;
   status?: string;
+  salary?: number;
+  join_date?: string;
+  end_date?: string;
+  emergency_contact?: any;
+  skills?: string[];
+  certifications?: string[];
+  notes?: string;
+  reports_to?: string;
+  project_count?: number;
+  manager_name?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -27,13 +40,29 @@ interface Staff {
   name: string;
   email?: string;
   phone?: string;
+  alternatePhone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
   department?: string;
   position?: string;
-  hire_date?: string;
-  salary?: number;
+  type?: string;
   status?: string;
-  created_at?: string;
-  updated_at?: string;
+  salary?: number;
+  joinDate?: string;
+  endDate?: string;
+  emergencyContact?: any;
+  skills?: string[];
+  certifications?: string[];
+  notes?: string;
+  reportsTo?: string;
+  currentProjectCount?: number;
+  maxProjectCount?: number;
+  managerName?: string;
+  startDate?: string;  // Alias for joinDate for compatibility
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
@@ -48,25 +77,75 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 function transformDbToStaff(dbStaff: DbStaff): Staff {
   return {
-    ...dbStaff,
+    id: dbStaff.id,
     employeeId: dbStaff.employee_id,
-    name: `${dbStaff.first_name} ${dbStaff.last_name}`.trim()
+    name: dbStaff.name,
+    email: dbStaff.email,
+    phone: dbStaff.phone,
+    alternatePhone: dbStaff.alternate_phone,
+    address: dbStaff.address,
+    city: dbStaff.city,
+    state: dbStaff.state,
+    postalCode: dbStaff.postal_code,
+    department: dbStaff.department,
+    position: dbStaff.position,
+    type: dbStaff.type,
+    status: dbStaff.status,
+    salary: dbStaff.salary,
+    joinDate: dbStaff.join_date,
+    startDate: dbStaff.join_date, // Alias for compatibility
+    endDate: dbStaff.end_date,
+    emergencyContact: dbStaff.emergency_contact,
+    skills: dbStaff.skills,
+    certifications: dbStaff.certifications,
+    notes: dbStaff.notes,
+    reportsTo: dbStaff.reports_to,
+    currentProjectCount: dbStaff.project_count || 0,
+    maxProjectCount: 5, // Default max
+    managerName: dbStaff.manager_name,
+    createdAt: dbStaff.created_at,
+    updatedAt: dbStaff.updated_at
   };
 }
 
 function transformStaffToDb(staff: Partial<Staff>): Partial<DbStaff> {
-  const names = staff.name?.split(' ') || [];
   return {
-    ...staff,
+    id: staff.id,
     employee_id: staff.employeeId,
-    first_name: names[0] || '',
-    last_name: names.slice(1).join(' ') || ''
+    name: staff.name,
+    email: staff.email,
+    phone: staff.phone,
+    alternate_phone: staff.alternatePhone,
+    address: staff.address,
+    city: staff.city,
+    state: staff.state,
+    postal_code: staff.postalCode,
+    department: staff.department,
+    position: staff.position,
+    type: staff.type,
+    status: staff.status,
+    salary: staff.salary,
+    join_date: staff.joinDate || staff.startDate,
+    end_date: staff.endDate,
+    emergency_contact: staff.emergencyContact,
+    skills: staff.skills,
+    certifications: staff.certifications,
+    notes: staff.notes,
+    reports_to: staff.reportsTo
   };
 }
 
 export const staffApiService = {
-  async getAll(): Promise<Staff[]> {
-    const response = await fetch(`${API_BASE}/staff`);
+  async getAll(filter?: any): Promise<Staff[]> {
+    const params = new URLSearchParams();
+    if (filter) {
+      if (filter.search || filter.searchTerm) params.append('search', filter.search || filter.searchTerm);
+      if (filter.department) params.append('department', filter.department);
+      if (filter.status) params.append('status', filter.status);
+      if (filter.position) params.append('position', filter.position);
+    }
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+    const response = await fetch(`${API_BASE}/staff${queryString}`);
     const dbStaff = await handleResponse<DbStaff[]>(response);
     return dbStaff.map(transformDbToStaff);
   },

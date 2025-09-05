@@ -1,3 +1,5 @@
+'use client';
+
 import { TrendingUp, AlertCircle, Activity } from 'lucide-react';
 
 export function KeyInsights() {

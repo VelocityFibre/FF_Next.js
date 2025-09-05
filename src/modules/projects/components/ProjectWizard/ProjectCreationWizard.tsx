@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { CheckCircle, FileSpreadsheet, ArrowRight, Folder } from 'lucide-react';
 import { useActiveClients } from '@/hooks/useClients';
@@ -16,7 +17,7 @@ import { ProjectPriority } from '../../types/project.types';
 import { log } from '@/lib/logger';
 
 export function ProjectCreationWizard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [createdProjectId, setCreatedProjectId] = useState<string>();
@@ -132,7 +133,7 @@ export function ProjectCreationWizard() {
   };
 
   const handleFinish = () => {
-    navigate('/app/projects');
+    router.push('/projects');
   };
 
   const selectedClient = clients?.find((c: any) => c.id === form.watch('clientId'));
@@ -189,7 +190,7 @@ export function ProjectCreationWizard() {
           
           <div className="space-y-4">
             <Link
-              to={`/app/sow-management?projectId=${createdProjectId}`}
+              href={`/sow-management?projectId=${createdProjectId}`}
               className="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <FileSpreadsheet className="h-5 w-5 mr-2" />
@@ -197,7 +198,7 @@ export function ProjectCreationWizard() {
             </Link>
             
             <Link
-              to={`/app/projects/${createdProjectId}`}
+              href={`/projects/${createdProjectId}`}
               className="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <Folder className="h-5 w-5 mr-2" />
@@ -205,7 +206,7 @@ export function ProjectCreationWizard() {
             </Link>
             
             <button
-              onClick={() => navigate('/app/projects')}
+              onClick={() => router.push('/projects')}
               className="inline-flex items-center justify-center w-full px-6 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               Go to Projects List

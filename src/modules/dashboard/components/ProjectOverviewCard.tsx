@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { FolderOpen, Calendar, MapPin, Users, Clock, AlertTriangle } from 'lucide-react';
 import { cn } from '@/utils/cn';

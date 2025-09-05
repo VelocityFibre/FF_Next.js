@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { FileSpreadsheet, Upload } from 'lucide-react';
 import { SOWListTable } from './components/SOWListTable';
 import { SOWFilters } from './components/SOWFilters';
@@ -9,7 +9,7 @@ import { useSOWFilters } from './hooks/useSOWFilters';
 import { SOWListItem } from './types/sow.types';
 
 export function SOWListPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [, setSelectedDocument] = useState<SOWListItem | null>(null);
   
   const { sowDocuments, loading, deleteDocument, downloadDocument } = useSOWDocuments();
@@ -60,7 +60,7 @@ export function SOWListPage() {
           </div>
         </div>
         <button
-          onClick={() => navigate('/app/projects/sow/upload')}
+          onClick={() => router.push('/projects/sow/upload')}
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           <Upload className="h-5 w-5 mr-2" />
