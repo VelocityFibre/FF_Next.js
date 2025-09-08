@@ -4,7 +4,7 @@
  */
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/config/firebase';
+import { auth } from '@/src/config/firebase';
 import { User } from '@/types/auth.types';
 import { getUserProfile } from '../userService';
 import { AuthUser, mapFirebaseUser } from '../authHelpers';

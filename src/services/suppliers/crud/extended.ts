@@ -10,7 +10,7 @@ import {
   where,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { SupplierStatus } from '@/types/supplier/base.types';
 import { SupplierBaseCrud } from './base';
 import { SupplierSoftDeleteData } from './types';

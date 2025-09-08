@@ -1,12 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { sql } from 'drizzle-orm';
 
 // Initialize Neon client
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -50,40 +46,40 @@ export default async function handler(
       financialSummary
     ] = await Promise.all([
       // Project summary
-      db.execute(sql`
+      sql`
         SELECT 
           COUNT(*) as total_projects,
           COUNT(CASE WHEN created_at >= ${startDate} THEN 1 END) as new_projects,
           COUNT(CASE WHEN status = 'active' OR status = 'in_progress' THEN 1 END) as active_projects,
           COUNT(CASE WHEN status = 'completed' AND updated_at >= ${startDate} THEN 1 END) as recently_completed
         FROM projects
-      `),
+      `,
       
       // Staff summary
-      db.execute(sql`
+      sql`
         SELECT 
           COUNT(*) as total_staff,
           COUNT(CASE WHEN created_at >= ${startDate} THEN 1 END) as new_hires,
           COUNT(CASE WHEN status = 'active' THEN 1 END) as active_staff
         FROM staff
-      `),
+      `,
       
       // SOW summary for the period
-      db.execute(sql`
+      sql`
         SELECT 
           (SELECT COUNT(*) FROM sow_poles WHERE created_at >= ${startDate}) as poles_this_period,
           (SELECT COUNT(*) FROM sow_drops WHERE created_at >= ${startDate}) as drops_this_period,
           (SELECT COALESCE(SUM(length), 0) FROM sow_fibre WHERE created_at >= ${startDate}) as fiber_this_period
-      `),
+      `,
       
       // Financial summary
-      db.execute(sql`
+      sql`
         SELECT 
           COALESCE(SUM(budget), 0) as total_budget,
           COALESCE(AVG(budget), 0) as average_budget
         FROM projects
         WHERE created_at >= ${startDate}
-      `)
+      `
     ]);
 
     const projectData: any = projectSummary[0] || {};

@@ -15,117 +15,103 @@ export function useSOWData() {
     try {
       setLoading(true);
       
-      // Fetch all projects first - using relative API path for production compatibility
-      const projectsResponse = await fetch('/api/projects');
-      const projectsResult = await projectsResponse.json();
-      const projects = projectsResult.data || [];
+      // Use the combined SOW list API that fetches all types at once
+      const sowResponse = await fetch('/api/sow/list?type=all&pageSize=1000');
+      const sowResult = await sowResponse.json();
       
-      // For each project, fetch SOW data
-      const sowPromises = projects.map(async (project: any) => {
-        try {
-          // Fetch poles, drops, and fibre data for each project
-          const [polesRes, dropsRes, fibreRes, statusRes] = await Promise.all([
-            fetch(`/api/sow/poles?projectId=${project.id}`),
-            fetch(`/api/sow/drops?projectId=${project.id}`),
-            fetch(`/api/sow/fibre?projectId=${project.id}`),
-            fetch(`/api/sow/import-status/${project.id}`)
-          ]);
-          
-          const [polesData, dropsData, fibreData, statusData] = await Promise.all([
-            polesRes.json(),
-            dropsRes.json(),
-            fibreRes.json(),
-            statusRes.json()
-          ]);
-          
-          // Calculate totals and completion
-          const totalPoles = polesData.data?.length || 0;
-          const totalDrops = dropsData.data?.length || 0;
-          const totalFibre = fibreData.data?.length || 0;
-          
-          // Calculate houses vs spares
-          // LAW.ONT.DRxxxxxx = actual house drops (connected homes)
-          // "Spare" in address = spare drops (not yet connected)
-          const houses = dropsData.data?.filter((d: any) => 
-            d.address && d.address.startsWith('LAW.ONT.DR')
-          ).length || 0;
-          const spares = dropsData.data?.filter((d: any) => 
-            d.address && (d.address === 'Spare' || d.address.toLowerCase().includes('spare'))
-          ).length || 0;
-          
-          // Calculate total fibre distance
-          const totalFibreDistance = fibreData.data?.reduce((sum: number, segment: any) => 
-            sum + (segment.distance || 0), 0) || 0;
-          
-          // Determine SOW status based on import status
-          const importStatuses = statusData.data || [];
-          const allCompleted = importStatuses.length === 3 && 
-            importStatuses.every((s: any) => s.status === 'completed');
-          const hasData = totalPoles > 0 || totalDrops > 0 || totalFibre > 0;
-          
-          if (!hasData) return null;
-          
-          // Create SOW object from actual data
-          const sow: SOW = {
-            id: project.id,
-            sowNumber: `SOW-${project.project_code || project.id.substring(0, 8)}`,
-            projectName: project.project_name || project.name || 'Unnamed Project',
-            clientName: project.client_name || 'Unknown Client',
-            status: allCompleted ? 'active' : 'draft',
-            version: '1.0',
-            value: project.budget || 0,
-            currency: project.currency || 'USD',
-            startDate: project.start_date || new Date().toISOString(),
-            endDate: project.end_date || new Date().toISOString(),
-            scope: [
-              `${totalPoles} poles installed`,
-              `${houses} houses connected`,
-              `${spares} spare drops available`,
-              `${totalFibre} fibre segments (${(totalFibreDistance / 1000).toFixed(2)}km total)`
-            ],
-            deliverables: [
-              'Network infrastructure data',
-              'Poles and drops mapping',
-              'Fibre route documentation'
-            ],
-            milestones: importStatuses.map((status: any, index: number) => ({
-              id: `m${index + 1}`,
-              name: `Import ${status.step_type}`,
-              description: `Import ${status.step_type} data`,
-              dueDate: status.completed_at || new Date().toISOString(),
-              value: 0,
-              status: status.status === 'completed' ? 'completed' : 
-                     status.status === 'in_progress' ? 'in_progress' : 'pending',
-              deliverables: [`${status.records_imported || 0} ${status.step_type} records`]
-            })),
-            approvals: [],
-            documents: [],
-            createdDate: project.created_at || new Date().toISOString(),
-            lastModified: project.updated_at || new Date().toISOString(),
-            createdBy: 'System Import',
-            
-            // Add custom fields for actual data
-            importedData: {
-              poles: totalPoles,
-              drops: totalDrops,
-              houses: houses,
-              spares: spares,
-              fibre: totalFibre,
-              fibreDistance: totalFibreDistance
-            }
-          };
-          
-          return sow;
-        } catch (err) {
-          console.error(`Error fetching SOW data for project ${project.id}:`, err);
-          return null;
+      if (!sowResult.success) {
+        throw new Error(sowResult.error || 'Failed to fetch SOW data');
+      }
+      
+      const sowData = sowResult.data || [];
+      
+      // Group data by project
+      const projectMap = new Map();
+      
+      sowData.forEach((item: any) => {
+        const projectId = item.project_id;
+        if (!projectMap.has(projectId)) {
+          projectMap.set(projectId, {
+            project_id: projectId,
+            project_name: item.project_name || 'Unknown Project',
+            project_code: item.project_code || '',
+            poles: [],
+            drops: [],
+            fibre: []
+          });
+        }
+        
+        const project = projectMap.get(projectId);
+        if (item.type === 'pole') {
+          project.poles.push(item);
+        } else if (item.type === 'drop') {
+          project.drops.push(item);
+        } else if (item.type === 'fibre') {
+          project.fibre.push(item);
         }
       });
       
-      const sowResults = await Promise.all(sowPromises);
-      const validSOWs = sowResults.filter(sow => sow !== null) as SOW[];
+      // Convert to SOW objects
+      const sows = Array.from(projectMap.values()).map(projectData => {
+        const totalPoles = projectData.poles.length;
+        const totalDrops = projectData.drops.length;
+        const totalFibre = projectData.fibre.length;
+        
+        // Calculate houses vs spares from drops
+        const houses = projectData.drops.filter((d: any) => 
+          d.address && d.address.startsWith('LAW.ONT.DR')
+        ).length;
+        const spares = projectData.drops.filter((d: any) => 
+          d.address && (d.address === 'Spare' || d.address.toLowerCase().includes('spare'))
+        ).length;
+        
+        // Calculate total fibre distance
+        const totalFibreDistance = projectData.fibre.reduce((sum: number, segment: any) => 
+          sum + (parseFloat(segment.distance) || 0), 0
+        );
+        
+        const sow: SOW = {
+          id: projectData.project_id,
+          sowNumber: `SOW-${projectData.project_code || projectData.project_id.substring(0, 8)}`,
+          projectName: projectData.project_name,
+          clientName: 'Lawley Municipality', // Default for now
+          status: totalPoles > 0 || totalDrops > 0 || totalFibre > 0 ? 'active' : 'draft',
+          version: '1.0',
+          value: 0,
+          currency: 'ZAR',
+          startDate: new Date().toISOString(),
+          endDate: new Date().toISOString(),
+          scope: [
+            `${totalPoles} poles`,
+            `${houses} houses connected`,
+            `${spares} spare drops`,
+            `${totalFibre} fibre segments (${(totalFibreDistance / 1000).toFixed(2)}km)`
+          ],
+          deliverables: [
+            'Network infrastructure data',
+            'Poles and drops mapping',
+            'Fibre route documentation'
+          ],
+          milestones: [],
+          approvals: [],
+          documents: [],
+          createdDate: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          createdBy: 'System Import',
+          importedData: {
+            poles: totalPoles,
+            drops: totalDrops,
+            houses: houses,
+            spares: spares,
+            fibre: totalFibre,
+            fibreDistance: totalFibreDistance
+          }
+        };
+        
+        return sow;
+      });
       
-      setSOWs(validSOWs);
+      setSOWs(sows);
       setError(null);
     } catch (err) {
       console.error('Error fetching SOW data:', err);

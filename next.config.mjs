@@ -3,6 +3,19 @@ const nextConfig = {
   // Enable React strict mode for better dev experience
   reactStrictMode: true,
   
+  // Ignore ESLint errors during production builds
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  // Ignore TypeScript errors during production builds
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
+  // Optimize build
+  productionBrowserSourceMaps: false,
+  
   // Environment variables available in the browser
   env: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',

@@ -1,14 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { FieldTask } from '../../../../src/modules/field-app/types/field-app.types';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { tasks, users, projects } from '../../../../src/lib/neon/schema/core.schema';
-import { eq, and, desc, sql, or, isNull } from 'drizzle-orm';
+import { apiResponse, ErrorCode } from '../../../../src/lib/apiResponse';
 
 // Initialize database connection
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,53 +12,127 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     try {
-      const { technicianId, status, priority } = req.query;
+      const { 
+        technicianId, 
+        status, 
+        priority, 
+        dateFrom, 
+        dateTo,
+        category,
+        search,
+        limit = '100',
+        offset = '0'
+      } = req.query;
       
-      // Build query conditions
-      const conditions = [];
-      if (technicianId) conditions.push(eq(tasks.assignedTo, technicianId as string));
-      if (status) conditions.push(eq(tasks.status, status as string));
-      if (priority) conditions.push(eq(tasks.priority, priority as string));
+      // Build dynamic query based on filters
+      let taskData;
       
-      // Query real tasks from database with user and project joins
-      const taskData = await db
-        .select({
-          task: tasks,
-          assignedUser: users,
-          project: projects,
-        })
-        .from(tasks)
-        .leftJoin(users, eq(tasks.assignedTo, users.id))
-        .leftJoin(projects, eq(tasks.projectId, projects.id))
-        .where(conditions.length > 0 ? and(...conditions) : undefined)
-        .orderBy(desc(tasks.priority), desc(tasks.createdAt))
-        .limit(100);
+      if (technicianId || status || priority || category || dateFrom || dateTo || search) {
+        // Build parameterized query for filters
+        let baseQuery = `
+          SELECT 
+            t.*,
+            u.first_name,
+            u.last_name,
+            p.name as project_name,
+            p.location as project_location,
+            p.latitude as project_latitude,
+            p.longitude as project_longitude
+          FROM tasks t
+          LEFT JOIN users u ON t.assigned_to = u.id
+          LEFT JOIN projects p ON t.project_id = p.id
+          WHERE 1=1
+        `;
+        
+        if (technicianId) baseQuery += ` AND t.assigned_to = '${technicianId}'`;
+        if (status) baseQuery += ` AND t.status = '${status}'`;
+        if (priority) baseQuery += ` AND t.priority = '${priority}'`;
+        if (category) baseQuery += ` AND t.category = '${category}'`;
+        if (dateFrom) baseQuery += ` AND t.due_date >= '${new Date(dateFrom as string).toISOString()}'`;
+        if (dateTo) baseQuery += ` AND t.due_date <= '${new Date(dateTo as string).toISOString()}'`;
+        if (search) baseQuery += ` AND (t.title ILIKE '%${search}%' OR t.description ILIKE '%${search}%')`;
+        
+        baseQuery += `
+          ORDER BY 
+            CASE t.priority 
+              WHEN 'urgent' THEN 1 
+              WHEN 'high' THEN 2 
+              WHEN 'medium' THEN 3 
+              WHEN 'low' THEN 4 
+              ELSE 5 
+            END,
+            t.created_at DESC
+          LIMIT ${Number(limit)}
+          OFFSET ${Number(offset)}
+        `;
+        
+        taskData = await sql.unsafe(baseQuery);
+      } else {
+        // Simple query without filters
+        taskData = await sql`
+          SELECT 
+            t.*,
+            u.first_name,
+            u.last_name,
+            p.name as project_name,
+            p.location as project_location,
+            p.latitude as project_latitude,
+            p.longitude as project_longitude
+          FROM tasks t
+          LEFT JOIN users u ON t.assigned_to = u.id
+          LEFT JOIN projects p ON t.project_id = p.id
+          ORDER BY 
+            CASE t.priority 
+              WHEN 'urgent' THEN 1 
+              WHEN 'high' THEN 2 
+              WHEN 'medium' THEN 3 
+              WHEN 'low' THEN 4 
+              ELSE 5 
+            END,
+            t.created_at DESC
+          LIMIT ${Number(limit)}
+          OFFSET ${Number(offset)}
+        `;
+      }
       
       // Transform data to match FieldTask format
-      const transformedTasks: FieldTask[] = taskData.map(({ task, assignedUser, project }) => ({
-        id: task.id,
-        title: task.title,
-        description: task.description || '',
-        type: task.category as 'installation' | 'maintenance' | 'inspection' || 'installation',
-        priority: task.priority as 'low' | 'medium' | 'high' | 'urgent' || 'medium',
-        status: task.status as 'pending' | 'in_progress' | 'completed' | 'cancelled' || 'pending',
-        assignedTo: task.assignedTo || '',
-        technicianName: assignedUser ? `${assignedUser.firstName || ''} ${assignedUser.lastName || ''}`.trim() : 'Unassigned',
-        location: {
-          address: project?.location || 'No address specified',
-          coordinates: project?.latitude && project?.longitude ? {
-            lat: Number(project.latitude),
-            lng: Number(project.longitude)
-          } : { lat: -26.2041, lng: 28.0473 } // Default to Johannesburg
-        },
-        scheduledDate: task.startDate?.toISOString() || task.dueDate?.toISOString() || new Date().toISOString(),
-        estimatedDuration: task.estimatedHours ? Number(task.estimatedHours) : 4,
-        materials: Array.isArray(task.metadata) ? task.metadata : [],
-        syncStatus: 'synced' as const,
-        offline: false,
-        createdAt: task.createdAt?.toISOString() || new Date().toISOString(),
-        updatedAt: task.updatedAt?.toISOString() || new Date().toISOString(),
-      }));
+      const transformedTasks: FieldTask[] = taskData.map((task) => {
+        const metadata = task.metadata as any || {};
+        const location = metadata.location || {};
+        
+        return {
+          id: task.id,
+          title: task.title,
+          description: task.description || '',
+          type: task.category as 'installation' | 'maintenance' | 'inspection' || 'installation',
+          priority: task.priority as 'low' | 'medium' | 'high' | 'urgent' || 'medium',
+          status: task.status as 'pending' | 'in_progress' | 'completed' | 'cancelled' || 'pending',
+          assignedTo: task.assigned_to || '',
+          technicianName: task.first_name && task.last_name ? `${task.first_name} ${task.last_name}`.trim() : 'Unassigned',
+          location: {
+            address: location.address || task.project_location || 'No address specified',
+            coordinates: location.latitude && location.longitude ? {
+              lat: Number(location.latitude),
+              lng: Number(location.longitude)
+            } : task.project_latitude && task.project_longitude ? {
+              lat: Number(task.project_latitude),
+              lng: Number(task.project_longitude)
+            } : { lat: -26.2041, lng: 28.0473 } // Default to Johannesburg
+          },
+          scheduledDate: task.start_date || task.due_date || new Date().toISOString(),
+          estimatedDuration: task.estimated_hours ? Number(task.estimated_hours) : 4,
+          materials: metadata.equipment || [],
+          syncStatus: metadata.syncStatus || 'synced' as const,
+          offline: metadata.offlineEdits ? true : false,
+          notes: metadata.notes,
+          photos: metadata.photos || [],
+          customerInfo: metadata.customerInfo,
+          workOrder: metadata.workOrder,
+          qualityCheck: metadata.qualityCheck,
+          createdAt: task.created_at || new Date().toISOString(),
+          updatedAt: task.updated_at || new Date().toISOString(),
+        };
+      });
       
       // Add statistics
       const stats = {
@@ -73,14 +143,23 @@ export default async function handler(
         highPriorityTasks: transformedTasks.filter(t => t.priority === 'high' || t.priority === 'urgent').length,
       };
 
-      res.status(200).json({ 
-        tasks: transformedTasks,
-        total: transformedTasks.length,
-        stats 
-      });
+      // Return paginated response
+      const page = Number(req.query.page) || 1;
+      const pageSize = Number(limit);
+      
+      return apiResponse.paginated(
+        res,
+        transformedTasks,
+        {
+          page,
+          pageSize,
+          total: transformedTasks.length + Number(offset), // Estimate total based on current results
+        },
+        undefined,
+        { stats }
+      );
     } catch (error) {
-      console.error('Error fetching tasks:', error);
-      res.status(500).json({ error: 'Failed to fetch tasks' });
+      return apiResponse.databaseError(res, error, 'Failed to fetch tasks');
     }
   } else if (req.method === 'POST') {
     try {
@@ -90,27 +169,37 @@ export default async function handler(
       const taskCode = newTask.taskCode || `TASK-${Date.now().toString().slice(-8)}`;
       
       // Insert new task into database
-      const [insertedTask] = await db
-        .insert(tasks)
-        .values({
-          ...newTask,
-          taskCode,
-          title: newTask.title,
-          description: newTask.description || '',
-          status: newTask.status || 'pending',
-          priority: newTask.priority || 'medium',
-        })
-        .returning();
+      const insertedTasks = await sql`
+        INSERT INTO tasks (
+          task_code, title, description, status, priority,
+          category, assigned_to, project_id, due_date,
+          estimated_hours, metadata
+        )
+        VALUES (
+          ${taskCode},
+          ${newTask.title},
+          ${newTask.description || ''},
+          ${newTask.status || 'pending'},
+          ${newTask.priority || 'medium'},
+          ${newTask.type || newTask.category || 'installation'},
+          ${newTask.assignedTo || null},
+          ${newTask.projectId || null},
+          ${newTask.scheduledDate ? new Date(newTask.scheduledDate) : null},
+          ${newTask.estimatedDuration || 4},
+          ${JSON.stringify(newTask.metadata || {})}
+        )
+        RETURNING *
+      `;
       
-      res.status(201).json({ 
-        message: 'Task created successfully',
-        task: insertedTask
-      });
+      return apiResponse.created(
+        res,
+        insertedTasks[0],
+        'Task created successfully'
+      );
     } catch (error) {
-      console.error('Error creating task:', error);
-      res.status(500).json({ error: 'Failed to create task' });
+      return apiResponse.databaseError(res, error, 'Failed to create task');
     }
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return apiResponse.methodNotAllowed(res, req.method!, ['GET', 'POST']);
   }
 }

@@ -34,7 +34,7 @@
 **Size**: ~35K tokens  
 **Coverage**: Application bootstrap, configuration, environment setup
 - Entry point analysis (index.html → main.tsx → App.tsx)
-- Build configuration (Vite, TypeScript, TailwindCSS)
+- Build configuration (Next.js, TypeScript, TailwindCSS)
 - Environment management and deployment
 - Development server setup
 
@@ -62,7 +62,7 @@
 **Size**: ~38K tokens  
 **Coverage**: API architecture and service layer
 - 47 API endpoints documented
-- Dual architecture: Express (dev) → Vercel Functions (prod)
+- Next.js API routes (single architecture; legacy Express dev server deprecated)
 - Service layer patterns
 - Error handling and validation
 
@@ -181,7 +181,7 @@
 
 ### Development Tools
 - **Scripts**: package.json commands for dev, build, test
-- **Configuration**: vite.config.ts, tsconfig.json, tailwind.config.js
+- **Configuration**: next.config.mjs, tsconfig.json, tailwind.config.js
 - **Database**: Drizzle schema in src/db/schema/
 
 ### Code Organization
@@ -240,3 +240,9 @@ For questions about this documentation or the codebase:
 - Review CLAUDE.md for AI context
 - Check MIGRATION_STATUS.md for current state
 - Reference specific section documentation for deep dives
+
+
+---
+
+### Architecture Consolidation
+- See [Phase 2: Architecture Consolidation](./architecture/phase-2-architecture-consolidation.md) for details on build system cleanup, database single source of truth, ORM strategy, migration flow, Neon pooling strategy, and the Health API route.

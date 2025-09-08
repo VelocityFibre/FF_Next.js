@@ -6,7 +6,7 @@ import {
   getDocs, 
   writeBatch 
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 
 export function useSOWService() {
   const queryClient = useQueryClient();

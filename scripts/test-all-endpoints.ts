@@ -10,13 +10,13 @@ async function testEndpoints() {
   console.log('=====================================\n');
   
   const endpoints = [
-    { name: 'Projects', query: `SELECT * FROM projects LIMIT 5` },
-    { name: 'Staff', query: `SELECT * FROM staff LIMIT 5` },
-    { name: 'Clients', query: `SELECT * FROM clients LIMIT 5` },
-    { name: 'SOW Imports', query: `SELECT * FROM sow_imports LIMIT 5` },
+    { name: 'Projects', query: sql`SELECT * FROM projects LIMIT 5` },
+    { name: 'Staff', query: sql`SELECT * FROM staff LIMIT 5` },
+    { name: 'Clients', query: sql`SELECT * FROM clients LIMIT 5` },
+    { name: 'SOW Imports', query: sql`SELECT * FROM sow_imports LIMIT 5` },
     { 
       name: 'Analytics Stats', 
-      query: `
+      query: sql`
         SELECT 
           COUNT(*) as total_projects,
           COUNT(CASE WHEN status = 'active' THEN 1 END) as active_projects
@@ -28,7 +28,7 @@ async function testEndpoints() {
   for (const endpoint of endpoints) {
     try {
       console.log(`📊 Testing ${endpoint.name}:`);
-      const result = await sql(endpoint.query);
+      const result = await endpoint.query;
       
       if (result && result.length > 0) {
         console.log(`  ✅ Success - ${result.length} records found`);

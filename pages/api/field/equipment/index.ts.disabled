@@ -1,0 +1,246 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
+import { nokiaEquipment, staff } from '../../../../src/lib/neon/schema';
+import { eq, and, desc, or, ilike, sql } from 'drizzle-orm';
+
+const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
+const neonClient = neon(connectionString);
+const db = drizzle(neonClient as any);
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === 'GET') {
+    try {
+      const { 
+        status,
+        category,
+        technicianId,
+        search,
+        available
+      } = req.query;
+      
+      // Build query conditions
+      const conditions = [];
+      
+      if (status) {
+        conditions.push(eq(nokiaEquipment.status, status as string));
+      }
+      
+      if (category) {
+        conditions.push(eq(nokiaEquipment.category, category as string));
+      }
+      
+      if (available === 'true') {
+        conditions.push(eq(nokiaEquipment.status, 'inventory'));
+      }
+      
+      if (search) {
+        conditions.push(
+          or(
+            ilike(nokiaEquipment.equipmentType, `%${search}%`),
+            ilike(nokiaEquipment.serialNumber, `%${search}%`),
+            ilike(nokiaEquipment.modelNumber, `%${search}%`)
+          )
+        );
+      }
+      
+      // Query equipment
+      const equipment = await db
+        .select({
+          equipment: nokiaEquipment,
+          technician: staff
+        })
+        .from(nokiaEquipment)
+        .leftJoin(staff, eq(nokiaEquipment.installedBy, staff.id))
+        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .orderBy(desc(nokiaEquipment.updatedAt))
+        .limit(100);
+      
+      // Transform equipment data
+      const transformedEquipment = equipment.map(({ equipment: eq, technician }) => {
+        const metadata = eq.metadata as any || {};
+        const checkout = metadata.checkout || {};
+        
+        return {
+          id: eq.id,
+          equipmentId: eq.equipmentId,
+          serialNumber: eq.serialNumber,
+          modelNumber: eq.modelNumber,
+          type: eq.equipmentType,
+          category: eq.category,
+          status: eq.status,
+          operationalStatus: eq.operationalStatus,
+          location: eq.currentLocation,
+          assignedTo: checkout.technicianId,
+          assignedToName: technician ? `${technician.firstName} ${technician.lastName}` : null,
+          checkoutTime: checkout.checkoutTime,
+          expectedReturn: checkout.expectedReturn,
+          actualReturn: checkout.actualReturn,
+          condition: checkout.condition || 'good',
+          lastMaintenance: eq.lastMaintenanceDate,
+          nextMaintenance: eq.nextMaintenanceDate,
+          specifications: eq.specifications,
+          notes: checkout.notes,
+          metadata: metadata
+        };
+      });
+      
+      // Get statistics
+      const stats = {
+        total: transformedEquipment.length,
+        available: transformedEquipment.filter(e => e.status === 'inventory').length,
+        deployed: transformedEquipment.filter(e => e.status === 'deployed').length,
+        maintenance: transformedEquipment.filter(e => e.status === 'maintenance').length,
+        byType: transformedEquipment.reduce((acc, eq) => {
+          acc[eq.type] = (acc[eq.type] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>)
+      };
+      
+      res.status(200).json({
+        equipment: transformedEquipment,
+        total: transformedEquipment.length,
+        stats
+      });
+    } catch (error) {
+      console.error('Error fetching equipment:', error);
+      res.status(500).json({ error: 'Failed to fetch equipment' });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const { action, equipmentId, technicianId, ...data } = req.body;
+      
+      if (action === 'checkout') {
+        // Checkout equipment
+        const [equipment] = await db
+          .select()
+          .from(nokiaEquipment)
+          .where(eq(nokiaEquipment.id, equipmentId))
+          .limit(1);
+        
+        if (!equipment) {
+          return res.status(404).json({ error: 'Equipment not found' });
+        }
+        
+        if (equipment.status !== 'inventory') {
+          return res.status(400).json({ error: 'Equipment not available for checkout' });
+        }
+        
+        // Update equipment with checkout info
+        const metadata = equipment.metadata as any || {};
+        metadata.checkout = {
+          technicianId,
+          checkoutTime: new Date().toISOString(),
+          expectedReturn: data.expectedReturn,
+          purpose: data.purpose,
+          notes: data.notes
+        };
+        
+        const [updated] = await db
+          .update(nokiaEquipment)
+          .set({
+            status: 'deployed',
+            installedBy: technicianId,
+            metadata,
+            updatedAt: new Date()
+          })
+          .where(eq(nokiaEquipment.id, equipmentId))
+          .returning();
+        
+        res.status(200).json({
+          message: 'Equipment checked out successfully',
+          equipment: updated
+        });
+      } else if (action === 'checkin') {
+        // Check in equipment
+        const [equipment] = await db
+          .select()
+          .from(nokiaEquipment)
+          .where(eq(nokiaEquipment.id, equipmentId))
+          .limit(1);
+        
+        if (!equipment) {
+          return res.status(404).json({ error: 'Equipment not found' });
+        }
+        
+        // Update equipment with checkin info
+        const metadata = equipment.metadata as any || {};
+        if (metadata.checkout) {
+          metadata.checkout.actualReturn = new Date().toISOString();
+          metadata.checkout.condition = data.condition;
+          metadata.checkout.returnNotes = data.notes;
+        }
+        
+        metadata.checkoutHistory = metadata.checkoutHistory || [];
+        metadata.checkoutHistory.push(metadata.checkout);
+        
+        const [updated] = await db
+          .update(nokiaEquipment)
+          .set({
+            status: data.needsMaintenance ? 'maintenance' : 'inventory',
+            installedBy: null,
+            metadata,
+            updatedAt: new Date()
+          })
+          .where(eq(nokiaEquipment.id, equipmentId))
+          .returning();
+        
+        res.status(200).json({
+          message: 'Equipment checked in successfully',
+          equipment: updated
+        });
+      } else {
+        // Create new equipment
+        const newEquipment = await db
+          .insert(nokiaEquipment)
+          .values({
+            equipmentId: `EQ-${Date.now().toString().slice(-8)}`,
+            serialNumber: data.serialNumber,
+            modelNumber: data.modelNumber,
+            equipmentType: data.equipmentType,
+            category: data.category || 'field_equipment',
+            status: 'inventory',
+            currentLocation: data.location || 'Field Operations Center',
+            specifications: data.specifications || {},
+            metadata: data.metadata || {}
+          })
+          .returning();
+        
+        res.status(201).json({
+          message: 'Equipment created successfully',
+          equipment: newEquipment[0]
+        });
+      }
+    } catch (error) {
+      console.error('Error managing equipment:', error);
+      res.status(500).json({ error: 'Failed to manage equipment' });
+    }
+  } else if (req.method === 'PUT') {
+    try {
+      const { id } = req.query;
+      const updates = req.body;
+      
+      const [updated] = await db
+        .update(nokiaEquipment)
+        .set({
+          ...updates,
+          updatedAt: new Date()
+        })
+        .where(eq(nokiaEquipment.id, id as string))
+        .returning();
+      
+      res.status(200).json({
+        message: 'Equipment updated successfully',
+        equipment: updated
+      });
+    } catch (error) {
+      console.error('Error updating equipment:', error);
+      res.status(500).json({ error: 'Failed to update equipment' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method not allowed' });
+  }
+}

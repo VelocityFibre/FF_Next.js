@@ -1,23 +1,9 @@
 /**
  * Projects Service
- * Handles all project-related operations
+ * Handles all project-related operations via Neon API
  */
 
-import { db } from '@/lib/firebase';
 import { log } from '@/lib/logger';
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  Timestamp
-} from 'firebase/firestore';
 
 export interface Project {
   id: string;
@@ -53,223 +39,133 @@ export interface ProjectFormData {
   budget?: number;
   teamMembers?: string[];
   tags?: string[];
-  metadata?: Record<string, any>;
-}
-
-export interface ProjectFilter {
-  status?: string;
-  clientId?: string;
-  startDate?: Date;
-  endDate?: Date;
-  searchTerm?: string;
-  tags?: string[];
 }
 
 class ProjectsService {
-  private collectionName = 'projects';
+  private baseUrl = '/api/projects';
 
-  /**
-   * Get all projects
-   */
-  async getAll(filter?: ProjectFilter): Promise<Project[]> {
+  async getAll(): Promise<Project[]> {
     try {
-      let q = query(collection(db, this.collectionName));
-
-      if (filter?.status) {
-        q = query(q, where('status', '==', filter.status));
+      const response = await fetch(this.baseUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch projects: ${response.statusText}`);
       }
-      if (filter?.clientId) {
-        q = query(q, where('clientId', '==', filter.clientId));
-      }
-
-      q = query(q, orderBy('createdAt', 'desc'));
-
-      const snapshot = await getDocs(q);
-      const projects: Project[] = [];
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        projects.push({
-          id: doc.id,
-          ...data,
-          startDate: data.startDate?.toDate(),
-          endDate: data.endDate?.toDate(),
-          createdAt: data.createdAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate()
-        } as Project);
-      });
-
-      // Apply client-side filtering
-      let filtered = projects;
-      
-      if (filter?.searchTerm) {
-        const term = filter.searchTerm.toLowerCase();
-        filtered = filtered.filter(p => 
-          p.name.toLowerCase().includes(term) ||
-          p.code.toLowerCase().includes(term) ||
-          p.description?.toLowerCase().includes(term)
-        );
-      }
-
-      if (filter?.tags && filter.tags.length > 0) {
-        filtered = filtered.filter(p => 
-          p.tags?.some(tag => filter.tags?.includes(tag))
-        );
-      }
-
-      return filtered;
+      const data = await response.json();
+      return data.projects || [];
     } catch (error) {
-      log.error('Error fetching projects:', { data: error }, 'projectsService');
+      log.error('Error fetching projects:', error, 'ProjectsService');
       throw error;
     }
   }
 
-  /**
-   * Get a single project by ID
-   */
   async getById(id: string): Promise<Project | null> {
     try {
-      const docRef = doc(db, this.collectionName, id);
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        return null;
+      const response = await fetch(`${this.baseUrl}/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error(`Failed to fetch project: ${response.statusText}`);
       }
-
-      const data = docSnap.data();
-      return {
-        id: docSnap.id,
-        ...data,
-        startDate: data.startDate?.toDate(),
-        endDate: data.endDate?.toDate(),
-        createdAt: data.createdAt?.toDate(),
-        updatedAt: data.updatedAt?.toDate()
-      } as Project;
+      const data = await response.json();
+      return data.project;
     } catch (error) {
-      log.error('Error fetching project:', { data: error }, 'projectsService');
+      log.error('Error fetching project by ID:', error, 'ProjectsService');
       throw error;
     }
   }
 
-  /**
-   * Create a new project
-   */
-  async create(data: ProjectFormData): Promise<Project> {
+  async create(projectData: ProjectFormData): Promise<Project> {
     try {
-      const projectData = {
-        ...data,
-        status: data.status || 'planning',
-        startDate: data.startDate ? Timestamp.fromDate(data.startDate) : null,
-        endDate: data.endDate ? Timestamp.fromDate(data.endDate) : null,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        progress: 0,
-        actualCost: 0
-      };
-
-      const docRef = await addDoc(collection(db, this.collectionName), projectData);
-      const created = await this.getById(docRef.id);
-      
-      if (!created) {
-        throw new Error('Failed to create project');
+      const response = await fetch(this.baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectData),
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to create project: ${response.statusText}`);
       }
-
-      return created;
+      const data = await response.json();
+      return data.project;
     } catch (error) {
-      log.error('Error creating project:', { data: error }, 'projectsService');
+      log.error('Error creating project:', error, 'ProjectsService');
       throw error;
     }
   }
 
-  /**
-   * Update an existing project
-   */
-  async update(id: string, data: Partial<ProjectFormData>): Promise<Project> {
+  async update(id: string, projectData: Partial<ProjectFormData>): Promise<Project> {
     try {
-      const docRef = doc(db, this.collectionName, id);
-      
-      const updateData: any = {
-        ...data,
-        updatedAt: Timestamp.now()
-      };
-
-      if (data.startDate) {
-        updateData.startDate = Timestamp.fromDate(data.startDate);
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectData),
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to update project: ${response.statusText}`);
       }
-      if (data.endDate) {
-        updateData.endDate = Timestamp.fromDate(data.endDate);
-      }
-
-      await updateDoc(docRef, updateData);
-      
-      const updated = await this.getById(id);
-      if (!updated) {
-        throw new Error('Project not found after update');
-      }
-
-      return updated;
+      const data = await response.json();
+      return data.project;
     } catch (error) {
-      log.error('Error updating project:', { data: error }, 'projectsService');
+      log.error('Error updating project:', error, 'ProjectsService');
       throw error;
     }
   }
 
-  /**
-   * Delete a project
-   */
   async delete(id: string): Promise<void> {
     try {
-      await deleteDoc(doc(db, this.collectionName, id));
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to delete project: ${response.statusText}`);
+      }
     } catch (error) {
-      log.error('Error deleting project:', { data: error }, 'projectsService');
+      log.error('Error deleting project:', error, 'ProjectsService');
       throw error;
     }
   }
 
-  /**
-   * Get active projects
-   */
-  async getActiveProjects(): Promise<Project[]> {
-    return this.getAll({ status: 'active' });
-  }
-
-  /**
-   * Get projects by client
-   */
   async getByClient(clientId: string): Promise<Project[]> {
-    return this.getAll({ clientId });
+    try {
+      const response = await fetch(`${this.baseUrl}?clientId=${clientId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch projects by client: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data.projects || [];
+    } catch (error) {
+      log.error('Error fetching projects by client:', error, 'ProjectsService');
+      throw error;
+    }
   }
 
-  /**
-   * Update project progress
-   */
-  async updateProgress(id: string, progress: number): Promise<Project> {
-    return this.update(id, { metadata: { progress } });
+  async getStats(): Promise<any> {
+    try {
+      const response = await fetch(`${this.baseUrl}/stats`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch project stats: ${response.statusText}`);
+      }
+      return await response.json();
+    } catch (error) {
+      log.error('Error fetching project stats:', error, 'ProjectsService');
+      throw error;
+    }
   }
 
-  /**
-   * Get project statistics
-   */
-  async getProjectStats(): Promise<{
-    total: number;
-    active: number;
-    completed: number;
-    onHold: number;
-    planning: number;
-    totalBudget: number;
-    totalActualCost: number;
-  }> {
-    const projects = await this.getAll();
-    
-    return {
-      total: projects.length,
-      active: projects.filter(p => p.status === 'active').length,
-      completed: projects.filter(p => p.status === 'completed').length,
-      onHold: projects.filter(p => p.status === 'on-hold').length,
-      planning: projects.filter(p => p.status === 'planning').length,
-      totalBudget: projects.reduce((sum, p) => sum + (p.budget || 0), 0),
-      totalActualCost: projects.reduce((sum, p) => sum + (p.actualCost || 0), 0)
-    };
+  async search(query: string): Promise<Project[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}/search?q=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error(`Failed to search projects: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data.projects || [];
+    } catch (error) {
+      log.error('Error searching projects:', error, 'ProjectsService');
+      throw error;
+    }
   }
 }
 

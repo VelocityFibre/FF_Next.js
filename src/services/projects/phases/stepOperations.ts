@@ -7,7 +7,7 @@ import {
   orderBy,
   serverTimestamp
 } from 'firebase/firestore';
-import { db, auth } from '@/config/firebase';
+import { db, auth } from '@/src/config/firebase';
 import { Step } from '@/types/project.types';
 import { updatePhaseProgress, updateProjectProgress } from './progressCalculations';
 import { log } from '@/lib/logger';

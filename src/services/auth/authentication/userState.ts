@@ -10,7 +10,7 @@ import {
   updateProfile,
   sendEmailVerification,
 } from 'firebase/auth';
-import { auth } from '@/config/firebase';
+import { auth } from '@/src/config/firebase';
 import { User } from '@/types/auth.types';
 import { getUserProfile, getUserFromFirestore } from '../userService';
 import { AuthUser, mapFirebaseUser } from '../authHelpers';

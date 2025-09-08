@@ -9,7 +9,7 @@ export const contractorsSection: NavSection = {
   section: 'CONTRACTORS',
   items: [
     {
-      to: '/app/contractors',
+      to: '/contractors',
       icon: Briefcase,
       label: 'Contractors Portal',
       shortLabel: 'Contract',

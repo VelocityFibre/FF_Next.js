@@ -1,9 +1,9 @@
 import { GetServerSideProps } from 'next';
-// import { getAuth } from '@clerk/nextjs/server';
+import { getAuth } from '../../../lib/auth-mock';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
-const ProjectDetail = dynamic(() => import('@/modules/projects/components/ProjectDetail').then(mod => mod.ProjectDetail || mod.default), {
+const ProjectDetail = dynamic(() => import('@/src/pages/ProjectDetail').then(mod => mod.ProjectDetail || mod.default), {
   ssr: false,
   loading: () => <div>Loading project...</div>
 });

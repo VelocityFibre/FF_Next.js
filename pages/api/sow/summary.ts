@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 // import { getAuth } from '@clerk/nextjs/server';
 import { getAuth } from '../../../lib/auth-mock';
-import { neon } from '@neondatabase/serverless';
-
-const sql = neon(process.env.DATABASE_URL!);
+import { sql } from '../../../lib/db.mjs';
 
 type SummarData = {
   success: boolean;

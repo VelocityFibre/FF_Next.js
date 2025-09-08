@@ -5,7 +5,7 @@
 import { LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { memo, useCallback } from 'react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 
 interface QuickActionCardProps {
   title: string;

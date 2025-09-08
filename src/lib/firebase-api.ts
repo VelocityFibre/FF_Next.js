@@ -6,7 +6,7 @@
 // Get the base URL for API
 const getBaseUrl = () => {
   // In development, use local dev server
-  if (import.meta.env.DEV) {
+  if (process.env.NODE_ENV === 'development') {
     return 'http://localhost:5173/api';
   }
   

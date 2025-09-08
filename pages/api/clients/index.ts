@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { neon } from '@neondatabase/serverless';
-
-const sql = neon(process.env.DATABASE_URL!);
+import { sql } from '../../../lib/db.mjs';
+import { safeArrayQuery, safeMutation } from '../../../lib/safe-query';
+import { apiLogger } from '../../../lib/logger';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Enable CORS
@@ -23,27 +23,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         if (id) {
           // Get single client with related projects
-          const client = await sql`
-            SELECT 
-              c.*,
-              COUNT(DISTINCT p.id) as project_count,
-              COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
-              SUM(p.budget) as total_budget,
-              JSON_AGG(
-                DISTINCT JSONB_BUILD_OBJECT(
-                  'id', p.id,
-                  'project_name', p.project_name,
-                  'status', p.status,
-                  'start_date', p.start_date,
-                  'end_date', p.end_date,
-                  'budget', p.budget
-                )
-              ) FILTER (WHERE p.id IS NOT NULL) as projects
-            FROM clients c
-            LEFT JOIN projects p ON p.client_id = c.id::text::uuid
-            WHERE c.id = ${id as string}
-            GROUP BY c.id
-          `;
+          const client = await safeArrayQuery(
+            async () => sql`
+              SELECT 
+                c.*,
+                COUNT(DISTINCT p.id) as project_count,
+                COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
+                SUM(p.budget) as total_budget,
+                JSON_AGG(
+                  DISTINCT JSONB_BUILD_OBJECT(
+                    'id', p.id,
+                    'project_name', p.project_name,
+                    'status', p.status,
+                    'start_date', p.start_date,
+                    'end_date', p.end_date,
+                    'budget', p.budget
+                  )
+                ) FILTER (WHERE p.id IS NOT NULL) as projects
+              FROM clients c
+              LEFT JOIN projects p ON p.client_id = c.id::text::uuid
+              WHERE c.id = ${id as string}
+              GROUP BY c.id
+            `,
+            { logError: true }
+          );
           
           if (client.length === 0) {
             return res.status(404).json({ 
@@ -55,35 +58,73 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           
           res.status(200).json({ success: true, data: client[0] });
         } else {
-          // Build query with filters
-          let conditions = [];
-          
-          if (search) {
-            conditions.push(`(
-              LOWER(c.client_name) LIKE LOWER('%${search}%') OR 
-              LOWER(c.contact_person) LIKE LOWER('%${search}%') OR 
-              LOWER(c.email) LIKE LOWER('%${search}%')
-            )`);
-          }
-          
-          if (status) {
-            conditions.push(`c.status = '${status}'`);
-          }
-          
-          const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-          
-          const clients = await sql`
-            SELECT 
-              c.*,
-              COUNT(DISTINCT p.id) as project_count,
-              COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
-              SUM(p.budget) as total_revenue
-            FROM clients c
-            LEFT JOIN projects p ON p.client_id = c.id::text::uuid
-            ${whereClause ? sql.unsafe(whereClause) : sql``}
-            GROUP BY c.id
-            ORDER BY c.client_name ASC NULLS LAST
-          `;
+          // Build query with filters (using safe parameterized queries)
+          const clients = await safeArrayQuery(
+            async () => {
+              // Base query that we'll filter based on parameters
+              if (search && status) {
+                return sql`
+                  SELECT 
+                    c.*,
+                    COUNT(DISTINCT p.id) as project_count,
+                    COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
+                    SUM(p.budget) as total_revenue
+                  FROM clients c
+                  LEFT JOIN projects p ON p.client_id = c.id::text::uuid
+                  WHERE (
+                    LOWER(c.client_name) LIKE LOWER(${'%' + search + '%'}) OR 
+                    LOWER(c.contact_person) LIKE LOWER(${'%' + search + '%'}) OR 
+                    LOWER(c.email) LIKE LOWER(${'%' + search + '%'})
+                  ) AND c.status = ${status}
+                  GROUP BY c.id
+                  ORDER BY c.client_name ASC NULLS LAST
+                `;
+              } else if (search) {
+                return sql`
+                  SELECT 
+                    c.*,
+                    COUNT(DISTINCT p.id) as project_count,
+                    COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
+                    SUM(p.budget) as total_revenue
+                  FROM clients c
+                  LEFT JOIN projects p ON p.client_id = c.id::text::uuid
+                  WHERE (
+                    LOWER(c.client_name) LIKE LOWER(${'%' + search + '%'}) OR 
+                    LOWER(c.contact_person) LIKE LOWER(${'%' + search + '%'}) OR 
+                    LOWER(c.email) LIKE LOWER(${'%' + search + '%'})
+                  )
+                  GROUP BY c.id
+                  ORDER BY c.client_name ASC NULLS LAST
+                `;
+              } else if (status) {
+                return sql`
+                  SELECT 
+                    c.*,
+                    COUNT(DISTINCT p.id) as project_count,
+                    COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
+                    SUM(p.budget) as total_revenue
+                  FROM clients c
+                  LEFT JOIN projects p ON p.client_id = c.id::text::uuid
+                  WHERE c.status = ${status}
+                  GROUP BY c.id
+                  ORDER BY c.client_name ASC NULLS LAST
+                `;
+              } else {
+                return sql`
+                  SELECT 
+                    c.*,
+                    COUNT(DISTINCT p.id) as project_count,
+                    COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
+                    SUM(p.budget) as total_revenue
+                  FROM clients c
+                  LEFT JOIN projects p ON p.client_id = c.id::text::uuid
+                  GROUP BY c.id
+                  ORDER BY c.client_name ASC NULLS LAST
+                `;
+              }
+            },
+            { logError: true, retryCount: 2 }
+          );
           
           // Return empty array if no clients, not an error
           res.status(200).json({ 
@@ -165,7 +206,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(405).json({ success: false, error: 'Method not allowed' });
     }
   } catch (error) {
-    console.error('API Error:', error);
+    apiLogger.error({ error, method: req.method, path: '/api/clients' }, 'Client API request failed');
     res.status(500).json({ success: false, error: (error as Error).message });
   }
 }

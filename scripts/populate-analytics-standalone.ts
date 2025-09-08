@@ -37,6 +37,7 @@ class AnalyticsDataPopulator {
     console.log(`📅 Date Range: ${this.config.startDate.toISOString().split('T')[0]} to ${this.config.endDate.toISOString().split('T')[0]}`);
     
     try {
+      await this.createTables();
       await this.clearExistingData();
       await this.populateKPIMetrics();
       await this.populateStaffPerformance();
@@ -442,7 +443,7 @@ class AnalyticsDataPopulator {
           WHEN start_offset < 30 THEN NULL -- Project still running
           ELSE (current_date - (start_offset || ' days')::interval + 
                 (duration_days || ' days')::interval + 
-                ((random() - 0.5) * 14 || ' days')::interval)
+                (round((random() - 0.5) * 14) || ' days')::interval)
         END as actual_end_date,
         (proj_completion * 100)::decimal(5,2) as completion_percentage,
         CASE 
@@ -502,65 +503,64 @@ class AnalyticsDataPopulator {
         average_project_duration, on_time_completion_rate, satisfaction_score,
         last_project_date, next_follow_up_date, total_interactions, client_category, lifetime_value
       )
-      SELECT 
-        'client_' || client_num as client_id,
-        clients.name as client_name,
-        client_projects.total as total_projects,
-        client_projects.active as active_projects,
-        client_projects.completed as completed_projects,
-        -- Revenue in ZAR millions for major ISPs
-        (client_projects.total * (2500000 + random() * 5000000))::decimal(15,2) as total_revenue,
-        -- Outstanding balance (5-15% of revenue)
-        ((client_projects.total * (2500000 + random() * 5000000)) * 
-         (0.05 + random() * 0.1))::decimal(15,2) as outstanding_balance,
-        (2500000 + random() * 5000000)::decimal(15,2) as average_project_value,
-        -- Payment score (higher for established ISPs)
-        CASE 
-          WHEN clients.name IN ('Vumatel', 'Octotel', 'MetroFibre', 'OpenServe') THEN (85 + random() * 15)::decimal(5,2)
-          ELSE (70 + random() * 20)::decimal(5,2)
-        END as payment_score,
-        (45 + random() * 30)::int as average_project_duration,
-        -- On-time rate varies by client maturity
-        CASE 
-          WHEN clients.name IN ('Vumatel', 'Octotel') THEN (80 + random() * 15)::decimal(5,2)
-          ELSE (65 + random() * 25)::decimal(5,2)
-        END as on_time_completion_rate,
-        (75 + random() * 20)::decimal(5,2) as satisfaction_score,
-        (current_date - (random() * 90 || ' days')::interval) as last_project_date,
-        (current_date + (random() * 30 || ' days')::interval) as next_follow_up_date,
-        (client_projects.total * (8 + random() * 15))::int as total_interactions,
-        CASE 
-          WHEN clients.name IN ('Vumatel', 'Octotel', 'MetroFibre') THEN 'VIP'
-          WHEN client_projects.total >= 5 THEN 'Regular'
-          ELSE 'Standard'
-        END as client_category,
-        -- Lifetime value calculation
-        (client_projects.total * (2500000 + random() * 5000000) * 
-         (1 + client_projects.total * 0.1))::decimal(15,2) as lifetime_value
-      FROM generate_series(1, 20) as client_num
-      CROSS JOIN (
-        VALUES 
-          ('Vumatel'), ('Octotel'), ('MetroFibre'), ('OpenServe'), 
-          ('Frogfoot'), ('Rise Fiber'), ('Herotel'), ('Cybersmart'),
-          ('WebAfrica'), ('Mweb'), ('Rain'), ('Telkom'),
-          ('MTN Fiber'), ('Vodacom Fiber'), ('Cell C Fiber'), ('TelkomOne'),
-          ('Axxess'), ('Webafrica Business'), ('IS'), ('Internet Solutions')
-      ) as clients(name)
-      CROSS JOIN (
+      WITH client_data AS (
         SELECT 
+          'client_' || client_num as client_id,
+          client_names.name as client_name,
           client_num,
           -- Project distribution varies by client size
           CASE 
             WHEN random() < 0.2 THEN (8 + random() * 15)::int -- Large clients
             WHEN random() < 0.5 THEN (3 + random() * 8)::int  -- Medium clients
             ELSE (1 + random() * 4)::int                      -- Small clients
-          END as total,
-          (random() * 3 + 1)::int as active,
-          -- Completed = total - active (with some adjustment)
-          greatest(0, total - active - (random() * 2)::int) as completed
+          END as total_proj,
+          (random() * 3 + 1)::int as active_proj
         FROM generate_series(1, 20) as client_num
-      ) as client_projects
-      WHERE client_num <= 20;
+        JOIN (
+          VALUES 
+            (1, 'Vumatel'), (2, 'Octotel'), (3, 'MetroFibre'), (4, 'OpenServe'), 
+            (5, 'Frogfoot'), (6, 'Rise Fiber'), (7, 'Herotel'), (8, 'Cybersmart'),
+            (9, 'WebAfrica'), (10, 'Mweb'), (11, 'Rain'), (12, 'Telkom'),
+            (13, 'MTN Fiber'), (14, 'Vodacom Fiber'), (15, 'Cell C Fiber'), (16, 'TelkomOne'),
+            (17, 'Axxess'), (18, 'Webafrica Business'), (19, 'IS'), (20, 'Internet Solutions')
+        ) as client_names(id, name) ON client_num = client_names.id
+      )
+      SELECT 
+        client_id,
+        client_name,
+        total_proj as total_projects,
+        active_proj as active_projects,
+        greatest(0, total_proj - active_proj - (random() * 2)::int) as completed_projects,
+        -- Revenue in ZAR millions for major ISPs
+        (total_proj * (2500000 + random() * 5000000))::decimal(15,2) as total_revenue,
+        -- Outstanding balance (5-15% of revenue)
+        ((total_proj * (2500000 + random() * 5000000)) * 
+         (0.05 + random() * 0.1))::decimal(15,2) as outstanding_balance,
+        (2500000 + random() * 5000000)::decimal(15,2) as average_project_value,
+        -- Payment score (higher for established ISPs)
+        CASE 
+          WHEN client_name IN ('Vumatel', 'Octotel', 'MetroFibre', 'OpenServe') THEN (85 + random() * 15)::decimal(5,2)
+          ELSE (70 + random() * 20)::decimal(5,2)
+        END as payment_score,
+        (45 + random() * 30)::int as average_project_duration,
+        -- On-time rate varies by client maturity
+        CASE 
+          WHEN client_name IN ('Vumatel', 'Octotel') THEN (80 + random() * 15)::decimal(5,2)
+          ELSE (65 + random() * 25)::decimal(5,2)
+        END as on_time_completion_rate,
+        (75 + random() * 20)::decimal(5,2) as satisfaction_score,
+        (current_date - (round(random() * 90) || ' days')::interval) as last_project_date,
+        (current_date + (round(random() * 30) || ' days')::interval) as next_follow_up_date,
+        (total_proj * (8 + random() * 15))::int as total_interactions,
+        CASE 
+          WHEN client_name IN ('Vumatel', 'Octotel', 'MetroFibre') THEN 'VIP'
+          WHEN total_proj >= 5 THEN 'Regular'
+          ELSE 'Standard'
+        END as client_category,
+        -- Lifetime value calculation
+        (total_proj * (2500000 + random() * 5000000) * 
+         (1 + total_proj * 0.1))::decimal(15,2) as lifetime_value
+      FROM client_data;
     `;
     
     console.log('✅ Client analytics populated');
@@ -614,8 +614,15 @@ class AnalyticsDataPopulator {
           ELSE NULL
         END as due_date,
         CASE 
-          WHEN status IN ('paid') THEN 
-            date_series.date + (random() * 45 || ' days')::interval
+          WHEN (CASE 
+            WHEN date_series.date < current_date - interval '60 days' AND transaction_types.type != 'expense' THEN
+              CASE WHEN random() < 0.9 THEN 'paid' ELSE 'overdue' END
+            WHEN date_series.date < current_date - interval '30 days' AND transaction_types.type != 'expense' THEN
+              CASE WHEN random() < 0.7 THEN 'paid' WHEN random() < 0.9 THEN 'approved' ELSE 'pending' END
+            ELSE
+              CASE WHEN random() < 0.3 THEN 'paid' WHEN random() < 0.6 THEN 'approved' ELSE 'pending' END
+          END) IN ('paid') THEN 
+            date_series.date + (round(random() * 45) || ' days')::interval
           ELSE NULL
         END as paid_date,
         transaction_types.description as description,

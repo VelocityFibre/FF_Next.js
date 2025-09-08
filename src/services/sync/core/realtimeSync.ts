@@ -4,7 +4,7 @@
  */
 
 import { onSnapshot, collection } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { ProjectSync } from '../projectSync';
 import { ClientSync } from '../clientSync';
 import { StaffSync } from '../staffSync';

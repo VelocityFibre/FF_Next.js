@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { sql } from 'drizzle-orm';
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,10 +14,10 @@ export default async function handler(
   const { projectId } = req.query;
 
   try {
-    let query;
+    let data;
     if (projectId) {
       // Get specific project summary
-      query = sql`
+      const result = await sql`
         SELECT 
           p.*,
           c.name as client_name,
@@ -36,9 +32,10 @@ export default async function handler(
         WHERE p.id = ${projectId}
         GROUP BY p.id, c.name
       `;
+      data = result[0] || null;
     } else {
       // Get all projects summary
-      query = sql`
+      const result = await sql`
         SELECT 
           COUNT(*) as total_projects,
           COUNT(CASE WHEN status = 'active' OR status = 'in_progress' THEN 1 END) as active_projects,
@@ -50,19 +47,17 @@ export default async function handler(
           COUNT(DISTINCT client_id) as unique_clients
         FROM projects
       `;
+      data = result[0] || {
+        total_projects: 0,
+        active_projects: 0,
+        completed_projects: 0,
+        on_hold_projects: 0,
+        cancelled_projects: 0,
+        total_budget: 0,
+        average_budget: 0,
+        unique_clients: 0
+      };
     }
-
-    const result = await db.execute(query);
-    const data = projectId ? result[0] : result[0] || {
-      total_projects: 0,
-      active_projects: 0,
-      completed_projects: 0,
-      on_hold_projects: 0,
-      cancelled_projects: 0,
-      total_budget: 0,
-      average_budget: 0,
-      unique_clients: 0
-    };
 
     return res.status(200).json({
       success: true,

@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 
 export interface PoleStatistics {
   total: number;

@@ -10,7 +10,7 @@ import {
   orderBy,
   onSnapshot
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { Product, ProductCallback } from './types';
 
 const PRODUCTS_COLLECTION = 'products';

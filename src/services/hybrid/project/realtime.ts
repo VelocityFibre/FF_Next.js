@@ -15,7 +15,7 @@ import {
   onSnapshot,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import type { Project } from '@/types/project.types';
 
 /**

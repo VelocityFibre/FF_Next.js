@@ -15,7 +15,7 @@ import {
   orderBy,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { Pole, POLE_COLLECTION } from './types';
 
 export class PoleCrudService {

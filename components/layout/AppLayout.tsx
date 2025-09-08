@@ -20,9 +20,12 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    // Load sidebar state from localStorage
-    const saved = localStorage.getItem('fibreflow-sidebar-collapsed');
-    return saved ? JSON.parse(saved) : false;
+    // Load sidebar state from localStorage (only on client)
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('fibreflow-sidebar-collapsed');
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
   });
   
   const router = useRouter();
@@ -30,9 +33,11 @@ export function AppLayout({ children }: AppLayoutProps) {
   // Theme hook ready for future use
   // const { theme } = useTheme();
 
-  // Save sidebar state to localStorage
+  // Save sidebar state to localStorage (only on client)
   useEffect(() => {
-    localStorage.setItem('fibreflow-sidebar-collapsed', JSON.stringify(sidebarCollapsed));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('fibreflow-sidebar-collapsed', JSON.stringify(sidebarCollapsed));
+    }
   }, [sidebarCollapsed]);
 
   // Close mobile sidebar when route changes

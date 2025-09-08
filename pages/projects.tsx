@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { AppLayout } from '@/components/layout/AppLayout';
 // // import { useUser } from '@clerk/nextjs';
 import { useProjects, useCreateProject, useDeleteProject } from '@/hooks/useProjects';
 import { useStore } from '@/store/useStore';

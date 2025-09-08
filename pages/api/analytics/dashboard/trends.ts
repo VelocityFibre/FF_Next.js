@@ -1,12 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { sql } from 'drizzle-orm';
 
 // Initialize Neon client
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,24 +23,24 @@ export default async function handler(
     // Get current period stats
     const [currentPeriod, previousPeriod] = await Promise.all([
       // Current 30 days
-      db.execute(sql`
+      sql`
         SELECT 
           (SELECT COUNT(*) FROM projects WHERE created_at >= ${thirtyDaysAgo}) as new_projects,
           (SELECT COUNT(*) FROM staff WHERE created_at >= ${thirtyDaysAgo}) as new_staff,
           (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${thirtyDaysAgo} AND import_type = 'poles') as new_poles,
           (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${thirtyDaysAgo} AND import_type = 'drops') as new_drops,
           (SELECT COALESCE(SUM(processed_records), 0) FROM sow_imports WHERE imported_at >= ${thirtyDaysAgo}) as new_tasks
-      `),
+      `,
       
       // Previous 30 days
-      db.execute(sql`
+      sql`
         SELECT 
           (SELECT COUNT(*) FROM projects WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_projects,
           (SELECT COUNT(*) FROM staff WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_staff,
           (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${sixtyDaysAgo} AND imported_at < ${thirtyDaysAgo} AND import_type = 'poles') as prev_poles,
           (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${sixtyDaysAgo} AND imported_at < ${thirtyDaysAgo} AND import_type = 'drops') as prev_drops,
           (SELECT COALESCE(SUM(processed_records), 0) FROM sow_imports WHERE imported_at >= ${sixtyDaysAgo} AND imported_at < ${thirtyDaysAgo}) as prev_tasks
-      `)
+      `
     ]);
 
     const current: any = currentPeriod[0] || {};

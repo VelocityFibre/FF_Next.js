@@ -1,6 +1,6 @@
 'use client';
 
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { 
   Plus, 
   FolderPlus, 
@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Permission } from '@/types/auth.types';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 
 interface QuickActionItem {
   id: string;
@@ -133,7 +133,7 @@ const variantStyles = {
 };
 
 export function QuickActions({ className = '' }: QuickActionsProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { hasPermission } = useAuth();
 
   // Filter actions based on user permissions
@@ -143,7 +143,7 @@ export function QuickActions({ className = '' }: QuickActionsProps) {
   );
 
   const handleActionClick = (action: QuickActionItem) => {
-    navigate(action.route);
+    router.push(action.route);
   };
 
   return (

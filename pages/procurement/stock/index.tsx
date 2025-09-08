@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
-import { StockManagement } from '../../../src/modules/procurement/stock/StockManagement';
+import StockManagement from '../../../src/modules/procurement/stock/StockManagement';
 import type { StockItem } from '../../../src/types/procurement/stock.types';
 
 interface StockPageProps {

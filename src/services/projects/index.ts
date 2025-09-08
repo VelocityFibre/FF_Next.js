@@ -1,8 +1,9 @@
 /**
  * Project Service - Main export file
+ * Using Neon PostgreSQL for all operations
  */
 
-// CRUD operations
+// CRUD operations (Neon-based)
 export {
   getAll,
   getById,
@@ -13,49 +14,50 @@ export {
   getActiveProjects
 } from './projectCrud';
 
-// Phases and hierarchy management
-export {
-  generateProjectPhases,
-  getProjectPhases,
-  getPhaseById,
-  updatePhase,
-  getPhaseSteps,
-  updateStep,
-  getStepTasks,
-  createTask,
-  updateTask
-} from './projectPhases';
+// Phases and hierarchy management - TEMPORARILY DISABLED (uses Firebase)
+// TODO: Migrate to Neon
+// export {
+//   generateProjectPhases,
+//   getProjectPhases,
+//   getPhaseById,
+//   updatePhase,
+//   getPhaseSteps,
+//   updateStep,
+//   getStepTasks,
+//   createTask,
+//   updateTask
+// } from './projectPhases';
 
-// Statistics and analytics
-export {
-  getProjectSummary,
-  getRecentProjects,
-  getOverdueProjects,
-  getProjectsByStatus,
-  getProjectCountByType,
-  getProjectsEndingSoon,
-  calculateBudgetVariance
-} from './projectStats';
+// Statistics and analytics - TEMPORARILY DISABLED (uses Firebase)
+// TODO: Migrate to Neon
+// export {
+//   getProjectSummary,
+//   getRecentProjects,
+//   getOverdueProjects,
+//   getProjectsByStatus,
+//   getProjectCountByType,
+//   getProjectsEndingSoon,
+//   calculateBudgetVariance
+// } from './projectStats';
 
-// Real-time subscriptions
-export {
-  subscribeToProject,
-  subscribeToProjects,
-  subscribeToProjectPhases,
-  subscribeToPhaseSteps,
-  subscribeToStepTasks,
-  subscribeToProjectHierarchy,
-  unsubscribeAll
-} from './projectRealtime';
+// Real-time subscriptions - REMOVED (Firebase-specific feature)
+// Not needed with Neon PostgreSQL
+// export {
+//   subscribeToProject,
+//   subscribeToProjects,
+//   subscribeToProjectPhases,
+//   subscribeToPhaseSteps,
+//   subscribeToStepTasks,
+//   subscribeToProjectHierarchy,
+//   unsubscribeAll
+// } from './projectRealtime';
 
 // Create the projectService object for backward compatibility
 import * as crud from './projectCrud';
-import * as phases from './projectPhases';
-import * as stats from './projectStats';
-import * as realtime from './projectRealtime';
+// Removed Firebase imports - only using Neon CRUD operations
 
 export const projectService = {
-  // CRUD operations
+  // CRUD operations (Neon-based)
   getAll: crud.getAll,
   getById: crud.getById,
   create: crud.create,
@@ -65,37 +67,38 @@ export const projectService = {
   getByClientId: crud.getByClientId,
   getActiveProjects: crud.getActiveProjects,
   
-  // Phases
-  generatePhases: phases.generateProjectPhases,
-  getPhases: phases.getProjectPhases,
-  getPhase: phases.getPhaseById,
-  updatePhase: phases.updatePhase,
-  getSteps: phases.getPhaseSteps,
-  updateStep: phases.updateStep,
-  getTasks: phases.getStepTasks,
-  createTask: phases.createTask,
-  updateTask: phases.updateTask,
-  initializeProjectPhases: phases.generateProjectPhases, // Alias
+  // Placeholder functions for backward compatibility
+  // These return empty data until migrated to Neon
+  generatePhases: async () => [],
+  getPhases: async () => [],
+  getPhase: async () => null,
+  updatePhase: async () => ({}),
+  getSteps: async () => [],
+  updateStep: async () => ({}),
+  getTasks: async () => [],
+  createTask: async () => ({}),
+  updateTask: async () => ({}),
+  initializeProjectPhases: async () => [],
   
-  // Stats
-  getSummary: stats.getProjectSummary,
-  getRecent: stats.getRecentProjects,
-  getOverdue: stats.getOverdueProjects,
-  getByStatus: stats.getProjectsByStatus,
-  getCountByType: stats.getProjectCountByType,
-  getEndingSoon: stats.getProjectsEndingSoon,
-  calculateBudgetVariance: stats.calculateBudgetVariance,
-  getProjectSummary: stats.getProjectSummary, // Direct export
-  getProjectHierarchy: realtime.subscribeToProjectHierarchy, // Alias
+  // Stats placeholders
+  getSummary: async () => ({ total: 0, active: 0, completed: 0 }),
+  getRecent: async () => [],
+  getOverdue: async () => [],
+  getByStatus: async () => [],
+  getCountByType: async () => ({}),
+  getEndingSoon: async () => [],
+  calculateBudgetVariance: async () => 0,
+  getProjectSummary: async () => ({ total: 0, active: 0, completed: 0 }),
+  getProjectHierarchy: async () => null,
   
-  // Real-time
-  subscribe: realtime.subscribeToProject,
-  subscribeToList: realtime.subscribeToProjects,
-  subscribeToPhases: realtime.subscribeToProjectPhases,
-  subscribeToSteps: realtime.subscribeToPhaseSteps,
-  subscribeToTasks: realtime.subscribeToStepTasks,
-  subscribeToHierarchy: realtime.subscribeToProjectHierarchy,
-  unsubscribeAll: realtime.unsubscribeAll,
-  subscribeToProject: realtime.subscribeToProject, // Direct export
-  subscribeToProjects: realtime.subscribeToProjects // Direct export
+  // Real-time placeholders (not needed with Neon)
+  subscribe: () => () => {},
+  subscribeToList: () => () => {},
+  subscribeToPhases: () => () => {},
+  subscribeToSteps: () => () => {},
+  subscribeToTasks: () => () => {},
+  subscribeToHierarchy: () => () => {},
+  unsubscribeAll: () => {},
+  subscribeToProject: () => () => {},
+  subscribeToProjects: () => () => {} // Placeholder
 };

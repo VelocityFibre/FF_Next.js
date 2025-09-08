@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { 
   getFirestore, 
@@ -14,17 +14,17 @@ import { getStorage, connectStorageEmulator } from 'firebase/storage';
 // Firebase configuration
 // Note: These are public keys protected by Firebase Security Rules
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDvW-ImXptnYIX7IDR78pdruw9BAp5A8Q8',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'fibreflow-292c7.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'fibreflow-292c7',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'fibreflow-292c7.firebasestorage.app',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '178707510767',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:178707510767:web:a9455c8f053de03fbff21a',
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-3S74XHZ49B'
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyDvW-ImXptnYIX7IDR78pdruw9BAp5A8Q8',
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'fibreflow-292c7.firebaseapp.com',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'fibreflow-292c7',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'fibreflow-292c7.firebasestorage.app',
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '178707510767',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:178707510767:web:a9455c8f053de03fbff21a',
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-3S74XHZ49B'
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (singleton pattern to prevent duplicate initialization)
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Firebase services
 export const auth = getAuth(app);
@@ -37,50 +37,53 @@ const analytics = null;
 const performance = null;
 
 // Uncomment when APIs are enabled:
-// if (import.meta.env.VITE_ENABLE_ANALYTICS === 'true') {
+// if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === 'true') {
 //   isSupported().then((supported) => {
 //     if (supported) {
 //       analytics = getAnalytics(app);
 //     }
 //   });
 // }
-// if (import.meta.env.VITE_APP_ENV === 'production') {
+// if (process.env.NEXT_PUBLIC_APP_ENV === 'production') {
 //   performance = getPerformance(app);
 // }
 
-// Enable offline persistence for Firestore
-if (import.meta.env.VITE_ENABLE_OFFLINE === 'true') {
-  // Try multi-tab persistence first, fall back to single-tab if it fails
+// Offline persistence - disable in server environment
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_ENABLE_OFFLINE === 'true') {
+  // Enable multi-tab persistence
   enableMultiTabIndexedDbPersistence(db).catch((err) => {
     if (err.code === 'failed-precondition') {
       // Multiple tabs open, persistence can only be enabled in one tab at a time
-      // Multiple tabs open, persistence can only be enabled in one tab at a time
-      enableIndexedDbPersistence(db).catch(() => {
-        // Silent fail for persistence
-      });
+      console.warn('Firebase persistence failed: Multiple tabs open');
     } else if (err.code === 'unimplemented') {
       // The current browser doesn't support persistence
-      // The current browser doesn't support persistence
+      console.warn('Firebase persistence not available in this browser');
     }
   });
 }
 
-// Connect to Firebase emulators in development
-if (import.meta.env.VITE_APP_ENV === 'development' && import.meta.env.VITE_USE_EMULATORS === 'true') {
-  // Auth emulator
-  connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
-  
-  // Firestore emulator
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  
-  // Storage emulator
-  connectStorageEmulator(storage, 'localhost', 9199);
-  
-  // Connected to Firebase emulators in development
+// Emulator configuration for development
+if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_APP_ENV === 'development' && process.env.NEXT_PUBLIC_USE_EMULATORS === 'true') {
+  // Emulator ports from Firebase emulators configuration
+  const authEmulatorUrl = 'http://localhost:9099';
+  const firestoreEmulatorHost = 'localhost';
+  const firestoreEmulatorPort = 8080;
+  const storageEmulatorHost = 'localhost';
+  const storageEmulatorPort = 9199;
+
+  try {
+    connectAuthEmulator(auth, authEmulatorUrl, { disableWarnings: true });
+    connectFirestoreEmulator(db, firestoreEmulatorHost, firestoreEmulatorPort);
+    connectStorageEmulator(storage, storageEmulatorHost, storageEmulatorPort);
+    console.log('🔧 Connected to Firebase emulators');
+  } catch (error) {
+    // Emulators might already be connected or not running
+    console.debug('Firebase emulators connection skipped:', error);
+  }
 }
 
-// Debug logging in development
-// Firebase initialized successfully
+export { app, analytics, performance };
 
-export { analytics, performance };
-export default app;
+// Re-export types for convenience
+export type { User } from 'firebase/auth';
+export type { DocumentData, QuerySnapshot } from 'firebase/firestore';

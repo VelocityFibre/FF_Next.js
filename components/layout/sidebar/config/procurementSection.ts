@@ -12,14 +12,14 @@ export const procurementSection: NavSection = {
   section: 'PROCUREMENT',
   items: [
     {
-      to: '/app/procurement',
+      to: '/procurement',
       icon: ShoppingCart,
       label: 'Procurement Portal',
       shortLabel: 'Procure',
       permissions: []
     },
     {
-      to: '/app/suppliers',
+      to: '/suppliers',
       icon: Truck,
       label: 'Suppliers Portal',
       shortLabel: 'Supply',

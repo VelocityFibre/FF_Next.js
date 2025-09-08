@@ -9,21 +9,21 @@ export const fieldOperationsSection: NavSection = {
   section: 'FIELD OPERATIONS',
   items: [
     {
-      to: '/app/field',
+      to: '/field',
       icon: Smartphone,
       label: 'Field App Portal',
       shortLabel: 'Field',
       permissions: [],
     },
     {
-      to: '/app/onemap',
+      to: '/onemap',
       icon: MapPin,
       label: 'OneMap Data Grid',
       shortLabel: 'OneMap',
       permissions: [],
     },
     {
-      to: '/app/nokia-equipment',
+      to: '/nokia-equipment',
       icon: Wrench,
       label: 'Nokia Equipment',
       shortLabel: 'Nokia',

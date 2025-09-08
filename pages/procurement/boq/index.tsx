@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
-import { BOQList } from '../../../src/modules/procurement/boq/components/BOQList';
-import { BOQProvider } from '../../../src/modules/procurement/boq/context/BOQContext';
+import BOQList from '../../../src/components/procurement/boq/BOQList';
 import type { BOQItem } from '../../../src/types/procurement/boq.types';
 
 interface BOQPageProps {
@@ -43,51 +42,29 @@ export default function BOQPage({ projectId, projectName, initialData = [] }: BO
     router.push('/procurement/boq/new');
   };
 
-  const handleEditBOQ = (id: string) => {
-    router.push(`/procurement/boq/${id}/edit`);
-  };
-
-  const handleViewBOQ = (id: string) => {
-    router.push(`/procurement/boq/${id}`);
-  };
 
   return (
-    <BOQProvider>
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Bill of Quantities</h1>
-            {projectName && (
-              <p className="mt-2 text-gray-600">Project: {projectName}</p>
-            )}
-          </div>
-
-          <div className="mb-6 flex justify-between items-center">
-            <div className="text-sm text-gray-600">
-              {boqItems.length} BOQ item{boqItems.length !== 1 ? 's' : ''} found
-            </div>
-            <button
-              onClick={handleCreateBOQ}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Create New BOQ
-            </button>
-          </div>
-
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="text-gray-500">Loading BOQ data...</div>
-            </div>
-          ) : (
-            <BOQList
-              items={boqItems}
-              onView={handleViewBOQ}
-              onEdit={handleEditBOQ}
-            />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Bill of Quantities</h1>
+          {projectName && (
+            <p className="mt-2 text-gray-600">Project: {projectName}</p>
           )}
         </div>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-gray-500">Loading BOQ data...</div>
+          </div>
+        ) : (
+          <BOQList
+            onCreateBOQ={handleCreateBOQ}
+            className="mt-6"
+          />
+        )}
       </div>
-    </BOQProvider>
+    </div>
   );
 }
 

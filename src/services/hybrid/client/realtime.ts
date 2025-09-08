@@ -11,7 +11,7 @@ import {
   updateDoc, 
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import type { Client } from '@/types/client.types';
 
 /**

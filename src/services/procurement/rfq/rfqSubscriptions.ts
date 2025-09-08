@@ -10,7 +10,7 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { RFQ } from '@/types/procurement.types';
 
 const COLLECTION_NAME = 'rfqs';

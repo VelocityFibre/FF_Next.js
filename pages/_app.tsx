@@ -2,6 +2,13 @@ import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, createContext, useContext } from 'react';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { AuthProvider } from '@/src/contexts/AuthContext';
+import { ThemeProvider } from '@/src/contexts/ThemeContext';
+import { reportWebVitals } from '@/lib/performance';
+
+// Export for Next.js Web Vitals
+export { reportWebVitals };
 
 // Dev mode mock user context
 export const DevUserContext = createContext({
@@ -43,11 +50,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <DevUserContext.Provider value={mockUser}>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-      </QueryClientProvider>
-    </DevUserContext.Provider>
+    <ErrorBoundary>
+      <DevUserContext.Provider value={mockUser}>
+        <AuthProvider>
+          <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+              <Component {...pageProps} />
+            </QueryClientProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </DevUserContext.Provider>
+    </ErrorBoundary>
   );
 }
 

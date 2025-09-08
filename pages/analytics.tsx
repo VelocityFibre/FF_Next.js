@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import MainLayout from '@/components/layout/MainLayout';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { RefreshCw } from 'lucide-react';
 
 // Dynamic import of the Analytics module with no SSR for performance
@@ -77,10 +77,10 @@ function AnalyticsSkeleton() {
 
 export default function AnalyticsPage() {
   return (
-    <MainLayout>
+    <AppLayout>
       <Suspense fallback={<AnalyticsSkeleton />}>
         <AnalyticsModule />
       </Suspense>
-    </MainLayout>
+    </AppLayout>
   );
 }

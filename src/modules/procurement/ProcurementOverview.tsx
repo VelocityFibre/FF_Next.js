@@ -19,7 +19,7 @@ import { useBOQs } from './hooks/useBOQ';
 import { useRFQs } from './hooks/useRFQ';
 import { BOQStatus, RFQStatus } from '@/types/procurement.types';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Button } from '@/shared/components/ui/Button';
+import { Button } from '@/src/shared/components/ui/Button';
 import type { 
   ProcurementPortalContext
 } from '@/types/procurement/portal.types';

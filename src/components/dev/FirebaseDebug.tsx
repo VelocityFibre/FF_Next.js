@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 
 interface FirebaseDebugInfo {
   projectId?: string;
   authDomain?: string;
   appName: string;
   environment: {
-    VITE_FIREBASE_PROJECT_ID?: string;
-    VITE_FIREBASE_AUTH_DOMAIN?: string;
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID?: string;
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN?: string;
   };
   error?: string;
 }
@@ -22,8 +22,8 @@ export function FirebaseDebug() {
         authDomain: db.app.options.authDomain || 'undefined', 
         appName: db.app.name,
         environment: {
-          VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-          VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
         }
       };
       setDebugInfo(info);
@@ -34,8 +34,8 @@ export function FirebaseDebug() {
         error: error?.toString() || 'Unknown error',
         appName: 'unknown',
         environment: {
-          VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-          VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
         }
       });
     }

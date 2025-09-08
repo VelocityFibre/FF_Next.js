@@ -1,6 +1,6 @@
 import { Save } from 'lucide-react';
 import { PoleData } from '../types/pole-tracker.types';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 import { usePoleCapture } from './hooks/usePoleCapture';
 import { 
   PoleFormHeader, 

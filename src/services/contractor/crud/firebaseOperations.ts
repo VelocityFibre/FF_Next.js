@@ -17,7 +17,7 @@ import {
   Timestamp,
   QueryConstraint
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { 
   Contractor, 
   ContractorFormData,

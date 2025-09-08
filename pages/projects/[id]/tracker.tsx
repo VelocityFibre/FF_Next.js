@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-// // import { getAuth } from '@clerk/nextjs/server';
+import { getAuth } from '../../../lib/auth-mock';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
@@ -18,16 +18,16 @@ export default function ProjectTrackerPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  // Authentication bypassed for demo
-  // const { userId } = getAuth(ctx.req);
-  // if (!userId) {
-  //   return {
-  //     redirect: {
-  //       destination: '/sign-in',
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  const { userId } = getAuth(ctx.req);
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
+    };
+  }
 
   return { props: {} };
 };

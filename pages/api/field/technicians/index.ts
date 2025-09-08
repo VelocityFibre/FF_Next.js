@@ -1,14 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { FieldTechnician } from '../../../../src/modules/field-app/types/field-app.types';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { staff, tasks, users } from '../../../../src/lib/neon/schema/core.schema';
-import { eq, and, desc, sql, count } from 'drizzle-orm';
 
 // Initialize database connection
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,58 +12,58 @@ export default async function handler(
   if (req.method === 'GET') {
     try {
       // Query staff who are field technicians
-      const technicianData = await db
-        .select({
-          staff: staff,
-          user: users,
-          activeTaskCount: sql<number>`(
+      const technicianData = await sql`
+        SELECT 
+          s.*,
+          u.first_name as user_first_name,
+          u.last_name as user_last_name,
+          u.last_login,
+          (
             SELECT COUNT(*) FROM tasks 
-            WHERE tasks.assigned_to = ${staff.userId}
+            WHERE tasks.assigned_to = s.user_id
             AND tasks.status IN ('pending', 'in_progress')
-          )::int`,
-          completedTaskCount: sql<number>`(
+          )::int as active_task_count,
+          (
             SELECT COUNT(*) FROM tasks 
-            WHERE tasks.assigned_to = ${staff.userId}
+            WHERE tasks.assigned_to = s.user_id
             AND tasks.status = 'completed'
-          )::int`,
-          currentTaskId: sql<string>`(
+          )::int as completed_task_count,
+          (
             SELECT id FROM tasks 
-            WHERE tasks.assigned_to = ${staff.userId}
+            WHERE tasks.assigned_to = s.user_id
             AND tasks.status = 'in_progress'
             ORDER BY tasks.updated_at DESC
             LIMIT 1
-          )`,
-        })
-        .from(staff)
-        .leftJoin(users, eq(staff.userId, users.id))
-        .where(
-          or(
-            eq(staff.department, 'Field Operations'),
-            eq(staff.position, 'Field Technician'),
-            eq(staff.position, 'Technician')
-          )
+          ) as current_task_id
+        FROM staff s
+        LEFT JOIN users u ON s.user_id = u.id
+        WHERE (
+          s.department = 'Field Operations' OR
+          s.position = 'Field Technician' OR
+          s.position = 'Technician'
         )
-        .orderBy(desc(staff.updatedAt))
-        .limit(50);
+        ORDER BY s.updated_at DESC
+        LIMIT 50
+      `;
       
       // Transform data to match FieldTechnician format
-      const transformedTechnicians: FieldTechnician[] = technicianData.map(({ staff: s, user, activeTaskCount, completedTaskCount, currentTaskId }) => ({
+      const transformedTechnicians: FieldTechnician[] = technicianData.map((s) => ({
         id: s.id,
-        name: `${s.firstName} ${s.lastName}`,
+        name: `${s.first_name} ${s.last_name}`,
         email: s.email,
         phone: s.phone || '+27 00 000 0000',
-        status: determineStatus(s.status, activeTaskCount, currentTaskId),
-        currentTask: currentTaskId || null,
+        status: determineStatus(s.status, s.active_task_count, s.current_task_id),
+        currentTask: s.current_task_id || null,
         location: {
           lat: -26.2041, // Default location - could be enhanced with real GPS data
           lng: 28.0473
         },
         skills: Array.isArray(s.skills) ? s.skills : [],
-        rating: s.performanceRating ? Number(s.performanceRating) : 4.0,
-        completedTasks: completedTaskCount || 0,
-        activeTaskCount: activeTaskCount || 0,
-        lastActive: user?.lastLogin?.toISOString() || s.updatedAt?.toISOString() || new Date().toISOString(),
-        createdAt: s.createdAt?.toISOString() || new Date().toISOString(),
+        rating: s.performance_rating ? Number(s.performance_rating) : 4.0,
+        completedTasks: s.completed_task_count || 0,
+        activeTaskCount: s.active_task_count || 0,
+        lastActive: s.last_login || s.updated_at || new Date().toISOString(),
+        createdAt: s.created_at || new Date().toISOString(),
       }));
       
       // Calculate statistics
@@ -97,25 +92,28 @@ export default async function handler(
       const employeeId = newTechnician.employeeId || `TECH-${Date.now().toString().slice(-8)}`;
       
       // Insert new staff member as technician
-      const [insertedStaff] = await db
-        .insert(staff)
-        .values({
-          ...newTechnician,
-          employeeId,
-          firstName: newTechnician.firstName || newTechnician.name?.split(' ')[0] || '',
-          lastName: newTechnician.lastName || newTechnician.name?.split(' ')[1] || '',
-          email: newTechnician.email,
-          phone: newTechnician.phone,
-          department: 'Field Operations',
-          position: 'Field Technician',
-          status: 'active',
-          contractType: 'full-time',
-        })
-        .returning();
+      const insertedStaff = await sql`
+        INSERT INTO staff (
+          employee_id, first_name, last_name, email, phone,
+          department, position, status, contract_type
+        )
+        VALUES (
+          ${employeeId},
+          ${newTechnician.firstName || newTechnician.name?.split(' ')[0] || ''},
+          ${newTechnician.lastName || newTechnician.name?.split(' ')[1] || ''},
+          ${newTechnician.email},
+          ${newTechnician.phone},
+          'Field Operations',
+          'Field Technician',
+          'active',
+          'full-time'
+        )
+        RETURNING *
+      `;
       
       res.status(201).json({ 
         message: 'Technician added successfully',
-        technician: insertedStaff
+        technician: insertedStaff[0]
       });
     } catch (error) {
       console.error('Error adding technician:', error);

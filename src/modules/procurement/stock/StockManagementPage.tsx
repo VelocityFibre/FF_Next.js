@@ -20,7 +20,7 @@ import {
   Calendar,
   User
 } from 'lucide-react';
-import { Button } from '@/shared/components/ui/Button';
+import { Button } from '@/src/shared/components/ui/Button';
 import type { ProcurementPortalContext } from '@/types/procurement/portal.types';
 
 interface StockItemData {

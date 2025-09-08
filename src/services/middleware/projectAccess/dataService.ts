@@ -3,7 +3,7 @@
  * Handles database queries for project access information
  */
 
-import { db as firestoreDb } from '@/config/firebase';
+import { db as firestoreDb } from '@/src/config/firebase';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { UserProjectAccess, ProjectInfo } from './types';
 import { ProjectAccessValidator } from './validator';

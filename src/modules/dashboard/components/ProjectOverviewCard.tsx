@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FolderOpen, Calendar, MapPin, Users, Clock, AlertTriangle } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 import { ProjectQueryService } from '@/services/projects/core/projectQueryService';
 import { Project } from '@/types/project.types';
 import { log } from '@/lib/logger';

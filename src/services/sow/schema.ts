@@ -7,7 +7,7 @@ import { createNeonClient } from '@/lib/neon-sql';
 import { SOWTableType } from './types';
 import { log } from '@/lib/logger';
 
-const { query } = createNeonClient(import.meta.env.VITE_NEON_DATABASE_URL || '');
+const { query } = createNeonClient(process.env.NEXT_PUBLIC_NEON_DATABASE_URL || '');
 
 /**
  * Helper function to safely create table names

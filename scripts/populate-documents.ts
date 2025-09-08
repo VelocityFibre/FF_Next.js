@@ -6,7 +6,6 @@
 
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Client } from 'pg';
-import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
 
 // Database connection
@@ -22,6 +21,10 @@ const db = drizzle(client);
 // 🟢 WORKING: Helper functions for generating realistic data
 function generateRandomDate(start: Date = new Date(2022, 0, 1), end: Date = new Date()): Date {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+function uuidv4(): string {
+  return crypto.randomUUID();
 }
 
 function generateMD5Hash(input: string): string {
@@ -666,8 +669,7 @@ async function main() {
   try {
     console.log('🚀 Starting document database population...');
     
-    await client.connect();
-    console.log('✅ Connected to database');
+    console.log('✅ Already connected to database');
     
     // First, let's create some dummy project IDs to associate documents with
     const projectIds = Array.from({length: 10}, () => uuidv4());
@@ -734,7 +736,9 @@ async function checkTables() {
 
 // Run the script
 if (require.main === module) {
-  client.connect().then(async () => {
+  (async () => {
+    await client.connect();
+    
     const tablesExist = await checkTables();
     
     if (tablesExist) {
@@ -743,5 +747,5 @@ if (require.main === module) {
       await client.end();
       process.exit(1);
     }
-  });
+  })();
 }

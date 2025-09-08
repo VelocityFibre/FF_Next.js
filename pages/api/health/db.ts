@@ -1,0 +1,32 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { db } from '@/lib/db';
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    // Simple query to check if database is responsive
+    const startTime = Date.now();
+    await db.$queryRaw`SELECT 1`;
+    const responseTime = Date.now() - startTime;
+
+    return res.status(200).json({
+      status: 'healthy',
+      responseTime: `${responseTime}ms`,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Database health check failed:', error);
+    
+    return res.status(503).json({
+      status: 'unhealthy',
+      error: 'Database connection failed',
+      timestamp: new Date().toISOString()
+    });
+  }
+}

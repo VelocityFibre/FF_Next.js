@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import type { GetServerSideProps } from 'next';
-import { RFQList } from '../../../src/modules/procurement/rfq/components/RFQList';
-import { RFQProvider } from '../../../src/modules/procurement/rfq/context/RFQContext';
-import type { RFQ } from '../../../src/types/procurement/rfq.types';
+import RFQList from '../../../src/components/procurement/rfq/RFQList';
+
+interface RFQ {
+  id: string;
+  title: string;
+  description?: string;
+  status: 'draft' | 'active' | 'closed' | 'expired';
+  createdAt: string;
+  dueDate?: string;
+  projectId?: string;
+  supplierCount?: number;
+  responseCount?: number;
+}
 
 interface RFQPageProps {
   projectId?: string;
@@ -52,42 +62,30 @@ export default function RFQPage({ projectId, projectName, initialData = [] }: RF
   };
 
   return (
-    <RFQProvider>
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Request for Quotations</h1>
-            {projectName && (
-              <p className="mt-2 text-gray-600">Project: {projectName}</p>
-            )}
-          </div>
-
-          <div className="mb-6 flex justify-between items-center">
-            <div className="text-sm text-gray-600">
-              {rfqs.length} RFQ{rfqs.length !== 1 ? 's' : ''} found
-            </div>
-            <button
-              onClick={handleCreateRFQ}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Create New RFQ
-            </button>
-          </div>
-
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="text-gray-500">Loading RFQ data...</div>
-            </div>
-          ) : (
-            <RFQList
-              rfqs={rfqs}
-              onView={handleViewRFQ}
-              onEdit={handleEditRFQ}
-            />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Request for Quotations</h1>
+          {projectName && (
+            <p className="mt-2 text-gray-600">Project: {projectName}</p>
           )}
         </div>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-gray-500">Loading RFQ data...</div>
+          </div>
+        ) : (
+          <RFQList
+            rfqs={rfqs}
+            onCreateRFQ={handleCreateRFQ}
+            onView={handleViewRFQ}
+            onEdit={handleEditRFQ}
+            className="mt-6"
+          />
+        )}
       </div>
-    </RFQProvider>
+    </div>
   );
 }
 

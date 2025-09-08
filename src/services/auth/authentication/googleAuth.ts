@@ -10,7 +10,7 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
 } from 'firebase/auth';
-import { auth } from '@/config/firebase';
+import { auth } from '@/src/config/firebase';
 import { User } from '@/types/auth.types';
 import { getUserProfile, updateLastLogin } from '../userService';
 import { AuthUser, mapFirebaseUser, handleAuthError } from '../authHelpers';

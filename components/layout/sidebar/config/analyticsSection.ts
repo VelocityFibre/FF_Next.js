@@ -9,28 +9,28 @@ export const analyticsSection: NavSection = {
   section: 'ANALYTICS',
   items: [
     {
-      to: '/app/analytics',
+      to: '/analytics',
       icon: Activity,
       label: 'Analytics Dashboard',
       shortLabel: 'Analytics',
       permissions: [],
     },
     {
-      to: '/app/enhanced-kpis',
+      to: '/enhanced-kpis',
       icon: TrendingUp,
       label: 'Enhanced KPIs',
       shortLabel: 'KPIs',
       permissions: [],
     },
     {
-      to: '/app/kpi-dashboard',
+      to: '/kpi-dashboard',
       icon: BarChart3,
       label: 'KPI Dashboard',
       shortLabel: 'KPI Dash',
       permissions: [],
     },
     {
-      to: '/app/reports',
+      to: '/reports',
       icon: FileText,
       label: 'Reports',
       shortLabel: 'Reports',

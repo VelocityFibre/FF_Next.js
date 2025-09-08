@@ -1,29 +1,32 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-// // import { getAuth } from '@clerk/nextjs/server';
-import { getAuth } from '../../lib/auth-mock';
-import { db, projects, Project, NewProject, safeQuery } from '@/lib/db';
-import { eq, desc, and, ilike } from 'drizzle-orm';
+import { neon } from '@neondatabase/serverless';
+import { apiLogger } from '@/lib/logger';
+
+const sql = neon(process.env.DATABASE_URL!);
 
 // API route handler for projects CRUD operations
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // For testing: use mock user ID
-  // TODO: Re-enable Clerk authentication
-  const userId = 'test-user-123';
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
   
-  if (!userId) {
-    return res.status(401).json({ error: 'Unauthorized' });
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
   }
 
   // Handle different HTTP methods
   switch (req.method) {
     case 'GET':
-      return handleGet(req, res, userId);
+      return handleGet(req, res);
     case 'POST':
-      return handlePost(req, res, userId);
+      return handlePost(req, res);
     case 'PUT':
-      return handlePut(req, res, userId);
+      return handlePut(req, res);
     case 'DELETE':
-      return handleDelete(req, res, userId);
+      return handleDelete(req, res);
     default:
       res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
       return res.status(405).json({ error: `Method ${req.method} not allowed` });
@@ -31,164 +34,201 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 // GET /api/projects - Fetch all projects or single project by ID
-async function handleGet(req: NextApiRequest, res: NextApiResponse, userId: string) {
-  const { id, search, status, limit = 50, offset = 0 } = req.query;
+async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  const { id, search, status, client_id, limit = 50, offset = 0 } = req.query;
   
   try {
     // Fetch single project by ID
     if (id) {
-      const result = await safeQuery(
-        async () => await db.select().from(projects).where(eq(projects.id, Number(id))).limit(1),
-        'Failed to fetch project'
-      );
+      const project = await sql`
+        SELECT 
+          p.*,
+          c.name as client_name,
+          s.name as manager_name
+        FROM projects p
+        LEFT JOIN clients c ON p.client_id = c.id
+        LEFT JOIN staff s ON p.project_manager_id = s.id
+        WHERE p.id = ${id as string}
+      `;
       
-      if (result.error) {
-        return res.status(500).json({ error: result.error });
-      }
-      
-      const project = result.data?.[0];
-      if (!project) {
+      if (project.length === 0) {
         return res.status(404).json({ error: 'Project not found' });
       }
       
-      return res.status(200).json(project);
+      return res.status(200).json({ success: true, data: project[0] });
     }
     
-    // Build query conditions
-    const conditions: any[] = [];
-    if (status && typeof status === 'string') {
-      conditions.push(eq(projects.status, status));
-    }
-    if (search && typeof search === 'string') {
-      conditions.push(ilike(projects.name, `%${search}%`));
-    }
+    // Build query with filters
+    let query = `
+      SELECT 
+        p.*,
+        c.name as client_name,
+        s.name as manager_name,
+        COUNT(DISTINCT t.id) as task_count
+      FROM projects p
+      LEFT JOIN clients c ON p.client_id = c.id
+      LEFT JOIN staff s ON p.project_manager_id = s.id
+      LEFT JOIN project_tasks t ON p.id = t.project_id
+      WHERE 1=1
+    `;
     
-    // Fetch projects with filters
-    const result = await safeQuery(
-      async () => {
-        const query = db.select().from(projects);
-        if (conditions.length > 0) {
-          query.where(and(...conditions));
-        }
-        return await query
-          .orderBy(desc(projects.createdAt))
-          .limit(Number(limit))
-          .offset(Number(offset));
-      },
-      'Failed to fetch projects'
-    );
+    const params: any[] = [];
+    let paramIndex = 1;
     
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
+    if (search) {
+      query += ` AND (LOWER(p.name) LIKE LOWER($${paramIndex}) OR LOWER(p.description) LIKE LOWER($${paramIndex}))`;
+      params.push(`%${search}%`);
+      paramIndex++;
     }
     
-    return res.status(200).json(result.data || []);
+    if (status) {
+      query += ` AND p.status = $${paramIndex}`;
+      params.push(status);
+      paramIndex++;
+    }
+    
+    if (client_id) {
+      query += ` AND p.client_id = $${paramIndex}`;
+      params.push(client_id);
+      paramIndex++;
+    }
+    
+    query += ` GROUP BY p.id, c.name, s.name ORDER BY p.created_at DESC`;
+    
+    if (limit) {
+      query += ` LIMIT $${paramIndex}`;
+      params.push(Number(limit));
+      paramIndex++;
+    }
+    
+    if (offset) {
+      query += ` OFFSET $${paramIndex}`;
+      params.push(Number(offset));
+    }
+    
+    const projects = params.length > 0 
+      ? await sql.call(null, query, params)
+      : await sql(query);
+    
+    return res.status(200).json({ success: true, data: projects || [] });
   } catch (error) {
-    console.error('Error in GET /api/projects:', error);
+    apiLogger.error({ error, method: 'GET', path: '/api/projects' }, 'Failed to fetch projects');
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
 // POST /api/projects - Create new project
-async function handlePost(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function handlePost(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const projectData: NewProject = {
-      ...req.body,
-      createdBy: userId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const projectData = req.body;
     
     // Validate required fields
     if (!projectData.name) {
       return res.status(400).json({ error: 'Project name is required' });
     }
     
-    const result = await safeQuery(
-      async () => await db.insert(projects).values(projectData).returning(),
-      'Failed to create project'
-    );
+    const newProject = await sql`
+      INSERT INTO projects (
+        name, description, client_id, project_manager_id,
+        status, priority, start_date, end_date,
+        budget_allocated, budget_spent,
+        municipal_district, gps_latitude, gps_longitude,
+        city, state
+      )
+      VALUES (
+        ${projectData.name},
+        ${projectData.description || null},
+        ${projectData.client_id || projectData.clientId || null},
+        ${projectData.project_manager_id || projectData.projectManagerId || null},
+        ${projectData.status || 'PLANNING'},
+        ${projectData.priority || 'MEDIUM'},
+        ${projectData.start_date || projectData.startDate || new Date().toISOString()},
+        ${projectData.end_date || projectData.endDate || null},
+        ${projectData.budget_allocated || projectData.budgetAllocated || 0},
+        ${projectData.budget_spent || projectData.budgetSpent || 0},
+        ${projectData.municipal_district || projectData.municipalDistrict || null},
+        ${projectData.gps_latitude || projectData.gpsLatitude || null},
+        ${projectData.gps_longitude || projectData.gpsLongitude || null},
+        ${projectData.city || null},
+        ${projectData.state || null}
+      )
+      RETURNING *
+    `;
     
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
-    }
-    
-    return res.status(201).json(result.data?.[0]);
+    return res.status(201).json({ success: true, data: newProject[0] });
   } catch (error) {
-    console.error('Error in POST /api/projects:', error);
+    apiLogger.error({ error, method: 'POST', path: '/api/projects' }, 'Failed to create project');
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
 // PUT /api/projects - Update existing project
-async function handlePut(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function handlePut(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
   
-  if (!id || Array.isArray(id)) {
+  if (!id) {
     return res.status(400).json({ error: 'Project ID is required' });
   }
   
   try {
-    const updateData = {
-      ...req.body,
-      updatedAt: new Date(),
-    };
+    const updates = req.body;
     
-    // Remove fields that shouldn't be updated
-    delete updateData.id;
-    delete updateData.createdAt;
-    delete updateData.createdBy;
+    const updatedProject = await sql`
+      UPDATE projects
+      SET 
+        name = COALESCE(${updates.name}, name),
+        description = COALESCE(${updates.description}, description),
+        client_id = COALESCE(${updates.client_id || updates.clientId}, client_id),
+        project_manager_id = COALESCE(${updates.project_manager_id || updates.projectManagerId}, project_manager_id),
+        status = COALESCE(${updates.status}, status),
+        priority = COALESCE(${updates.priority}, priority),
+        start_date = COALESCE(${updates.start_date || updates.startDate}, start_date),
+        end_date = COALESCE(${updates.end_date || updates.endDate}, end_date),
+        budget_allocated = COALESCE(${updates.budget_allocated || updates.budgetAllocated}, budget_allocated),
+        budget_spent = COALESCE(${updates.budget_spent || updates.budgetSpent}, budget_spent),
+        municipal_district = COALESCE(${updates.municipal_district || updates.municipalDistrict}, municipal_district),
+        gps_latitude = COALESCE(${updates.gps_latitude || updates.gpsLatitude}, gps_latitude),
+        gps_longitude = COALESCE(${updates.gps_longitude || updates.gpsLongitude}, gps_longitude),
+        city = COALESCE(${updates.city}, city),
+        state = COALESCE(${updates.state}, state),
+        updated_at = NOW()
+      WHERE id = ${id as string}
+      RETURNING *
+    `;
     
-    const result = await safeQuery(
-      async () => await db.update(projects)
-        .set(updateData)
-        .where(eq(projects.id, Number(id)))
-        .returning(),
-      'Failed to update project'
-    );
-    
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
-    }
-    
-    if (!result.data?.[0]) {
+    if (updatedProject.length === 0) {
       return res.status(404).json({ error: 'Project not found' });
     }
     
-    return res.status(200).json(result.data[0]);
+    return res.status(200).json({ success: true, data: updatedProject[0] });
   } catch (error) {
-    console.error('Error in PUT /api/projects:', error);
+    apiLogger.error({ error, method: 'PUT', path: '/api/projects', projectId: id }, 'Failed to update project');
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
 
 // DELETE /api/projects - Delete project
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, userId: string) {
+async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
   
-  if (!id || Array.isArray(id)) {
+  if (!id) {
     return res.status(400).json({ error: 'Project ID is required' });
   }
   
   try {
-    const result = await safeQuery(
-      async () => await db.delete(projects)
-        .where(eq(projects.id, Number(id)))
-        .returning(),
-      'Failed to delete project'
-    );
+    const deleted = await sql`
+      DELETE FROM projects
+      WHERE id = ${id as string}
+      RETURNING id
+    `;
     
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
-    }
-    
-    if (!result.data?.[0]) {
+    if (deleted.length === 0) {
       return res.status(404).json({ error: 'Project not found' });
     }
     
-    return res.status(200).json({ message: 'Project deleted successfully' });
+    return res.status(200).json({ success: true, message: 'Project deleted successfully' });
   } catch (error) {
-    console.error('Error in DELETE /api/projects:', error);
+    apiLogger.error({ error, method: 'DELETE', path: '/api/projects', projectId: id }, 'Failed to delete project');
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

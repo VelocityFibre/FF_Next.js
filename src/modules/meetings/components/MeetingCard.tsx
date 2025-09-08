@@ -2,7 +2,7 @@ import {
   Calendar, Clock, MapPin, Video, Users, 
   CheckCircle, Edit, Trash2
 } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 import type { Meeting } from '../types/meeting.types';
 
 interface MeetingCardProps {

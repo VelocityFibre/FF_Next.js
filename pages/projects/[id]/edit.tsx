@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-// import { getAuth } from '@clerk/nextjs/server';
+import { getAuth } from '../../../lib/auth-mock';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 

@@ -11,7 +11,7 @@ import {
   limit, 
   getDocs
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { Supplier, SupplierStatus } from '@/types/supplier/base.types';
 import { log } from '@/lib/logger';
 

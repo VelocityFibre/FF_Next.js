@@ -1,17 +1,18 @@
-import { neon } from '@neondatabase/serverless';
+import { sql } from '@/lib/db';
 
-// Create a wrapper function for dynamic SQL queries
-export function createNeonClient(databaseUrl: string) {
-  const sql = neon(databaseUrl);
-  
+// Legacy-compatible factory that now returns the canonical client.
+// The databaseUrl parameter is ignored to enforce a single source of truth.
+export function createNeonClient(_databaseUrl?: string) {
+  const client = sql as any;
   return {
     // For template literal queries
-    sql,
-    
+    sql: client,
+
     // For dynamic queries with string concatenation
     query: async (queryString: string, params?: any[]) => {
-      // Use the sql function as a regular function
-      return (sql as any)(queryString, params);
-    }
+      return client(queryString, params);
+    },
   };
 }
+
+export { sql };

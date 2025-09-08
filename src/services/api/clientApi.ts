@@ -6,7 +6,7 @@
 import { Client, ClientFilter, ClientSummary } from '@/types/client.types';
 import { log } from '@/lib/logger';
 
-const API_BASE = import.meta.env.DEV ? 'http://localhost:5173/api' : '/api';
+const API_BASE = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : '/api';
 
 export const clientApi = {
   /**

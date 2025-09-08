@@ -9,7 +9,7 @@ import {
   Filter,
   Check
 } from 'lucide-react';
-import { Button } from '@/shared/components/ui/Button';
+import { Button } from '@/src/shared/components/ui/Button';
 import type { ProcurementViewMode } from '@/types/procurement/portal.types';
 import type { Project } from '@/types/project.types';
 import { ProjectStatus } from '@/types/project.types';

@@ -11,7 +11,7 @@ import {
   onSnapshot,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
 import { log } from '@/lib/logger';
 

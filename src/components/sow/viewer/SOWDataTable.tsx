@@ -3,7 +3,7 @@
  */
 
 import { CheckCircle } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 
 interface SOWDataTableProps {
   data: any[];

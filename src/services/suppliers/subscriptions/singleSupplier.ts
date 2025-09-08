@@ -4,7 +4,7 @@
  */
 
 import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { Supplier } from '@/types/supplier/base.types';
 import { SupplierCallback, SubscriptionOptions } from './types';
 import { log } from '@/lib/logger';

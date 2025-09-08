@@ -1,14 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { StockItem } from '../../../../src/types/procurement/stock.types';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { stockPositions, stockMovements, stockMovementItems } from '../../../../src/lib/neon/schema/procurement/stock.schema';
-import { eq, and, desc, sql, lt, or } from 'drizzle-orm';
 
 // Initialize database connection
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,57 +19,57 @@ export default async function handler(
       
       if (projectId && projectId !== 'all') {
         // Get stock positions for specific project
-        stockData = await db
-          .select()
-          .from(stockPositions)
-          .where(eq(stockPositions.projectId, projectId as string))
-          .orderBy(desc(stockPositions.updatedAt));
+        stockData = await sql`
+          SELECT * FROM stock_positions 
+          WHERE project_id = ${projectId}
+          ORDER BY updated_at DESC
+        `;
         
         // Get recent movements
-        movements = await db
-          .select()
-          .from(stockMovements)
-          .where(eq(stockMovements.projectId, projectId as string))
-          .orderBy(desc(stockMovements.movementDate))
-          .limit(10);
+        movements = await sql`
+          SELECT * FROM stock_movements 
+          WHERE project_id = ${projectId}
+          ORDER BY movement_date DESC
+          LIMIT 10
+        `;
       } else {
         // Get all stock positions with aggregations
-        stockData = await db
-          .select()
-          .from(stockPositions)
-          .where(eq(stockPositions.isActive, true))
-          .orderBy(desc(stockPositions.updatedAt))
-          .limit(200);
+        stockData = await sql`
+          SELECT * FROM stock_positions 
+          WHERE is_active = true
+          ORDER BY updated_at DESC
+          LIMIT 200
+        `;
           
         // Get recent movements across all projects
-        movements = await db
-          .select()
-          .from(stockMovements)
-          .orderBy(desc(stockMovements.movementDate))
-          .limit(20);
+        movements = await sql`
+          SELECT * FROM stock_movements
+          ORDER BY movement_date DESC
+          LIMIT 20
+        `;
       }
       
       // Transform data to match expected format
       const transformedItems: StockItem[] = stockData.map(stock => ({
         id: stock.id,
-        itemCode: stock.itemCode,
-        name: stock.itemName,
+        itemCode: stock.item_code,
+        name: stock.item_name,
         description: stock.description || '',
         category: stock.category || 'General',
-        projectId: stock.projectId,
-        warehouse: stock.warehouseLocation || 'Main Warehouse',
-        location: stock.binLocation || '',
-        quantity: Number(stock.availableQuantity || 0),
+        projectId: stock.project_id,
+        warehouse: stock.warehouse_location || 'Main Warehouse',
+        location: stock.bin_location || '',
+        quantity: Number(stock.available_quantity || 0),
         unit: stock.uom,
-        minQuantity: Number(stock.reorderLevel || 0),
-        maxQuantity: Number(stock.maxStockLevel || 0),
-        unitCost: Number(stock.averageUnitCost || 0),
-        totalValue: Number(stock.totalValue || 0),
+        minQuantity: Number(stock.reorder_level || 0),
+        maxQuantity: Number(stock.max_stock_level || 0),
+        unitCost: Number(stock.average_unit_cost || 0),
+        totalValue: Number(stock.total_value || 0),
         supplier: '', // Will need to join with suppliers table if available
-        lastRestocked: stock.lastMovementDate?.toISOString() || new Date().toISOString(),
-        status: stock.stockStatus as 'in_stock' | 'low_stock' | 'out_of_stock' || 'in_stock',
-        createdAt: stock.createdAt?.toISOString() || new Date().toISOString(),
-        updatedAt: stock.updatedAt?.toISOString() || new Date().toISOString(),
+        lastRestocked: stock.last_movement_date || new Date().toISOString(),
+        status: stock.stock_status as 'in_stock' | 'low_stock' | 'out_of_stock' || 'in_stock',
+        createdAt: stock.created_at || new Date().toISOString(),
+        updatedAt: stock.updated_at || new Date().toISOString(),
       }));
       
       // Calculate stock statistics
@@ -90,7 +85,7 @@ export default async function handler(
       // Add movement statistics
       const movementStats = {
         recentMovements: movements.length,
-        lastMovementDate: movements[0]?.movementDate?.toISOString() || null,
+        lastMovementDate: movements[0]?.movement_date || null,
         totalMovements: movements.length,
       };
 
@@ -115,19 +110,36 @@ export default async function handler(
       const newItem = req.body;
       
       // Insert new stock position into database
-      const [insertedStock] = await db
-        .insert(stockPositions)
-        .values({
-          ...newItem,
-          projectId: newItem.projectId || projectId,
-          availableQuantity: newItem.quantity?.toString() || '0',
-          onHandQuantity: newItem.quantity?.toString() || '0',
-        })
-        .returning();
+      const insertedStocks = await sql`
+        INSERT INTO stock_positions (
+          project_id, item_code, item_name, description, category, uom,
+          available_quantity, on_hand_quantity, warehouse_location, bin_location,
+          reorder_level, max_stock_level, average_unit_cost, total_value, stock_status, is_active
+        )
+        VALUES (
+          ${newItem.projectId || projectId},
+          ${newItem.itemCode || ''},
+          ${newItem.name},
+          ${newItem.description || ''},
+          ${newItem.category || 'General'},
+          ${newItem.unit},
+          ${newItem.quantity || 0},
+          ${newItem.quantity || 0},
+          ${newItem.warehouse || 'Main Warehouse'},
+          ${newItem.location || ''},
+          ${newItem.minQuantity || 0},
+          ${newItem.maxQuantity || 0},
+          ${newItem.unitCost || 0},
+          ${newItem.totalValue || 0},
+          ${newItem.status || 'in_stock'},
+          true
+        )
+        RETURNING *
+      `;
       
       res.status(201).json({ 
         message: 'Stock item added successfully',
-        item: insertedStock
+        item: insertedStocks[0]
       });
     } catch (error) {
       console.error('Error adding stock item:', error);

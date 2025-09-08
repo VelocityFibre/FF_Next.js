@@ -5,7 +5,7 @@ import {
   orderBy, 
   getDocs
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { log } from '@/lib/logger';
 import { 
   StaffMember,

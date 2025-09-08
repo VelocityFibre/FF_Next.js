@@ -1,34 +1,59 @@
 /**
- * Firebase Configuration
- * Initializes Firebase services for the application
+ * Firebase Configuration - Mock Implementation
+ * This is a mock implementation since the app has migrated to Clerk authentication.
+ * Firebase references are kept for backward compatibility but don't perform actual operations.
  */
 
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
-import { getAnalytics, isSupported } from 'firebase/analytics';
-
-// Firebase configuration from environment variables
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDemoKey",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "demo-project.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "demo-project",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "demo-project.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-XXXXXXXXXX"
+// Mock Firebase app
+const app = {
+  name: 'mock-app',
+  options: {},
+  automaticDataCollectionEnabled: false
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Mock Firestore database
+export const db = {
+  collection: () => ({
+    doc: () => ({
+      get: () => Promise.resolve({ exists: () => false, data: () => null }),
+      set: () => Promise.resolve(),
+      update: () => Promise.resolve(),
+      delete: () => Promise.resolve(),
+      onSnapshot: () => () => {}
+    }),
+    add: () => Promise.resolve({ id: 'mock-id' }),
+    where: () => ({
+      get: () => Promise.resolve({ docs: [], empty: true }),
+      onSnapshot: () => () => {}
+    }),
+    get: () => Promise.resolve({ docs: [], empty: true }),
+    onSnapshot: () => () => {}
+  })
+};
 
-// Initialize Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+// Mock Auth
+export const auth = {
+  currentUser: null,
+  onAuthStateChanged: () => () => {},
+  signOut: () => Promise.resolve(),
+  signInWithEmailAndPassword: () => Promise.reject(new Error('Use Clerk authentication')),
+  createUserWithEmailAndPassword: () => Promise.reject(new Error('Use Clerk authentication'))
+};
 
-// Initialize Analytics only if supported
-export const analytics = isSupported().then(yes => yes ? getAnalytics(app) : null);
+// Mock Storage
+export const storage = {
+  ref: () => ({
+    put: () => Promise.resolve({ ref: { getDownloadURL: () => Promise.resolve('mock-url') } }),
+    getDownloadURL: () => Promise.resolve('mock-url'),
+    delete: () => Promise.resolve()
+  })
+};
 
-export default app;
+// Mock Analytics
+let analytics: any = {
+  logEvent: () => {},
+  setUserId: () => {},
+  setUserProperties: () => {}
+};
+
+export { app, analytics };

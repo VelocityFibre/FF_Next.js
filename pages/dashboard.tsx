@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import MainLayout from '@/components/layout/MainLayout';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { RefreshCw } from 'lucide-react';
 
 // Dynamic import of the Dashboard module with no SSR for performance
 const DashboardModule = dynamic(
-  () => import('../src/modules/dashboard/Dashboard'),
+  () => import('../src/modules/dashboard/Dashboard').then(mod => ({ default: mod.Dashboard })),
   { 
     loading: () => <DashboardSkeleton />,
     ssr: false 
@@ -78,10 +78,10 @@ function DashboardSkeleton() {
 
 export default function DashboardPage() {
   return (
-    <MainLayout>
+    <AppLayout>
       <Suspense fallback={<DashboardSkeleton />}>
         <DashboardModule />
       </Suspense>
-    </MainLayout>
+    </AppLayout>
   );
 }

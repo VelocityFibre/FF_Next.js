@@ -1,0 +1,410 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ],
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    }
+  ],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [
+      {
+        "source": "/api/:path*",
+        "destination": "/api/:path*",
+        "regex": "^/api(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+      }
+    ],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/clients/[id]",
+      "regex": "^/api/clients/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/clients/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/field/tasks/[id]",
+      "regex": "^/api/field/tasks/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/field/tasks/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/projects/[id]",
+      "regex": "^/api/projects/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/projects/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/sow/import/[importId]/status",
+      "regex": "^/api/sow/import/([^/]+?)/status(?:/)?$",
+      "routeKeys": {
+        "nxtPimportId": "nxtPimportId"
+      },
+      "namedRegex": "^/api/sow/import/(?<nxtPimportId>[^/]+?)/status(?:/)?$"
+    },
+    {
+      "page": "/api/sow/project/[projectId]",
+      "regex": "^/api/sow/project/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/api/sow/project/(?<nxtPprojectId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/sow/project/[projectId]/import",
+      "regex": "^/api/sow/project/([^/]+?)/import(?:/)?$",
+      "routeKeys": {
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/api/sow/project/(?<nxtPprojectId>[^/]+?)/import(?:/)?$"
+    },
+    {
+      "page": "/api/sow/project/[projectId]/poles-with-drops",
+      "regex": "^/api/sow/project/([^/]+?)/poles\\-with\\-drops(?:/)?$",
+      "routeKeys": {
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/api/sow/project/(?<nxtPprojectId>[^/]+?)/poles\\-with\\-drops(?:/)?$"
+    },
+    {
+      "page": "/api/sow/project/[projectId]/summary",
+      "regex": "^/api/sow/project/([^/]+?)/summary(?:/)?$",
+      "routeKeys": {
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/api/sow/project/(?<nxtPprojectId>[^/]+?)/summary(?:/)?$"
+    },
+    {
+      "page": "/clients/[id]",
+      "regex": "^/clients/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/clients/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/clients/[id]/edit",
+      "regex": "^/clients/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/clients/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]",
+      "regex": "^/projects/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/edit",
+      "regex": "^/projects/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]/tracker",
+      "regex": "^/projects/([^/]+?)/tracker(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)/tracker(?:/)?$"
+    },
+    {
+      "page": "/staff/[id]",
+      "regex": "^/staff/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/staff/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/staff/[id]/edit",
+      "regex": "^/staff/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/staff/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/action-items",
+      "regex": "^/action\\-items(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/action\\-items(?:/)?$"
+    },
+    {
+      "page": "/analytics",
+      "regex": "^/analytics(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/analytics(?:/)?$"
+    },
+    {
+      "page": "/clients",
+      "regex": "^/clients(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/clients(?:/)?$"
+    },
+    {
+      "page": "/clients/new",
+      "regex": "^/clients/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/clients/new(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/field",
+      "regex": "^/field(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/field(?:/)?$"
+    },
+    {
+      "page": "/meetings",
+      "regex": "^/meetings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/meetings(?:/)?$"
+    },
+    {
+      "page": "/pole-capture",
+      "regex": "^/pole\\-capture(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pole\\-capture(?:/)?$"
+    },
+    {
+      "page": "/pole-tracker",
+      "regex": "^/pole\\-tracker(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pole\\-tracker(?:/)?$"
+    },
+    {
+      "page": "/procurement",
+      "regex": "^/procurement(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/procurement(?:/)?$"
+    },
+    {
+      "page": "/procurement/boq",
+      "regex": "^/procurement/boq(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/procurement/boq(?:/)?$"
+    },
+    {
+      "page": "/procurement/rfq",
+      "regex": "^/procurement/rfq(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/procurement/rfq(?:/)?$"
+    },
+    {
+      "page": "/procurement/stock",
+      "regex": "^/procurement/stock(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/procurement/stock(?:/)?$"
+    },
+    {
+      "page": "/projects",
+      "regex": "^/projects(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/projects(?:/)?$"
+    },
+    {
+      "page": "/projects/new",
+      "regex": "^/projects/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/projects/new(?:/)?$"
+    },
+    {
+      "page": "/reports",
+      "regex": "^/reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/reports(?:/)?$"
+    },
+    {
+      "page": "/sign-in",
+      "regex": "^/sign\\-in(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sign\\-in(?:/)?$"
+    },
+    {
+      "page": "/sow",
+      "regex": "^/sow(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sow(?:/)?$"
+    },
+    {
+      "page": "/sow/import",
+      "regex": "^/sow/import(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sow/import(?:/)?$"
+    },
+    {
+      "page": "/sow/list",
+      "regex": "^/sow/list(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sow/list(?:/)?$"
+    },
+    {
+      "page": "/sow-management",
+      "regex": "^/sow\\-management(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sow\\-management(?:/)?$"
+    },
+    {
+      "page": "/staff",
+      "regex": "^/staff(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff(?:/)?$"
+    },
+    {
+      "page": "/staff/import",
+      "regex": "^/staff/import(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff/import(?:/)?$"
+    },
+    {
+      "page": "/staff/new",
+      "regex": "^/staff/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/staff/new(?:/)?$"
+    }
+  ],
+  "dataRoutes": [
+    {
+      "page": "/field",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/field\\.json$"
+    },
+    {
+      "page": "/pole-tracker",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/pole-tracker\\.json$"
+    },
+    {
+      "page": "/procurement",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/procurement\\.json$"
+    },
+    {
+      "page": "/procurement/boq",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/procurement/boq\\.json$"
+    },
+    {
+      "page": "/procurement/rfq",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/procurement/rfq\\.json$"
+    },
+    {
+      "page": "/procurement/stock",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/procurement/stock\\.json$"
+    },
+    {
+      "page": "/projects",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects\\.json$"
+    },
+    {
+      "page": "/projects/new",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/new\\.json$"
+    },
+    {
+      "page": "/projects/[id]",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/([^/]+?)\\.json$",
+      "namedDataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/(?<nxtPid>[^/]+?)\\.json$"
+    },
+    {
+      "page": "/projects/[id]/edit",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/([^/]+?)/edit\\.json$",
+      "namedDataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/(?<nxtPid>[^/]+?)/edit\\.json$"
+    },
+    {
+      "page": "/projects/[id]/tracker",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/([^/]+?)/tracker\\.json$",
+      "namedDataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/projects/(?<nxtPid>[^/]+?)/tracker\\.json$"
+    },
+    {
+      "page": "/sow",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/sow\\.json$"
+    },
+    {
+      "page": "/sow/import",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/sow/import\\.json$"
+    },
+    {
+      "page": "/sow/list",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/sow/list\\.json$"
+    },
+    {
+      "page": "/sow-management",
+      "dataRouteRegex": "^/_next/data/WbeW6o75xnoIRSPk9pMGI/sow-management\\.json$"
+    }
+  ],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

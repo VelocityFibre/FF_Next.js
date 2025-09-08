@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020",
     "lib": [
       "dom",
       "dom.iterable",
@@ -13,29 +13,61 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "tsBuildInfoFile": ".next/tsconfig.tsbuildinfo",
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
     "paths": {
       "@/*": [
         "./*"
       ],
       "@/lib/*": [
-        "./lib/*"
+        "./lib/*",
+        "./src/lib/*"
       ],
       "@/components/*": [
-        "./components/*"
+        "./components/*",
+        "./src/components/*"
       ],
       "@/hooks/*": [
-        "./hooks/*"
+        "./hooks/*",
+        "./src/hooks/*"
       ],
       "@/store/*": [
-        "./store/*"
+        "./store/*",
+        "./src/store/*"
       ],
       "@/types/*": [
-        "./types/*"
+        "./types/*",
+        "./src/types/*"
+      ],
+      "@/contexts/*": [
+        "./src/contexts/*",
+        "./contexts/*"
+      ],
+      "@/services/*": [
+        "./src/services/*",
+        "./services/*"
+      ],
+      "@/modules/*": [
+        "./src/modules/*",
+        "./modules/*"
+      ],
+      "@/config/*": [
+        "./src/config/*",
+        "./config/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*",
+        "./utils/*"
+      ],
+      "@/src/*": [
+        "./src/*"
       ]
     },
     "plugins": [
@@ -48,7 +80,8 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "next.config.ts"
   ],
   "exclude": [
     "node_modules"

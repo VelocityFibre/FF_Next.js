@@ -8,7 +8,7 @@ import {
   getDocs,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { ProjectAssignment } from '@/types/staff.types';
 import { log } from '@/lib/logger';
 

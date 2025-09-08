@@ -1,12 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { sql } from 'drizzle-orm';
 
-// Initialize Neon client
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+// Initialize Neon client directly (no Drizzle needed)
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,7 +13,7 @@ export default async function handler(
   }
 
   try {
-    // Fetch real statistics from database
+    // Fetch real statistics from database using direct Neon client
     const [
       projectStats,
       staffStats,
@@ -26,7 +22,7 @@ export default async function handler(
       sowImportStats
     ] = await Promise.all([
       // Projects statistics - using actual columns
-      db.execute(sql`
+      sql`
         SELECT 
           COUNT(*) as total_projects,
           COUNT(CASE WHEN status = 'active' OR status = 'in_progress' THEN 1 END) as active_projects,
@@ -34,19 +30,19 @@ export default async function handler(
           COALESCE(SUM(budget::numeric), 0) as total_budget,
           COALESCE(AVG(progress), 0) as avg_progress
         FROM projects
-      `),
+      `,
       
       // Staff statistics - using actual columns
-      db.execute(sql`
+      sql`
         SELECT 
           COUNT(*) as total_staff,
           COUNT(CASE WHEN status = 'active' THEN 1 END) as active_staff,
           COUNT(DISTINCT department) as departments
         FROM staff
-      `),
+      `,
       
       // SOW statistics from imports (since we don't have poles/drops tables yet)
-      db.execute(sql`
+      sql`
         SELECT 
           COUNT(CASE WHEN import_type = 'poles' THEN 1 END) as pole_imports,
           COUNT(CASE WHEN import_type = 'drops' THEN 1 END) as drop_imports,
@@ -54,25 +50,25 @@ export default async function handler(
           COALESCE(SUM(processed_records), 0) as total_processed
         FROM sow_imports
         WHERE status = 'completed' OR status = 'success'
-      `),
+      `,
       
       // Client statistics - using actual columns
-      db.execute(sql`
+      sql`
         SELECT 
           COUNT(*) as total_clients,
           COUNT(CASE WHEN status = 'active' THEN 1 END) as active_clients
         FROM clients
-      `),
+      `,
       
       // Get project budgets for revenue calculation
-      db.execute(sql`
+      sql`
         SELECT 
           COALESCE(SUM(budget::numeric), 0) as total_revenue,
           COUNT(*) as total_imports,
           COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_imports
         FROM projects p
         LEFT JOIN sow_imports si ON p.id = si.project_id
-      `)
+      `
     ]);
 
     // Extract results

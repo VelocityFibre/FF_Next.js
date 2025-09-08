@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import toast from 'react-hot-toast';
-import { storage } from '@/config/firebase';
+import { storage } from '@/src/config/firebase';
 import { contractorService } from '@/services/contractorService';
 import { DocumentType, ContractorDocument } from '@/types/contractor.types';
 import { DOCUMENT_TYPE_LABELS } from '../types/documentUpload.types';

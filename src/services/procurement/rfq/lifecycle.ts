@@ -14,7 +14,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { RFQStatus } from '@/types/procurement.types';
 import { RFQOperations } from './operations';
 import { log } from '@/lib/logger';

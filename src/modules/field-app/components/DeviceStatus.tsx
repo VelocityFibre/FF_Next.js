@@ -1,5 +1,5 @@
 import { Battery, Signal, HardDrive, Smartphone } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 
 interface DeviceStatusProps {
   battery: number;

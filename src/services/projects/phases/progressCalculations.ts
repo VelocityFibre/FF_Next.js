@@ -1,5 +1,5 @@
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { TaskStatus } from '@/types/project.types';
 import { getProjectPhases } from './phaseOperations';
 import { getPhaseSteps } from './stepOperations';

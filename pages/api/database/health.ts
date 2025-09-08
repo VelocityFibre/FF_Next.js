@@ -1,8 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.DATABASE_URL!);
 
 /**
  * Database Health Check API Route
- * Checks the database connection status
+ * Checks the database connection status directly using Neon
  */
 export default async function handler(
   req: NextApiRequest,
@@ -14,29 +17,23 @@ export default async function handler(
   }
 
   try {
-    // Proxy to backend API server
-    const backendUrl = process.env.BACKEND_API_URL || 'http://localhost:3001';
-    const response = await fetch(`${backendUrl}/api/health`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    // Direct database health check using Neon
+    const result = await sql`SELECT NOW() as time, version() as version`;
+    
+    return res.status(200).json({ 
+      status: 'healthy',
+      database: 'connected',
+      timestamp: result[0].time,
+      version: result[0].version,
+      environment: process.env.NODE_ENV || 'development'
     });
-
-    if (!response.ok) {
-      return res.status(response.status).json({ 
-        success: false,
-        error: `Backend health check failed: ${response.status}` 
-      });
-    }
-
-    const result = await response.json();
-    return res.status(200).json(result);
   } catch (error) {
     console.error('Health check error:', error);
-    return res.status(500).json({ 
-      success: false,
-      error: error instanceof Error ? error.message : 'Health check failed' 
+    return res.status(503).json({ 
+      status: 'unhealthy',
+      database: 'disconnected',
+      error: error instanceof Error ? error.message : 'Database connection failed',
+      environment: process.env.NODE_ENV || 'development'
     });
   }
 }

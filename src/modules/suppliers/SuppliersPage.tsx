@@ -3,7 +3,7 @@ import { Plus, Search, Star, Building2, AlertCircle } from 'lucide-react';
 import { useSuppliers } from './hooks/useSuppliers';
 import { SupplierCard } from './components/SupplierCard';
 import { SupplierStatus, ProductCategory } from '@/types/supplier.types';
-import { Button } from '@/shared/components/ui/Button';
+import { Button } from '@/src/shared/components/ui/Button';
 import { Input } from '@/shared/components/ui/Input';
 import { useNavigate } from 'react-router-dom';
 

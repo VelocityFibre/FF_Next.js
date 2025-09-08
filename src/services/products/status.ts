@@ -4,7 +4,7 @@
  */
 
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { ProductAvailability } from './types';
 import { log } from '@/lib/logger';
 

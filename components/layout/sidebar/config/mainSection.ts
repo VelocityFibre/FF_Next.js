@@ -9,21 +9,21 @@ export const mainSection: NavSection = {
   section: 'MAIN',
   items: [
     {
-      to: '/app/dashboard',
+      to: '/dashboard',
       icon: LayoutDashboard,
       label: 'Dashboard',
       shortLabel: 'Dash',
       permissions: [], // Available to all
     },
     {
-      to: '/app/meetings',
+      to: '/meetings',
       icon: Users,
       label: 'Meetings',
       shortLabel: 'Meet',
       permissions: [],
     },
     {
-      to: '/app/action-items',
+      to: '/action-items',
       icon: CheckCircle,
       label: 'Action Items',
       shortLabel: 'Actions',

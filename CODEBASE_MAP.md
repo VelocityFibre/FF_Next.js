@@ -1,10 +1,11 @@
-# FibreFlow React - Codebase Mapping Strategy
+# FibreFlow Next.js - Codebase Mapping Strategy
 
 ## 🎯 Goal
 Create comprehensive codebase documentation that fits within Claude's 200K token context window by processing the codebase in logical sections.
 
 ## 📊 Codebase Overview
-- **Total Size**: 1,980 files, 280K lines of code
+- **Framework**: Next.js 14+ with App Router
+- **Total Size**: ~2,000 files, 280K+ lines of code
 - **Token Estimate**: ~2.8-4.2M tokens
 - **Claude Limit**: 200K tokens per conversation
 - **Required Passes**: ~15-20 sections
@@ -13,27 +14,28 @@ Create comprehensive codebase documentation that fits within Claude's 200K token
 
 ### Phase 1: Core Architecture (Foundation)
 **Section 1.1: Entry Points & Configuration**
-- `src/index.tsx`, `src/App.tsx`
-- `src/config/*` - App configuration
-- `vite.config.ts`, `tsconfig.json`
+- `pages/_app.tsx`, `pages/index.tsx` - Next.js entry points
+- `next.config.mjs`, `tsconfig.json` - Configuration
+- `middleware.ts` - Clerk authentication middleware
 - **Output**: `docs/architecture/01-entry-points.md`
 
 **Section 1.2: Routing & Navigation**
-- `src/app/*` - App structure
-- `src/pages/*` - Page components
-- Route definitions and navigation logic
+- `pages/*` - Next.js page components (Pages Router)
+- `components/layout/*` - AppLayout, Header, Sidebar
+- Navigation configuration and routing logic
 - **Output**: `docs/architecture/02-routing.md`
 
 ### Phase 2: Data Layer
 **Section 2.1: Database & Models**
-- `src/lib/neon/*` - Database schemas
-- `drizzle/*` - Migrations
-- Type definitions
+- `lib/db.ts` - Neon database connection
+- `scripts/migrations/*` - Database migrations
+- Type definitions and schemas
 - **Output**: `docs/data/01-database-models.md`
 
 **Section 2.2: API Layer**
-- `api/*` - All API endpoints
+- `pages/api/*` - Next.js API routes
 - `src/services/api/*` - API client services
+- Neon serverless client usage patterns
 - **Output**: `docs/data/02-api-layer.md`
 
 **Section 2.3: State Management**
@@ -44,8 +46,9 @@ Create comprehensive codebase documentation that fits within Claude's 200K token
 
 ### Phase 3: Feature Modules
 **Section 3.1: Authentication & Users**
-- Auth components and services
-- User management
+- Clerk authentication integration
+- `middleware.ts` - Auth middleware
+- User management components
 - **Output**: `docs/features/01-authentication.md`
 
 **Section 3.2: Projects Module**

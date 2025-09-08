@@ -14,17 +14,21 @@
 ### Core Application
 - `src/` - Main React application code
 - `api/` - Backend API endpoints and server logic
+- `components/` - **Shared UI components (AppLayout is the standard layout)**
+  - `layout/` - Layout components (AppLayout, Header, Sidebar, Footer)
+  - `layout/index.ts` - Single source of truth for layout imports
 - `public/` - Static assets and public files
 - `scripts/` - Build scripts, database utilities, and tools
 - `SOW/` - Statement of Work import functionality (active feature)
 
 ### Database & Infrastructure
-- `drizzle/` - **Database ORM and migration system**
-  - Uses Drizzle ORM for TypeScript-first database access
-  - Contains migrations and schema definitions
-  - Connects to Neon PostgreSQL database
-  - Key commands: `db:generate`, `db:migrate`, `db:push`, `db:studio`
-- `neon/` - Neon database configuration
+- `neon/` - **Neon PostgreSQL database**
+  - Uses @neondatabase/serverless client for direct SQL queries
+  - No ORM - direct SQL with template literals
+  - Database configuration and connection setup
+- `scripts/migrations/` - Custom database migration scripts
+  - Migration runner and SQL files
+  - Database setup and seeding utilities
 
 ### Development & Testing
 - `tests/` - Test suites and e2e tests
@@ -39,6 +43,7 @@ Non-essential files have been moved to `../FF_React_Archive/` to keep the codeba
 - Migration scripts (one-time fixes)
 - Temporary files and test outputs
 - Legacy code (ForgeFlow-v2-FF2)
+- `archive/old-layouts/` - Old layout components (MainLayout, simple Layout) replaced by AppLayout
 
 ## Key Commands
 
@@ -52,10 +57,11 @@ npm run type-check   # TypeScript type checking
 
 ### Database
 ```bash
-npm run db:generate  # Generate migrations from schema changes
-npm run db:migrate   # Apply migrations to database
-npm run db:push      # Push schema directly to database
-npm run db:studio    # Open Drizzle Studio (database browser)
+npm run db:migrate   # Run custom migration scripts
+npm run db:seed      # Seed database with initial data
+npm run db:validate  # Validate database schema and connections
+npm run db:setup     # Initial database setup
+npm run db:test      # Run database tests
 ```
 
 ### Testing
@@ -75,7 +81,7 @@ npm run antihall    # Run anti-hallucination validator
 - **Framework**: Next.js 14+ with App Router
 - **Frontend**: React 18, TypeScript, TailwindCSS
 - **Authentication**: Clerk (complete integration)
-- **Database**: Neon PostgreSQL with Drizzle ORM
+- **Database**: Neon PostgreSQL (serverless client, direct SQL)
 - **API**: Next.js API Routes (App Router)
 - **Testing**: Vitest, Playwright
 - **Deployment**: Vercel (optimized SSR/ISR)
@@ -95,10 +101,20 @@ npm run antihall    # Run anti-hallucination validator
 
 ### Development Guidelines
 1. Always check existing code patterns before implementing new features
-2. The database layer uses Drizzle ORM - don't use raw SQL or other ORMs
+2. Database uses Neon serverless client with direct SQL queries (no ORM)
 3. SOW import functionality is an active feature - keep related files
 4. Use the antihall validator to verify code references exist
 5. Archive directory (`../FF_React_Archive/`) contains old/temporary files if needed for reference
 6. **All new features**: Implement in Next.js app (current production)
 7. **Authentication**: Use Clerk patterns exclusively (Firebase Auth removed)
 8. **API Routes**: Use Next.js App Router API routes (Express server retired)
+
+### Coding Standards
+1. **File Size Limit**: Keep files under 300 lines (enforces better organization)
+2. **Component Structure**: 
+   - Components should be < 200 lines
+   - Extract business logic to custom hooks
+   - Keep only UI logic in components
+3. **Type Organization**: Group types by module (e.g., `types/procurement/base.types.ts`)
+4. **Service Pattern**: Domain-focused services, split large services into operations
+5. **Custom Hooks**: Use for data fetching, business logic, and reusable UI state

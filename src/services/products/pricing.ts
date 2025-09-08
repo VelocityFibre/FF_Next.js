@@ -16,7 +16,7 @@ import {
   limit,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { Product, PriceList, PriceListItem, CreatePriceListData, PriceAdjustment } from './types';
 import { log } from '@/lib/logger';
 

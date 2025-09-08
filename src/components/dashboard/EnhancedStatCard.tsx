@@ -4,9 +4,9 @@
  */
 
 import { LucideIcon, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { memo, useCallback } from 'react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 
 // 🟢 WORKING: Enhanced stat card props interface
 export interface EnhancedStatCardProps {
@@ -49,7 +49,7 @@ const EnhancedStatCardComponent = ({
   showTrend = true,
   formatValue,
 }: EnhancedStatCardProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleClick = useCallback(() => {
     if (error) return; // Don't navigate if there's an error
@@ -57,9 +57,9 @@ const EnhancedStatCardComponent = ({
     if (onClick) {
       onClick();
     } else if (route) {
-      navigate(route);
+      router.push(route);
     }
-  }, [onClick, route, navigate, error]);
+  }, [onClick, route, router, error]);
 
   // 🟢 WORKING: Format display value
   const displayValue = formatValue 

@@ -4,7 +4,7 @@
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { auth } from '@/config/firebase';
+import { auth } from '@/src/config/firebase';
 import { log } from '@/lib/logger';
 
 export interface ApiError {
@@ -27,7 +27,7 @@ export interface ApiResponse<T = unknown> {
 
 class ApiClient {
   private client: AxiosInstance;
-  constructor(baseURL: string = import.meta.env.VITE_API_BASE_URL || '') {
+  constructor(baseURL: string = process.env.NEXT_PUBLIC_API_BASE_URL || '') {
     this.client = axios.create({
       baseURL,
       timeout: 30000,
@@ -55,7 +55,7 @@ class ApiClient {
 
         // Add request metadata
         config.headers['X-Request-ID'] = this.generateRequestId();
-        config.headers['X-Client-Version'] = import.meta.env.VITE_APP_VERSION || '1.0.0';
+        config.headers['X-Client-Version'] = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0';
         
         return config;
       },

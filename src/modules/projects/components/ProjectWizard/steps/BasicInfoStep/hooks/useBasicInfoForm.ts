@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { reverseGeocode, getCurrentLocation, validateSouthAfricanGPS, parseGPSCoordinates } from '@/utils/geoLocation';
+import { reverseGeocode, getCurrentLocation, validateSouthAfricanGPS, parseGPSCoordinates } from '@/src/utils/geoLocation';
 import type { GpsState } from '../types/basicInfo.types';
 import { log } from '@/lib/logger';
 

@@ -15,7 +15,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from 'firebase/auth';
-import { auth } from '@/config/firebase';
+import { auth } from '@/src/config/firebase';
 import { LoginCredentials, RegisterCredentials, PasswordResetRequest, User } from '@/types/auth.types';
 import { createUserProfile, getUserProfile, updateLastLogin } from '../userService';
 import { AuthUser, mapFirebaseUser, handleAuthError } from '../authHelpers';

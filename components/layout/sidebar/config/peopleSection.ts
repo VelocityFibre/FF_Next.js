@@ -9,14 +9,14 @@ export const peopleSection: NavSection = {
   section: 'PEOPLE & MANAGEMENT',
   items: [
     {
-      to: '/app/clients',
+      to: '/clients',
       icon: Users,
       label: 'Clients',
       shortLabel: 'Clients',
       permissions: [],
     },
     {
-      to: '/app/staff',
+      to: '/staff',
       icon: Users,
       label: 'Staff',
       shortLabel: 'Staff',

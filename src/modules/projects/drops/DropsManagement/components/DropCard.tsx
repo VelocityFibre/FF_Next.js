@@ -8,7 +8,7 @@ import {
   User,
   Cable
 } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 import type { Drop } from '../types/drops.types';
 import { getStatusColor, formatStatusText } from '../utils/dropsUtils';
 

@@ -9,21 +9,21 @@ export const communicationsSection: NavSection = {
   section: 'COMMUNICATIONS',
   items: [
     {
-      to: '/app/communications',
+      to: '/communications',
       icon: MessageSquare,
       label: 'Communications Portal',
       shortLabel: 'Comms',
       permissions: [],
     },
     {
-      to: '/app/meetings',
+      to: '/meetings',
       icon: Users,
       label: 'Meetings',
       shortLabel: 'Meet',
       permissions: [],
     },
     {
-      to: '/app/action-items',
+      to: '/action-items',
       icon: CheckCircle,
       label: 'Action Items',
       shortLabel: 'Actions',

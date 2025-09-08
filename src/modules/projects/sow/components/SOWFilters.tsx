@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 import { SOWFilterType } from '../types/sow.types';
 
 interface SOWFiltersProps {

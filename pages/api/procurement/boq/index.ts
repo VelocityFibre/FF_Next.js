@@ -1,14 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { BOQItem } from '../../../../src/types/procurement/boq.types';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { boqs, boqItems } from '../../../../src/lib/neon/schema/procurement/boq.schema';
-import { eq, and, desc, sql } from 'drizzle-orm';
 
 // Initialize database connection
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_jUJCNFiG38aY@ep-mute-brook-a99vppmn-pooler.gwc.azure.neon.tech/neondb?sslmode=require';
-const neonClient = neon(connectionString);
-const db = drizzle(neonClient as any);
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,46 +19,46 @@ export default async function handler(
       
       if (projectId && projectId !== 'all') {
         // Get BOQ data for specific project
-        boqData = await db
-          .select()
-          .from(boqs)
-          .where(eq(boqs.projectId, projectId as string))
-          .orderBy(desc(boqs.createdAt));
+        boqData = await sql`
+          SELECT * FROM boqs 
+          WHERE project_id = ${projectId}
+          ORDER BY created_at DESC
+        `;
         
         // Get BOQ items if we have BOQs
         if (boqData.length > 0) {
-          items = await db
-            .select()
-            .from(boqItems)
-            .where(eq(boqItems.projectId, projectId as string))
-            .orderBy(boqItems.lineNumber);
+          items = await sql`
+            SELECT * FROM boq_items 
+            WHERE project_id = ${projectId}
+            ORDER BY line_number
+          `;
         } else {
           items = [];
         }
       } else {
         // Get all BOQs with their items count
-        const boqWithCount = await db
-          .select({
-            boq: boqs,
-            itemsCount: sql<number>`COUNT(${boqItems.id})::int`,
-          })
-          .from(boqs)
-          .leftJoin(boqItems, eq(boqs.id, boqItems.boqId))
-          .groupBy(boqs.id)
-          .orderBy(desc(boqs.createdAt))
-          .limit(100);
+        const boqWithCount = await sql`
+          SELECT 
+            b.*,
+            COUNT(bi.id)::int as items_count
+          FROM boqs b
+          LEFT JOIN boq_items bi ON b.id = bi.boq_id
+          GROUP BY b.id
+          ORDER BY b.created_at DESC
+          LIMIT 100
+        `;
         
-        boqData = boqWithCount.map(row => row.boq);
+        boqData = boqWithCount;
         
         // Get items for all BOQs
         if (boqData.length > 0) {
           const boqIds = boqData.map(b => b.id);
-          items = await db
-            .select()
-            .from(boqItems)
-            .where(sql`${boqItems.boqId} = ANY(${boqIds})`)
-            .orderBy(boqItems.lineNumber)
-            .limit(500);
+          items = await sql`
+            SELECT * FROM boq_items
+            WHERE boq_id = ANY(${boqIds})
+            ORDER BY line_number
+            LIMIT 500
+          `;
         } else {
           items = [];
         }
@@ -72,18 +67,18 @@ export default async function handler(
       // Transform data to match expected format
       const transformedItems: BOQItem[] = items.map(item => ({
         id: item.id,
-        projectId: item.projectId,
-        itemCode: item.itemCode || '',
+        projectId: item.project_id,
+        itemCode: item.item_code || '',
         description: item.description,
         unit: item.uom,
         quantity: Number(item.quantity),
-        unitPrice: item.unitPrice ? Number(item.unitPrice) : 0,
-        totalPrice: item.totalPrice ? Number(item.totalPrice) : 0,
+        unitPrice: item.unit_price ? Number(item.unit_price) : 0,
+        totalPrice: item.total_price ? Number(item.total_price) : 0,
         category: item.category || 'Materials',
-        supplier: item.catalogItemName || '',
-        status: item.procurementStatus || 'pending',
-        createdAt: item.createdAt?.toISOString() || new Date().toISOString(),
-        updatedAt: item.updatedAt?.toISOString() || new Date().toISOString(),
+        supplier: item.catalog_item_name || '',
+        status: item.procurement_status || 'pending',
+        createdAt: item.created_at || new Date().toISOString(),
+        updatedAt: item.updated_at || new Date().toISOString(),
       }));
       
       // Add aggregated stats
@@ -109,18 +104,30 @@ export default async function handler(
       const newItem = req.body;
       
       // Insert new BOQ item into database
-      const [insertedItem] = await db
-        .insert(boqItems)
-        .values({
-          ...newItem,
-          boqId: newItem.boqId || null,
-          projectId: newItem.projectId || projectId,
-        })
-        .returning();
+      const insertedItems = await sql`
+        INSERT INTO boq_items (
+          boq_id, project_id, item_code, description, uom, quantity, 
+          unit_price, total_price, category, catalog_item_name, procurement_status
+        )
+        VALUES (
+          ${newItem.boqId || null}, 
+          ${newItem.projectId || projectId},
+          ${newItem.itemCode || ''}, 
+          ${newItem.description}, 
+          ${newItem.unit || newItem.uom}, 
+          ${newItem.quantity}, 
+          ${newItem.unitPrice || 0}, 
+          ${newItem.totalPrice || 0}, 
+          ${newItem.category || 'Materials'}, 
+          ${newItem.supplier || ''}, 
+          ${newItem.status || 'pending'}
+        )
+        RETURNING *
+      `;
       
       res.status(201).json({ 
         message: 'BOQ item created successfully',
-        item: insertedItem
+        item: insertedItems[0]
       });
     } catch (error) {
       console.error('Error creating BOQ item:', error);

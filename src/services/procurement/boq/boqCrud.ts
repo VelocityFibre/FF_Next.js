@@ -16,7 +16,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { BOQ, BOQFormData, BOQStatusType } from '@/types/procurement/boq.types';
 import { log } from '@/lib/logger';
 

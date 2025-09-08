@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-// import { getAuth } from '@clerk/nextjs/server';
+import { getAuth } from '../../lib/auth-mock';
 import dynamic from 'next/dynamic';
 
 const ProjectCreationWizard = dynamic(() => import('@/modules/projects/components/ProjectWizard/ProjectCreationWizard').then(mod => mod.ProjectCreationWizard || mod.default), {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, getDocs } from 'firebase/firestore';
-import { auth, db } from '@/config/firebase';
+import { auth, db } from '@/src/config/firebase';
 import { FirebaseDebug } from './FirebaseDebug';
 
 export function FirebaseTest() {

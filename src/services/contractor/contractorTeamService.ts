@@ -15,7 +15,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { contractorTeams, teamMembers } from '@/lib/neon/schema';
 import { eq } from 'drizzle-orm';

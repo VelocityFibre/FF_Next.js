@@ -11,7 +11,7 @@ import {
   where,
   orderBy
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { RFQ, RFQStatus } from '@/types/procurement.types';
 import type { SubscriptionFilter } from './subscription-types';
 import { log } from '@/lib/logger';

@@ -9,7 +9,7 @@ export const systemSection: NavSection = {
   section: 'SYSTEM',
   items: [
     {
-      to: '/app/settings',
+      to: '/settings',
       icon: Settings,
       label: 'Settings',
       shortLabel: 'Settings',

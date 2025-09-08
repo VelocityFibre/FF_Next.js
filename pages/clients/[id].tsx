@@ -1,5 +1,17 @@
 import type { NextPage } from 'next';
-import { ClientDetail } from '../../src/modules/clients/components/ClientDetail';
+import dynamic from 'next/dynamic';
+
+const ClientDetail = dynamic(
+  () => import('../../src/modules/clients/components/ClientDetail').then(mod => mod.ClientDetail),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+);
 
 const ClientDetailPage: NextPage = () => {
   return <ClientDetail />;

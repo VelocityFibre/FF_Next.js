@@ -7,7 +7,7 @@
  * New code should import from './activity' directly
  */
 
-import { cn } from '@/utils/cn';
+import { cn } from '@/src/utils/cn';
 import { 
   RecentActivityFeedProps, 
   ActivityHeader,

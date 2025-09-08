@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 // // import { getAuth } from '@clerk/nextjs/server';
 import { getAuth } from '../../lib/auth-mock';
-import { db, sowImports, projects, NewSOWImport, safeQuery } from '@/lib/db';
-import { eq, desc } from 'drizzle-orm';
+import { neon } from '@neondatabase/serverless';
+
+// Initialize database connection
+const sql = neon(process.env.DATABASE_URL!);
 
 // Type definitions for SOW import data
 interface SOWData {
@@ -45,25 +47,27 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, userId: stri
   const { projectId, limit = 20 } = req.query;
   
   try {
-    const conditions = projectId ? eq(sowImports.projectId, Number(projectId)) : undefined;
+    let sowImports;
     
-    const result = await safeQuery(
-      async () => await db.select()
-        .from(sowImports)
-        .where(conditions)
-        .orderBy(desc(sowImports.importedAt))
-        .limit(Number(limit)),
-      'Failed to fetch SOW imports'
-    );
-    
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
+    if (projectId) {
+      sowImports = await sql`
+        SELECT * FROM sow_imports 
+        WHERE project_id = ${Number(projectId)}
+        ORDER BY imported_at DESC
+        LIMIT ${Number(limit)}
+      `;
+    } else {
+      sowImports = await sql`
+        SELECT * FROM sow_imports
+        ORDER BY imported_at DESC
+        LIMIT ${Number(limit)}
+      `;
     }
     
-    return res.status(200).json(result.data || []);
+    return res.status(200).json(sowImports);
   } catch (error) {
     console.error('Error in GET /api/sow:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Failed to fetch SOW imports' });
   }
 }
 
@@ -86,12 +90,11 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, userId: str
     }
     
     // Verify project exists
-    const projectResult = await safeQuery(
-      async () => await db.select().from(projects).where(eq(projects.id, projectId)).limit(1),
-      'Failed to verify project'
-    );
+    const projectResult = await sql`
+      SELECT * FROM projects WHERE id = ${projectId} LIMIT 1
+    `;
     
-    if (projectResult.error || !projectResult.data?.[0]) {
+    if (!projectResult[0]) {
       return res.status(404).json({ error: 'Project not found' });
     }
     
@@ -99,51 +102,48 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, userId: str
     const processedResult = await processSOWData(type, data);
     
     // Create SOW import record
-    const importData: NewSOWImport = {
-      projectId,
-      fileName: fileName || `${type}_import_${Date.now()}`,
-      importType: type,
-      status: processedResult.success ? 'completed' : 'failed',
-      data: data as any, // Store original data as JSONB
-      processedRecords: processedResult.processedCount,
-      totalRecords: processedResult.totalCount,
-      errors: processedResult.errors ? { errors: processedResult.errors } : null,
-      importedAt: new Date(),
-      importedBy: userId,
-    };
-    
-    const result = await safeQuery(
-      async () => await db.insert(sowImports).values(importData).returning(),
-      'Failed to save SOW import'
-    );
-    
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
-    }
+    const sowImportResult = await sql`
+      INSERT INTO sow_imports (
+        project_id, file_name, import_type, status, data, 
+        processed_records, total_records, errors, imported_at, imported_by
+      )
+      VALUES (
+        ${projectId},
+        ${fileName || `${type}_import_${Date.now()}`},
+        ${type},
+        ${processedResult.success ? 'completed' : 'failed'},
+        ${JSON.stringify(data)},
+        ${processedResult.processedCount},
+        ${processedResult.totalCount},
+        ${processedResult.errors ? JSON.stringify({ errors: processedResult.errors }) : null},
+        ${new Date().toISOString()},
+        ${userId}
+      )
+      RETURNING *
+    `;
     
     // Update project with SOW data reference
     if (processedResult.success) {
-      await safeQuery(
-        async () => await db.update(projects)
-          .set({
-            sowData: { 
-              ...((projectResult.data![0] as any).sowData || {}),
-              [type]: {
-                importId: result.data![0].id,
-                recordCount: processedResult.processedCount,
-                lastImported: new Date(),
-              }
-            },
-            updatedAt: new Date(),
-          })
-          .where(eq(projects.id, projectId)),
-        'Failed to update project SOW data'
-      );
+      const currentSowData = projectResult[0].sow_data || {};
+      const newSowData = {
+        ...currentSowData,
+        [type]: {
+          importId: sowImportResult[0].id,
+          recordCount: processedResult.processedCount,
+          lastImported: new Date().toISOString(),
+        }
+      };
+      
+      await sql`
+        UPDATE projects 
+        SET sow_data = ${JSON.stringify(newSowData)}, updated_at = ${new Date().toISOString()}
+        WHERE id = ${projectId}
+      `;
     }
     
     return res.status(201).json({
       message: `SOW ${type} data imported successfully`,
-      import: result.data![0],
+      import: sowImportResult[0],
       processed: processedResult.processedCount,
       total: processedResult.totalCount,
       errors: processedResult.errors,
@@ -163,26 +163,20 @@ async function handleGetStatus(req: NextApiRequest, res: NextApiResponse, userId
   }
   
   try {
-    const result = await safeQuery(
-      async () => await db.select()
-        .from(sowImports)
-        .where(eq(sowImports.id, Number(id)))
-        .limit(1),
-      'Failed to fetch import status'
-    );
+    const sowImport = await sql`
+      SELECT * FROM sow_imports 
+      WHERE id = ${Number(id)}
+      LIMIT 1
+    `;
     
-    if (result.error) {
-      return res.status(500).json({ error: result.error });
-    }
-    
-    if (!result.data?.[0]) {
+    if (!sowImport[0]) {
       return res.status(404).json({ error: 'Import not found' });
     }
     
-    return res.status(200).json(result.data[0]);
+    return res.status(200).json(sowImport[0]);
   } catch (error) {
     console.error('Error in GET /api/sow/status:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Failed to fetch import status' });
   }
 }
 

@@ -7,7 +7,7 @@ import {
   getDocs,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '@/config/firebase';
+import { db } from '@/src/config/firebase';
 import { DropImportRow } from '../types/sowImport.types';
 import { log } from '@/lib/logger';
 

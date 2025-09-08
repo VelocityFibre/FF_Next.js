@@ -21,8 +21,8 @@ const getDatabaseUrl = (): string => {
   let databaseUrl: string | undefined;
 
   // Try Vite environment variable first (for server-side build)
-  if (import.meta.env?.VITE_DATABASE_URL) {
-    databaseUrl = import.meta.env.VITE_DATABASE_URL;
+  if (process.env?.NEXT_PUBLIC_DATABASE_URL) {
+    databaseUrl = process.env.NEXT_PUBLIC_DATABASE_URL;
   }
   // Fall back to Node.js environment variables (server-side)
   else if (typeof process !== 'undefined' && process.env) {
