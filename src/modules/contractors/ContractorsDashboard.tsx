@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { UserPlus, Download, RefreshCw, Upload } from 'lucide-react';
 import { ContractorList } from './components/ContractorList';
 import { PendingApplicationsList } from './components/applications';
@@ -17,7 +17,7 @@ import { getContractorsDashboardCards } from '@/config/dashboards/dashboardConfi
 import { ContractorImport } from '@/components/contractor/ContractorImport';
 import { log } from '@/lib/logger';
 export function ContractorsDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
   const [showImportModal, setShowImportModal] = useState(false);
   
@@ -55,7 +55,7 @@ export function ContractorsDashboard() {
           {
             label: 'Add Contractor',
             icon: UserPlus as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/contractors/new'),
+            onClick: () => router.push('/contractors/new'),
             variant: 'primary'
           },
           {
@@ -189,7 +189,7 @@ export function ContractorsDashboard() {
       {activeTab === 'performance' && (
         <PerformanceDashboard 
           showFilters={true}
-          onContractorSelect={(contractorId) => navigate(`/app/contractors/${contractorId}`)}
+          onContractorSelect={(contractorId) => router.push(`/contractors/${contractorId}`)}
           className="mt-0"
         />
       )}

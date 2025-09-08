@@ -3,10 +3,7 @@
  * Handles Neon PostgreSQL operations for contractor analytics
  */
 
-import { neonDb } from '@/lib/neon/connection';
-import { contractors } from '@/lib/neon/schema';
-import { eq, count, and } from 'drizzle-orm';
-import { NewContractor } from '@/lib/neon/schema';
+import { sql } from '@/lib/db.mjs';
 import { ContractorFormData, ContractorAnalytics } from '@/types/contractor.types';
 import { log } from '@/lib/logger';
 
@@ -15,53 +12,30 @@ import { log } from '@/lib/logger';
  */
 export async function createContractorInNeon(id: string, data: ContractorFormData): Promise<void> {
   try {
-    const neonData: NewContractor = {
-      id: id,
-      companyName: data.companyName,
-      registrationNumber: data.registrationNumber,
-      contactPerson: data.contactPerson,
-      email: data.email,
-      phone: data.phone,
-      alternatePhone: data.alternatePhone,
-      physicalAddress: data.physicalAddress,
-      postalAddress: data.postalAddress,
-      city: data.city,
-      province: data.province,
-      postalCode: data.postalCode,
-      businessType: data.businessType,
-      industryCategory: data.industryCategory,
-      yearsInBusiness: data.yearsInBusiness,
-      employeeCount: data.employeeCount,
-      annualTurnover: data.annualTurnover?.toString(),
-      creditRating: data.creditRating,
-      paymentTerms: data.paymentTerms,
-      bankName: data.bankName,
-      accountNumber: data.accountNumber,
-      branchCode: data.branchCode,
-      status: data.status || 'pending',
-      isActive: true,
-      complianceStatus: data.complianceStatus || 'pending',
-      ragOverall: 'amber',
-      ragFinancial: 'amber',
-      ragCompliance: 'amber',
-      ragPerformance: 'amber',
-      ragSafety: 'amber',
-      totalProjects: 0,
-      completedProjects: 0,
-      activeProjects: 0,
-      cancelledProjects: 0,
-      onboardingProgress: 0,
-      documentsExpiring: 0,
-      notes: data.notes,
-      tags: data.tags || [],
-      createdBy: 'current-user',
-      updatedBy: 'current-user',
-    };
-    
-    await neonDb.insert(contractors).values(neonData);
+    await sql`
+      INSERT INTO contractors (
+        id, company_name, registration_number, contact_person, email, phone, 
+        alternate_phone, physical_address, postal_address, city, province, postal_code,
+        business_type, industry_category, years_in_business, employee_count, 
+        annual_turnover, credit_rating, payment_terms, bank_name, account_number, 
+        branch_code, status, is_active, compliance_status, rag_overall, 
+        rag_financial, rag_compliance, rag_performance, rag_safety,
+        total_projects, completed_projects, active_projects, cancelled_projects,
+        onboarding_progress, documents_expiring, notes, tags, created_by, updated_by
+      ) VALUES (
+        ${id}, ${data.companyName}, ${data.registrationNumber}, ${data.contactPerson}, 
+        ${data.email}, ${data.phone}, ${data.alternatePhone}, ${data.physicalAddress},
+        ${data.postalAddress}, ${data.city}, ${data.province}, ${data.postalCode},
+        ${data.businessType}, ${data.industryCategory}, ${data.yearsInBusiness}, 
+        ${data.employeeCount}, ${data.annualTurnover?.toString()}, ${data.creditRating},
+        ${data.paymentTerms}, ${data.bankName}, ${data.accountNumber}, ${data.branchCode},
+        ${data.status || 'pending'}, true, ${data.complianceStatus || 'pending'}, 'amber',
+        'amber', 'amber', 'amber', 'amber', 0, 0, 0, 0, 0, 0, 
+        ${data.notes}, ${JSON.stringify(data.tags || [])}, 'current-user', 'current-user'
+      )
+    `;
   } catch (error) {
     log.warn('Failed to sync contractor to Neon:', { data: error }, 'neonOperations');
-    // Don't fail the entire operation for analytics sync issues
     throw error;
   }
 }
@@ -71,25 +45,46 @@ export async function createContractorInNeon(id: string, data: ContractorFormDat
  */
 export async function updateContractorInNeon(id: string, data: Partial<ContractorFormData>): Promise<void> {
   try {
-    const neonUpdateData: any = {};
+    const updates: string[] = [];
+    const values: any[] = [];
     
-    // Map Firebase fields to Neon fields
-    if (data.companyName) neonUpdateData.companyName = data.companyName;
-    if (data.contactPerson) neonUpdateData.contactPerson = data.contactPerson;
-    if (data.email) neonUpdateData.email = data.email;
-    if (data.phone) neonUpdateData.phone = data.phone;
-    if (data.status) neonUpdateData.status = data.status;
-    if (data.notes) neonUpdateData.notes = data.notes;
-    if (data.tags) neonUpdateData.tags = data.tags;
+    if (data.companyName) {
+      updates.push('company_name = $' + (values.length + 1));
+      values.push(data.companyName);
+    }
+    if (data.contactPerson) {
+      updates.push('contact_person = $' + (values.length + 1));
+      values.push(data.contactPerson);
+    }
+    if (data.email) {
+      updates.push('email = $' + (values.length + 1));
+      values.push(data.email);
+    }
+    if (data.phone) {
+      updates.push('phone = $' + (values.length + 1));
+      values.push(data.phone);
+    }
+    if (data.status) {
+      updates.push('status = $' + (values.length + 1));
+      values.push(data.status);
+    }
+    if (data.notes) {
+      updates.push('notes = $' + (values.length + 1));
+      values.push(data.notes);
+    }
+    if (data.tags) {
+      updates.push('tags = $' + (values.length + 1));
+      values.push(JSON.stringify(data.tags));
+    }
     
-    neonUpdateData.updatedBy = 'current-user';
-    neonUpdateData.updatedAt = new Date();
-    
-    if (Object.keys(neonUpdateData).length > 2) { // Only update if there are fields beyond audit fields
-      await neonDb
-        .update(contractors)
-        .set(neonUpdateData)
-        .where(eq(contractors.id, id));
+    if (updates.length > 0) {
+      updates.push('updated_by = $' + (values.length + 1));
+      values.push('current-user');
+      updates.push('updated_at = $' + (values.length + 1));
+      values.push(new Date().toISOString());
+      values.push(id); // for WHERE clause
+      
+      await sql`UPDATE contractors SET ${updates.join(', ')} WHERE id = ${id}`;
     }
   } catch (error) {
     log.warn('Failed to sync contractor update to Neon:', { data: error }, 'neonOperations');
@@ -102,9 +97,7 @@ export async function updateContractorInNeon(id: string, data: Partial<Contracto
  */
 export async function deleteContractorFromNeon(id: string): Promise<void> {
   try {
-    await neonDb
-      .delete(contractors)
-      .where(eq(contractors.id, id));
+    await sql`DELETE FROM contractors WHERE id = ${id}`;
   } catch (error) {
     log.warn('Failed to delete contractor from Neon:', { data: error }, 'neonOperations');
     throw error;
@@ -116,72 +109,34 @@ export async function deleteContractorFromNeon(id: string): Promise<void> {
  */
 export async function getContractorAnalytics(): Promise<ContractorAnalytics> {
   try {
-    // Get total counts
-    const totalResult = await neonDb
-      .select({ count: count() })
-      .from(contractors);
-
-    const activeResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.isActive, true));
-
-    const approvedResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.status, 'approved'));
-
-    const pendingResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.status, 'pending'));
-
-    const suspendedResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.status, 'suspended'));
-
-    const blacklistedResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.status, 'blacklisted'));
-
-    // RAG distribution
-    const greenRagResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.ragOverall, 'green'));
-
-    const amberRagResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.ragOverall, 'amber'));
-
-    const redRagResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(eq(contractors.ragOverall, 'red'));
-
-    const expiringDocsResult = await neonDb
-      .select({ count: count() })
-      .from(contractors)
-      .where(and(
-        eq(contractors.isActive, true)
-        // TODO: Add expiring documents condition when field is available
-      ));
+    // Get all counts in a single query for efficiency
+    const [results] = await sql`
+      SELECT 
+        COUNT(*) as total_contractors,
+        COUNT(*) FILTER (WHERE is_active = true) as active_contractors,
+        COUNT(*) FILTER (WHERE status = 'approved') as approved_contractors,
+        COUNT(*) FILTER (WHERE status = 'pending') as pending_approval,
+        COUNT(*) FILTER (WHERE status = 'suspended') as suspended,
+        COUNT(*) FILTER (WHERE status = 'blacklisted') as blacklisted,
+        COUNT(*) FILTER (WHERE rag_overall = 'green') as rag_green,
+        COUNT(*) FILTER (WHERE rag_overall = 'amber') as rag_amber,
+        COUNT(*) FILTER (WHERE rag_overall = 'red') as rag_red,
+        COUNT(*) FILTER (WHERE is_active = true AND documents_expiring > 0) as expiring_docs
+      FROM contractors
+    `;
 
     return {
-      totalContractors: totalResult[0]?.count || 0,
-      activeContractors: activeResult[0]?.count || 0,
-      approvedContractors: approvedResult[0]?.count || 0,
-      pendingApproval: pendingResult[0]?.count || 0,
-      suspended: suspendedResult[0]?.count || 0,
-      blacklisted: blacklistedResult[0]?.count || 0,
+      totalContractors: parseInt(results?.total_contractors || '0'),
+      activeContractors: parseInt(results?.active_contractors || '0'),
+      approvedContractors: parseInt(results?.approved_contractors || '0'),
+      pendingApproval: parseInt(results?.pending_approval || '0'),
+      suspended: parseInt(results?.suspended || '0'),
+      blacklisted: parseInt(results?.blacklisted || '0'),
       
       ragDistribution: {
-        green: greenRagResult[0]?.count || 0,
-        amber: amberRagResult[0]?.count || 0,
-        red: redRagResult[0]?.count || 0,
+        green: parseInt(results?.rag_green || '0'),
+        amber: parseInt(results?.rag_amber || '0'),
+        red: parseInt(results?.rag_red || '0'),
       },
       
       // Placeholder values - would calculate from actual data
@@ -194,7 +149,7 @@ export async function getContractorAnalytics(): Promise<ContractorAnalytics> {
       totalCompletedProjects: 0,
       averageProjectsPerContractor: 0,
       
-      documentsExpiringSoon: expiringDocsResult[0]?.count || 0,
+      documentsExpiringSoon: parseInt(results?.expiring_docs || '0'),
       complianceIssues: 0,
       pendingDocuments: 0,
     };

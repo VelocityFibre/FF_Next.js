@@ -4,11 +4,11 @@ import { useSuppliers } from './hooks/useSuppliers';
 import { SupplierCard } from './components/SupplierCard';
 import { SupplierStatus, ProductCategory } from '@/types/supplier.types';
 import { Button } from '@/src/shared/components/ui/Button';
-import { Input } from '@/shared/components/ui/Input';
-import { useNavigate } from 'react-router-dom';
+import { Input } from '@/src/shared/components/ui/Input';
+import { useRouter } from 'next/router';
 
 export function SuppliersPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<SupplierStatus | 'all'>('all');
   const [categoryFilter, setCategoryFilter] = useState<ProductCategory | 'all'>('all');
@@ -33,7 +33,7 @@ export function SuppliersPage() {
   });
 
   const handleCreate = () => {
-    navigate('/suppliers/new');
+    router.push('/suppliers/new');
   };
 
   if (error) {

@@ -16,24 +16,39 @@ import type {
   ProcurementTabId, 
   ProcurementPermissions
 } from '@/types/procurement/portal.types';
+import { useProcurementPortal } from '../context/ProcurementPortalProvider';
 
 interface ProcurementTabsProps {
-  activeTab: ProcurementTabId;
-  onTabChange: (tabId: ProcurementTabId) => void;
+  activeTab?: ProcurementTabId;
+  onTabChange?: (tabId: ProcurementTabId) => void;
   selectedProject?: { id: string; name: string; code: string } | undefined;
-  tabBadges: Record<ProcurementTabId, { count?: number; type?: 'info' | 'warning' | 'error' | 'success' }>;
-  permissions: ProcurementPermissions;
+  tabBadges?: Record<ProcurementTabId, { count?: number; type?: 'info' | 'warning' | 'error' | 'success' }>;
+  permissions?: ProcurementPermissions;
   isLoading?: boolean;
 }
 
 export function ProcurementTabs({
-  activeTab,
-  onTabChange,
-  selectedProject,
-  tabBadges,
-  permissions,
-  isLoading = false
-}: ProcurementTabsProps) {
+  activeTab: propActiveTab,
+  onTabChange: propOnTabChange,
+  selectedProject: propSelectedProject,
+  tabBadges: propTabBadges,
+  permissions: propPermissions,
+  isLoading: propIsLoading = false
+}: ProcurementTabsProps = {}) {
+  // Try to get from context first, fallback to props
+  let context: any = null;
+  try {
+    context = useProcurementPortal();
+  } catch {
+    // Context not available, use props
+  }
+  
+  const activeTab = propActiveTab ?? context?.activeTab ?? 'overview';
+  const onTabChange = propOnTabChange ?? context?.setActiveTab ?? (() => {});
+  const selectedProject = propSelectedProject ?? context?.project;
+  const tabBadges = propTabBadges ?? context?.tabBadges ?? {};
+  const permissions = propPermissions ?? context?.permissions;
+  const isLoading = propIsLoading || context?.isLoading || false;
   
   // Define all available tabs with enhanced configuration
   const allTabs: ProcurementTab[] = useMemo(() => [
@@ -111,8 +126,8 @@ export function ProcurementTabs({
       // Check if project is required and selected
       if (tab.requiresProject && !selectedProject) return false;
       
-      // Check permissions
-      if (tab.permission) {
+      // Check permissions (only if permissions are loaded)
+      if (tab.permission && permissions) {
         const hasPermission = permissions[tab.permission as keyof ProcurementPermissions];
         if (!hasPermission) return false;
       }
@@ -142,7 +157,7 @@ export function ProcurementTabs({
   const getTabState = (tab: ProcurementTab) => {
     const isActive = activeTab === tab.id;
     const isDisabled = tab.requiresProject && !selectedProject;
-    const hasPermission = !tab.permission || permissions[tab.permission as keyof ProcurementPermissions];
+    const hasPermission = !tab.permission || (permissions && permissions[tab.permission as keyof ProcurementPermissions]) || false;
     
     return {
       isActive,

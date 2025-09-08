@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { GetServerSideProps } from 'next';
-import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
+import { DashboardHeader } from '../../src/components/dashboard/DashboardHeader';
 import { TaskCard } from '../../src/modules/field-app/components/TaskCard';
 import { OfflineStatus } from '../../src/modules/field-app/components/OfflineStatus';
 import { DeviceStatus } from '../../src/modules/field-app/components/DeviceStatus';

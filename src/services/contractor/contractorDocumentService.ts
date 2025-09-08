@@ -17,9 +17,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '@/src/config/firebase';
-import { neonDb } from '@/lib/neon/connection';
-import { contractorDocuments } from '@/lib/neon/schema';
-import { eq } from 'drizzle-orm';
+import { sql } from '@/lib/db.mjs';
 import { log } from '@/lib/logger';
 import { 
   ContractorDocument,
