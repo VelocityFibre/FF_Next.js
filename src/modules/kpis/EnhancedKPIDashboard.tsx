@@ -1,9 +1,9 @@
 import { Target, TrendingUp, BarChart3, PieChart, Activity, Settings } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 export function EnhancedKPIDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('operational');
 
   const tabs = [
@@ -19,42 +19,42 @@ export function EnhancedKPIDashboard() {
       description: 'View all key performance indicators',
       icon: BarChart3,
       color: 'bg-blue-500',
-      onClick: () => navigate('/app/kpis/overview'),
+      onClick: () => router.push('/app/kpis/overview'),
     },
     {
       title: 'Set Targets',
       description: 'Define KPI targets and thresholds',
       icon: Target,
       color: 'bg-green-500',
-      onClick: () => navigate('/app/kpis/targets'),
+      onClick: () => router.push('/app/kpis/targets'),
     },
     {
       title: 'Performance Trends',
       description: 'Analyze performance over time',
       icon: TrendingUp,
       color: 'bg-purple-500',
-      onClick: () => navigate('/app/kpis/trends'),
+      onClick: () => router.push('/app/kpis/trends'),
     },
     {
       title: 'Comparisons',
       description: 'Compare KPIs across teams/projects',
       icon: PieChart,
       color: 'bg-orange-500',
-      onClick: () => navigate('/app/kpis/compare'),
+      onClick: () => router.push('/app/kpis/compare'),
     },
     {
       title: 'Real-time Monitor',
       description: 'Live KPI monitoring dashboard',
       icon: Activity,
       color: 'bg-indigo-500',
-      onClick: () => navigate('/app/kpis/monitor'),
+      onClick: () => router.push('/app/kpis/monitor'),
     },
     {
       title: 'Configure KPIs',
       description: 'Manage KPI definitions',
       icon: Settings,
       color: 'bg-pink-500',
-      onClick: () => navigate('/app/kpis/configure'),
+      onClick: () => router.push('/app/kpis/configure'),
     },
   ];
 

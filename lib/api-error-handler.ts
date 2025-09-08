@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { apiLogger } from './logger';
 
 /**
  * Standard API error response
@@ -29,6 +30,8 @@ export function withErrorHandler<T = any>(
   handler: (req: NextApiRequest, res: NextApiResponse<ApiResponse<T>>) => Promise<void>
 ) {
   return async (req: NextApiRequest, res: NextApiResponse<ApiResponse<T>>) => {
+    const startTime = Date.now();
+    
     try {
       // Set CORS headers
       res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,14 +43,39 @@ export function withErrorHandler<T = any>(
         return res.status(200).end();
       }
 
+      // Log incoming request
+      apiLogger.info({
+        type: 'request',
+        method: req.method,
+        url: req.url,
+        query: req.query,
+        body: req.method !== 'GET' ? req.body : undefined,
+      }, `API Request: ${req.method} ${req.url}`);
+
       // Execute the actual handler
       await handler(req, res);
+      
+      // Log successful response
+      const duration = Date.now() - startTime;
+      apiLogger.info({
+        type: 'response',
+        method: req.method,
+        url: req.url,
+        statusCode: res.statusCode,
+        duration: `${duration}ms`,
+      }, `API Response: ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
+      
     } catch (error) {
-      console.error('API Error:', {
+      const duration = Date.now() - startTime;
+      
+      // Log error with context
+      apiLogger.error({
+        type: 'error',
         method: req.method,
         url: req.url,
         error: error instanceof Error ? error.message : 'Unknown error',
         stack: error instanceof Error ? error.stack : undefined,
+        duration: `${duration}ms`,
       });
 
       // Check if headers were already sent

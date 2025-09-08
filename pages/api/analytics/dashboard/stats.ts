@@ -1,15 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql } from '@/lib/db-logger';
 
-// Initialize Neon client directly (no Drizzle needed)
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize Neon client with logging
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
   try {
@@ -131,7 +133,7 @@ export default async function handler(
       budgetUtilization
     };
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       data: stats
     });
@@ -139,7 +141,7 @@ export default async function handler(
     console.error('Dashboard stats error:', error);
     
     // Return zeros on error (no mock data)
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       data: {
         totalProjects: 0,
@@ -165,4 +167,4 @@ export default async function handler(
       }
     });
   }
-}
+})

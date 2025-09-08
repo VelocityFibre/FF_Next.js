@@ -1,12 +1,12 @@
 import { BarChart3, Users, Calendar, Target, Download, RefreshCw, Settings } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { useKPIDashboardData } from '@/hooks/useDashboardData';
 import { getKPIDashboardCards } from '@/config/dashboards/dashboardConfigs';
 
 export function KPIDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const { 
     stats, 
@@ -74,13 +74,13 @@ export function KPIDashboard() {
           {
             label: 'Configure KPIs',
             icon: Settings as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/kpi-dashboard/settings'),
+            onClick: () => router.push('/kpi-dashboard/settings'),
             variant: 'secondary'
           },
           {
             label: 'Export Dashboard',
             icon: Download as React.ComponentType<{ className?: string; }>,
-            onClick: () => navigate('/app/kpi-dashboard/export'),
+            onClick: () => router.push('/kpi-dashboard/export'),
             variant: 'secondary'
           },
           {

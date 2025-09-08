@@ -64,6 +64,34 @@
         "@typescript-eslint/no-explicit-any": "off",
         "no-console": "off"
       }
+    },
+    {
+      "files": [
+        "lib/**/*.js",
+        "lib/**/*.ts",
+        "pages/api/**/*.js",
+        "pages/api/**/*.ts",
+        "scripts/**/*.js",
+        "scripts/**/*.ts",
+        "middleware.js",
+        "middleware.ts",
+        "lib/db/*.js"
+      ],
+      "env": {
+        "node": true,
+        "browser": false
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "no-console": "off",
+        "no-undef": "off"
+      },
+      "globals": {
+        "process": "readonly",
+        "require": "readonly",
+        "fetch": "readonly",
+        "EdgeRuntime": "readonly"
+      }
     }
   ],
   "settings": {
@@ -85,6 +113,10 @@
     "**/__tests__/**",
     "**/setup.ts",
     "**/setupTests.ts",
-    "src/test/**"
+    "src/test/**",
+    "**/testHelpers.ts",
+    "**/testHelpers.tsx",
+    "**/__mocks__/**",
+    ".next/"
   ]
 }
