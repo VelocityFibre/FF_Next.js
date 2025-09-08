@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/lib/db';
+import { sql } from '@/lib/db/pool';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handler(
   try {
     // Simple query to check if database is responsive
     const startTime = Date.now();
-    await db.$queryRaw`SELECT 1`;
+    await sql`SELECT 1`;
     const responseTime = Date.now() - startTime;
 
     return res.status(200).json({
