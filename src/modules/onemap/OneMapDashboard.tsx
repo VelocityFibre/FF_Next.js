@@ -1,8 +1,8 @@
 import { Map, Grid3x3, Download, Upload, Layers, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 export function OneMapDashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const cards = [
     {
@@ -10,42 +10,42 @@ export function OneMapDashboard() {
       description: 'Interactive map visualization',
       icon: Map,
       color: 'bg-blue-500',
-      onClick: () => navigate('/app/onemap/map'),
+      onClick: () => router.push('/onemap/map'),
     },
     {
       title: 'Data Grid',
       description: 'Tabular data view',
       icon: Grid3x3,
       color: 'bg-green-500',
-      onClick: () => navigate('/app/onemap/grid'),
+      onClick: () => router.push('/onemap/grid'),
     },
     {
       title: 'Layers',
       description: 'Manage map layers',
       icon: Layers,
       color: 'bg-purple-500',
-      onClick: () => navigate('/app/onemap/layers'),
+      onClick: () => router.push('/onemap/layers'),
     },
     {
       title: 'Import Data',
       description: 'Import geographic data',
       icon: Upload,
       color: 'bg-orange-500',
-      onClick: () => navigate('/app/onemap/import'),
+      onClick: () => router.push('/onemap/import'),
     },
     {
       title: 'Export Data',
       description: 'Export to various formats',
       icon: Download,
       color: 'bg-indigo-500',
-      onClick: () => navigate('/app/onemap/export'),
+      onClick: () => router.push('/onemap/export'),
     },
     {
       title: 'Search & Filter',
       description: 'Advanced search capabilities',
       icon: Search,
       color: 'bg-pink-500',
-      onClick: () => navigate('/app/onemap/search'),
+      onClick: () => router.push('/onemap/search'),
     },
   ];
 
