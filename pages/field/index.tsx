@@ -196,12 +196,24 @@ export default function FieldAppPage({
         {/* Status Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           <OfflineStatus 
-            isOnline={isOnline}
-            syncInProgress={syncInProgress}
-            pendingCount={tasks.filter(t => t.syncStatus === 'pending').length}
+            isOffline={!isOnline}
+            offlineData={{
+              tasks: tasks.filter(t => t.syncStatus === 'pending').length,
+              photos: 0,
+              forms: 0,
+              dataSize: '0 KB',
+              lastSync: new Date().toLocaleTimeString()
+            }}
+            onSync={syncOfflineData}
+            isSyncing={syncInProgress}
           />
           
-          <DeviceStatus />
+          <DeviceStatus 
+            battery={85}
+            signal="good"
+            gpsAccuracy={10}
+            storage={{ used: 2.5, total: 8 }}
+          />
 
           {/* Today's Stats */}
           <div className="bg-white rounded-lg shadow p-6">

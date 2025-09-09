@@ -1,54 +1,73 @@
-# Local Development Setup
+# Local Development Guide
 
-This guide documents how to build and run the FibreFlow Next.js application locally.
+## Current Setup (as of 2025-09-09)
 
-## Prerequisites
+### ⚠️ Important: Development Server Issue
 
-- Node.js 18+ installed
-- npm or yarn package manager
-- PostgreSQL database (Neon) credentials in `.env.local`
+There is a known bug with the Next.js development server (`npm run dev`) that affects both Next.js 14 and 15. The issue is caused by the Watchpack module's inability to handle multiple package.json files in the project structure.
 
-## Quick Start
+**Error Details:**
+```
+TypeError: The "to" argument must be of type string. Received undefined
+    at Object.relative (node:path:1270:5)
+    at Watchpack.<anonymous> (setup-dev-bundler.js)
+```
 
-### Production Mode (Recommended for stability)
+### Root Cause
+
+The project structure contains multiple package.json files:
+- `/home/louisdup/VF/Apps/FF_React/package.json` (main project)
+- `/home/louisdup/VF/Apps/FF_React/neon/package.json` (Neon API server)
+
+This confuses Next.js's workspace root detection in the Watchpack file watcher.
+
+## Recommended Development Workflow
+
+### Use Production Mode for Local Development
+
 ```bash
-# Install dependencies
+# 1. Install dependencies
 npm install
 
-# Build the application
+# 2. Build the application
 npm run build
 
-# Start the production server
-npm start
+# 3. Start the production server
+PORT=3005 npm start
 ```
 
-The application will be available at http://localhost:3000
+Access the application at: **http://localhost:3005**
 
-### Development Mode
+### Benefits of Production Mode
+- ✅ Stable and reliable
+- ✅ No Watchpack errors
+- ✅ Fast startup time
+- ✅ Closer to production environment
+
+### Limitations
+- ❌ No hot module replacement (HMR)
+- ❌ Need to rebuild for changes: `npm run build`
+
+## Development Commands
+
 ```bash
-# Install dependencies
-npm install
+# Build and start production server
+npm run build && PORT=3005 npm start
 
-# Start development server
-npm run dev
+# Run linting
+npm run lint
+
+# Type checking
+npm run type-check
+
+# Run tests
+npm test
+
+# Database operations
+npm run db:migrate    # Run migrations
+npm run db:seed       # Seed database
+npm run db:validate   # Validate schema
 ```
-
-**Note:** If you encounter watchpack errors in development mode, use production mode instead.
-
-## Configuration Files
-
-### ES Module Configuration
-The project uses ES modules (`.mjs` files) for configuration:
-
-- `next.config.mjs` - Next.js configuration
-- `postcss.config.mjs` - PostCSS configuration for TailwindCSS
-- `tailwind.config.mjs` - TailwindCSS configuration
-
-### Why ES Modules?
-- Modern JavaScript standard
-- Better tree-shaking and optimization
-- Native support in Next.js 15
-- Consistent with current best practices
 
 ## Environment Variables
 
@@ -57,106 +76,74 @@ Create a `.env.local` file with:
 # Database
 DATABASE_URL=your_neon_database_url
 
-# App URL
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+# Authentication (Clerk)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+CLERK_SECRET_KEY=your_clerk_secret
 
-# Other required variables (see .env.example)
+# Other environment variables as needed
 ```
 
-## Common Issues & Solutions
+## Troubleshooting
 
-### Issue: Styles not loading
-**Solution:** Ensure `postcss.config.mjs` exists with:
-```javascript
-export default {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}
-```
-
-### Issue: Watchpack error in dev mode
-**Error:** "The 'to' argument must be of type string. Received undefined"
-**Solution:** Use production build instead:
+### Port Already in Use
+If you get "Error: listen EADDRINUSE", try a different port:
 ```bash
-npm run build && npm start
+PORT=3006 npm start
+PORT=3007 npm start
+# etc.
 ```
 
-### Issue: Firebase errors when fetching data
-**Solution:** The app uses Neon PostgreSQL, not Firebase. Ensure:
-1. Database URL is correctly set in `.env.local`
-2. API endpoints are using `/api/` routes
-3. Services are fetching from API endpoints, not Firebase
-
-### Issue: Module not found errors
-**Solution:** Check that path aliases in `tsconfig.json` are correct:
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./components/*", "./src/components/*"]
-    }
-  }
-}
-```
-
-## Build Commands
-
+### Clear Build Cache
+If you encounter build issues:
 ```bash
-# Development
-npm run dev          # Start development server
-
-# Production
-npm run build        # Build for production
-npm start           # Start production server
-
-# Testing & Validation
-npm run lint        # Run ESLint
-npm run type-check  # TypeScript type checking
-
-# Database
-npm run db:migrate  # Run database migrations
-npm run db:seed     # Seed database
+rm -rf .next
+npm run build
 ```
 
-## Tech Stack
+### Restore Files (if needed)
+If you need to restore the backup files:
+```bash
+# Restore parent package.json (if needed)
+mv /home/louisdup/VF/Apps/package.json.backup /home/louisdup/VF/Apps/package.json
 
-- **Framework:** Next.js 15.5.2
-- **React:** 18.x
-- **Styling:** TailwindCSS with PostCSS
-- **Database:** Neon PostgreSQL (serverless)
-- **TypeScript:** Strict mode enabled
-- **Module System:** ES Modules (.mjs)
-
-## Project Structure
-
-```
-FF_React/
-├── pages/           # Next.js pages (routes)
-├── components/      # Shared UI components
-├── src/            # Application source code
-│   ├── modules/    # Feature modules
-│   ├── services/   # API services
-│   └── lib/        # Utilities and helpers
-├── public/         # Static assets
-├── docs/           # Documentation
-└── scripts/        # Build and utility scripts
+# Restore neon package.json (if needed)
+mv neon/package.json.backup neon/package.json
 ```
 
-## Performance Tips
+## Future Fix
 
-1. **Use Production Build:** Development mode has additional overhead
-2. **Clear Cache:** If issues persist, clear `.next` folder
-3. **Check Dependencies:** Run `npm install` after pulling changes
+To permanently fix the dev server issue, options include:
+1. Restructure the project to remove nested package.json files
+2. Move the `neon/` directory outside the main project
+3. Wait for Next.js to fix the Watchpack bug
+4. Use a different bundler configuration
+
+## Tech Stack Details
+
+- **Next.js**: 14.2.18 (stable LTS)
+- **React**: 18.x
+- **Node.js**: 20.18.1
+- **Package Manager**: npm
+- **Database**: Neon PostgreSQL
+- **Authentication**: Clerk
 
 ## Deployment
 
-For production deployment, see `docs/DEPLOYMENT.md`
+For production deployment:
+```bash
+# Build for production
+npm run build
 
-## Support
+# Output is in .next/ directory
+# Deploy to Vercel, Netlify, or your preferred platform
+```
 
-- Check `CLAUDE.md` for AI assistant context
-- Review `docs/INDEX.md` for complete documentation index
-- See `CODEBASE_MAP.md` for project structure overview
+## Additional Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Clerk Documentation](https://clerk.com/docs)
+- [Neon Documentation](https://neon.tech/docs)
+
+## Contact
+
+For issues or questions, contact the development team.

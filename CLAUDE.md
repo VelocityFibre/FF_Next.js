@@ -45,12 +45,28 @@ Non-essential files have been moved to `../FF_React_Archive/` to keep the codeba
 - Legacy code (ForgeFlow-v2-FF2)
 - `archive/old-layouts/` - Old layout components (MainLayout, simple Layout) replaced by AppLayout
 
+## ⚠️ CRITICAL: Development Server Issue
+**Known Bug**: The development server (`npm run dev`) has a Watchpack bug due to nested package.json files in the `neon/` directory. This affects both Next.js 14 and 15.
+
+### Workaround - Use Production Mode for Local Development:
+```bash
+npm run build        # Build the application
+PORT=3005 npm start  # Start production server on port 3005
+```
+Access the app at: **http://localhost:3005**
+
 ## Key Commands
 
 ### Development
 ```bash
-npm run dev          # Start development server (Vite + API server)
+# PRODUCTION MODE (RECOMMENDED - Works reliably)
 npm run build        # Build for production
+PORT=3005 npm start  # Start production server
+
+# DEVELOPMENT MODE (Currently has Watchpack bug)
+npm run dev          # ⚠️ Has known issues - use production mode instead
+
+# Other commands
 npm run lint         # Run ESLint
 npm run type-check   # TypeScript type checking
 ```
