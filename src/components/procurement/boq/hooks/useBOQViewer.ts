@@ -2,7 +2,7 @@
  * Custom hook for BOQ Viewer logic
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { BOQItem, BOQWithItems } from '@/types/procurement/boq.types';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import { procurementApiService } from '@/services/procurement/boqApiExtensions';
@@ -43,12 +43,12 @@ export const useBOQViewer = (
     loadBOQData();
   }, [boqId, context]);
 
-  const loadBOQData = async () => {
+  const loadBOQData = useCallback(async () => {
     if (!context) return;
 
     try {
       setIsLoading(true);
-      const data = await procurementApiService.getBOQWithItems(context, boqId);
+      const data = await procurementApiService.getBOQWithItems(context as any, boqId);
       setBOQData(data);
     } catch (error) {
       log.error('Failed to load BOQ data:', { data: error }, 'useBOQViewer');
@@ -56,7 +56,7 @@ export const useBOQViewer = (
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [context, boqId]);
 
   // Get unique filter values
   const filterOptions = useMemo(() => {
@@ -195,8 +195,8 @@ export const useBOQViewer = (
       setIsSaving(true);
       
       const updatedItem = await procurementApiService.updateBOQItem(
-        context, 
-        itemId, 
+        context as any,
+        itemId,
         editingItem.data
       );
 

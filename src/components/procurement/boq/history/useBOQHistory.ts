@@ -48,7 +48,7 @@ export const useBOQHistory = (
   // Load version history
   useEffect(() => {
     loadVersionHistory();
-  }, [loadVersionHistory]);
+  }, [context, boqId]);
 
   // Filter versions
   const filteredVersions = useMemo(() => {

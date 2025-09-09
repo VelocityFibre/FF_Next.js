@@ -109,16 +109,7 @@ export function ProjectCreationWizard() {
         location: formData.location || null // Don't stringify, send as object or null
       };
       
-      console.log('Submitting project data:', projectData); // Debug log
-      console.log('Form data details:', {
-        name: formData.name,
-        clientId: formData.clientId,
-        projectManagerId: formData.projectManagerId,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        location: formData.location,
-        budget: formData.budget
-      });
+      log.debug('Submitting project data', { projectData, formData }, 'ProjectCreationWizard');
       const result = await createProject.mutateAsync(projectData as any);
       log.info('Project created successfully:', { data: result }, 'ProjectCreationWizard');
       
@@ -126,7 +117,7 @@ export function ProjectCreationWizard() {
       setCreatedProjectId(result.id || result);
       setShowSuccess(true);
     } catch (error) {
-      console.error('Project creation error:', error); // Debug log
+      // Error logging is already handled below with proper logging
       log.error('Failed to create project:', { data: error }, 'ProjectCreationWizard');
       alert(`Failed to create project: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }

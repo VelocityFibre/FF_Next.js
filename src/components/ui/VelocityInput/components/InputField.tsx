@@ -49,7 +49,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       <input
         ref={ref}
         className={cn(
-          velocityInputVariants({ variant: variant as any, size, state: currentState }),
+          velocityInputVariants({ variant: (variant as any) || 'glass', size, state: currentState }),
           // Icon padding adjustments
           (hasIcon && iconPosition === 'left') || loading ? 'pl-10' : '',
           (hasIcon && iconPosition === 'right') || isPasswordInput ? 'pr-10' : '',

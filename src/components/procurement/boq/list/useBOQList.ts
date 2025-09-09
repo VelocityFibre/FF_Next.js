@@ -2,7 +2,7 @@
  * Custom hook for BOQ List logic
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { BOQ } from '@/types/procurement/boq.types';
 import { useProcurementContext } from '@/hooks/procurement/useProcurementContext';
 import { procurementApiService } from '@/services/procurement/boqApiExtensions';
@@ -30,20 +30,20 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
     loadBOQs();
   }, [context]);
 
-  const loadBOQs = async () => {
+  const loadBOQs = useCallback(async () => {
     if (!context) return;
 
     try {
       setIsLoading(true);
-      const data = await procurementApiService.getBOQsByProject(context, context.projectId);
-      setBOQs(data);
+      const data = await procurementApiService.getBOQsByProject(context as any, context.projectId);
+      setBOQs(data as any);
     } catch (error) {
       log.error('Failed to load BOQs:', { data: error }, 'useBOQList');
       toast.error('Failed to load BOQs');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [context]);
 
   // Get unique filter values
   const filterOptions = useMemo(() => {
@@ -193,7 +193,7 @@ export const useBOQList = (onSelectBOQ?: (boq: BOQ) => void) => {
     }
 
     try {
-      await procurementApiService.deleteBOQ(context!, boq.id);
+      await procurementApiService.deleteBOQ(context as any, boq.id);
       setBOQs(prev => prev.filter(b => b.id !== boq.id));
       toast.success('BOQ deleted successfully');
     } catch (error) {

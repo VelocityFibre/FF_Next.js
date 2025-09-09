@@ -77,76 +77,71 @@ const VelocityInput = React.forwardRef<HTMLInputElement, VelocityInputProps>(
     };
 
     // Helper function to create clean props objects for exactOptionalPropertyTypes compatibility
-    const createPropsObject = <T extends Record<string, any>>(props: T): any => {
-      const cleaned: Record<string, any> = {};
+    const createPropsObject = <T extends Record<string, unknown>>(props: T): T => {
+      const cleaned: Partial<T> = {};
       Object.entries(props).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
-          cleaned[key] = value;
+          cleaned[key as keyof T] = value as T[keyof T];
         }
       });
-      return cleaned as any;
+      return cleaned as T;
     };
 
     return (
       <div className={cn('relative', fullWidth ? 'w-full' : 'w-auto')}>
         {/* Input field container */}
         <div className="relative">
-          <InputIcons
-            {...createPropsObject({
-              icon,
-              iconPosition,
-              loading,
-              focused,
-              variant,
-              size,
-              isPasswordInput,
-              showPassword,
-              onTogglePassword: togglePasswordVisibility,
-              showCharacterCount,
-              characterCount,
-              maxLength,
-              isNearLimit,
-              isAtLimit,
-              inputId: props.id,
-            })}
-          />
+      <InputIcons
+        icon={icon}
+        iconPosition={iconPosition}
+        loading={loading}
+        focused={focused}
+        variant={variant || undefined}
+        size={size || undefined}
+        isPasswordInput={isPasswordInput}
+        showPassword={showPassword}
+        onTogglePassword={togglePasswordVisibility}
+        showCharacterCount={showCharacterCount}
+        characterCount={characterCount}
+        inputId={props.id}
+      />
 
-          <InputField
-            ref={ref || inputRef}
-            type={actualType}
-            {...createPropsObject({
-              variant,
-              size,
-              currentState,
-              hasIcon: !!icon,
-              iconPosition,
-              loading,
-              isPasswordInput,
-              showCharacterCount,
-              fullWidth,
-              customStyle: combinedStyle,
-              className,
-              value,
-              defaultValue,
-              maxLength,
-              onFocusHandler: handleFocus(onFocus),
-              onBlurHandler: handleBlur(onBlur),
-              onChangeHandler: handleChange(onChange),
-            })}
-            {...props}
-          />
+      <InputField
+        {...props}
+        ref={ref}
+        type={actualType}
+        className={cn(
+          'peer',
+          className
+        )}
+        style={combinedStyle}
+        variant={variant || undefined}
+        size={size || undefined}
+        currentState={currentState}
+        hasIcon={!!icon}
+        iconPosition={iconPosition}
+        loading={loading}
+        isPasswordInput={isPasswordInput}
+        showCharacterCount={showCharacterCount}
+        fullWidth={fullWidth}
+        customStyle={customNeonStyle}
+        onFocusHandler={handleFocus(onFocus)}
+        onBlurHandler={handleBlur(onBlur)}
+        onChangeHandler={handleChange(onChange)}
+        error={error}
+        success={success}
+        warning={warning}
+      />
 
-          <FloatingLabel
-            {...createPropsObject({
-              label,
-              variant,
-              size,
-              currentState,
-              isFloating,
-              focused,
-              htmlFor: props.id,
-            })}
-          />
+      <FloatingLabel
+        label={label}
+        variant={variant || undefined}
+        size={size || undefined}
+        currentState={currentState}
+        isFloating={isFloating}
+        focused={focused}
+        htmlFor={props.id}
+      />
         </div>
 
         <InputMessages

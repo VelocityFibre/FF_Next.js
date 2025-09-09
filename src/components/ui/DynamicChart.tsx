@@ -3,26 +3,37 @@ import { LucideLoader2 } from 'lucide-react';
 import { ChartErrorBoundary } from './ChartErrorBoundary';
 import { log } from '@/lib/logger';
 
+// Type definitions for Recharts components
+interface ChartComponentProps {
+  [key: string]: unknown;
+}
+
+interface FallbackComponentProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
 // Dynamic chart components to avoid SSR issues with Recharts
 // These components are loaded asynchronously to prevent forwardRef bundling issues
 // Using safer import pattern with error handling
-const createLazyChartComponent = (componentName: string) => 
-  lazy(() => 
+const createLazyChartComponent = (componentName: string) =>
+  lazy(() =>
     import('recharts')
-      .then((module: any) => {
-        if (!module[componentName]) {
+      .then((module) => {
+        const component = (module as unknown as Record<string, React.ComponentType<ChartComponentProps>>)[componentName];
+        if (!component) {
           throw new Error(`Component ${componentName} not found in recharts module`);
         }
-        return { default: module[componentName] as React.ComponentType<any> };
+        return { default: component };
       })
       .catch(error => {
         log.error(`Failed to load recharts component ${componentName}:`, { data: error }, 'DynamicChart');
         // Return a fallback component
-        const FallbackComponent: React.ComponentType<any> = () => 
+        const FallbackComponent: React.ComponentType<FallbackComponentProps> = ({ className, children }) =>
           React.createElement('div', {
-            className: 'p-4 text-center text-gray-500 border-2 border-dashed border-gray-300 rounded'
-          }, `Chart component (${componentName}) failed to load`);
-        
+            className: className || 'p-4 text-center text-gray-500 border-2 border-dashed border-gray-300 rounded'
+          }, children || `Chart component (${componentName}) failed to load`);
+
         return { default: FallbackComponent };
       })
   );

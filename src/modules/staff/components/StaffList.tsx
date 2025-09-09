@@ -11,7 +11,7 @@ import { StaffImport } from '@/components/staff/StaffImport';
 import { StaffListHeader } from './StaffListHeader';
 import { StaffFilters } from './StaffFilters';
 import { StaffTable } from './StaffTable';
-import { StaffFilter, StaffMember } from '@/types/staff.types';
+import { StaffFilter, StaffMember, StaffSummary } from '@/types/staff.types';
 import { log } from '@/lib/logger';
 
 export function StaffList() {
@@ -23,12 +23,18 @@ export function StaffList() {
 
   const { data: staff = [], isLoading, error, refetch } = useQuery({
     queryKey: ['staff', filter],
-    queryFn: () => staffService.getAll(filter)
+    queryFn: async () => {
+      const result = await staffService.getAll(filter);
+      return result as StaffMember[];
+    }
   });
 
   const { data: summary } = useQuery({
     queryKey: ['staff-summary'],
-    queryFn: () => staffService.getStaffSummary()
+    queryFn: async () => {
+      const result = await staffService.getStaffSummary();
+      return result as StaffSummary;
+    }
   });
 
   const handleSearch = (e: React.FormEvent) => {
@@ -63,8 +69,17 @@ export function StaffList() {
         'Project Count': member.currentProjectCount || 0
       }));
 
+      if (csvContent.length === 0) {
+        throw new Error('No staff data to export');
+      }
+
+      const firstRow = csvContent[0];
+      if (!firstRow) {
+        throw new Error('Invalid staff data');
+      }
+
       const csv = [
-        Object.keys(csvContent[0]).join(','),
+        Object.keys(firstRow).join(','),
         ...csvContent.map(row => Object.values(row).join(','))
       ].join('\n');
 
@@ -134,7 +149,7 @@ export function StaffList() {
         setShowFilters={setShowFilters}
         onAddStaff={() => router.push('/app/staff/new')}
         onImport={() => setShowImport(true)}
-        onSettings={() => router.push('/app/staff/settings'))
+        onSettings={() => router.push('/app/staff/settings')}
         onExport={handleExport}
       />
 
@@ -151,7 +166,7 @@ export function StaffList() {
       <StaffTable
         staff={staff}
         onView={(staff: StaffMember) => router.push(`/app/staff/${staff.id}`)}
-        onEdit={(staff: StaffMember) => router.push(`/app/staff/edit/${staff.id}`))
+        onEdit={(staff: StaffMember) => router.push(`/app/staff/edit/${staff.id}`)}
         onDelete={handleDelete}
       />
 

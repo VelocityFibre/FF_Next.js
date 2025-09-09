@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { log } from '@/lib/logger';
 
 interface SOWColumnMapperProps {
   file: File;
@@ -35,7 +36,7 @@ export function SOWColumnMapper({ file, onMapped, onError }: SOWColumnMapperProp
         formData.append('file', file);
         formData.append('config_name', 'pole'); // Use pole config
 
-        console.log('Calling column mapping service...');
+        log.debug('Calling column mapping service', {}, 'SOWColumnMapper');
 
         // Call the column mapping service
         const response = await fetch('http://localhost:5001/map-columns', {
@@ -89,7 +90,7 @@ export function SOWColumnMapper({ file, onMapped, onError }: SOWColumnMapperProp
 
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-        console.error('Column mapping failed:', err);
+        log.error('Column mapping failed', { error: err }, 'SOWColumnMapper');
         setError(errorMessage);
         onError(errorMessage);
       } finally {

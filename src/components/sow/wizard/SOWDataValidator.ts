@@ -27,6 +27,7 @@
 
 import { ValidationResult } from './SOWWizardTypes';
 import { sowApi } from '@/services/api/sowApi';
+import { log } from '@/lib/logger';
 
 export const validateStepData = (stepType: string, data: any[]): ValidationResult => {
   if (!data || data.length === 0) {
@@ -54,10 +55,10 @@ const validatePolesData = (data: any[]): ValidationResult => {
   }
 
   // Log original columns for debugging
-  console.log('Original columns from Excel:', Object.keys(firstRow));
-  
+  log.debug('Original columns from Excel:', { columns: Object.keys(firstRow) }, 'SOWDataValidator');
+
   const availableColumns = Object.keys(firstRow).map(key => key.toLowerCase().trim());
-  console.log('Normalized columns:', availableColumns);
+  log.debug('Normalized columns:', { columns: availableColumns }, 'SOWDataValidator');
 
   const missingFields = requiredFields.filter(field => {
     // Special handling for each required field with more variants
@@ -165,7 +166,7 @@ const validateDropsData = (data: any[]): ValidationResult => {
       }
     })).filter(item => item.drop_number);
 
-    console.log(`Processed ${processedData.length} drops in Lawley format`);
+    log.info(`Processed ${processedData.length} drops in Lawley format`, {}, 'SOWDataValidator');
     return { isValid: true, processedData };
   }
 
@@ -258,7 +259,7 @@ const validateFibreData = (data: any[]): ValidationResult => {
       };
     }).filter(item => item.segment_id && item.distance >= 0);
 
-    console.log(`Processed ${processedData.length} fibre segments in Lawley format`);
+    log.info(`Processed ${processedData.length} fibre segments in Lawley format`, {}, 'SOWDataValidator');
     return { isValid: true, processedData };
   }
 
