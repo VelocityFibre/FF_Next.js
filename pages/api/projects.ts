@@ -1,22 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
 import { apiLogger } from '@/lib/logger';
 
-const sql = neon(process.env.DATABASE_URL!);
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
 // API route handler for projects CRUD operations
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
+  // CORS handled by withErrorHandler - no need for manual headers
   
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
   // Handle different HTTP methods
   switch (req.method) {
     case 'GET':
@@ -31,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
       return res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
-}
+})
 
 // GET /api/projects - Fetch all projects or single project by ID
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
@@ -154,6 +146,15 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
       )
       RETURNING *
     `;
+    
+    // Log successful project creation
+    if (newProject[0]) {
+      logCreate('project', newProject[0].id, {
+        project_code: newProject[0].project_code,
+        project_name: newProject[0].project_name,
+        client_id: newProject[0].client_id
+      });
+    }
     
     return res.status(201).json({ success: true, data: newProject[0] });
   } catch (error) {

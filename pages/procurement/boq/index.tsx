@@ -74,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const projectName = query.projectName as string | undefined;
   
   // Optionally fetch initial data on the server side
-  let initialData: BOQItem[] = [];
+  const initialData: BOQItem[] = [];
   
   try {
     // You can fetch initial data here if needed

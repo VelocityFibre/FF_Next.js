@@ -1,23 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
 
-const sql = neon(process.env.DATABASE_URL!);
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
+  // CORS handled by withErrorHandler
   
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
   try {
     switch (req.method) {
-      case 'GET':
+      case 'GET': {
         // Get all staff or single staff member by ID
         const { id, search, department, status, position } = req.query;
         
@@ -42,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.status(200).json({ success: true, data: staff[0] });
         } else {
           // Build query with filters
-          let conditions = [];
+          const conditions = [];
           
           if (search) {
             conditions.push(`(
@@ -84,8 +76,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         break;
+      }
 
-      case 'POST':
+      case 'POST': {
         // Create new staff member
         const staffData = req.body;
         const newStaff = await sql`
@@ -106,10 +99,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           )
           RETURNING *, CONCAT(first_name, ' ', last_name) as full_name
         `;
+        
+        // Log successful staff creation
+        if (newStaff[0]) {
+          logCreate('staff', newStaff[0].id, {
+            employee_id: newStaff[0].employee_id,
+            name: newStaff[0].full_name,
+            email: newStaff[0].email,
+            department: newStaff[0].department
+          });
+        }
+        
         res.status(201).json({ success: true, data: newStaff[0] });
         break;
+      }
 
-      case 'PUT':
+      case 'PUT': {
         // Update staff member
         if (!req.query.id) {
           return res.status(400).json({ success: false, error: 'Staff ID required' });
@@ -138,17 +143,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         
+        // Log successful staff update
+        if (updatedStaff[0]) {
+          logUpdate('staff', req.query.id as string, {
+            updated_fields: Object.keys(updates),
+            name: updatedStaff[0].full_name
+          });
+        }
+        
         res.status(200).json({ success: true, data: updatedStaff[0] });
         break;
+      }
 
-      case 'DELETE':
+      case 'DELETE': {
         // Delete staff member
         if (!req.query.id) {
           return res.status(400).json({ success: false, error: 'Staff ID required' });
         }
         await sql`DELETE FROM staff WHERE id = ${req.query.id as string}`;
+        
+        // Log successful staff deletion
+        logDelete('staff', req.query.id as string);
+        
         res.status(200).json({ success: true, message: 'Staff member deleted successfully' });
         break;
+      }
 
       default:
         res.status(405).json({ success: false, error: 'Method not allowed' });
@@ -157,4 +176,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('API Error:', error);
     res.status(500).json({ success: false, error: (error as Error).message });
   }
-}
+})

@@ -1,14 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { BOQItem } from '../../../../src/types/procurement/boq.types';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate } from '@/lib/db-logger';
 
-// Initialize database connection
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize database connection with logging
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   const { projectId } = req.query;
 
   if (req.method === 'GET') {
@@ -125,6 +126,17 @@ export default async function handler(
         RETURNING *
       `;
       
+      // Log BOQ item creation
+      if (insertedItems[0]) {
+        logCreate('boq_item', insertedItems[0].id, {
+          project_id: insertedItems[0].project_id,
+          item_code: insertedItems[0].item_code,
+          description: insertedItems[0].description,
+          quantity: insertedItems[0].quantity,
+          total_price: insertedItems[0].total_price
+        });
+      }
+      
       res.status(201).json({ 
         message: 'BOQ item created successfully',
         item: insertedItems[0]
@@ -136,4 +148,4 @@ export default async function handler(
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-}
+})

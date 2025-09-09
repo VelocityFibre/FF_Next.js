@@ -1,15 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { FieldTask } from '../../../../src/modules/field-app/types/field-app.types';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
 import { apiResponse, ErrorCode } from '../../../../src/lib/apiResponse';
 
-// Initialize database connection
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize database connection with logging
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   if (req.method === 'GET') {
     try {
       const { 
@@ -34,10 +35,8 @@ export default async function handler(
             t.*,
             u.first_name,
             u.last_name,
-            p.name as project_name,
-            p.location as project_location,
-            p.latitude as project_latitude,
-            p.longitude as project_longitude
+            p.project_name,
+            p.location as project_location
           FROM tasks t
           LEFT JOIN users u ON t.assigned_to = u.id
           LEFT JOIN projects p ON t.project_id = p.id
@@ -74,10 +73,8 @@ export default async function handler(
             t.*,
             u.first_name,
             u.last_name,
-            p.name as project_name,
-            p.location as project_location,
-            p.latitude as project_latitude,
-            p.longitude as project_longitude
+            p.project_name,
+            p.location as project_location
           FROM tasks t
           LEFT JOIN users u ON t.assigned_to = u.id
           LEFT JOIN projects p ON t.project_id = p.id
@@ -114,9 +111,6 @@ export default async function handler(
             coordinates: location.latitude && location.longitude ? {
               lat: Number(location.latitude),
               lng: Number(location.longitude)
-            } : task.project_latitude && task.project_longitude ? {
-              lat: Number(task.project_latitude),
-              lng: Number(task.project_longitude)
             } : { lat: -26.2041, lng: 28.0473 } // Default to Johannesburg
           },
           scheduledDate: task.start_date || task.due_date || new Date().toISOString(),
@@ -191,6 +185,17 @@ export default async function handler(
         RETURNING *
       `;
       
+      // Log task creation
+      if (insertedTasks[0]) {
+        logCreate('field_task', insertedTasks[0].id, {
+          task_code: insertedTasks[0].task_code,
+          title: insertedTasks[0].title,
+          assigned_to: insertedTasks[0].assigned_to,
+          project_id: insertedTasks[0].project_id,
+          priority: insertedTasks[0].priority
+        });
+      }
+      
       return apiResponse.created(
         res,
         insertedTasks[0],
@@ -202,4 +207,4 @@ export default async function handler(
   } else {
     return apiResponse.methodNotAllowed(res, req.method!, ['GET', 'POST']);
   }
-}
+});

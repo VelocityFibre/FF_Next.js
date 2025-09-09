@@ -4,6 +4,7 @@ import { getAuth } from '../../../lib/auth-mock';
 import { neon } from '@neondatabase/serverless';
 import { safeArrayQuery, safeObjectQuery, safeMutation } from '../../../lib/safe-query';
 import { apiResponse, ErrorCode } from '../../../src/lib/apiResponse';
+import { logCreate, logUpdate, logDelete } from '../../../lib/db-logger';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -65,7 +66,7 @@ export default async function handler(
         }
         break;
 
-      case 'POST':
+      case 'POST': {
         // Create new project
         const projectData = req.body;
         const result = await safeMutation(
@@ -96,10 +97,22 @@ export default async function handler(
           );
         }
         
-        return apiResponse.created(res, result.data?.[0], 'Project created successfully');
+        // Log successful project creation
+        const newProject = result.data?.[0];
+        if (newProject) {
+          logCreate('project', newProject.id, {
+            project_code: newProject.project_code,
+            project_name: newProject.project_name,
+            client_id: newProject.client_id,
+            created_by: userId
+          });
+        }
+        
+        return apiResponse.created(res, newProject, 'Project created successfully');
         break;
+      }
 
-      case 'PUT':
+      case 'PUT': {
         // Update project
         if (!req.query.id) {
           return apiResponse.validationError(res, { id: 'Project ID is required' });
@@ -135,10 +148,20 @@ export default async function handler(
           );
         }
         
-        return apiResponse.success(res, updateResult.data?.[0], 'Project updated successfully');
+        // Log successful project update
+        const updatedProject = updateResult.data?.[0];
+        if (updatedProject) {
+          logUpdate('project', req.query.id as string, {
+            updated_fields: Object.keys(updateData),
+            updated_by: userId
+          });
+        }
+        
+        return apiResponse.success(res, updatedProject, 'Project updated successfully');
         break;
+      }
 
-      case 'DELETE':
+      case 'DELETE': {
         // Delete project
         if (!req.query.id) {
           return apiResponse.validationError(res, { id: 'Project ID is required' });
@@ -157,8 +180,12 @@ export default async function handler(
           );
         }
         
+        // Log successful project deletion
+        logDelete('project', req.query.id as string);
+        
         return apiResponse.success(res, null, 'Project deleted successfully');
         break;
+      }
 
       default:
         return apiResponse.methodNotAllowed(res, req.method!, ['GET', 'POST', 'PUT', 'DELETE']);

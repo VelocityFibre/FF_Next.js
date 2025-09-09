@@ -2,22 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { sql } from '../../../lib/db.mjs';
 import { safeArrayQuery, safeMutation } from '../../../lib/safe-query';
 import { apiLogger } from '../../../lib/logger';
+import { withErrorHandler } from '../../../lib/api-error-handler';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
+  // CORS headers are now handled by withErrorHandler
   
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
   try {
     switch (req.method) {
-      case 'GET':
+      case 'GET': {
         // Get all clients or single client by ID
         const { id, status, search } = req.query;
         
@@ -134,8 +126,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         break;
+      }
 
-      case 'POST':
+      case 'POST': {
         // Create new client
         const clientData = req.body;
         const newClient = await sql`
@@ -159,8 +152,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `;
         res.status(201).json({ success: true, data: newClient[0] });
         break;
+      }
 
-      case 'PUT':
+      case 'PUT': {
         // Update client
         if (!req.query.id) {
           return res.status(400).json({ success: false, error: 'Client ID required' });
@@ -192,8 +186,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         res.status(200).json({ success: true, data: updatedClient[0] });
         break;
+      }
 
-      case 'DELETE':
+      case 'DELETE': {
         // Delete client
         if (!req.query.id) {
           return res.status(400).json({ success: false, error: 'Client ID required' });
@@ -201,6 +196,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await sql`DELETE FROM clients WHERE id = ${req.query.id as string}`;
         res.status(200).json({ success: true, message: 'Client deleted successfully' });
         break;
+      }
 
       default:
         res.status(405).json({ success: false, error: 'Method not allowed' });
@@ -209,4 +205,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     apiLogger.error({ error, method: req.method, path: '/api/clients' }, 'Client API request failed');
     res.status(500).json({ success: false, error: (error as Error).message });
   }
-}
+})

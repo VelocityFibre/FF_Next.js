@@ -1,14 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { FieldTechnician } from '../../../../src/modules/field-app/types/field-app.types';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate } from '@/lib/db-logger';
 
-// Initialize database connection
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize database connection with logging
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   if (req.method === 'GET') {
     try {
       // Query staff who are field technicians
@@ -111,6 +112,16 @@ export default async function handler(
         RETURNING *
       `;
       
+      // Log technician creation
+      if (insertedStaff[0]) {
+        logCreate('field_technician', insertedStaff[0].id, {
+          employee_id: insertedStaff[0].employee_id,
+          name: `${insertedStaff[0].first_name} ${insertedStaff[0].last_name}`,
+          email: insertedStaff[0].email,
+          department: 'Field Operations'
+        });
+      }
+      
       res.status(201).json({ 
         message: 'Technician added successfully',
         technician: insertedStaff[0]
@@ -122,7 +133,7 @@ export default async function handler(
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-}
+})
 
 // Helper function to determine technician status
 function determineStatus(

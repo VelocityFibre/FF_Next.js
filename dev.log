@@ -1,0 +1,32 @@
+
+> fibreflow-react@1.0.0 dev
+> next dev --turbo
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/louisdup/VF/Apps/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/louisdup/VF/Apps/FF_React/package-lock.json
+
+ ⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+   ▲ Next.js 15.5.2 (Turbopack)
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.1.207:3001
+   - Environments: .env.local, .env
+
+ ✓ Starting...
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 763ms
+node:path:1270
+    validateString(to, 'to');
+    ^
+
+TypeError: The "to" argument must be of type string. Received undefined
+    at Object.relative (node:path:1270:5)
+    at Watchpack.<anonymous> (/home/louisdup/VF/Apps/FF_React/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js:497:55) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v20.18.1
+[?25h

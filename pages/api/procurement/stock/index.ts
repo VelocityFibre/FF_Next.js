@@ -1,14 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { StockItem } from '../../../../src/types/procurement/stock.types';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate } from '@/lib/db-logger';
 
-// Initialize database connection
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize database connection with logging
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   const { projectId } = req.query;
 
   if (req.method === 'GET') {
@@ -137,6 +138,17 @@ export default async function handler(
         RETURNING *
       `;
       
+      // Log stock item creation
+      if (insertedStocks[0]) {
+        logCreate('stock_item', insertedStocks[0].id, {
+          project_id: insertedStocks[0].project_id,
+          item_code: insertedStocks[0].item_code,
+          item_name: insertedStocks[0].item_name,
+          quantity: insertedStocks[0].quantity_on_hand,
+          warehouse: insertedStocks[0].warehouse_location
+        });
+      }
+      
       res.status(201).json({ 
         message: 'Stock item added successfully',
         item: insertedStocks[0]
@@ -148,4 +160,4 @@ export default async function handler(
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-}
+})

@@ -68,8 +68,8 @@ async function handleGetPoles(req: NextApiRequest, res: NextApiResponse<PoleData
     }
 
     // Build query for listing poles
-    let whereConditions = [];
-    let queryParams = [];
+    const whereConditions = [];
+    const queryParams = [];
     
     if (projectId) {
       whereConditions.push(`p.project_id = $${queryParams.length + 1}::uuid`);

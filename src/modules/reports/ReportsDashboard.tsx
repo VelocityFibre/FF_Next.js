@@ -8,7 +8,7 @@ import { DashboardHeader } from '../../components/dashboard/DashboardHeader';
 import { useReportsDashboardData } from '../../hooks/useDashboardData';
 import { getReportsDashboardCards } from '../../config/dashboards/dashboardConfigs';
 
-export function ReportsDashboard() {
+export default function ReportsDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('all');
 

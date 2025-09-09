@@ -26,7 +26,7 @@ export default async function handler(
     const { projectId } = req.query;
 
     switch (req.method) {
-      case 'GET':
+      case 'GET': {
         if (!projectId) {
           return res.status(400).json({ success: false, data: null, error: 'Project ID required' });
         }
@@ -56,8 +56,9 @@ export default async function handler(
         };
 
         return res.status(200).json({ success: true, data: status });
+      }
 
-      case 'POST':
+      case 'POST': {
         // Update import status (could be used for tracking import progress)
         const { status: newStatus, type } = req.body;
         
@@ -75,6 +76,7 @@ export default async function handler(
           data: null, 
           message: 'Status updated successfully' 
         });
+      }
 
       default:
         res.setHeader('Allow', ['GET', 'POST']);

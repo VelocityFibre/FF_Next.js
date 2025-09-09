@@ -1,179 +1,159 @@
 # FibreFlow Documentation Index
 
+## 📁 Documentation Structure
+```
+docs/
+├── Core Documentation (this directory)
+├── standards/        - Coding standards and conventions
+├── architecture/     - System architecture and design
+├── data/            - Database and API documentation
+├── features/        - Feature-specific documentation
+├── ui/              - UI components and styling
+├── utilities/       - Helper functions and utilities
+├── testing/         - Testing strategies and guides
+├── guides/          - Development and onboarding guides
+└── archive/         - Historical documentation
+```
+
 ## Quick Navigation
-- [Getting Started](#getting-started)
+- [Current Tasks & Issues](#current-tasks--issues)
+- [Development Guides](#development-guides)
+- [Standards & Conventions](#standards--conventions)
 - [Architecture Documentation](#architecture-documentation)
 - [Data Layer Documentation](#data-layer-documentation)
-- [Feature Module Documentation](#feature-module-documentation)
-- [UI Component Documentation](#ui-component-documentation)
-- [Utilities & Testing Documentation](#utilities--testing-documentation)
-- [Migration Guides](#migration-guides)
-- [Additional Resources](#additional-resources)
+- [Feature Documentation](#feature-documentation)
+- [Testing Documentation](#testing-documentation)
 
 ---
 
-## Getting Started
+## Current Tasks & Issues
 
-### Project Overview
-- **CLAUDE.md** - AI assistant context guide and project overview
-- **MIGRATION_STATUS.md** - Next.js + Clerk migration progress tracking
-- **CODEBASE_MAP.md** - Documentation strategy and organization
-- **PROGRESS.md** - Documentation completion tracker
+### Active Work
+- **[PROGRESS.md](./PROGRESS.md)** - Overall progress tracking
+
+### Archived
+- **[tasks.md](./archive/tasks.md)** - Task list (archived)
+- **[tasks-feedback.md](./archive/tasks-feedback.md)** - Task guidance (archived)
+- **[REMAINING-ISSUES.md](./archive/REMAINING-ISSUES.md)** - Issues tracker (archived)
+
+### Project Context
+- **[RULES.md](./RULES.md)** - Project rules and guidelines
+- **[DOCS_REVIEW_SUMMARY.md](./DOCS_REVIEW_SUMMARY.md)** - Documentation status
+
+---
+
+## Development Guides
+
+### Getting Started
+- **[LOCAL_DEVELOPMENT.md](./guides/LOCAL_DEVELOPMENT.md)** - Local setup guide
+- **[ENHANCED_ONBOARDING_GUIDE.md](./guides/ENHANCED_ONBOARDING_GUIDE.md)** - New developer onboarding
+- **[neon-api-migration-guide.md](./guides/neon-api-migration-guide.md)** - Neon API migration
+
+### Logging & Monitoring
+- **[LOGGING_BEST_PRACTICES.md](./guides/logging/LOGGING_BEST_PRACTICES.md)** - Logging strategy and standards
+- **[LOGGING_IMPLEMENTATION_EXAMPLE.md](./guides/logging/LOGGING_IMPLEMENTATION_EXAMPLE.md)** - Implementation examples
+- **[LOGGING_MIGRATION_GUIDE.md](./guides/logging/LOGGING_MIGRATION_GUIDE.md)** - API logging migration guide
 
 ### Key Context ✅
-- **Current Stack**: Next.js 14+ App Router, React 18, TypeScript, TailwindCSS, Clerk Auth
-- **Previous Stack**: React/Vite (archived for reference)
-- **Database**: Real data from Neon PostgreSQL (NO mock data)
-- **Authentication**: Clerk (fully integrated, Firebase Auth retired)
+- **Framework**: Next.js 15.0 with App Router
+- **Frontend**: React 18, TypeScript, TailwindCSS  
+- **Authentication**: Clerk (complete integration)
+- **Database**: Neon PostgreSQL (serverless client, direct SQL)
+- **API**: Next.js API Routes (App Router)
+- **Testing**: Vitest, Playwright
+- **Deployment**: Vercel (optimized SSR/ISR)
+
+---
+
+## Standards & Conventions
+
+### Code Standards
+- **[API_RESPONSE_STANDARD.md](./standards/API_RESPONSE_STANDARD.md)** - API response formats
+- **[MODULE_FIELD_CONSISTENCY_STANDARD.md](./standards/MODULE_FIELD_CONSISTENCY_STANDARD.md)** - Module field standards
+- **[UNIVERSAL_MODULE_STRUCTURE.md](./standards/UNIVERSAL_MODULE_STRUCTURE.md)** - Module organization
+- **[FILE_SPLITTING_RULES.md](./standards/FILE_SPLITTING_RULES.md)** - File organization rules
+- **[database-best-practices.md](./standards/database-best-practices.md)** - Database guidelines
+- **[UI_UX_STANDARD.md](./standards/UI_UX_STANDARD.md)** - UI/UX standards
 
 ---
 
 ## Architecture Documentation
 
-### [Section 1.1: Entry Points & Configuration](./architecture/01-entry-points.md)
-**Size**: ~35K tokens  
-**Coverage**: Application bootstrap, configuration, environment setup
-- Entry point analysis (index.html → main.tsx → App.tsx)
-- Build configuration (Next.js, TypeScript, TailwindCSS)
-- Environment management and deployment
-- Development server setup
-
-### [Section 1.2: Routing & Navigation](./architecture/02-routing.md)
-**Size**: ~28K tokens  
-**Coverage**: Route structure, navigation patterns, layouts
-- 100+ routes mapped across 11 feature domains
-- React Router v6 implementation
-- Navigation architecture and components
-- Protected routes and role-based access
+### System Architecture
+- **[PROJECT_STRUCTURE.md](./architecture/PROJECT_STRUCTURE.md)** - Project structure overview
+- **[02-routing.md](./architecture/02-routing.md)** - Routing and navigation patterns
+- **[LAYOUT_ARCHITECTURE.md](./architecture/LAYOUT_ARCHITECTURE.md)** - Layout system architecture
 
 ---
 
 ## Data Layer Documentation
 
-### [Section 2.1: Database & Models](./data/01-database-models.md)
-**Size**: ~45K tokens  
-**Coverage**: Complete database schema and ORM setup
-- 32+ tables across 5 domains
-- Drizzle ORM implementation
-- Schema relationships and constraints
-- Migration patterns
-
-### [Section 2.2: API Layer](./data/02-api-layer.md)
-**Size**: ~38K tokens  
-**Coverage**: API architecture and service layer
-- 47 API endpoints documented
-- Next.js API routes (single architecture; legacy Express dev server deprecated)
-- Service layer patterns
-- Error handling and validation
-
-### [Section 2.3: State Management](./data/03-state-management.md)
-**Size**: ~32K tokens  
-**Coverage**: Client-side state architecture
-- React Query for server state
-- Context API patterns (migrating to Zustand)
-- Local state management
-- Cache strategies
+### Database & API
+- **[01-database-models.md](./data/01-database-models.md)** - Database schema and models
+- **[02-api-layer.md](./data/02-api-layer.md)** - API architecture and endpoints
+- **[03-state-management.md](./data/03-state-management.md)** - State management patterns
 
 ---
 
-## Feature Module Documentation
+## Feature Documentation
 
-### [Section 3.1: Authentication & Users](./features/01-authentication.md)
-**Size**: ~28K tokens  
-**Coverage**: Auth system and user management
-- Current JWT implementation
-- Role-based access control (RBAC)
-- User profiles and permissions
-- Migration to Clerk Auth
+### Core Features
+- **[01-authentication.md](./features/01-authentication.md)** - Authentication system (Clerk)
+- **[02-projects.md](./features/02-projects.md)** - Project management features
+- **[03-procurement.md](./features/03-procurement.md)** - Procurement module
+- **[04-sow-import.md](./features/04-sow-import.md)** - SOW import functionality
+- **[05-analytics.md](./features/05-analytics.md)** - Analytics and reporting
 
-### [Section 3.2: Projects Module](./features/02-projects.md)
-**Size**: ~35K tokens  
-**Coverage**: Core project management features
-- Project creation and lifecycle
-- Task management and workflows
-- Resource allocation
-- Budget tracking
-
-### [Section 3.3: Procurement Module](./features/03-procurement.md)
-**Size**: ~32K tokens  
-**Coverage**: Purchase and vendor management
-- Purchase orders and requisitions
-- Vendor management
-- Approval workflows
-- Financial tracking
-
-### [Section 3.4: SOW Import](./features/04-sow-import.md)
-**Size**: ~30K tokens  
-**Coverage**: Statement of Work import system
-- CSV/Excel import pipeline
-- Data validation and transformation
-- Bulk operations
-- Error handling
-
-### [Section 3.5: Analytics & Reporting](./features/05-analytics.md)
-**Size**: ~28K tokens  
-**Coverage**: Analytics and visualization
-- Dashboard components
-- Recharts implementation
-- Real-time metrics
-- Report generation
+### Feature Specifications
+- **[COMPREHENSIVE_FEATURE_DOCUMENTATION.md](./features/COMPREHENSIVE_FEATURE_DOCUMENTATION.md)** - Complete feature overview
+- **[procurement_portal_prd_v_1.md](./features/procurement_portal_prd_v_1.md)** - Procurement PRD
 
 ---
 
-## UI Component Documentation
+## UI Documentation
 
-### [Section 4.1: Core Components](./ui/01-components.md)
-**Size**: ~40K tokens  
-**Coverage**: Reusable component library
-- 148+ components documented
-- TypeScript interfaces
-- Component composition patterns
-- Accessibility features
-
-### [Section 4.2: Styling & Theme](./ui/02-styling.md)
-**Size**: ~25K tokens  
-**Coverage**: Design system and styling
-- TailwindCSS configuration
-- 5-theme system with CSS variables
-- Responsive design patterns
-- Animation utilities
+### Components & Styling
+- **[01-components.md](./ui/01-components.md)** - UI component library
+- **[02-styling.md](./ui/02-styling.md)** - Styling and theming guide
 
 ---
 
-## Utilities & Testing Documentation
+## Utilities Documentation
 
-### [Section 5.1: Utilities & Helpers](./utilities/01-helpers.md)
-**Size**: ~35K tokens  
-**Coverage**: Utility functions and services
-- 94+ utility files documented
-- Data processing utilities
-- Storage services with encryption
-- Security and logging systems
-
-### [Section 5.2: Testing Infrastructure](./utilities/02-testing.md)
-**Size**: ~30K tokens  
-**Coverage**: Testing setup and patterns
-- Vitest unit testing configuration
-- Playwright E2E testing
-- Testing utilities and patterns
-- Coverage requirements (90% threshold)
+### Helper Functions
+- **[01-helpers.md](./utilities/01-helpers.md)** - Utility functions and services
+- **[02-testing.md](./utilities/02-testing.md)** - Testing utilities
 
 ---
 
-## Migration Guides
+## Testing Documentation
 
-### ✅ Next.js Migration Complete!
-- **Status**: Fully Complete ✅
-- **Key Files**: 
-  - MIGRATION_STATUS.md - Migration completion summary
-  - docs/data/02-api-layer.md - API architecture (current Next.js)
-  - docs/features/01-authentication.md - Clerk integration
+### Testing Strategies
+- **[COMPREHENSIVE_TESTING_STRATEGY.md](./testing/COMPREHENSIVE_TESTING_STRATEGY.md)** - Testing strategy overview
+- **[TESTING_IMPLEMENTATION_GUIDE.md](./testing/TESTING_IMPLEMENTATION_GUIDE.md)** - Implementation guide
+- **[TEST_COVERAGE_MATRIX.md](./testing/TEST_COVERAGE_MATRIX.md)** - Coverage requirements
+- **[UI_UX_TESTING_CHECKLIST.md](./testing/UI_UX_TESTING_CHECKLIST.md)** - UI testing checklist
 
-### ✅ Completed Migration Points
-1. **Routing**: React Router → Next.js App Router ✅
-2. **Authentication**: JWT/bcrypt → Clerk ✅
-3. **API**: Express → Next.js Route Handlers ✅
-4. **Deployment**: Various → Vercel ✅
+---
+
+## Archive Documentation
+
+The `archive/` directory contains historical documentation for reference:
+
+### Archive Structure
+- **reports/** - Completed analysis and performance reports
+- **implementations/** - Completed feature implementations
+- **migrations/** - Migration history and guides
+- **legacy-vite/** - Legacy Vite configuration
+- **migration-history/** - Detailed migration records
+- **old-features/** - Deprecated feature documentation
+
+### Notable Archived Documents
+- Migration reports and validation
+- Performance analysis reports
+- Security audit reports
+- Implementation summaries
+- Legacy architecture documentation
 
 ---
 
@@ -182,20 +162,25 @@
 ### Development Tools
 - **Scripts**: package.json commands for dev, build, test
 - **Configuration**: next.config.mjs, tsconfig.json, tailwind.config.js
-- **Database**: Drizzle schema in src/db/schema/
+- **Database**: Neon PostgreSQL with direct SQL queries
 
 ### Code Organization
 ```
-src/
+./
+├── app/            # Next.js App Router pages & API routes
 ├── components/     # Reusable UI components
-├── features/       # Feature modules
-├── services/       # API and business logic
-├── db/            # Database schema and queries
+├── lib/           # Core libraries and utilities  
 ├── hooks/         # Custom React hooks
-├── utils/         # Utility functions
 ├── types/         # TypeScript definitions
-└── test/          # Testing utilities
+├── styles/        # Global styles
+├── public/        # Static assets
+└── pages/         # Legacy pages (being migrated to app/)
 ```
+
+### Quick Links
+- [Neon Dashboard](https://console.neon.tech/)
+- [Clerk Dashboard](https://dashboard.clerk.com/)
+- [Vercel Dashboard](https://vercel.com/dashboard)
 
 ### Important Notes
 1. **Real Data Only**: Application uses REAL data from Neon database
@@ -211,13 +196,13 @@ src/
 - **Total Documentation**: ~475K tokens
 - **Files Analyzed**: ~150 source files
 - **Lines Documented**: ~25,000 lines
-- **Last Updated**: 2025-09-03
+- **Last Updated**: 2025-09-08
 
 ## Quick Start Commands
 
 ```bash
-# Development (Next.js)
-npm run dev          # Start Next.js dev server with Clerk
+# Development (Next.js 15)
+npm run dev          # Start Next.js dev server with Turbo & Clerk
 npm run build        # Build Next.js for production
 npm start            # Start Next.js production server
 
@@ -227,8 +212,8 @@ npm run test:e2e    # Run Playwright E2E tests
 npm run coverage    # Generate coverage report
 
 # Database
-npm run db:push     # Push schema to database
-npm run db:studio   # Open Drizzle Studio
+npm run db:migrate   # Run database migrations
+npm run db:seed      # Seed database with initial data
 
 # Legacy Reference
 # Previous React/Vite commands archived with codebase
@@ -242,7 +227,3 @@ For questions about this documentation or the codebase:
 - Reference specific section documentation for deep dives
 
 
----
-
-### Architecture Consolidation
-- See [Phase 2: Architecture Consolidation](./architecture/phase-2-architecture-consolidation.md) for details on build system cleanup, database single source of truth, ORM strategy, migration flow, Neon pooling strategy, and the Health API route.

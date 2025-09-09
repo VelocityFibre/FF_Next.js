@@ -1,15 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { RFQ } from '../../../../src/types/procurement/rfq.types';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
 import { apiResponse, ErrorCode } from '../../../../src/lib/apiResponse';
 
-// Initialize database connection
-const sql = neon(process.env.DATABASE_URL!);
+// Initialize database connection with logging
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse
-) {
+) => {
   const { projectId } = req.query;
 
   if (req.method === 'GET') {
@@ -192,6 +193,16 @@ export default async function handler(
         RETURNING *
       `;
       
+      // Log RFQ creation
+      if (insertedRFQs[0]) {
+        logCreate('rfq', insertedRFQs[0].id, {
+          rfq_number: insertedRFQs[0].rfq_number,
+          project_id: insertedRFQs[0].project_id,
+          title: insertedRFQs[0].title,
+          total_budget: insertedRFQs[0].total_budget_estimate
+        });
+      }
+      
       // Transform the response to match RFQ type
       const createdRFQ: RFQ = {
         id: insertedRFQs[0].id,
@@ -234,4 +245,4 @@ export default async function handler(
   } else {
     return apiResponse.methodNotAllowed(res, req.method!, ['GET', 'POST']);
   }
-}
+})

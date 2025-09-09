@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 // import { getAuth } from '@clerk/nextjs/server';
 import { getAuth } from '../../../lib/auth-mock';
-import { neon } from '@neondatabase/serverless';
+import { withErrorHandler } from '@/lib/api-error-handler';
+import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
 
-const sql = neon(process.env.DATABASE_URL!);
+const sql = createLoggedSql(process.env.DATABASE_URL!);
 
 type SOWData = {
   success: boolean;
@@ -12,10 +13,10 @@ type SOWData = {
   error?: string;
 };
 
-export default async function handler(
+export default withErrorHandler(async (
   req: NextApiRequest,
   res: NextApiResponse<SOWData>
-) {
+) => {
   // Check authentication
   const { userId } = getAuth(req);
   if (!userId) {
@@ -59,7 +60,7 @@ export default async function handler(
     console.error('SOW API Error:', error);
     return res.status(500).json({ success: false, data: null, error: 'Internal server error' });
   }
-}
+});
 
 async function handleGetProjectSOW(req: NextApiRequest, res: NextApiResponse<SOWData>, projectId: string) {
   try {
@@ -249,6 +250,15 @@ async function handleUploadPoles(req: NextApiRequest, res: NextApiResponse<SOWDa
       insertedPoles.push(result[0]);
     }
 
+    // Log SOW poles creation
+    if (insertedPoles.length > 0) {
+      logCreate('sow_poles_batch', projectId as string, {
+        count: insertedPoles.length,
+        project_id: projectId,
+        uploaded_by: userId
+      });
+    }
+
     return res.status(201).json({ success: true, data: insertedPoles, message: `${insertedPoles.length} poles uploaded` });
   } catch (error: any) {
     console.error('Error uploading poles:', error);
@@ -276,6 +286,15 @@ async function handleUploadDrops(req: NextApiRequest, res: NextApiResponse<SOWDa
       insertedDrops.push(result[0]);
     }
 
+    // Log SOW drops creation
+    if (insertedDrops.length > 0) {
+      logCreate('sow_drops_batch', projectId as string, {
+        count: insertedDrops.length,
+        project_id: projectId,
+        uploaded_by: userId
+      });
+    }
+
     return res.status(201).json({ success: true, data: insertedDrops, message: `${insertedDrops.length} drops uploaded` });
   } catch (error: any) {
     console.error('Error uploading drops:', error);
@@ -301,6 +320,15 @@ async function handleUploadFibre(req: NextApiRequest, res: NextApiResponse<SOWDa
         RETURNING *
       `;
       insertedFibre.push(result[0]);
+    }
+
+    // Log SOW fibre creation
+    if (insertedFibre.length > 0) {
+      logCreate('sow_fibre_batch', projectId as string, {
+        count: insertedFibre.length,
+        project_id: projectId,
+        uploaded_by: userId
+      });
     }
 
     return res.status(201).json({ success: true, data: insertedFibre, message: `${insertedFibre.length} fibre cables uploaded` });

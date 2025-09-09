@@ -53,7 +53,7 @@ export function withCorrelation<T>(
 /**
  * Middleware to add correlation ID to requests
  */
-export function correlationMiddleware(handler: Function) {
+export function correlationMiddleware(handler: (...args: any[]) => any) {
   return async (req: NextRequest, context?: any) => {
     // Get or generate correlation ID
     const correlationId = 

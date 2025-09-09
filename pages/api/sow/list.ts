@@ -178,8 +178,8 @@ async function getSOWData(
 ) {
   const { projectId, status, search, limit, offset, sortBy, sortOrder } = params;
   
-  let whereConditions = [];
-  let queryParams = [];
+  const whereConditions = [];
+  const queryParams = [];
   
   if (projectId) {
     whereConditions.push(`s.project_id = $${queryParams.length + 1}::uuid`);
@@ -206,8 +206,9 @@ async function getSOWData(
   
   // Get count
   const countQuery = `SELECT COUNT(*) FROM ${table} s ${whereClause}`;
-  const [countResult] = await sql.unsafe(countQuery, queryParams);
-  const count = parseInt(countResult.count);
+  const countResults = await sql.unsafe(countQuery, queryParams);
+  const countResult = Array.isArray(countResults) ? countResults[0] : countResults;
+  const count = parseInt(countResult?.count || '0');
   
   // Get data with project info
   let dataQuery = `
@@ -222,7 +223,8 @@ async function getSOWData(
     dataQuery += ` LIMIT ${limit} OFFSET ${offset}`;
   }
   
-  const data = await sql.unsafe(dataQuery, queryParams);
+  const dataResults = await sql.unsafe(dataQuery, queryParams);
+  const data = Array.isArray(dataResults) ? dataResults : [];
   
   return { data, count };
 }

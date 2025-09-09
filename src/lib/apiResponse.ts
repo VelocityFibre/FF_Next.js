@@ -329,20 +329,20 @@ export class ApiResponseHelper {
  * Convenience exports for common responses
  */
 export const apiResponse = {
-  success: ApiResponseHelper.success,
-  created: ApiResponseHelper.created,
-  noContent: ApiResponseHelper.noContent,
-  paginated: ApiResponseHelper.paginated,
-  error: ApiResponseHelper.error,
-  validationError: ApiResponseHelper.validationError,
-  notFound: ApiResponseHelper.notFound,
-  unauthorized: ApiResponseHelper.unauthorized,
-  forbidden: ApiResponseHelper.forbidden,
-  methodNotAllowed: ApiResponseHelper.methodNotAllowed,
-  internalError: ApiResponseHelper.internalError,
-  databaseError: ApiResponseHelper.databaseError,
-  setCorsHeaders: ApiResponseHelper.setCorsHeaders,
-  handleOptions: ApiResponseHelper.handleOptions,
+  success: ApiResponseHelper.success.bind(ApiResponseHelper),
+  created: ApiResponseHelper.created.bind(ApiResponseHelper),
+  noContent: ApiResponseHelper.noContent.bind(ApiResponseHelper),
+  paginated: ApiResponseHelper.paginated.bind(ApiResponseHelper),
+  error: ApiResponseHelper.error.bind(ApiResponseHelper),
+  validationError: ApiResponseHelper.validationError.bind(ApiResponseHelper),
+  notFound: ApiResponseHelper.notFound.bind(ApiResponseHelper),
+  unauthorized: ApiResponseHelper.unauthorized.bind(ApiResponseHelper),
+  forbidden: ApiResponseHelper.forbidden.bind(ApiResponseHelper),
+  methodNotAllowed: ApiResponseHelper.methodNotAllowed.bind(ApiResponseHelper),
+  internalError: ApiResponseHelper.internalError.bind(ApiResponseHelper),
+  databaseError: ApiResponseHelper.databaseError.bind(ApiResponseHelper),
+  setCorsHeaders: ApiResponseHelper.setCorsHeaders.bind(ApiResponseHelper),
+  handleOptions: ApiResponseHelper.handleOptions.bind(ApiResponseHelper),
 };
 
 export default apiResponse;

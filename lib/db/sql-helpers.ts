@@ -432,8 +432,8 @@ export async function getKPIMetrics(
   metricType?: string,
   startDate?: Date
 ): Promise<QueryResult<KpiMetrics>> {
-  let conditions = [];
-  let values = [];
+  const conditions = [];
+  const values = [];
   let paramIndex = 1;
   
   if (projectId) {
