@@ -11,10 +11,8 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    console.log('Initializing database tables...');
-    
-    // Create clients table
+   try {
+     // Create clients table
     await sql`
       CREATE TABLE IF NOT EXISTS clients (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

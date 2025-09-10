@@ -1,4 +1,4 @@
-import { sql } from '@/lib/db';
+import { sql } from '../../lib/db/pool.js';
 
 // Legacy-compatible factory that now returns the canonical client.
 // The databaseUrl parameter is ignored to enforce a single source of truth.

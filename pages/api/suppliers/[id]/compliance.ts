@@ -200,43 +200,33 @@ async function handlePut(id: string, req: NextApiRequest, res: NextApiResponse) 
         `;
         break;
 
-      case 'update':
-        const updateFields: string[] = [];
-        const params: any[] = [];
-        let paramCount = 0;
+       case 'update': {
+         // Handle individual field updates
+         if (data?.expiryDate !== undefined) {
+           await sql`
+             UPDATE supplier_compliance
+             SET expiry_date = ${data.expiryDate ? new Date(data.expiryDate) : null}, updated_at = NOW()
+             WHERE id = ${parseInt(documentId)} AND supplier_id = ${parseInt(id)}
+           `;
+         }
 
-        if (data?.expiryDate !== undefined) {
-          paramCount++;
-          updateFields.push(`expiry_date = $${paramCount}`);
-          params.push(data.expiryDate ? new Date(data.expiryDate) : null);
-        }
+         if (data?.docNumber !== undefined) {
+           await sql`
+             UPDATE supplier_compliance
+             SET doc_number = ${data.docNumber}, updated_at = NOW()
+             WHERE id = ${parseInt(documentId)} AND supplier_id = ${parseInt(id)}
+           `;
+         }
 
-        if (data?.docNumber !== undefined) {
-          paramCount++;
-          updateFields.push(`doc_number = $${paramCount}`);
-          params.push(data.docNumber);
-        }
-
-        if (data?.issuingBody !== undefined) {
-          paramCount++;
-          updateFields.push(`issuing_body = $${paramCount}`);
-          params.push(data.issuingBody);
-        }
-
-        if (updateFields.length > 0) {
-          paramCount++;
-          params.push(parseInt(documentId));
-          paramCount++;
-          params.push(parseInt(id));
-
-          const query = `
-            UPDATE supplier_compliance
-            SET ${updateFields.join(', ')}, updated_at = NOW()
-            WHERE id = $${paramCount - 1} AND supplier_id = $${paramCount}
-          `;
-          await sql(query, params);
-        }
-        break;
+         if (data?.issuingBody !== undefined) {
+           await sql`
+             UPDATE supplier_compliance
+             SET issuing_body = ${data.issuingBody}, updated_at = NOW()
+             WHERE id = ${parseInt(documentId)} AND supplier_id = ${parseInt(id)}
+           `;
+         }
+         break;
+       }
 
       default:
         return res.status(400).json({

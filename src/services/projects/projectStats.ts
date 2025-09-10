@@ -4,12 +4,11 @@
 
 import { neon } from '@neondatabase/serverless';
 import { log } from '@/lib/logger';
-import { 
+import {
   Project,
   ProjectSummary,
   ProjectStatus
 } from '@/types/project.types';
-import { progressCalculations } from './phases/neonPhaseService';
 
 // Get database connection
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -26,7 +25,7 @@ export async function getProjectSummary(): Promise<ProjectSummary> {
   try {
     // Get project statistics from Neon
     const statsResult = await sql`
-      SELECT 
+      SELECT
         COUNT(*) as total,
         COUNT(CASE WHEN status = ${ProjectStatus.ACTIVE} THEN 1 END) as active,
         COUNT(CASE WHEN status = ${ProjectStatus.COMPLETED} THEN 1 END) as completed,
@@ -36,145 +35,21 @@ export async function getProjectSummary(): Promise<ProjectSummary> {
         COALESCE(AVG(progress), 0) as average_progress
       FROM projects
     `;
-    
+
     const stats = statsResult[0];
-    
+
     return {
-      total: parseInt(stats.total),
-      active: parseInt(stats.active),
-      completed: parseInt(stats.completed),
-      onHold: parseInt(stats.on_hold),
-      totalBudget: parseFloat(stats.total_budget),
-      totalSpent: parseFloat(stats.total_spent),
-      averageProgress: parseFloat(stats.average_progress)
+      total: parseInt(stats?.total || 0),
+      active: parseInt(stats?.active || 0),
+      completed: parseInt(stats?.completed || 0),
+      onHold: parseInt(stats?.on_hold || 0),
+      totalBudget: parseFloat(stats?.total_budget || 0),
+      totalSpent: parseFloat(stats?.total_spent || 0),
+      averageProgress: parseFloat(stats?.average_progress || 0)
     };
   } catch (error) {
     log.error('Error getting project summary:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch project summary');
-  }
-}
-
-/**
- * Get recent projects
- */
-export async function getRecentProjects(count: number = 5): Promise<Project[]> {
-  try {
-    const result = await sql`
-      SELECT 
-        id,
-        name,
-        client_id as "clientId",
-        status,
-        start_date as "startDate",
-        end_date as "endDate",
-        budget,
-        actual_cost as "actualCost",
-        progress,
-        description,
-        project_manager as "projectManager",
-        created_at as "createdAt",
-        updated_at as "updatedAt"
-      FROM projects
-      ORDER BY created_at DESC
-      LIMIT ${count}
-    `;
-    
-    return result as Project[];
-  } catch (error) {
-    log.error('Error getting recent projects:', { data: error }, 'projectStats');
-    throw new Error('Failed to fetch recent projects');
-  }
-}
-
-/**
- * Get overdue projects
- */
-export async function getOverdueProjects(): Promise<Project[]> {
-  try {
-    const result = await sql`
-      SELECT 
-        id,
-        name,
-        client_id as "clientId",
-        status,
-        start_date as "startDate",
-        end_date as "endDate",
-        budget,
-        actual_cost as "actualCost",
-        progress,
-        description,
-        project_manager as "projectManager",
-        created_at as "createdAt",
-        updated_at as "updatedAt"
-      FROM projects
-      WHERE status = ${ProjectStatus.ACTIVE}
-        AND end_date < CURRENT_DATE
-      ORDER BY end_date ASC
-    `;
-    
-    return result as Project[];
-  } catch (error) {
-    log.error('Error getting overdue projects:', { data: error }, 'projectStats');
-    throw new Error('Failed to fetch overdue projects');
-  }
-}
-
-/**
- * Get project statistics with phase breakdown
- */
-export async function getProjectStatisticsWithPhases(projectId: string) {
-  try {
-    // Get project basic info
-    const projectResult = await sql`
-      SELECT 
-        id,
-        name,
-        status,
-        progress,
-        budget,
-        actual_cost as "actualCost",
-        start_date as "startDate",
-        end_date as "endDate"
-      FROM projects
-      WHERE id = ${projectId}::uuid
-    `;
-    
-    if (projectResult.length === 0) {
-      throw new Error('Project not found');
-    }
-    
-    const project = projectResult[0];
-    
-    // Get phase statistics
-    const phaseStats = await progressCalculations.getProjectProgressSummary(projectId);
-    
-    // Get phase breakdown
-    const phasesResult = await sql`
-      SELECT 
-        id,
-        name,
-        phase_type as type,
-        status,
-        progress,
-        budget,
-        actual_cost as "actualCost",
-        planned_start_date as "plannedStartDate",
-        planned_end_date as "plannedEndDate",
-        actual_start_date as "actualStartDate",
-        actual_end_date as "actualEndDate"
-      FROM project_phases
-      WHERE project_id = ${projectId}::uuid
-      ORDER BY phase_order ASC
-    `;
-    
-    return {
-      project,
-      statistics: phaseStats,
-      phases: phasesResult
-    };
-  } catch (error) {
-    log.error('Error getting project statistics with phases:', { data: error }, 'projectStats');
-    throw new Error('Failed to fetch project statistics');
   }
 }
 
@@ -184,7 +59,7 @@ export async function getProjectStatisticsWithPhases(projectId: string) {
 export async function getProjectsByStatus(status: ProjectStatus): Promise<Project[]> {
   try {
     const result = await sql`
-      SELECT 
+      SELECT
         id,
         name,
         client_id as "clientId",
@@ -202,123 +77,8 @@ export async function getProjectsByStatus(status: ProjectStatus): Promise<Projec
       WHERE status = ${status}
       ORDER BY created_at DESC
     `;
-    
+
     return result as Project[];
-  } catch (error) {
-    log.error('Error getting projects by status:', { data: error }, 'projectStats');
-    throw new Error('Failed to fetch projects by status');
-  }
-}
-
-/**
- * Calculate project health score
- */
-export async function calculateProjectHealthScore(projectId: string): Promise<number> {
-  try {
-    const statsResult = await sql`
-      SELECT 
-        p.progress,
-        p.budget,
-        p.actual_cost as actual_cost,
-        p.end_date as end_date,
-        COUNT(DISTINCT ph.id) as total_phases,
-        COUNT(DISTINCT CASE WHEN ph.status = 'completed' THEN ph.id END) as completed_phases,
-        COUNT(DISTINCT CASE WHEN ph.status = 'blocked' THEN ph.id END) as blocked_phases,
-        COUNT(DISTINCT t.id) as total_tasks,
-        COUNT(DISTINCT CASE WHEN t.status = 'completed' THEN t.id END) as completed_tasks,
-        COUNT(DISTINCT CASE WHEN t.is_blocked = true THEN t.id END) as blocked_tasks
-      FROM projects p
-      LEFT JOIN project_phases ph ON ph.project_id = p.id
-      LEFT JOIN phase_tasks t ON t.project_id = p.id
-      WHERE p.id = ${projectId}::uuid
-      GROUP BY p.id, p.progress, p.budget, p.actual_cost, p.end_date
-    `;
-    
-    if (statsResult.length === 0) {
-      throw new Error('Project not found');
-    }
-    
-    const stats = statsResult[0];
-    let healthScore = 100;
-    
-    // Deduct points for budget overrun
-    if (stats.actual_cost > stats.budget) {
-      const overrunPercent = ((stats.actual_cost - stats.budget) / stats.budget) * 100;
-      healthScore -= Math.min(overrunPercent, 30); // Max 30 point deduction
-    }
-    
-    // Deduct points for being overdue
-    if (stats.end_date && new Date(stats.end_date) < new Date()) {
-      healthScore -= 20;
-    }
-    
-    // Deduct points for blocked phases/tasks
-    if (stats.total_phases > 0) {
-      const blockedPercent = (stats.blocked_phases / stats.total_phases) * 100;
-      healthScore -= Math.min(blockedPercent * 0.5, 20); // Max 20 point deduction
-    }
-    
-    if (stats.total_tasks > 0) {
-      const blockedTaskPercent = (stats.blocked_tasks / stats.total_tasks) * 100;
-      healthScore -= Math.min(blockedTaskPercent * 0.3, 15); // Max 15 point deduction
-    }
-    
-    // Add points for good progress
-    if (stats.progress > 75) {
-      healthScore += 10;
-    }
-    
-    return Math.max(0, Math.min(100, healthScore));
-  } catch (error) {
-    log.error('Error calculating project health score:', { data: error }, 'projectStats');
-    throw new Error('Failed to calculate project health score');
-  }
-}
-
-// Keep the original function for backward compatibility
-function calculateAverageProgress(projects: Project[]): number {
-  if (projects.length === 0) return 0;
-  const totalProgress = projects.reduce((sum, p) => sum + (p.progress || 0), 0);
-  return totalProgress / projects.length;
-      id: doc.id,
-      ...doc.data()
-    } as Project));
-    
-    // Filter overdue projects
-    return projects.filter(project => {
-      if (!project.endDate) return false;
-      let endDate: Date;
-      if (project.endDate instanceof Date) {
-        endDate = project.endDate;
-      } else if (typeof project.endDate === 'object' && 'toDate' in project.endDate) {
-        endDate = (project.endDate as any).toDate();
-      } else {
-        endDate = new Date(project.endDate as string);
-      }
-      return endDate < now && project.actualProgress < 100;
-    });
-  } catch (error) {
-    log.error('Error getting overdue projects:', { data: error }, 'projectStats');
-    throw new Error('Failed to fetch overdue projects');
-  }
-}
-
-/**
- * Get projects by status
- */
-export async function getProjectsByStatus(status: ProjectStatus): Promise<Project[]> {
-  try {
-    const q = query(
-      collection(db, 'projects'),
-      where('status', '==', status),
-      orderBy('updatedAt', 'desc')
-    );
-    
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Project));
   } catch (error) {
     log.error('Error getting projects by status:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch projects by status');
@@ -330,15 +90,19 @@ export async function getProjectsByStatus(status: ProjectStatus): Promise<Projec
  */
 export async function getProjectCountByType(): Promise<Record<string, number>> {
   try {
-    const snapshot = await getDocs(collection(db, 'projects'));
+    const result = await sql`
+      SELECT
+        COALESCE(type, 'other') as project_type,
+        COUNT(*) as count
+      FROM projects
+      GROUP BY COALESCE(type, 'other')
+    `;
+
     const counts: Record<string, number> = {};
-    
-    snapshot.docs.forEach(doc => {
-      const data = doc.data();
-      const type = data.projectType || 'other';
-      counts[type] = (counts[type] || 0) + 1;
+    result.forEach(row => {
+      counts[row.project_type] = parseInt(row.count);
     });
-    
+
     return counts;
   } catch (error) {
     log.error('Error getting project counts by type:', { data: error }, 'projectStats');
@@ -353,34 +117,106 @@ export async function getProjectsEndingSoon(): Promise<Project[]> {
   try {
     const now = new Date();
     const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    
-    const activeQuery = query(
-      collection(db, 'projects'),
-      where('status', '==', ProjectStatus.ACTIVE)
-    );
-    
-    const snapshot = await getDocs(activeQuery);
-    const projects = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Project));
-    
-    // Filter projects ending within 7 days
-    return projects.filter(project => {
-      if (!project.endDate) return false;
-      let endDate: Date;
-      if (project.endDate instanceof Date) {
-        endDate = project.endDate;
-      } else if (typeof project.endDate === 'object' && 'toDate' in project.endDate) {
-        endDate = (project.endDate as any).toDate();
-      } else {
-        endDate = new Date(project.endDate as string);
-      }
-      return endDate >= now && endDate <= weekFromNow;
-    });
+
+    const result = await sql`
+      SELECT
+        id,
+        name,
+        client_id as "clientId",
+        status,
+        start_date as "startDate",
+        end_date as "endDate",
+        budget,
+        actual_cost as "actualCost",
+        progress,
+        description,
+        project_manager as "projectManager",
+        created_at as "createdAt",
+        updated_at as "updatedAt"
+      FROM projects
+      WHERE status = ${ProjectStatus.ACTIVE}
+      AND end_date >= ${now.toISOString()}
+      AND end_date <= ${weekFromNow.toISOString()}
+      ORDER BY end_date ASC
+    `;
+
+    return result as Project[];
   } catch (error) {
     log.error('Error getting projects ending soon:', { data: error }, 'projectStats');
     throw new Error('Failed to fetch projects ending soon');
+  }
+}
+
+/**
+ * Calculate project health score
+ */
+export async function calculateProjectHealthScore(projectId: string): Promise<number> {
+  try {
+    const statsResult = await sql`
+      SELECT
+        p.progress,
+        p.budget,
+        p.actual_cost as actual_cost,
+        p.end_date as end_date,
+        COUNT(DISTINCT ph.id) as total_phases,
+        COUNT(DISTINCT CASE WHEN ph.status = 'completed' THEN ph.id END) as completed_phases,
+        COUNT(DISTINCT CASE WHEN ph.status = 'blocked' THEN ph.id END) as blocked_phases,
+        COUNT(DISTINCT t.id) as total_tasks,
+        COUNT(DISTINCT CASE WHEN t.status = 'completed' THEN t.id END) as completed_tasks,
+        COUNT(DISTINCT CASE WHEN t.is_blocked = true THEN t.id END) as blocked_tasks
+      FROM projects p
+      LEFT JOIN project_phases ph ON ph.project_id = p.id
+      LEFT JOIN tasks t ON t.project_id = p.id
+      WHERE p.id = ${projectId}
+      GROUP BY p.id, p.progress, p.budget, p.actual_cost, p.end_date
+    `;
+
+    const stats = statsResult[0];
+    if (!stats) {
+      return 50; // Default neutral score
+    }
+
+    let healthScore = 50; // Start with neutral score
+
+    // Add points for progress
+    if (stats.progress > 75) {
+      healthScore += 20;
+    } else if (stats.progress > 50) {
+      healthScore += 10;
+    } else if (stats.progress < 25) {
+      healthScore -= 20;
+    }
+
+    // Check budget variance
+    if (stats.actual_cost && stats.budget) {
+      const variance = ((stats.actual_cost - stats.budget) / stats.budget) * 100;
+      if (variance > 20) {
+        healthScore -= 25;
+      } else if (variance > 10) {
+        healthScore -= 15;
+      }
+    }
+
+    // Check deadline
+    if (stats.end_date && new Date(stats.end_date) < new Date()) {
+      healthScore -= 20;
+    }
+
+    // Deduct points for blocked phases/tasks
+    if (stats.total_phases > 0) {
+      const blockedPercent = (stats.blocked_phases / stats.total_phases) * 100;
+      healthScore -= Math.min(blockedPercent * 0.5, 20);
+    }
+
+    if (stats.total_tasks > 0) {
+      const blockedTaskPercent = (stats.blocked_tasks / stats.total_tasks) * 100;
+      healthScore -= Math.min(blockedTaskPercent * 0.3, 15);
+    }
+
+    return Math.max(0, Math.min(100, healthScore));
+  } catch (error) {
+    log.error('Error calculating project health score:', { data: error }, 'projectStats');
+    throw new Error('Failed to calculate project health score');
   }
 }
 
@@ -394,48 +230,26 @@ export async function calculateBudgetVariance(): Promise<{
   totalVariance: number;
 }> {
   try {
-    const snapshot = await getDocs(collection(db, 'projects'));
-    
-    let overBudget = 0;
-    let underBudget = 0;
-    let onBudget = 0;
-    let totalVariance = 0;
-    
-    snapshot.docs.forEach(doc => {
-      const data = doc.data();
-      if (data.budget && data.actualCost !== undefined) {
-        const variance = data.actualCost - data.budget;
-        totalVariance += variance;
-        
-        if (variance > 0) {
-          overBudget++;
-        } else if (variance < 0) {
-          underBudget++;
-        } else {
-          onBudget++;
-        }
-      }
-    });
-    
+    const result = await sql`
+      SELECT
+        COUNT(CASE WHEN actual_cost > budget * 1.1 THEN 1 END) as over_budget,
+        COUNT(CASE WHEN actual_cost < budget * 0.9 THEN 1 END) as under_budget,
+        COUNT(CASE WHEN actual_cost BETWEEN budget * 0.9 AND budget * 1.1 THEN 1 END) as on_budget,
+        COALESCE(SUM(actual_cost - budget), 0) as total_variance
+      FROM projects
+      WHERE budget > 0 AND actual_cost IS NOT NULL
+    `;
+
+    const stats = result[0];
+
     return {
-      overBudget,
-      underBudget,
-      onBudget,
-      totalVariance
+      overBudget: parseInt(stats?.over_budget || 0),
+      underBudget: parseInt(stats?.under_budget || 0),
+      onBudget: parseInt(stats?.on_budget || 0),
+      totalVariance: parseFloat(stats?.total_variance || 0)
     };
   } catch (error) {
     log.error('Error calculating budget variance:', { data: error }, 'projectStats');
     throw new Error('Failed to calculate budget variance');
   }
-}
-
-// Helper functions
-function calculateAverageProgress(projects: Project[]): number {
-  if (projects.length === 0) return 0;
-  
-  const totalProgress = projects.reduce((sum, project) => {
-    return sum + (project.actualProgress || 0);
-  }, 0);
-  
-  return Math.round(totalProgress / projects.length);
 }

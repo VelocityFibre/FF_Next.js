@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 // Simple Migration Runner - Uses raw SQL files for database migrations
 
-import { sql } from '../../lib/db.js';
+import { sql } from '../../lib/db/pool.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';

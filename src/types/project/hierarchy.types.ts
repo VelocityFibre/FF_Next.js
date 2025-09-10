@@ -5,6 +5,9 @@
 import { Timestamp } from 'firebase/firestore';
 import { Priority } from './base.types';
 
+// Re-export Priority for convenience
+export { Priority };
+
 export interface Phase {
   id: string;
   projectId: string;

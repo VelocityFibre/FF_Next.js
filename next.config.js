@@ -17,23 +17,8 @@ const nextConfig = {
 
   // Fix file watching issues
   webpack: (config, { dev, isServer }) => {
-    // Fix Watchpack issues by configuring file watching properly
-    if (dev && !isServer) {
-      config.watchOptions = {
-        poll: 1000,
-        aggregateTimeout: 300,
-        ignored: [
-          '**/node_modules',
-          '**/.next',
-          '**/.git',
-          '**/dist',
-          '**/.vercel',
-          '**/coverage',
-          '**/*.test.*',
-          '**/*.spec.*',
-        ],
-      };
-    }
+    // Temporarily disable watch options to avoid Watchpack issues
+    // TODO: Re-enable when Next.js/watchpack compatibility is fixed
 
     // Ensure proper handling of undefined paths
     if (config.resolve && config.resolve.alias) {

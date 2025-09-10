@@ -4,7 +4,7 @@ import { ClientForm } from '../../../src/modules/clients/components/ClientForm';
 const ClientEditPage: NextPage = () => {
   return (
     <div className="p-6">
-      <ClientForm isEditMode />
+      <ClientForm />
     </div>
   );
 };

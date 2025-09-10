@@ -1,7 +1,7 @@
 // SQL Helper Functions - Typed wrappers for common database queries
 // Uses the existing Neon SQL configuration from lib/db.js
 
-import { sql } from '../db.js';
+import { sql } from './pool.js';
 import type {
   Project,
   Client,
@@ -585,7 +585,7 @@ export async function getPaginated<T>(
 // TRANSACTION HELPER
 // ============================================
 
-export { transaction } from '../db.js';
+export { transaction } from './pool.js';
 
 // ============================================
 // RAW QUERY HELPER (for complex queries)
@@ -596,4 +596,4 @@ export async function rawQuery<T>(query: string, values?: any[]): Promise<QueryR
 }
 
 // Export the sql template tag for direct use when needed
-export { sql } from '../db.js';
+export { sql } from './pool.js';

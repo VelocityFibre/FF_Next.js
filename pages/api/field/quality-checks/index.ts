@@ -1,8 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { neon } from '@neondatabase/serverless';
-import { safeArrayQuery, safeMutation } from '../../../../lib/safe-query';
-
-const sql = neon(process.env.DATABASE_URL!);
+import { safeArrayQuery } from '../../../../lib/safe-query';
 
 export default async function handler(
   req: NextApiRequest,
