@@ -89,11 +89,7 @@ export default withErrorHandler(async (
             ? item.specifications 
             : JSON.stringify(item.specifications || '')
         })),
-        suppliers: typeof rfq.invited_suppliers === 'string'
-          ? JSON.parse(rfq.invited_suppliers || '[]')
-          : Array.isArray(rfq.invited_suppliers) 
-            ? rfq.invited_suppliers 
-            : [],
+        suppliers: rfq.invited_suppliers || [],
         quotesReceived: rfq.quotes_received || 0,
         totalValue: rfq.total_budget_estimate ? Number(rfq.total_budget_estimate) : 0,
         createdBy: rfq.created_by || 'System',
@@ -216,9 +212,7 @@ export default withErrorHandler(async (
         createdDate: insertedRFQs[0].created_at || new Date().toISOString(),
         dueDate: insertedRFQs[0].response_deadline || new Date().toISOString(),
         items: [],
-        suppliers: typeof insertedRFQs[0].invited_suppliers === 'string' 
-          ? JSON.parse(insertedRFQs[0].invited_suppliers || '[]')
-          : insertedRFQs[0].invited_suppliers || [],
+        suppliers: insertedRFQs[0].invited_suppliers || [],
         quotesReceived: 0,
         totalValue: Number(insertedRFQs[0].total_budget_estimate || 0),
         createdBy: insertedRFQs[0].created_by || 'System',
