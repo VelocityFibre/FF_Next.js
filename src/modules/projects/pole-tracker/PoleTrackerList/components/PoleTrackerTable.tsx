@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/router';
 import { MapPin, Camera, CheckCircle, AlertTriangle } from 'lucide-react';
 import type { NeonPole } from '../../services/poleTrackerNeonService';

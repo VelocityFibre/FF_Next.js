@@ -1,13 +1,5 @@
-import { 
-  collection,
-  doc,
-  onSnapshot,
-  query,
-  where,
-  orderBy,
-  Unsubscribe
-} from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { socketIOAdapter } from '@/services/realtime/socketIOAdapter';
+import type { RealtimeEvent } from '@/services/realtime/websocketService';
 import { log } from '@/lib/logger';
 import { 
   Project,
@@ -18,131 +10,147 @@ import {
 } from '@/types/project.types';
 
 /**
- * Subscribe to real-time project updates
+ * Subscribe to real-time project updates via WebSocket
  */
 export function subscribeToProject(
   projectId: string, 
   callback: (project: Project | null) => void
-): Unsubscribe {
-  const docRef = doc(db, 'projects', projectId);
-  
-  return onSnapshot(docRef, (snapshot) => {
-    if (snapshot.exists()) {
-      callback({
-        id: snapshot.id,
-        ...snapshot.data()
-      } as Project);
-    } else {
-      callback(null);
+): () => void {
+  // Ensure WebSocket is connected
+  if (!socketIOAdapter.isConnected()) {
+    socketIOAdapter.connect().catch(console.error);
+  }
+
+  // Subscribe to specific project changes
+  const unsubscribe = socketIOAdapter.subscribe(
+    'project',
+    projectId,
+    async (event: RealtimeEvent) => {
+      if (event.type === 'removed') {
+        callback(null);
+      } else {
+        // Fetch fresh data for added/modified events
+        try {
+          const response = await fetch(`/api/projects/${projectId}`);
+          if (response.ok) {
+            const project = await response.json();
+            callback(project);
+          } else {
+            callback(null);
+          }
+        } catch (error) {
+          log.error('Error fetching project data:', { data: error }, 'projectRealtime');
+          callback(null);
+        }
+      }
     }
-  }, (error) => {
-    log.error('Error in project subscription:', { data: error }, 'projectRealtime');
-    callback(null);
-  });
+  );
+
+  // Fetch initial data
+  fetch(`/api/projects/${projectId}`)
+    .then(res => res.ok ? res.json() : null)
+    .then(callback)
+    .catch(() => callback(null));
+
+  return unsubscribe;
 }
 
 /**
- * Subscribe to real-time project list updates
+ * Subscribe to real-time project list updates via WebSocket
  */
 export function subscribeToProjects(
   callback: (projects: Project[]) => void,
   filter?: { status?: string; clientId?: string }
-): Unsubscribe {
-  let q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
-  
-  if (filter?.status) {
-    q = query(q, where('status', '==', filter.status));
+): () => void {
+  // Ensure WebSocket is connected
+  if (!socketIOAdapter.isConnected()) {
+    socketIOAdapter.connect().catch(console.error);
   }
+
+  // Subscribe to all project changes
+  const unsubscribe = socketIOAdapter.subscribeToAll(
+    'project',
+    async (event: RealtimeEvent) => {
+      // Re-fetch the entire list on any change
+      try {
+        let url = '/api/projects';
+        const params = new URLSearchParams();
+        if (filter?.status) params.append('status', filter.status);
+        if (filter?.clientId) params.append('clientId', filter.clientId);
+        if (params.toString()) url += `?${params.toString()}`;
+        
+        const response = await fetch(url);
+        if (response.ok) {
+          const projects = await response.json();
+          callback(projects);
+        } else {
+          callback([]);
+        }
+      } catch (error) {
+        log.error('Error fetching projects list:', { data: error }, 'projectRealtime');
+        callback([]);
+      }
+    }
+  );
+
+  // Fetch initial data
+  let url = '/api/projects';
+  const params = new URLSearchParams();
+  if (filter?.status) params.append('status', filter.status);
+  if (filter?.clientId) params.append('clientId', filter.clientId);
+  if (params.toString()) url += `?${params.toString()}`;
   
-  if (filter?.clientId) {
-    q = query(q, where('clientId', '==', filter.clientId));
-  }
-  
-  return onSnapshot(q, (snapshot) => {
-    const projects = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Project));
-    callback(projects);
-  }, (error) => {
-    log.error('Error in projects subscription:', { data: error }, 'projectRealtime');
-    callback([]);
-  });
+  fetch(url)
+    .then(res => res.ok ? res.json() : [])
+    .then(callback)
+    .catch(() => callback([]));
+
+  return unsubscribe;
 }
 
 /**
  * Subscribe to project phases updates
+ * Note: This would need a separate API endpoint for phases
  */
 export function subscribeToProjectPhases(
   projectId: string,
   callback: (phases: Phase[]) => void
-): Unsubscribe {
-  const q = query(
-    collection(db, 'projects', projectId, 'phases'),
-    orderBy('order')
-  );
-  
-  return onSnapshot(q, (snapshot) => {
-    const phases = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Phase));
-    callback(phases);
-  }, (error) => {
-    log.error('Error in phases subscription:', { data: error }, 'projectRealtime');
-    callback([]);
-  });
+): () => void {
+  // For now, return empty unsubscribe as phases would need separate API support
+  log.warn('Phase subscriptions not yet implemented for WebSocket', {}, 'projectRealtime');
+  callback([]);
+  return () => {};
 }
 
 /**
  * Subscribe to phase steps updates
+ * Note: This would need a separate API endpoint for steps
  */
 export function subscribeToPhaseSteps(
   projectId: string,
   phaseId: string,
   callback: (steps: Step[]) => void
-): Unsubscribe {
-  const q = query(
-    collection(db, 'projects', projectId, 'phases', phaseId, 'steps'),
-    orderBy('order')
-  );
-  
-  return onSnapshot(q, (snapshot) => {
-    const steps = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Step));
-    callback(steps);
-  }, (error) => {
-    log.error('Error in steps subscription:', { data: error }, 'projectRealtime');
-    callback([]);
-  });
+): () => void {
+  // For now, return empty unsubscribe as steps would need separate API support
+  log.warn('Step subscriptions not yet implemented for WebSocket', {}, 'projectRealtime');
+  callback([]);
+  return () => {};
 }
 
 /**
  * Subscribe to step tasks updates
+ * Note: This would need a separate API endpoint for tasks
  */
 export function subscribeToStepTasks(
   projectId: string,
   phaseId: string,
   stepId: string,
   callback: (tasks: Task[]) => void
-): Unsubscribe {
-  const q = query(
-    collection(db, 'projects', projectId, 'phases', phaseId, 'steps', stepId, 'tasks'),
-    orderBy('order')
-  );
-  
-  return onSnapshot(q, (snapshot) => {
-    const tasks = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Task));
-    callback(tasks);
-  }, (error) => {
-    log.error('Error in tasks subscription:', { data: error }, 'projectRealtime');
-    callback([]);
-  });
+): () => void {
+  // For now, return empty unsubscribe as tasks would need separate API support
+  log.warn('Task subscriptions not yet implemented for WebSocket', {}, 'projectRealtime');
+  callback([]);
+  return () => {};
 }
 
 /**
@@ -151,8 +159,8 @@ export function subscribeToStepTasks(
 export function subscribeToProjectHierarchy(
   projectId: string,
   callback: (hierarchy: ProjectHierarchy | null) => void
-): Unsubscribe[] {
-  const unsubscribes: Unsubscribe[] = [];
+): (() => void)[] {
+  const unsubscribes: (() => void)[] = [];
   const hierarchy: ProjectHierarchy = {
     project: null as any,
     phases: []
@@ -178,54 +186,9 @@ export function subscribeToProjectHierarchy(
       for (const phase of phases) {
         const phaseWithSteps: Phase & { steps?: Step[] } = { ...phase, steps: [] };
         
-        // Get steps for each phase
-        const stepsQuery = query(
-          collection(db, 'projects', projectId, 'phases', phase.id, 'steps'),
-          orderBy('order')
-        );
-        
-        // Subscribe to steps for this phase
-        unsubscribes.push(
-          onSnapshot(stepsQuery, async (stepsSnapshot) => {
-            phaseWithSteps.steps = [];
-            
-            for (const stepDoc of stepsSnapshot.docs) {
-              const step = { id: stepDoc.id, ...stepDoc.data() } as Step;
-              const stepWithTasks: Step & { tasks?: Task[] } = { ...step, tasks: [] };
-              
-              // Get tasks for each step
-              const tasksQuery = query(
-                collection(db, 'projects', projectId, 'phases', phase.id, 'steps', step.id, 'tasks'),
-                orderBy('order')
-              );
-              
-              // Subscribe to tasks for this step
-              unsubscribes.push(
-                onSnapshot(tasksQuery, (tasksSnapshot) => {
-                  stepWithTasks.tasks = tasksSnapshot.docs.map(taskDoc => ({
-                    id: taskDoc.id,
-                    ...taskDoc.data()
-                  } as Task));
-                  
-                  // Update hierarchy and trigger callback
-                  callback({ ...hierarchy });
-                })
-              );
-              
-              phaseWithSteps.steps!.push(stepWithTasks);
-            }
-            
-            // Update phases in hierarchy
-            const phaseIndex = hierarchy.phases.findIndex(p => p.id === phase.id);
-            if (phaseIndex >= 0) {
-              hierarchy.phases[phaseIndex] = phaseWithSteps;
-            } else {
-              hierarchy.phases.push(phaseWithSteps);
-            }
-            
-            callback({ ...hierarchy });
-          })
-        );
+        // Note: Steps and tasks would need separate API endpoints
+        // For now, just add the phase without nested data
+        hierarchy.phases.push(phaseWithSteps);
       }
       
       callback({ ...hierarchy });
@@ -238,6 +201,6 @@ export function subscribeToProjectHierarchy(
 /**
  * Unsubscribe from multiple subscriptions
  */
-export function unsubscribeAll(unsubscribes: Unsubscribe[]): void {
+export function unsubscribeAll(unsubscribes: (() => void)[]): void {
   unsubscribes.forEach(unsubscribe => unsubscribe());
 }

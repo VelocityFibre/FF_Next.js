@@ -17,7 +17,7 @@ const __dirname = dirname(__filename);
 dotenv.config({ path: join(__dirname, '../../.env') });
 
 // Database connection string
-const DATABASE_URL = process.env.DATABASE_URL || process.env.VITE_NEON_DATABASE_URL;
+const DATABASE_URL = process.env.DATABASE_URL;
 
 if (!DATABASE_URL) {
   console.error('❌ DATABASE_URL is not configured');

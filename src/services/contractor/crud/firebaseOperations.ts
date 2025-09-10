@@ -1,51 +1,43 @@
 /**
- * Firebase Operations for Contractors
- * Handles Firebase Firestore operations for contractor data
+ * Firebase Operations for Contractors - MIGRATED TO NEON
+ * This file now redirects to Neon-based operations
+ * Maintained for backward compatibility
  */
 
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  Timestamp,
-  QueryConstraint
-} from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { neonContractorService } from '../neonContractorService';
 import { 
   Contractor, 
   ContractorFormData,
   ContractorFilter
 } from '@/types/contractor.types';
+import { log } from '@/lib/logger';
 
 /**
- * Get all contractors from Firebase with optional filtering
+ * Get all contractors - now using Neon
  */
 export async function getAllContractorsFromFirebase(filter?: ContractorFilter): Promise<Contractor[]> {
+  try {
+    log.info('Redirecting to Neon service for contractors', 'firebaseOperations');
+    
+    // Convert filter format if needed
+    const neonFilter = filter ? {
+      status: filter.status?.[0],
+      complianceStatus: filter.complianceStatus?.[0],
+      ragOverall: filter.ragOverall?.[0],
+      isActive: filter.isActive
+    } : undefined;
+    
+    return await neonContractorService.getContractors(neonFilter);
+  } catch (error) {
+    log.error('Error fetching contractors from Neon:', { data: error }, 'firebaseOperations');
+    throw error;
+  }
+}
+
+// Legacy Firebase code kept for reference
+/*
+export async function getAllContractorsFromFirebase_OLD(filter?: ContractorFilter): Promise<Contractor[]> {
   const constraints: QueryConstraint[] = [orderBy('companyName', 'asc')];
-  
-  // Apply Firebase filters
-  if (filter?.status?.length) {
-    constraints.push(where('status', 'in', filter.status));
-  }
-  
-  if (filter?.complianceStatus?.length) {
-    constraints.push(where('complianceStatus', 'in', filter.complianceStatus));
-  }
-  
-  if (filter?.ragOverall?.length) {
-    constraints.push(where('ragOverall', 'in', filter.ragOverall));
-  }
-  
-  if (filter?.businessType?.length) {
-    constraints.push(where('businessType', 'in', filter.businessType));
-  }
   
   if (filter?.province?.length) {
     constraints.push(where('province', 'in', filter.province));

@@ -4,7 +4,7 @@
  */
 
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { projectAnalytics } from '@/lib/neon/schema';
 import type { NewProjectAnalytics } from '@/lib/neon/schema';

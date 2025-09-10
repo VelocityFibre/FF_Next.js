@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { HomeInstallsDashboard } from '@/src/modules/projects/home-installs/HomeInstallsDashboard';
+import { HomeInstallsDashboard } from '@/modules/projects/home-installs/HomeInstallsDashboard';
 
 export default function InstallationsPage() {
   return (
@@ -9,3 +9,10 @@ export default function InstallationsPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

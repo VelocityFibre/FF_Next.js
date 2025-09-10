@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/router';
 import { Eye, Edit, Trash2, MoreVertical } from 'lucide-react';
 import { useState } from 'react';

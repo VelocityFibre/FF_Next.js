@@ -10,7 +10,7 @@ import {
   query,
   where
 } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { Supplier } from '@/types/supplier/base.types';
 import { SupplierBatchOptions } from './types';
 import { log } from '@/lib/logger';

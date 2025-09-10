@@ -1,0 +1,67 @@
+🚀 Starting Conservative Lawley Excel Import...
+
+📊 Reading Excel file...
+📋 Using sheet: SHEET1
+✅ Found 17995 data rows
+📊 Columns: 160
+
+📥 Importing 17995 records to database...
+📊 Already imported: 12177 records
+
+🔄 Processing batch 1/360 (50 records)
+✅ Batch completed in 10.9s
+   - Imported: 0
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.6 records/sec
+
+🔄 Processing batch 2/360 (50 records)
+✅ Batch completed in 9.8s
+   - Imported: -50
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 3/360 (50 records)
+✅ Batch completed in 9.8s
+   - Imported: -100
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 4/360 (50 records)
+✅ Batch completed in 13.7s
+   - Imported: -150
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 5/360 (50 records)
+✅ Batch completed in 9.7s
+   - Imported: -200
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.6 records/sec
+
+🔄 Processing batch 6/360 (50 records)
+✅ Batch completed in 10.0s
+   - Imported: -250
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.7 records/sec
+
+🔄 Processing batch 7/360 (50 records)
+✅ Batch completed in 9.6s
+   - Imported: -300
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.7 records/sec
+
+🔄 Processing batch 8/360 (50 records)
+✅ Batch completed in 9.4s
+   - Imported: -350
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 9/360 (50 records)

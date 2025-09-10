@@ -1,5 +1,5 @@
 import { AppLayout } from '@/components/layout/AppLayout';
-import { MeetingsDashboard } from '@/src/modules/meetings/MeetingsDashboard';
+import { MeetingsDashboard } from '@/modules/meetings/MeetingsDashboard';
 
 export default function MeetingsPage() {
   return (
@@ -8,3 +8,10 @@ export default function MeetingsPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

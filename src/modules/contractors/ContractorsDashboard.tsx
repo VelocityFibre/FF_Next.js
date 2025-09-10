@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * ContractorsDashboard - Enhanced contractors dashboard with comprehensive metrics
  * Features contractor stats, performance metrics, and management tools

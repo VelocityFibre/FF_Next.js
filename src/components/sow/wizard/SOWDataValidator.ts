@@ -326,7 +326,7 @@ const findColumnValue = (row: any, possibleColumns: string[]): string => {
 
     for (const variant of variations) {
       const key = Object.keys(row).find(k =>
-        k.toLowerCase().replace(/[_\s-\.]/g, "") === variant.toLowerCase().replace(/[_\s-\.]/g, "")
+        k.toLowerCase().replace(/[_\s-.]/g, "") === variant.toLowerCase().replace(/[_\s-.]/g, "")
       );
       if (key && row[key] !== undefined && row[key] !== null && row[key] !== "") {
         return String(row[key]).trim();

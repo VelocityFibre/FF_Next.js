@@ -4,7 +4,7 @@
  */
 
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { ComplianceStatus, SupplierDocument, DocumentVerificationResult } from './types';
 import { DocumentManager } from './documentManager';
 import { ComplianceCalculator } from './complianceCalculator';

@@ -8,7 +8,7 @@ import {
   Download,
   Trash2
 } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import { SOWFile, FileTypeConfig } from '../types/sowUpload.types';
 
 interface FileUploadCardProps {

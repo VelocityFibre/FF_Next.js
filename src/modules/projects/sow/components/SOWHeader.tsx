@@ -1,3 +1,5 @@
+'use client';
+
 import { Upload, FileText } from 'lucide-react';
 import { useRouter } from 'next/router';
 

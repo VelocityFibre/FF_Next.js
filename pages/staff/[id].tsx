@@ -5,4 +5,11 @@ const StaffDetailPage: NextPage = () => {
   return <StaffDetail />;
 };
 
+// Prevent static generation to avoid NextRouter mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
+
 export default StaffDetailPage;

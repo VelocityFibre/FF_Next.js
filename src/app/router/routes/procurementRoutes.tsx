@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Loading } from '../components';
 import { ProcurementPage, ProcurementOverview } from '../lazyImports';
-import { boqRoutes } from './procurement/boqRoutes';
+import { boqRoutes } from './procurement/boqRoutes.config';
 import { rfqRoutes } from './procurement/rfqRoutes';
 import { stockRoutes } from './procurement/stockRoutes';
 import { 

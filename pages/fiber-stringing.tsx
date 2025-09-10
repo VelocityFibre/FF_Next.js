@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { FiberStringingDashboard } from '@/src/modules/projects/fiber-stringing/FiberStringingDashboard';
+import { FiberStringingDashboard } from '@/modules/projects/fiber-stringing/FiberStringingDashboard';
 
 export default function FiberStringingPage() {
   return (
@@ -9,3 +9,10 @@ export default function FiberStringingPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

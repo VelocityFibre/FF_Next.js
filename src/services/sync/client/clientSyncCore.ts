@@ -4,7 +4,7 @@
  */
 
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import type { NewClientAnalytics } from '@/lib/neon/schema';
 import { ProjectSync } from '../projectSync';
 import { SyncUtils } from '../syncUtils';

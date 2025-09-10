@@ -9,6 +9,8 @@ declare global {
   interface Window {
     __appLogs?: LogEntry[];
   }
+
+  // Modern approach: extend NodeJS namespace
   namespace NodeJS {
     interface Process {
       __appLogs?: LogEntry[];

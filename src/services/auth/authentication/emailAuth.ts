@@ -1,33 +1,38 @@
 /**
  * Email Authentication
- * Email and password authentication methods
+ * Migrated from Firebase to Clerk with development bypass
  */
 
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  setPersistence,
-  updateProfile,
-  browserLocalPersistence,
-  browserSessionPersistence,
-  sendPasswordResetEmail,
-  updatePassword,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-} from 'firebase/auth';
-import { auth } from '@/src/config/firebase';
+import { clerkAuth, User as ClerkUser } from '../clerkAuth';
+import { authConfig } from '@/config/auth.config';
 import { LoginCredentials, RegisterCredentials, PasswordResetRequest, User } from '@/types/auth.types';
 import { createUserProfile, getUserProfile, updateLastLogin } from '../userService';
-import { AuthUser, mapFirebaseUser, handleAuthError } from '../authHelpers';
+import { AuthUser } from '../authHelpers';
 
 export class EmailAuthentication {
   /**
    * Sign in with email and password (legacy method)
    */
   async signInWithEmail(email: string, password: string): Promise<AuthUser> {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    await updateLastLogin(result.user.uid);
-    return mapFirebaseUser(result.user);
+    if (authConfig.isDevMode) {
+      console.log('🔧 DEV MODE: Mock email sign in:', email);
+      const mockUser = await clerkAuth.signInWithEmailAndPassword(email, password);
+      return {
+        id: mockUser.id,
+        email: mockUser.email,
+        displayName: mockUser.name,
+        photoURL: mockUser.photoURL
+      };
+    }
+
+    const user = await clerkAuth.signInWithEmailAndPassword(email, password);
+    await updateLastLogin(user.id);
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.name,
+      photoURL: user.photoURL
+    };
   }
 
   /**
@@ -35,27 +40,35 @@ export class EmailAuthentication {
    */
   async signInWithEmailEnhanced(credentials: LoginCredentials): Promise<User> {
     try {
-      // Set persistence based on rememberMe
-      const persistence = credentials.rememberMe 
-        ? browserLocalPersistence 
-        : browserSessionPersistence;
-      
-      await setPersistence(auth, persistence);
+      if (authConfig.isDevMode) {
+        console.log('🔧 DEV MODE: Mock enhanced email sign in:', credentials.email);
+        const mockUser = await clerkAuth.signInWithEmailAndPassword(credentials.email, credentials.password);
+        return {
+          uid: mockUser.id,
+          email: mockUser.email || '',
+          displayName: mockUser.name || '',
+          photoURL: mockUser.photoURL || '',
+          role: mockUser.role || 'viewer',
+          emailVerified: true,
+          createdAt: mockUser.createdAt.toISOString(),
+          lastLoginAt: new Date().toISOString()
+        } as User;
+      }
 
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
+      const clerkUser = await clerkAuth.signInWithEmailAndPassword(
         credentials.email,
         credentials.password
       );
 
       // Update last login time
-      await updateLastLogin(userCredential.user.uid);
+      await updateLastLogin(clerkUser.id);
 
-      // Get user profile from Firestore
-      const user = await getUserProfile(userCredential.user);
+      // Get user profile from database
+      const user = await getUserProfile({ uid: clerkUser.id } as any);
       return user;
     } catch (error: unknown) {
-      throw handleAuthError(error);
+      console.error('Email sign in error:', error);
+      throw error;
     }
   }
 
@@ -63,11 +76,24 @@ export class EmailAuthentication {
    * Sign up with email and password (legacy method)
    */
   async signUp(email: string, password: string, displayName?: string): Promise<AuthUser> {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    if (displayName) {
-      await updateProfile(result.user, { displayName });
+    if (authConfig.isDevMode) {
+      console.log('🔧 DEV MODE: Mock email sign up:', email);
+      const mockUser = await clerkAuth.createUserWithEmailAndPassword(email, password, displayName);
+      return {
+        id: mockUser.id,
+        email: mockUser.email,
+        displayName: mockUser.name,
+        photoURL: mockUser.photoURL
+      };
     }
-    return mapFirebaseUser(result.user);
+
+    const user = await clerkAuth.createUserWithEmailAndPassword(email, password, displayName);
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.name,
+      photoURL: user.photoURL
+    };
   }
 
   /**
@@ -75,20 +101,42 @@ export class EmailAuthentication {
    */
   async registerWithEmail(credentials: RegisterCredentials): Promise<User> {
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
+      if (authConfig.isDevMode) {
+        console.log('🔧 DEV MODE: Mock registration:', credentials.email);
+        const displayName = `${credentials.firstName} ${credentials.lastName}`.trim();
+        const mockUser = await clerkAuth.createUserWithEmailAndPassword(
+          credentials.email,
+          credentials.password,
+          displayName
+        );
+        return {
+          uid: mockUser.id,
+          email: mockUser.email || '',
+          displayName: mockUser.name || '',
+          photoURL: mockUser.photoURL || '',
+          role: mockUser.role || 'viewer',
+          emailVerified: true,
+          createdAt: mockUser.createdAt.toISOString(),
+          lastLoginAt: new Date().toISOString()
+        } as User;
+      }
+
+      const displayName = `${credentials.firstName} ${credentials.lastName}`.trim();
+      const clerkUser = await clerkAuth.createUserWithEmailAndPassword(
         credentials.email,
-        credentials.password
+        credentials.password,
+        displayName
       );
 
-      // Create user profile in Firestore
-      const user = await createUserProfile(userCredential.user, {
-        displayName: `${credentials.firstName} ${credentials.lastName}`.trim(),
+      // Create user profile in database
+      const user = await createUserProfile({ uid: clerkUser.id } as any, {
+        displayName,
       });
 
       return user;
     } catch (error: unknown) {
-      throw handleAuthError(error);
+      console.error('Registration error:', error);
+      throw error;
     }
   }
 
@@ -96,37 +144,41 @@ export class EmailAuthentication {
    * Reset password (legacy method)
    */
   async resetPassword(email: string): Promise<void> {
-    await sendPasswordResetEmail(auth, email);
+    if (authConfig.isDevMode) {
+      console.log('🔧 DEV MODE: Mock password reset for:', email);
+      return;
+    }
+    
+    // In production, Clerk handles password reset through their UI
+    console.log('Password reset requested for:', email);
+    console.log('Clerk will handle this through their hosted UI');
   }
 
   /**
    * Reset password (enhanced method)
    */
   async resetPasswordEnhanced(request: PasswordResetRequest): Promise<void> {
-    try {
-      await sendPasswordResetEmail(auth, request.email, {
-        url: `${window.location.origin}/login`,
-        handleCodeInApp: false,
-      });
-    } catch (error) {
-      throw handleAuthError(error);
+    if (authConfig.isDevMode) {
+      console.log('🔧 DEV MODE: Mock password reset for:', request.email);
+      return;
     }
+
+    // In production, Clerk handles password reset through their UI
+    console.log('Password reset requested for:', request.email);
+    console.log('Clerk will handle this through their hosted UI');
   }
 
   /**
    * Change user password
    */
   async changePassword(currentPassword: string, newPassword: string): Promise<void> {
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      throw new Error('No authenticated user');
+    if (authConfig.isDevMode) {
+      console.log('🔧 DEV MODE: Mock password change');
+      return;
     }
-    
-    // Re-authenticate first
-    const credential = EmailAuthProvider.credential(user.email, currentPassword);
-    await reauthenticateWithCredential(user, credential);
-    
-    // Update password
-    await updatePassword(user, newPassword);
+
+    // In production, Clerk handles password changes through their UI
+    console.log('Password change requested');
+    console.log('Clerk will handle this through their user profile UI');
   }
 }

@@ -1,5 +1,5 @@
 import { Camera, CheckCircle } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import { PhotoCapture } from '../types/poleCapture.types';
 
 interface PhotoCaptureGridProps {

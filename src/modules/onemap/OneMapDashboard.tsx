@@ -1,3 +1,5 @@
+'use client';
+
 import { Map, Grid3x3, Download, Upload, Layers, Search } from 'lucide-react';
 import { useRouter } from 'next/router';
 

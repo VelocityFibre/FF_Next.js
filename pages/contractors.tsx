@@ -36,3 +36,10 @@ export default function Contractors() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

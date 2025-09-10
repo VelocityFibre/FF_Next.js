@@ -116,3 +116,10 @@ export default function ReportsPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

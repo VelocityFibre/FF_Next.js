@@ -1,3 +1,5 @@
+'use client';
+
 import { CheckCircle, Clock, AlertCircle, Calendar, Users, Filter } from 'lucide-react';
 import { useRouter } from 'next/router';
 

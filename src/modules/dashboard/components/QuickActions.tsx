@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Permission } from '@/types/auth.types';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 
 interface QuickActionItem {
   id: string;

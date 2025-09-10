@@ -4,7 +4,7 @@
  */
 
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { SupplierRating } from '@/types/supplier/base.types';
 import { RatingUpdateData } from './types';
 import { SupplierCrudService } from '../supplier.crud';

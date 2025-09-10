@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { Download, RefreshCw, Grid3X3 } from 'lucide-react';

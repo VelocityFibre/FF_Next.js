@@ -1,5 +1,5 @@
 import { neonService } from '@/services/neonService';
-import { storage } from '@/src/config/firebase';
+import { storage } from '@/config/firebase';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import type { PhotoType } from '../types/pole.types';
 import { POLE_QUERIES } from '../queries/poleQueries';

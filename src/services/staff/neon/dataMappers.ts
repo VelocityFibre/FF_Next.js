@@ -4,7 +4,7 @@
  */
 
 import { StaffMember, StaffDropdownOption, Timestamp } from '@/types/staff.types';
-import { safeToDate } from '@/src/utils/dateHelpers';
+import { safeToDate } from '@/utils/dateHelpers';
 
 // Helper function to convert Date to Timestamp for Firebase compatibility
 function dateToTimestamp(date: Date): Timestamp {

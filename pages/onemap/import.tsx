@@ -1,6 +1,6 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { useState, useRef } from 'react';
 import { Upload, FileSpreadsheet, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { AppLayout } from '../../src/components/layout/AppLayout';
 
 export default function OneMapImportPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -230,3 +230,10 @@ export default function OneMapImportPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

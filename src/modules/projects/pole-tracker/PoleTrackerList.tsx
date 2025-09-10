@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/router';
 import { Plus, Download } from 'lucide-react';
 import { DashboardHeader } from '../../../components/dashboard/DashboardHeader';

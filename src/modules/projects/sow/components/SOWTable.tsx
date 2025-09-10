@@ -1,5 +1,5 @@
 import { Calendar, Eye, Edit, Download, Send } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import { SOW, SOWMilestone } from '../types/sow.types';
 
 interface SOWTableProps {

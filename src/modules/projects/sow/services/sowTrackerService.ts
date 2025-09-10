@@ -5,7 +5,7 @@ import {
   getDocs,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { 
   PoleImportRow, 
   DropImportRow, 

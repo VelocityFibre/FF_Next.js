@@ -45,7 +45,7 @@ export default function SignInPage() {
   /*
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <SignIn 
+      <SignIn
         appearance={{
           elements: {
             rootBox: "mx-auto",
@@ -58,3 +58,10 @@ export default function SignInPage() {
   );
   */
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

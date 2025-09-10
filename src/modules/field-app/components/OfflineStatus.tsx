@@ -1,5 +1,5 @@
 import { Cloud, CloudOff, RefreshCw } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import type { OfflineData } from '../types/field-app.types';
 
 interface OfflineStatusProps {

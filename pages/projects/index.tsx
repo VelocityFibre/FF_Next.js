@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { AppLayout } from '@/components/layout/AppLayout';
 
 // Dynamically import the Projects component to avoid SSR issues
-const ProjectList = dynamic(() => import('@/modules/projects/components/ProjectList').then(mod => mod.ProjectList || mod.default), {
+const ProjectList = dynamic(() => import('@/modules/projects/components/ProjectList').then(mod => mod.ProjectList), {
   ssr: false,
   loading: () => (
     <div className="min-h-screen bg-gray-50 p-6">

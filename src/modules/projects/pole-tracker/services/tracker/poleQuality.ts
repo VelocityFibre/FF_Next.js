@@ -4,7 +4,7 @@
  */
 
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { PoleQualityChecks, POLE_COLLECTION } from './types';
 
 export class PoleQualityService {

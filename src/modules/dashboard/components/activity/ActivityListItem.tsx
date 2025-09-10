@@ -4,7 +4,7 @@
  */
 
 import { FileText, MapPin } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import { ActivityItem } from './types';
 import { activityConfig } from './config';
 import { formatTimestamp } from './utils';

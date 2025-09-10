@@ -1,0 +1,1494 @@
+🚀 Starting Conservative Lawley Excel Import...
+
+📊 Reading Excel file...
+📋 Using sheet: SHEET1
+✅ Found 17995 data rows
+📊 Columns: 160
+
+📥 Importing 17995 records to database...
+📊 Already imported: 12177 records
+🔍 Finding starting point...
+   Checked records 1-100: 100/100 already exist
+   Checked records 101-200: 100/100 already exist
+   Checked records 201-300: 100/100 already exist
+   Checked records 301-400: 100/100 already exist
+   Checked records 401-500: 100/100 already exist
+   Checked records 501-600: 100/100 already exist
+   Checked records 601-700: 100/100 already exist
+   Checked records 701-800: 100/100 already exist
+   Checked records 801-900: 100/100 already exist
+   Checked records 901-1000: 100/100 already exist
+   Checked records 1001-1100: 100/100 already exist
+   Checked records 1101-1200: 100/100 already exist
+   Checked records 1201-1300: 100/100 already exist
+   Checked records 1301-1400: 100/100 already exist
+   Checked records 1401-1500: 100/100 already exist
+   Checked records 1501-1600: 100/100 already exist
+   Checked records 1601-1700: 100/100 already exist
+   Checked records 1701-1800: 100/100 already exist
+   Checked records 1801-1900: 100/100 already exist
+   Checked records 1901-2000: 100/100 already exist
+   Checked records 2001-2100: 100/100 already exist
+   Checked records 2101-2200: 100/100 already exist
+   Checked records 2201-2300: 100/100 already exist
+   Checked records 2301-2400: 100/100 already exist
+   Checked records 2401-2500: 100/100 already exist
+   Checked records 2501-2600: 100/100 already exist
+   Checked records 2601-2700: 100/100 already exist
+   Checked records 2701-2800: 100/100 already exist
+   Checked records 2801-2900: 100/100 already exist
+   Checked records 2901-3000: 100/100 already exist
+   Checked records 3001-3100: 100/100 already exist
+   Checked records 3101-3200: 100/100 already exist
+   Checked records 3201-3300: 100/100 already exist
+   Checked records 3301-3400: 100/100 already exist
+   Checked records 3401-3500: 100/100 already exist
+   Checked records 3501-3600: 100/100 already exist
+   Checked records 3601-3700: 100/100 already exist
+   Checked records 3701-3800: 100/100 already exist
+   Checked records 3801-3900: 100/100 already exist
+   Checked records 3901-4000: 100/100 already exist
+   Checked records 4001-4100: 100/100 already exist
+   Checked records 4101-4200: 100/100 already exist
+   Checked records 4201-4300: 100/100 already exist
+   Checked records 4301-4400: 100/100 already exist
+   Checked records 4401-4500: 100/100 already exist
+   Checked records 4501-4600: 100/100 already exist
+   Checked records 4601-4700: 100/100 already exist
+   Checked records 4701-4800: 100/100 already exist
+   Checked records 4801-4900: 100/100 already exist
+   Checked records 4901-5000: 100/100 already exist
+   Checked records 5001-5100: 100/100 already exist
+   Checked records 5101-5200: 100/100 already exist
+   Checked records 5201-5300: 100/100 already exist
+   Checked records 5301-5400: 100/100 already exist
+   Checked records 5401-5500: 100/100 already exist
+   Checked records 5501-5600: 100/100 already exist
+   Checked records 5601-5700: 100/100 already exist
+   Checked records 5701-5800: 100/100 already exist
+   Checked records 5801-5900: 100/100 already exist
+   Checked records 5901-6000: 100/100 already exist
+   Checked records 6001-6100: 100/100 already exist
+   Checked records 6101-6200: 100/100 already exist
+   Checked records 6201-6300: 100/100 already exist
+   Checked records 6301-6400: 100/100 already exist
+   Checked records 6401-6500: 100/100 already exist
+   Checked records 6501-6600: 100/100 already exist
+   Checked records 6601-6700: 100/100 already exist
+   Checked records 6701-6800: 100/100 already exist
+   Checked records 6801-6900: 100/100 already exist
+   Checked records 6901-7000: 100/100 already exist
+   Checked records 7001-7100: 100/100 already exist
+   Checked records 7101-7200: 100/100 already exist
+   Checked records 7201-7300: 100/100 already exist
+   Checked records 7301-7400: 100/100 already exist
+   Checked records 7401-7500: 100/100 already exist
+   Checked records 7501-7600: 100/100 already exist
+   Checked records 7601-7700: 100/100 already exist
+   Checked records 7701-7800: 100/100 already exist
+   Checked records 7801-7900: 100/100 already exist
+   Checked records 7901-8000: 100/100 already exist
+   Checked records 8001-8100: 100/100 already exist
+📍 Starting from record 8103 of 17995
+
+🔄 Processing batch 163/198 (50 records)
+✅ Batch completed in 13.0s
+   - Imported: -8099
+   - Skipped: -8051
+   - Errors: 0
+   - Rate: 1.7 records/sec
+
+🔄 Processing batch 164/198 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -8149
+   - Skipped: -8051
+   - Errors: 0
+   - Rate: 2.5 records/sec
+
+🔄 Processing batch 165/198 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -8199
+   - Skipped: -8051
+   - Errors: 0
+   - Rate: 3.0 records/sec
+
+🔄 Processing batch 166/198 (50 records)
+✅ Batch completed in 11.0s
+   - Imported: -8247
+   - Skipped: -8053
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 167/198 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -8293
+   - Skipped: -8057
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 168/198 (50 records)
+✅ Batch completed in 12.2s
+   - Imported: -8332
+   - Skipped: -8068
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 169/198 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -8378
+   - Skipped: -8072
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 170/198 (50 records)
+✅ Batch completed in 11.2s
+   - Imported: -8424
+   - Skipped: -8076
+   - Errors: 0
+   - Rate: 3.8 records/sec
+
+🔄 Processing batch 171/198 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -8474
+   - Skipped: -8076
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 172/198 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -8524
+   - Skipped: -8076
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 173/198 (50 records)
+✅ Batch completed in 11.4s
+   - Imported: -8570
+   - Skipped: -8080
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 174/198 (50 records)
+✅ Batch completed in 12.5s
+   - Imported: -8609
+   - Skipped: -8091
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 175/198 (50 records)
+✅ Batch completed in 13.9s
+   - Imported: -8643
+   - Skipped: -8107
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 176/198 (50 records)
+✅ Batch completed in 13.3s
+   - Imported: -8683
+   - Skipped: -8117
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 177/198 (50 records)
+✅ Batch completed in 11.9s
+   - Imported: -8724
+   - Skipped: -8126
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 178/198 (50 records)
+✅ Batch completed in 13.7s
+   - Imported: -8759
+   - Skipped: -8141
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 179/198 (50 records)
+✅ Batch completed in 12.6s
+   - Imported: -8798
+   - Skipped: -8152
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 180/198 (50 records)
+✅ Batch completed in 14.3s
+   - Imported: -8828
+   - Skipped: -8172
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 181/198 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -8878
+   - Skipped: -8172
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 182/198 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -8926
+   - Skipped: -8174
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 183/198 (50 records)
+✅ Batch completed in 11.5s
+   - Imported: -8970
+   - Skipped: -8180
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 184/198 (50 records)
+✅ Batch completed in 10.7s
+   - Imported: -9015
+   - Skipped: -8185
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 185/198 (50 records)
+✅ Batch completed in 12.3s
+   - Imported: -9060
+   - Skipped: -8190
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 186/198 (50 records)
+✅ Batch completed in 12.4s
+   - Imported: -9100
+   - Skipped: -8200
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 187/198 (50 records)
+✅ Batch completed in 11.3s
+   - Imported: -9145
+   - Skipped: -8205
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 188/198 (50 records)
+✅ Batch completed in 12.0s
+   - Imported: -9189
+   - Skipped: -8211
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 189/198 (50 records)
+✅ Batch completed in 13.4s
+   - Imported: -9222
+   - Skipped: -8228
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 190/198 (50 records)
+✅ Batch completed in 12.3s
+   - Imported: -9259
+   - Skipped: -8241
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 191/198 (50 records)
+✅ Batch completed in 8.5s
+   - Imported: -9309
+   - Skipped: -8241
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 192/198 (50 records)
+✅ Batch completed in 9.4s
+   - Imported: -9359
+   - Skipped: -8241
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 193/198 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -9406
+   - Skipped: -8244
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 194/198 (50 records)
+✅ Batch completed in 10.7s
+   - Imported: -9453
+   - Skipped: -8247
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 195/198 (50 records)
+✅ Batch completed in 13.0s
+   - Imported: -9496
+   - Skipped: -8254
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 196/198 (50 records)
+✅ Batch completed in 10.0s
+   - Imported: -9541
+   - Skipped: -8259
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 197/198 (50 records)
+✅ Batch completed in 11.3s
+   - Imported: -9584
+   - Skipped: -8266
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 198/198 (50 records)
+✅ Batch completed in 12.6s
+   - Imported: -9623
+   - Skipped: -8277
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 199/198 (50 records)
+✅ Batch completed in 11.6s
+   - Imported: -9666
+   - Skipped: -8284
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 200/198 (50 records)
+✅ Batch completed in 10.9s
+   - Imported: -9716
+   - Skipped: -8284
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 201/198 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -9766
+   - Skipped: -8284
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 202/198 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -9816
+   - Skipped: -8284
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 203/198 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -9866
+   - Skipped: -8284
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 204/198 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -9916
+   - Skipped: -8284
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 205/198 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -9965
+   - Skipped: -8285
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 206/198 (50 records)
+✅ Batch completed in 10.7s
+   - Imported: -10011
+   - Skipped: -8289
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 207/198 (50 records)
+✅ Batch completed in 11.4s
+   - Imported: -10056
+   - Skipped: -8294
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 208/198 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -10100
+   - Skipped: -8300
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 209/198 (50 records)
+✅ Batch completed in 13.4s
+   - Imported: -10140
+   - Skipped: -8310
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 210/198 (50 records)
+✅ Batch completed in 12.2s
+   - Imported: -10178
+   - Skipped: -8322
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 211/198 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -10228
+   - Skipped: -8322
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 212/198 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -10278
+   - Skipped: -8322
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 213/198 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -10328
+   - Skipped: -8322
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 214/198 (50 records)
+✅ Batch completed in 11.1s
+   - Imported: -10378
+   - Skipped: -8322
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 215/198 (50 records)
+✅ Batch completed in 9.6s
+   - Imported: -10428
+   - Skipped: -8322
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 216/198 (50 records)
+✅ Batch completed in 15.4s
+   - Imported: -10477
+   - Skipped: -8323
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 217/198 (50 records)
+✅ Batch completed in 12.7s
+   - Imported: -10527
+   - Skipped: -8323
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 218/198 (50 records)
+✅ Batch completed in 11.3s
+   - Imported: -10570
+   - Skipped: -8330
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 219/198 (50 records)
+✅ Batch completed in 14.0s
+   - Imported: -10606
+   - Skipped: -8344
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 220/198 (50 records)
+✅ Batch completed in 13.7s
+   - Imported: -10627
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 221/198 (50 records)
+✅ Batch completed in 9.3s
+   - Imported: -10677
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 222/198 (50 records)
+✅ Batch completed in 9.0s
+   - Imported: -10727
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 223/198 (50 records)
+✅ Batch completed in 9.8s
+   - Imported: -10777
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 224/198 (50 records)
+✅ Batch completed in 9.3s
+   - Imported: -10827
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 225/198 (50 records)
+✅ Batch completed in 9.7s
+   - Imported: -10877
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 226/198 (50 records)
+✅ Batch completed in 9.4s
+   - Imported: -10927
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 227/198 (50 records)
+✅ Batch completed in 9.4s
+   - Imported: -10977
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 228/198 (50 records)
+✅ Batch completed in 9.3s
+   - Imported: -11027
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 229/198 (50 records)
+✅ Batch completed in 9.2s
+   - Imported: -11077
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 230/198 (50 records)
+✅ Batch completed in 9.2s
+   - Imported: -11127
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 231/198 (50 records)
+✅ Batch completed in 10.2s
+   - Imported: -11177
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 232/198 (50 records)
+✅ Batch completed in 9.5s
+   - Imported: -11227
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 233/198 (50 records)
+✅ Batch completed in 9.1s
+   - Imported: -11277
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 234/198 (50 records)
+✅ Batch completed in 9.2s
+   - Imported: -11327
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 235/198 (50 records)
+✅ Batch completed in 8.7s
+   - Imported: -11377
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 236/198 (50 records)
+✅ Batch completed in 9.3s
+   - Imported: -11427
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 237/198 (50 records)
+✅ Batch completed in 9.3s
+   - Imported: -11477
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 238/198 (50 records)
+✅ Batch completed in 9.3s
+   - Imported: -11527
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 239/198 (50 records)
+✅ Batch completed in 9.0s
+   - Imported: -11577
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 240/198 (50 records)
+✅ Batch completed in 8.9s
+   - Imported: -11627
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 241/198 (50 records)
+✅ Batch completed in 10.6s
+   - Imported: -11677
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 242/198 (50 records)
+✅ Batch completed in 9.2s
+   - Imported: -11727
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 243/198 (50 records)
+✅ Batch completed in 8.9s
+   - Imported: -11777
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 244/198 (50 records)
+✅ Batch completed in 9.4s
+   - Imported: -11827
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 245/198 (50 records)
+✅ Batch completed in 8.7s
+   - Imported: -11877
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 246/198 (50 records)
+✅ Batch completed in 8.7s
+   - Imported: -11927
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 247/198 (50 records)
+✅ Batch completed in 10.6s
+   - Imported: -11977
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 248/198 (50 records)
+✅ Batch completed in 8.9s
+   - Imported: -12027
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 249/198 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -12077
+   - Skipped: -8373
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 250/198 (50 records)
+✅ Batch completed in 9.4s
+   - Imported: -12125
+   - Skipped: -8375
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 251/198 (50 records)
+✅ Batch completed in 17.7s
+   - Imported: -12125
+   - Skipped: -8425
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 252/198 (50 records)
+✅ Batch completed in 18.6s
+   - Imported: -12125
+   - Skipped: -8475
+   - Errors: 0
+   - Rate: 4.5 records/sec
+
+🔄 Processing batch 253/198 (50 records)
+✅ Batch completed in 18.9s
+   - Imported: -12125
+   - Skipped: -8525
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 254/198 (50 records)
+✅ Batch completed in 19.2s
+   - Imported: -12125
+   - Skipped: -8575
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 255/198 (50 records)
+✅ Batch completed in 18.3s
+   - Imported: -12125
+   - Skipped: -8625
+   - Errors: 0
+   - Rate: 4.4 records/sec
+
+🔄 Processing batch 256/198 (50 records)
+✅ Batch completed in 18.7s
+   - Imported: -12125
+   - Skipped: -8675
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 257/198 (50 records)
+✅ Batch completed in 18.3s
+   - Imported: -12125
+   - Skipped: -8725
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 258/198 (50 records)
+✅ Batch completed in 18.2s
+   - Imported: -12125
+   - Skipped: -8775
+   - Errors: 0
+   - Rate: 4.3 records/sec
+
+🔄 Processing batch 259/198 (50 records)
+✅ Batch completed in 19.5s
+   - Imported: -12125
+   - Skipped: -8825
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 260/198 (50 records)
+✅ Batch completed in 18.7s
+   - Imported: -12125
+   - Skipped: -8875
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 261/198 (50 records)
+✅ Batch completed in 19.3s
+   - Imported: -12125
+   - Skipped: -8925
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 262/198 (50 records)
+✅ Batch completed in 17.5s
+   - Imported: -12125
+   - Skipped: -8975
+   - Errors: 0
+   - Rate: 4.2 records/sec
+
+🔄 Processing batch 263/198 (50 records)
+✅ Batch completed in 20.8s
+   - Imported: -12125
+   - Skipped: -9025
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 264/198 (50 records)
+✅ Batch completed in 17.1s
+   - Imported: -12125
+   - Skipped: -9075
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 265/198 (50 records)
+✅ Batch completed in 19.3s
+   - Imported: -12125
+   - Skipped: -9125
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 266/198 (50 records)
+✅ Batch completed in 17.8s
+   - Imported: -12125
+   - Skipped: -9175
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 267/198 (50 records)
+✅ Batch completed in 17.8s
+   - Imported: -12125
+   - Skipped: -9225
+   - Errors: 0
+   - Rate: 4.1 records/sec
+
+🔄 Processing batch 268/198 (50 records)
+✅ Batch completed in 19.1s
+   - Imported: -12125
+   - Skipped: -9275
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 269/198 (50 records)
+✅ Batch completed in 18.3s
+   - Imported: -12125
+   - Skipped: -9325
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 270/198 (50 records)
+✅ Batch completed in 18.7s
+   - Imported: -12125
+   - Skipped: -9375
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 271/198 (50 records)
+✅ Batch completed in 20.0s
+   - Imported: -12125
+   - Skipped: -9425
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 272/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -9475
+   - Errors: 0
+   - Rate: 4.0 records/sec
+
+🔄 Processing batch 273/198 (50 records)
+✅ Batch completed in 20.9s
+   - Imported: -12125
+   - Skipped: -9525
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 274/198 (50 records)
+✅ Batch completed in 19.8s
+   - Imported: -12125
+   - Skipped: -9575
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 275/198 (50 records)
+✅ Batch completed in 21.1s
+   - Imported: -12125
+   - Skipped: -9625
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 276/198 (50 records)
+✅ Batch completed in 20.8s
+   - Imported: -12125
+   - Skipped: -9675
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 277/198 (50 records)
+✅ Batch completed in 20.9s
+   - Imported: -12125
+   - Skipped: -9725
+   - Errors: 0
+   - Rate: 3.9 records/sec
+
+🔄 Processing batch 278/198 (50 records)
+✅ Batch completed in 20.1s
+   - Imported: -12125
+   - Skipped: -9775
+   - Errors: 0
+   - Rate: 3.8 records/sec
+
+🔄 Processing batch 279/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -9825
+   - Errors: 0
+   - Rate: 3.8 records/sec
+
+🔄 Processing batch 280/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -9875
+   - Errors: 0
+   - Rate: 3.8 records/sec
+
+🔄 Processing batch 281/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -9925
+   - Errors: 0
+   - Rate: 3.8 records/sec
+
+🔄 Processing batch 282/198 (50 records)
+✅ Batch completed in 20.2s
+   - Imported: -12125
+   - Skipped: -9975
+   - Errors: 0
+   - Rate: 3.8 records/sec
+
+🔄 Processing batch 283/198 (50 records)
+✅ Batch completed in 20.8s
+   - Imported: -12125
+   - Skipped: -10025
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 284/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -10075
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 285/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -10125
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 286/198 (50 records)
+✅ Batch completed in 21.0s
+   - Imported: -12125
+   - Skipped: -10175
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 287/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -10225
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 288/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -10275
+   - Errors: 0
+   - Rate: 3.7 records/sec
+
+🔄 Processing batch 289/198 (50 records)
+✅ Batch completed in 21.4s
+   - Imported: -12125
+   - Skipped: -10325
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 290/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -10375
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 291/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -10425
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 292/198 (50 records)
+✅ Batch completed in 20.0s
+   - Imported: -12125
+   - Skipped: -10475
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 293/198 (50 records)
+✅ Batch completed in 21.1s
+   - Imported: -12125
+   - Skipped: -10525
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 294/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -10575
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 295/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -10625
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 296/198 (50 records)
+✅ Batch completed in 21.2s
+   - Imported: -12125
+   - Skipped: -10675
+   - Errors: 0
+   - Rate: 3.6 records/sec
+
+🔄 Processing batch 297/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -10725
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 298/198 (50 records)
+✅ Batch completed in 20.1s
+   - Imported: -12125
+   - Skipped: -10775
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 299/198 (50 records)
+✅ Batch completed in 20.9s
+   - Imported: -12125
+   - Skipped: -10825
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 300/198 (50 records)
+✅ Batch completed in 20.2s
+   - Imported: -12125
+   - Skipped: -10875
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 301/198 (50 records)
+✅ Batch completed in 20.2s
+   - Imported: -12125
+   - Skipped: -10925
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 302/198 (50 records)
+✅ Batch completed in 20.4s
+   - Imported: -12125
+   - Skipped: -10975
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 303/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -11025
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 304/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -11075
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 305/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -11125
+   - Errors: 0
+   - Rate: 3.5 records/sec
+
+🔄 Processing batch 306/198 (50 records)
+✅ Batch completed in 20.4s
+   - Imported: -12125
+   - Skipped: -11175
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 307/198 (50 records)
+✅ Batch completed in 21.7s
+   - Imported: -12125
+   - Skipped: -11225
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 308/198 (50 records)
+✅ Batch completed in 21.0s
+   - Imported: -12125
+   - Skipped: -11275
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 309/198 (50 records)
+✅ Batch completed in 20.4s
+   - Imported: -12125
+   - Skipped: -11325
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 310/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -11375
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 311/198 (50 records)
+✅ Batch completed in 20.9s
+   - Imported: -12125
+   - Skipped: -11425
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 312/198 (50 records)
+✅ Batch completed in 22.0s
+   - Imported: -12125
+   - Skipped: -11475
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 313/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -11525
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 314/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -11575
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 315/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -11625
+   - Errors: 0
+   - Rate: 3.4 records/sec
+
+🔄 Processing batch 316/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -11675
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 317/198 (50 records)
+✅ Batch completed in 18.4s
+   - Imported: -12125
+   - Skipped: -11725
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 318/198 (50 records)
+✅ Batch completed in 16.7s
+   - Imported: -12125
+   - Skipped: -11775
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 319/198 (50 records)
+✅ Batch completed in 19.9s
+   - Imported: -12125
+   - Skipped: -11825
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 320/198 (50 records)
+✅ Batch completed in 20.4s
+   - Imported: -12125
+   - Skipped: -11875
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 321/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -11925
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 322/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -11975
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 323/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -12025
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 324/198 (50 records)
+✅ Batch completed in 21.3s
+   - Imported: -12125
+   - Skipped: -12075
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 325/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -12125
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 326/198 (50 records)
+✅ Batch completed in 20.2s
+   - Imported: -12125
+   - Skipped: -12175
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 327/198 (50 records)
+✅ Batch completed in 20.8s
+   - Imported: -12125
+   - Skipped: -12225
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 328/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -12275
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 329/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -12325
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 330/198 (50 records)
+✅ Batch completed in 20.0s
+   - Imported: -12125
+   - Skipped: -12375
+   - Errors: 0
+   - Rate: 3.3 records/sec
+
+🔄 Processing batch 331/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -12425
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 332/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -12475
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 333/198 (50 records)
+✅ Batch completed in 19.8s
+   - Imported: -12125
+   - Skipped: -12525
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 334/198 (50 records)
+✅ Batch completed in 21.0s
+   - Imported: -12125
+   - Skipped: -12575
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 335/198 (50 records)
+✅ Batch completed in 21.4s
+   - Imported: -12125
+   - Skipped: -12625
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 336/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -12675
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 337/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -12725
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 338/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -12775
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 339/198 (50 records)
+✅ Batch completed in 20.0s
+   - Imported: -12125
+   - Skipped: -12825
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 340/198 (50 records)
+✅ Batch completed in 19.9s
+   - Imported: -12125
+   - Skipped: -12875
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 341/198 (50 records)
+✅ Batch completed in 20.8s
+   - Imported: -12125
+   - Skipped: -12925
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 342/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -12975
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 343/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -13025
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 344/198 (50 records)
+✅ Batch completed in 21.3s
+   - Imported: -12125
+   - Skipped: -13075
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 345/198 (50 records)
+✅ Batch completed in 20.9s
+   - Imported: -12125
+   - Skipped: -13125
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 346/198 (50 records)
+✅ Batch completed in 20.3s
+   - Imported: -12125
+   - Skipped: -13175
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 347/198 (50 records)
+✅ Batch completed in 20.1s
+   - Imported: -12125
+   - Skipped: -13225
+   - Errors: 0
+   - Rate: 3.2 records/sec
+
+🔄 Processing batch 348/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -13275
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 349/198 (50 records)
+✅ Batch completed in 20.6s
+   - Imported: -12125
+   - Skipped: -13325
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 350/198 (50 records)
+✅ Batch completed in 20.9s
+   - Imported: -12125
+   - Skipped: -13375
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 351/198 (50 records)
+✅ Batch completed in 21.2s
+   - Imported: -12125
+   - Skipped: -13425
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 352/198 (50 records)
+✅ Batch completed in 20.4s
+   - Imported: -12125
+   - Skipped: -13475
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 353/198 (50 records)
+✅ Batch completed in 20.8s
+   - Imported: -12125
+   - Skipped: -13525
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 354/198 (50 records)
+✅ Batch completed in 21.2s
+   - Imported: -12125
+   - Skipped: -13575
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 355/198 (50 records)
+✅ Batch completed in 20.1s
+   - Imported: -12125
+   - Skipped: -13625
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 356/198 (50 records)
+✅ Batch completed in 21.2s
+   - Imported: -12125
+   - Skipped: -13675
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 357/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -13725
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 358/198 (50 records)
+✅ Batch completed in 20.5s
+   - Imported: -12125
+   - Skipped: -13775
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 359/198 (50 records)
+✅ Batch completed in 20.7s
+   - Imported: -12125
+   - Skipped: -13825
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+🔄 Processing batch 360/198 (43 records)
+✅ Batch completed in 17.6s
+   - Imported: -12132
+   - Skipped: -13875
+   - Errors: 0
+   - Rate: 3.1 records/sec
+
+📊 Overall Progress: 55% (9893/17995)
+   - Successfully imported: 5818
+   - Skipped (duplicates): 4075
+   - Errors: 0
+   - Average rate: 3.1 records/sec
+
+🎉 Import completed!
+⏱️  Total time: 3202.3 seconds
+📊 Final summary:
+   - Records processed: 17995
+   - New records imported: 5818
+   - Duplicates skipped: 4075
+   - Errors encountered: 0
+   - Average speed: 5.6 records/sec
+   - Total records in database: 17995

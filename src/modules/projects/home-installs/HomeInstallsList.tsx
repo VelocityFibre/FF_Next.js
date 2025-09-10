@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Refactored HomeInstallsList component
  * Split into modular components for better maintainability

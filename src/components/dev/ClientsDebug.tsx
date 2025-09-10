@@ -48,7 +48,7 @@ export function ClientsDebug() {
           No clients found in Neon. Please check:
           <ul className="list-disc ml-5 mt-2">
             <li>Neon database connection is configured</li>
-            <li>The 'clients' table exists</li>
+            <li>The &apos;clients&apos; table exists</li>
             <li>There are records in the clients table</li>
             <li>Check browser console for errors</li>
           </ul>

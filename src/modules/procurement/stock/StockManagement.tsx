@@ -13,7 +13,7 @@ import {
   Truck,
   Scan
 } from 'lucide-react';
-import { Button } from '@/src/shared/components/ui/Button';
+import { Button } from '@/shared/components/ui/Button';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/Tabs';
 import type { ProcurementPortalContext } from '@/types/procurement/portal.types';
 import { log } from '@/lib/logger';

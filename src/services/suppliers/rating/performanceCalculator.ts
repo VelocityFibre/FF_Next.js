@@ -4,7 +4,7 @@
  */
 
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { SupplierPerformance, PerformancePeriod } from '@/types/supplier/base.types';
 import { PerformanceTrendPoint } from './types';
 import { log } from '@/lib/logger';

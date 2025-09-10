@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Pole Tracker Detail - Legacy Compatibility Layer
  * @deprecated Use modular components from './components' instead

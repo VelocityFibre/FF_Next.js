@@ -3,12 +3,12 @@ import { useEffect } from 'react';
 
 export default function HomePage() {
   const router = useRouter();
-  
+
   useEffect(() => {
     // Redirect to projects page on load
     router.push('/projects');
   }, [router]);
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center">
@@ -25,3 +25,10 @@ export default function HomePage() {
     </div>
   );
 }
+
+// Disable static generation for this page
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

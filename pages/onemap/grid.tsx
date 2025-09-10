@@ -1,5 +1,5 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Grid3x3 } from 'lucide-react';
+import { AppLayout } from '../../src/components/layout/AppLayout';
 
 export default function OneMapGridPage() {
   return (
@@ -39,3 +39,10 @@ export default function OneMapGridPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

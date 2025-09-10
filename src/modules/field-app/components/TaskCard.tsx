@@ -2,7 +2,7 @@ import {
   Clock, Wrench, CheckCircle, MapPin, 
   AlertTriangle, ChevronRight, Paperclip 
 } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import type { FieldTask } from '../types/field-app.types';
 
 interface TaskCardProps {

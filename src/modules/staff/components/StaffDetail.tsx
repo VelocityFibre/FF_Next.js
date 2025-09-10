@@ -1,8 +1,10 @@
+'use client';
+
 import { useRouter } from 'next/router';
 import { ArrowLeft, Edit, Mail, Phone, Calendar, Briefcase, Award } from 'lucide-react';
 import { useStaffMember, useDeleteStaff } from '@/hooks/useStaff';
 import { format } from 'date-fns';
-import { safeToDate } from '@/src/utils/dateHelpers';
+import { safeToDate } from '@/utils/dateHelpers';
 import { log } from '@/lib/logger';
 
 export function StaffDetail() {

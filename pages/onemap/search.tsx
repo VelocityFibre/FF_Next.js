@@ -1,5 +1,5 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Search, Filter } from 'lucide-react';
+import { AppLayout } from '../../src/components/layout/AppLayout';
 
 export default function OneMapSearchPage() {
   return (
@@ -76,3 +76,10 @@ export default function OneMapSearchPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

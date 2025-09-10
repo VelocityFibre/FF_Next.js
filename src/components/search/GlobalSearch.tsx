@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, TrendingUp, Clock, Users, Briefcase, User, Building } from 'lucide-react';
 import { useGlobalSearch } from '@/hooks/useGlobalSearch';

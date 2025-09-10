@@ -3,7 +3,7 @@ import {
   X, Camera, MapPin, Clock, User, FileText, 
   CheckCircle, AlertTriangle, Phone 
 } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import type { FieldTask } from '../types/field-app.types';
 
 interface TaskDialogProps {

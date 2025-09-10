@@ -1,3 +1,5 @@
+'use client';
+
 import { BarChart3, Users, Calendar, Target, Download, RefreshCw, Settings } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { StatsGrid } from '@/components/dashboard/EnhancedStatCard';

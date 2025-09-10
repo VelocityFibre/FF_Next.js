@@ -1,10 +1,10 @@
-import '@/styles/globals.css';
+import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState, createContext, useContext } from 'react';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import { AuthProvider } from '@/src/contexts/AuthContext';
-import { ThemeProvider } from '@/src/contexts/ThemeContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { reportWebVitals } from '@/lib/performance';
 
 // Export for Next.js Web Vitals

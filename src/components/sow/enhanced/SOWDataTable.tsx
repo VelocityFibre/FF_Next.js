@@ -2,7 +2,7 @@
  * SOW Data Table Component
  */
 
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 
 interface SOWDataTableProps {
   type: 'poles' | 'drops' | 'fibre';

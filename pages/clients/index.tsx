@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
 const ClientList = dynamic(
-  () => import('../../src/modules/clients/components/ClientList').then(mod => mod.ClientList || mod.default),
+  () => import('../../src/modules/clients/components/ClientList').then(mod => mod.ClientList),
   {
     ssr: false,
     loading: () => <ClientsLoadingSkeleton />
@@ -60,6 +60,13 @@ const ClientsPage: NextPage = () => {
       <ClientList />
     </Suspense>
   );
+};
+
+// Prevent static generation to avoid Html import issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
 };
 
 export default ClientsPage;

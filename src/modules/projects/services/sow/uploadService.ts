@@ -9,7 +9,7 @@ import {
   getDownloadURL,
   UploadMetadata 
 } from 'firebase/storage';
-import { storage } from '@/src/config/firebase';
+import { storage } from '@/config/firebase';
 import { 
   SOWDocument, 
   SOWDocumentType, 

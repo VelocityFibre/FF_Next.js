@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ArrowLeft, Save, User } from 'lucide-react';
@@ -8,7 +10,7 @@ import {
   ContractType,
   Skill 
 } from '@/types/staff.types';
-import { safeToDate } from '@/src/utils/dateHelpers';
+import { safeToDate } from '@/utils/dateHelpers';
 import {
   PersonalInfoSection,
   EmploymentSection,

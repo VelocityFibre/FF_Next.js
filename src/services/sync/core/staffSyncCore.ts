@@ -4,7 +4,7 @@
  */
 
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { neonDb } from '@/lib/neon/connection';
 import { staffPerformance } from '@/lib/neon/schema';
 import type { NewStaffPerformance } from '@/lib/neon/schema';

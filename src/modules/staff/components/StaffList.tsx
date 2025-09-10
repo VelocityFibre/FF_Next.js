@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Staff List Component - Refactored Version
  * Main container for staff management with split components

@@ -4,7 +4,7 @@
  */
 
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { SupplierDocument, DocumentVerificationResult } from './types';
 import { log } from '@/lib/logger';
 

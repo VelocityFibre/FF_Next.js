@@ -16,7 +16,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { Product, ProductFormData, ProductFilter } from './types';
 import { log } from '@/lib/logger';
 

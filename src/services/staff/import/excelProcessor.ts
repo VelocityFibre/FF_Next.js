@@ -6,7 +6,7 @@
 import * as XLSX from 'xlsx';
 import { StaffImportRow, StaffImportResult, StaffMember } from '@/types/staff.types';
 import { processImportRows } from './rowProcessor';
-import { safeToDate } from '@/src/utils/dateHelpers';
+import { safeToDate } from '@/utils/dateHelpers';
 
 /**
  * Import staff from Excel file

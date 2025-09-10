@@ -4,7 +4,7 @@
  */
 
 import { query, collection, onSnapshot, orderBy, where, limit } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { SupplierStatus } from '@/types/supplier/base.types';
 import { SubscriptionOptions, SupplierRatingData, SupplierComplianceData } from './types';
 import { log } from '@/lib/logger';

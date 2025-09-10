@@ -10,7 +10,7 @@ import {
   orderBy,
   getDocs
 } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { Pole, PoleFilters, POLE_COLLECTION } from './types';
 
 export class PoleQueryService {

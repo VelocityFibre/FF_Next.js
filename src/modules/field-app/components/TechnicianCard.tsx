@@ -1,5 +1,5 @@
 import { User, MapPin, Star, CheckCircle } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 import type { FieldTechnician } from '../types/field-app.types';
 
 interface TechnicianCardProps {

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Enhanced StatCard Component - Advanced dashboard card with trends and loading states
  * Supports various data types, loading states, error handling, and trend indicators
@@ -6,7 +8,7 @@
 import { LucideIcon, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { memo, useCallback } from 'react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 
 // 🟢 WORKING: Enhanced stat card props interface
 export interface EnhancedStatCardProps {

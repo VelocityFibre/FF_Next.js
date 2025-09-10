@@ -3,7 +3,7 @@ import { getAuth } from '../../../lib/auth-mock';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 
-const ProjectDetail = dynamic(() => import('@/src/pages/ProjectDetail').then(mod => mod.ProjectDetail || mod.default), {
+const ProjectDetail = dynamic(() => import('@/pages/ProjectDetail').then(mod => mod.ProjectDetail || mod.default), {
   ssr: false,
   loading: () => <div>Loading project...</div>
 });

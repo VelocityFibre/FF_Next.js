@@ -1,5 +1,5 @@
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Layers } from 'lucide-react';
+import { AppLayout } from '../../src/components/layout/AppLayout';
 
 export default function OneMapLayersPage() {
   return (
@@ -50,3 +50,10 @@ export default function OneMapLayersPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

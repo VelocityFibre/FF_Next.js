@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/router';
 import { Plus, Upload, Download } from 'lucide-react';
 

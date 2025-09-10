@@ -17,4 +17,11 @@ const ClientDetailPage: NextPage = () => {
   return <ClientDetail />;
 };
 
+// Disable static generation to prevent Html import and router issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
+
 export default ClientDetailPage;

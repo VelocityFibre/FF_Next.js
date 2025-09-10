@@ -4,7 +4,7 @@
  */
 
 import { query, collection, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { Supplier } from '@/types/supplier/base.types';
 import { SupplierComparison } from './types';
 import { SupplierCrudService } from '../supplier.crud';

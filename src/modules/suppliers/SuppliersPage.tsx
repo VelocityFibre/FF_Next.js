@@ -1,10 +1,12 @@
+'use client';
+
 import { useState } from 'react';
 import { Plus, Search, Star, Building2, AlertCircle } from 'lucide-react';
 import { useSuppliers } from './hooks/useSuppliers';
 import { SupplierCard } from './components/SupplierCard';
 import { SupplierStatus, ProductCategory } from '@/types/supplier.types';
-import { Button } from '@/src/shared/components/ui/Button';
-import { Input } from '@/src/shared/components/ui/Input';
+import { Button } from '@/shared/components/ui/Button';
+import { Input } from '@/shared/components/ui/Input';
 import { useRouter } from 'next/router';
 
 export function SuppliersPage() {

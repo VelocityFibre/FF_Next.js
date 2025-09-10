@@ -14,7 +14,7 @@ import {
   QueryConstraint,
   Unsubscribe
 } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { 
   Client, 
   ClientFormData,

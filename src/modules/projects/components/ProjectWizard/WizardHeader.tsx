@@ -1,5 +1,5 @@
 import { wizardSteps } from './constants';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 
 interface WizardHeaderProps {
   currentStep: number;

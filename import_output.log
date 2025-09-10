@@ -1,0 +1,550 @@
+🚀 Starting Conservative Lawley Excel Import...
+
+📊 Reading Excel file...
+📋 Using sheet: SHEET1
+✅ Found 17995 data rows
+📊 Columns: 160
+
+📥 Importing 17995 records to database...
+📊 Already imported: 12177 records
+
+🔄 Processing batch 1/360 (50 records)
+✅ Batch completed in 8.6s
+   - Imported: 0
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.8 records/sec
+
+🔄 Processing batch 2/360 (50 records)
+✅ Batch completed in 8.3s
+   - Imported: -50
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.9 records/sec
+
+🔄 Processing batch 3/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -100
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.5 records/sec
+
+🔄 Processing batch 4/360 (50 records)
+✅ Batch completed in 9.5s
+   - Imported: -150
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.4 records/sec
+
+🔄 Processing batch 5/360 (50 records)
+✅ Batch completed in 11.9s
+   - Imported: -200
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.1 records/sec
+
+🔄 Processing batch 6/360 (50 records)
+✅ Batch completed in 11.1s
+   - Imported: -250
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.0 records/sec
+
+🔄 Processing batch 7/360 (50 records)
+✅ Batch completed in 9.8s
+   - Imported: -300
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.0 records/sec
+
+🔄 Processing batch 8/360 (50 records)
+✅ Batch completed in 10.7s
+   - Imported: -350
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.0 records/sec
+
+🔄 Processing batch 9/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -400
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 10/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -450
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.0 records/sec
+
+📊 Overall Progress: 3% (500/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 500
+   - Errors: 0
+   - Average rate: 5.0 records/sec
+
+🔄 Processing batch 11/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -500
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 5.0 records/sec
+
+🔄 Processing batch 12/360 (50 records)
+✅ Batch completed in 10.2s
+   - Imported: -550
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 13/360 (50 records)
+✅ Batch completed in 10.6s
+   - Imported: -600
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 14/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -650
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 15/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -700
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 16/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -750
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 17/360 (50 records)
+✅ Batch completed in 10.6s
+   - Imported: -800
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 18/360 (50 records)
+✅ Batch completed in 11.0s
+   - Imported: -850
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 19/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -900
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 20/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -950
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+📊 Overall Progress: 6% (1000/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 1000
+   - Errors: 0
+   - Average rate: 4.9 records/sec
+
+🔄 Processing batch 21/360 (50 records)
+✅ Batch completed in 9.7s
+   - Imported: -1000
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 22/360 (50 records)
+✅ Batch completed in 11.0s
+   - Imported: -1050
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 23/360 (50 records)
+✅ Batch completed in 10.2s
+   - Imported: -1100
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 24/360 (50 records)
+✅ Batch completed in 9.7s
+   - Imported: -1150
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 25/360 (50 records)
+✅ Batch completed in 10.2s
+   - Imported: -1200
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 26/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -1250
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 27/360 (50 records)
+✅ Batch completed in 9.8s
+   - Imported: -1300
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 28/360 (50 records)
+✅ Batch completed in 10.6s
+   - Imported: -1350
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 29/360 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -1400
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 30/360 (50 records)
+✅ Batch completed in 10.0s
+   - Imported: -1450
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+📊 Overall Progress: 8% (1500/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 1500
+   - Errors: 0
+   - Average rate: 4.9 records/sec
+
+🔄 Processing batch 31/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -1500
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 32/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -1550
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 33/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -1600
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 34/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -1650
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 35/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -1700
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 36/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -1750
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 37/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -1800
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 38/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -1850
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 39/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -1900
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 40/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -1950
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+📊 Overall Progress: 11% (2000/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 2000
+   - Errors: 0
+   - Average rate: 4.9 records/sec
+
+🔄 Processing batch 41/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -2000
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 42/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -2050
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.9 records/sec
+
+🔄 Processing batch 43/360 (50 records)
+✅ Batch completed in 11.2s
+   - Imported: -2100
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 44/360 (50 records)
+✅ Batch completed in 10.0s
+   - Imported: -2150
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 45/360 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -2200
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 46/360 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -2250
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 47/360 (50 records)
+✅ Batch completed in 10.2s
+   - Imported: -2300
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 48/360 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -2350
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 49/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -2400
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 50/360 (50 records)
+✅ Batch completed in 9.9s
+   - Imported: -2450
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+📊 Overall Progress: 14% (2500/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 2500
+   - Errors: 0
+   - Average rate: 4.8 records/sec
+
+🔄 Processing batch 51/360 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -2500
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 52/360 (50 records)
+✅ Batch completed in 10.3s
+   - Imported: -2550
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 53/360 (50 records)
+✅ Batch completed in 10.0s
+   - Imported: -2600
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 54/360 (50 records)
+✅ Batch completed in 11.9s
+   - Imported: -2650
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 55/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -2700
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 56/360 (50 records)
+✅ Batch completed in 10.0s
+   - Imported: -2750
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 57/360 (50 records)
+✅ Batch completed in 11.2s
+   - Imported: -2800
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 58/360 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -2850
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 59/360 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -2900
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 60/360 (50 records)
+✅ Batch completed in 10.7s
+   - Imported: -2950
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+📊 Overall Progress: 17% (3000/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 3000
+   - Errors: 0
+   - Average rate: 4.8 records/sec
+
+🔄 Processing batch 61/360 (50 records)
+✅ Batch completed in 11.0s
+   - Imported: -3000
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 62/360 (50 records)
+✅ Batch completed in 10.1s
+   - Imported: -3050
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 63/360 (50 records)
+✅ Batch completed in 10.4s
+   - Imported: -3100
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 64/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -3150
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 65/360 (50 records)
+✅ Batch completed in 10.9s
+   - Imported: -3200
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 66/360 (50 records)
+✅ Batch completed in 11.3s
+   - Imported: -3250
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 67/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -3300
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 68/360 (50 records)
+✅ Batch completed in 10.5s
+   - Imported: -3350
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 69/360 (50 records)
+✅ Batch completed in 11.4s
+   - Imported: -3400
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 70/360 (50 records)
+✅ Batch completed in 9.7s
+   - Imported: -3450
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+📊 Overall Progress: 19% (3500/17995)
+   - Successfully imported: 0
+   - Skipped (duplicates): 3500
+   - Errors: 0
+   - Average rate: 4.8 records/sec
+
+🔄 Processing batch 71/360 (50 records)
+✅ Batch completed in 10.8s
+   - Imported: -3500
+   - Skipped: 50
+   - Errors: 0
+   - Rate: 4.8 records/sec
+
+🔄 Processing batch 72/360 (50 records)

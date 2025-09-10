@@ -1,28 +1,21 @@
 /**
  * RFQ Lifecycle Management Service
  * Handles RFQ workflow, responses, and status transitions
+ * Fully migrated to use Neon PostgreSQL
  */
 
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  addDoc, 
-  updateDoc,
-  query,
-  where,
-  orderBy,
-  Timestamp
-} from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { neon } from '@neondatabase/serverless';
 import { RFQStatus } from '@/types/procurement.types';
-import { RFQOperations } from './operations';
+import { RFQCrud } from './rfqCrud';
+import { EmailNotificationService } from './notifications/emailNotificationService';
 import { log } from '@/lib/logger';
 
+const sql = neon(process.env.DATABASE_URL!);
+
 /**
- * Utility to convert Timestamp or Date to Date object
+ * Utility to convert various date formats to Date object
  */
-function toDate(timestampOrDate: Date | Timestamp | any): Date {
+function toDate(timestampOrDate: Date | string | number | any): Date {
   if (!timestampOrDate) {
     return new Date();
   }
@@ -32,13 +25,13 @@ function toDate(timestampOrDate: Date | Timestamp | any): Date {
     return timestampOrDate;
   }
   
-  // If it's a Firestore Timestamp, convert it
-  if (timestampOrDate && typeof timestampOrDate.toDate === 'function') {
-    return timestampOrDate.toDate();
-  }
-  
   // If it's a timestamp number, convert it
   if (typeof timestampOrDate === 'number') {
+    return new Date(timestampOrDate);
+  }
+  
+  // If it's a string, parse it
+  if (typeof timestampOrDate === 'string') {
     return new Date(timestampOrDate);
   }
   
@@ -46,11 +39,8 @@ function toDate(timestampOrDate: Date | Timestamp | any): Date {
   return new Date(timestampOrDate);
 }
 
-const RESPONSES_COLLECTION = 'rfq_responses';
-const COLLECTION_NAME = 'rfqs';
-
 /**
- * RFQ Lifecycle Management
+ * RFQ Lifecycle Management - Wrapper around Neon service for backward compatibility
  */
 export class RFQLifecycle {
   /**
@@ -58,24 +48,18 @@ export class RFQLifecycle {
    */
   static async sendToSuppliers(id: string): Promise<void> {
     try {
-      const rfq = await RFQOperations.getById(id);
+      // Get RFQ details
+      const rfq = await RFQCrud.getById(id);
       
-      // Update supplier invite statuses
-      const updatedInvites = (rfq.invitedSuppliers || []).map((supplierId: string) => ({
-        supplierId,
-        inviteSent: true,
-        inviteSentAt: Timestamp.now()
-      }));
+      // Update status to ISSUED
+      await RFQCrud.updateStatus(id, RFQStatus.ISSUED);
       
-      // TODO: Send email notifications to suppliers
-      // This would typically integrate with an email service
+      // Send invitations to suppliers
+      if (rfq.invitedSuppliers && rfq.invitedSuppliers.length > 0) {
+        await EmailNotificationService.sendRFQInvitations(id, rfq.invitedSuppliers);
+      }
       
-      await updateDoc(doc(db, COLLECTION_NAME, id), {
-        status: RFQStatus.ISSUED,
-        invitedSuppliers: updatedInvites,
-        sentAt: Timestamp.now(),
-        sentBy: 'current-user-id' // TODO: Get from auth context
-      });
+      log.info('RFQ sent to suppliers', { rfqId: id, supplierCount: rfq.invitedSuppliers?.length }, 'lifecycle');
     } catch (error) {
       log.error('Error sending RFQ to suppliers:', { data: error }, 'lifecycle');
       throw error;
@@ -87,24 +71,17 @@ export class RFQLifecycle {
    */
   static async submitResponse(rfqId: string, response: any): Promise<string> {
     try {
-      const docRef = await addDoc(collection(db, RESPONSES_COLLECTION), {
-        ...response,
-        rfqId,
-        status: 'submitted',
-        submittedAt: Timestamp.now()
-      });
+      // Submit response using CRUD service
+      const responseId = await RFQCrud.submitResponse(rfqId, response);
       
-      // Update RFQ with response reference
-      const rfq = await RFQOperations.getById(rfqId);
-      const updatedResponses = [...(rfq.respondedSuppliers || []), response.supplierId];
+      // Update RFQ status if this is the first response
+      const responses = await RFQCrud.getResponses(rfqId);
+      if (responses.length === 1) {
+        await RFQCrud.updateStatus(rfqId, RFQStatus.RESPONSES_RECEIVED);
+      }
       
-      await updateDoc(doc(db, COLLECTION_NAME, rfqId), {
-        respondedSuppliers: updatedResponses,
-        status: RFQStatus.RESPONSES_RECEIVED,
-        updatedAt: Timestamp.now()
-      });
-      
-      return docRef.id;
+      log.info('RFQ response submitted', { rfqId, responseId, supplierId: response.supplierId }, 'lifecycle');
+      return responseId;
     } catch (error) {
       log.error('Error submitting RFQ response:', { data: error }, 'lifecycle');
       throw error;
@@ -116,17 +93,7 @@ export class RFQLifecycle {
    */
   static async getResponses(rfqId: string): Promise<any[]> {
     try {
-      const q = query(
-        collection(db, RESPONSES_COLLECTION),
-        where('rfqId', '==', rfqId),
-        orderBy('submittedAt', 'desc')
-      );
-      
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as any));
+      return await RFQCrud.getResponses(rfqId);
     } catch (error) {
       log.error('Error fetching RFQ responses:', { data: error }, 'lifecycle');
       throw error;
@@ -136,27 +103,42 @@ export class RFQLifecycle {
   /**
    * Select winning response and award RFQ
    */
-  static async selectResponse(rfqId: string, responseId: string, reason?: string): Promise<void> {
+  static async selectResponse(rfqId: string, responseId: string, reason?: string, userId?: string): Promise<void> {
     try {
       // Update response as selected
-      await updateDoc(doc(db, RESPONSES_COLLECTION, responseId), {
-        isSelected: true,
-        status: 'accepted',
-        reviewedBy: 'current-user-id', // TODO: Get from auth context
-        reviewedAt: Timestamp.now()
-      });
+      await sql`
+        UPDATE rfq_responses 
+        SET 
+          status = 'accepted',
+          evaluated_by = ${userId || 'system'},
+          evaluated_at = ${new Date().toISOString()},
+          evaluation_notes = ${reason || 'Selected as winning bid'}
+        WHERE id = ${responseId}`;
       
-      // Update RFQ with selection
-      await updateDoc(doc(db, COLLECTION_NAME, rfqId), {
-        selectedResponseId: responseId,
-        selectionReason: reason,
-        status: RFQStatus.AWARDED,
-        closedAt: Timestamp.now(),
-        closedBy: 'current-user-id', // TODO: Get from auth context
-        updatedAt: Timestamp.now()
-      });
+      // Update other responses as rejected
+      await sql`
+        UPDATE rfq_responses 
+        SET status = 'rejected'
+        WHERE rfq_id = ${rfqId} AND id != ${responseId} AND status = 'submitted'`;
       
-      // TODO: Notify selected and non-selected suppliers
+      // Update RFQ status to AWARDED
+      await RFQCrud.updateStatus(rfqId, RFQStatus.AWARDED, userId);
+      
+      // Get all supplier IDs for notifications
+      const responses = await RFQCrud.getResponses(rfqId);
+      const allSupplierIds = responses.map(r => r.supplierId);
+      const winningResponse = responses.find(r => r.id === responseId);
+      
+      // Send award notifications
+      if (winningResponse) {
+        await EmailNotificationService.sendAwardNotification(
+          rfqId,
+          winningResponse.supplierId,
+          allSupplierIds
+        );
+      }
+      
+      log.info('RFQ response selected', { rfqId, responseId, userId }, 'lifecycle');
     } catch (error) {
       log.error('Error selecting RFQ response:', { data: error }, 'lifecycle');
       throw error;
@@ -209,15 +191,26 @@ export class RFQLifecycle {
   /**
    * Close RFQ without awarding (transition to CLOSED)
    */
-  static async closeRFQ(rfqId: string, reason: string): Promise<void> {
+  static async closeRFQ(rfqId: string, reason: string, userId?: string): Promise<void> {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, rfqId), {
-        status: RFQStatus.CLOSED,
-        closedAt: Timestamp.now(),
-        closedBy: 'current-user-id', // TODO: Get from auth context
-        closureReason: reason,
-        updatedAt: Timestamp.now()
+      await sql`
+        UPDATE rfqs 
+        SET 
+          status = ${RFQStatus.CLOSED},
+          updated_at = ${new Date().toISOString()}
+        WHERE id = ${rfqId}`;
+      
+      // Store closure reason in notification metadata
+      await RFQCrud.createNotification(rfqId, {
+        type: 'rfq_deadline',
+        recipientType: 'internal',
+        recipientId: userId || 'system',
+        subject: 'RFQ Closed',
+        message: `RFQ closed without awarding: ${reason}`,
+        metadata: { closureReason: reason }
       });
+      
+      log.info('RFQ closed', { rfqId, reason, userId }, 'lifecycle');
     } catch (error) {
       log.error('Error closing RFQ:', { data: error }, 'lifecycle');
       throw error;
@@ -227,17 +220,34 @@ export class RFQLifecycle {
   /**
    * Cancel RFQ (transition to CANCELLED)
    */
-  static async cancelRFQ(rfqId: string, reason: string): Promise<void> {
+  static async cancelRFQ(rfqId: string, reason: string, userId?: string): Promise<void> {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, rfqId), {
-        status: RFQStatus.CANCELLED,
-        cancelledAt: Timestamp.now(),
-        cancelledBy: 'current-user-id', // TODO: Get from auth context
-        cancellationReason: reason,
-        updatedAt: Timestamp.now()
+      await RFQCrud.updateStatus(rfqId, RFQStatus.CANCELLED, userId);
+      
+      // Store cancellation reason
+      await RFQCrud.createNotification(rfqId, {
+        type: 'rfq_deadline',
+        recipientType: 'all',
+        subject: 'RFQ Cancelled',
+        message: `This RFQ has been cancelled. Reason: ${reason}`,
+        metadata: { cancellationReason: reason, cancelledBy: userId }
       });
       
-      // TODO: Notify suppliers of cancellation
+      // Send notifications to all invited suppliers
+      const rfq = await RFQCrud.getById(rfqId);
+      if (rfq.invitedSuppliers && rfq.invitedSuppliers.length > 0) {
+        for (const supplierId of rfq.invitedSuppliers) {
+          await RFQCrud.createNotification(rfqId, {
+            type: 'rfq_deadline',
+            recipientType: 'supplier',
+            recipientId: supplierId,
+            subject: `RFQ ${rfq.rfqNumber} Cancelled`,
+            message: `RFQ ${rfq.rfqNumber} - ${rfq.title} has been cancelled.`
+          });
+        }
+      }
+      
+      log.info('RFQ cancelled', { rfqId, reason, userId }, 'lifecycle');
     } catch (error) {
       log.error('Error cancelling RFQ:', { data: error }, 'lifecycle');
       throw error;
@@ -247,20 +257,39 @@ export class RFQLifecycle {
   /**
    * Extend RFQ deadline
    */
-  static async extendDeadline(rfqId: string, newDeadline: Date, reason?: string): Promise<void> {
+  static async extendDeadline(rfqId: string, newDeadline: Date, reason?: string, userId?: string): Promise<void> {
     try {
-      await updateDoc(doc(db, COLLECTION_NAME, rfqId), {
-        responseDeadline: Timestamp.fromDate(newDeadline),
-        deadlineExtensions: {
-          extendedAt: Timestamp.now(),
-          extendedBy: 'current-user-id', // TODO: Get from auth context
-          reason: reason || 'Deadline extended',
-          previousDeadline: await RFQLifecycle.getCurrentDeadline(rfqId)
-        },
-        updatedAt: Timestamp.now()
+      const currentRFQ = await RFQCrud.getById(rfqId);
+      const previousDeadline = currentRFQ.responseDeadline;
+      
+      // Update deadline
+      await sql`
+        UPDATE rfqs 
+        SET 
+          response_deadline = ${newDeadline.toISOString()},
+          updated_at = ${new Date().toISOString()}
+        WHERE id = ${rfqId}`;
+      
+      // Create notification about extension
+      await RFQCrud.createNotification(rfqId, {
+        type: 'rfq_deadline',
+        recipientType: 'all',
+        subject: 'RFQ Deadline Extended',
+        message: `Deadline extended from ${new Date(previousDeadline).toLocaleDateString()} to ${newDeadline.toLocaleDateString()}. ${reason || ''}`,
+        metadata: {
+          previousDeadline,
+          newDeadline: newDeadline.toISOString(),
+          extendedBy: userId,
+          reason
+        }
       });
       
-      // TODO: Notify suppliers of deadline extension
+      // Send email notifications to suppliers
+      if (currentRFQ.invitedSuppliers && currentRFQ.invitedSuppliers.length > 0) {
+        await EmailNotificationService.sendDeadlineReminder(rfqId);
+      }
+      
+      log.info('RFQ deadline extended', { rfqId, newDeadline, reason, userId }, 'lifecycle');
     } catch (error) {
       log.error('Error extending RFQ deadline:', { data: error }, 'lifecycle');
       throw error;
@@ -271,7 +300,7 @@ export class RFQLifecycle {
    * Get current deadline for an RFQ
    */
   private static async getCurrentDeadline(rfqId: string): Promise<Date> {
-    const rfq = await RFQOperations.getById(rfqId);
+    const rfq = await RFQCrud.getById(rfqId);
     return toDate(rfq.responseDeadline);
   }
 
@@ -280,7 +309,7 @@ export class RFQLifecycle {
    */
   static async isRFQPastDeadline(rfqId: string): Promise<boolean> {
     try {
-      const rfq = await RFQOperations.getById(rfqId);
+      const rfq = await RFQCrud.getById(rfqId);
       const deadline = toDate(rfq.responseDeadline);
       return new Date() > deadline;
     } catch (error) {

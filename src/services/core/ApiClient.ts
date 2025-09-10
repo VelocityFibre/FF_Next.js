@@ -4,7 +4,7 @@
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { auth } from '@/src/config/firebase';
+import { auth } from '@/config/firebase';
 import { log } from '@/lib/logger';
 
 export interface ApiError {

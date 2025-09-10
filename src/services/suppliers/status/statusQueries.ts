@@ -4,7 +4,7 @@
  */
 
 import { query, collection, where, getDocs } from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { db } from '@/config/firebase';
 import { log } from '@/lib/logger';
 import { 
   SupplierStatus, 

@@ -3,7 +3,7 @@
  */
 
 import { Activity, MapPin, Home, Cable, Upload } from 'lucide-react';
-import { cn } from '@/src/utils/cn';
+import { cn } from '@/utils/cn';
 
 export type TabType = 'summary' | 'poles' | 'drops' | 'fibre' | 'upload';
 

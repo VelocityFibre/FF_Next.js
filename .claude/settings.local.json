@@ -9,7 +9,17 @@
       "Bash(tree:*)",
       "Bash(npm run dev:*)",
       "Bash(PORT=3006 npm start)",
-      "Bash(PORT=3007 npm start)"
+      "Bash(PORT=3007 npm start)",
+      "Bash(grep:*)",
+      "Bash(npx neon db:run:*)",
+      "Bash(psql:*)",
+      "Bash(npx tsx:*)",
+      "Bash(node:*)",
+      "Bash(chmod:*)",
+      "Bash(npm install)",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(bash:*)"
     ],
     "deny": [],
     "ask": [],

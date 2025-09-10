@@ -1,5 +1,5 @@
 import { AppLayout } from '@/components/layout/AppLayout';
-import CommunicationsDashboard from '@/src/modules/communications/CommunicationsDashboard';
+import CommunicationsDashboard from '@/modules/communications/CommunicationsDashboard';
 
 export default function CommunicationsPage() {
   return (
@@ -8,3 +8,10 @@ export default function CommunicationsPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

@@ -1,3 +1,5 @@
+'use client';
+
 import { MapPin, Camera, Upload, BarChart3, CheckCircle, AlertTriangle, Users, Plus, UtilityPole } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

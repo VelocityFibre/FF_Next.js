@@ -1,105 +1,173 @@
 /**
- * Real-time Project Operations (Firebase)
+ * Real-time Project Operations (WebSocket)
  */
 
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query,
-  orderBy,
-  onSnapshot,
-  Timestamp
-} from 'firebase/firestore';
-import { db } from '@/src/config/firebase';
+import { socketIOAdapter } from '@/services/realtime/socketIOAdapter';
+import type { RealtimeEvent } from '@/services/realtime/websocketService';
 import type { Project } from '@/types/project.types';
 
 /**
- * Get all projects (real-time)
+ * Get all projects (via API)
  */
 export async function getAllProjects(): Promise<Project[]> {
-  const snapshot = await getDocs(collection(db, 'projects'));
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  } as Project));
+  const response = await fetch('/api/projects');
+  if (!response.ok) {
+    throw new Error('Failed to fetch projects');
+  }
+  return response.json();
 }
 
 /**
- * Get project by ID (real-time)
+ * Get project by ID (via API)
  */
 export async function getProjectById(id: string): Promise<Project | null> {
-  const docRef = doc(db, 'projects', id);
-  const snapshot = await getDoc(docRef);
-  
-  if (!snapshot.exists()) return null;
-  
-  return { id: snapshot.id, ...snapshot.data() } as Project;
+  const response = await fetch(`/api/projects/${id}`);
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    throw new Error('Failed to fetch project');
+  }
+  return response.json();
 }
 
 /**
- * Create new project (Firebase)
+ * Create new project (via API)
  */
 export async function createProject(projectData: Omit<Project, 'id'>): Promise<string> {
-  const docRef = await addDoc(collection(db, 'projects'), {
-    ...projectData,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
+  const response = await fetch('/api/projects', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...projectData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }),
   });
 
-  return docRef.id;
+  if (!response.ok) {
+    throw new Error('Failed to create project');
+  }
+
+  const result = await response.json();
+  
+  // Broadcast change via WebSocket
+  socketIOAdapter.broadcastChange({
+    eventType: 'added',
+    entityType: 'project',
+    entityId: result.id,
+    data: { ...projectData, id: result.id }
+  });
+
+  return result.id;
 }
 
 /**
- * Update project (Firebase)
+ * Update project (via API)
  */
 export async function updateProject(id: string, updates: Partial<Project>): Promise<void> {
-  const docRef = doc(db, 'projects', id);
-  
-  await updateDoc(docRef, {
-    ...updates,
-    updatedAt: Timestamp.now(),
+  const response = await fetch(`/api/projects/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update project');
+  }
+
+  // Broadcast change via WebSocket
+  socketIOAdapter.broadcastChange({
+    eventType: 'modified',
+    entityType: 'project',
+    entityId: id,
+    data: updates
   });
 }
 
 /**
- * Delete project (Firebase)
+ * Delete project (via API)
  */
 export async function deleteProject(id: string): Promise<void> {
-  await deleteDoc(doc(db, 'projects', id));
+  const response = await fetch(`/api/projects/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete project');
+  }
+
+  // Broadcast change via WebSocket
+  socketIOAdapter.broadcastChange({
+    eventType: 'removed',
+    entityType: 'project',
+    entityId: id,
+    data: null
+  });
 }
 
 /**
- * Subscribe to project changes (real-time)
+ * Subscribe to project changes (real-time via WebSocket)
  */
 export function subscribeToProject(id: string, callback: (project: Project | null) => void): () => void {
-  const docRef = doc(db, 'projects', id);
-  
-  return onSnapshot(docRef, (snapshot) => {
-    if (snapshot.exists()) {
-      callback({ id: snapshot.id, ...snapshot.data() } as Project);
-    } else {
-      callback(null);
+  // Ensure WebSocket is connected
+  if (!socketIOAdapter.isConnected()) {
+    socketIOAdapter.connect().catch(console.error);
+  }
+
+  // Subscribe to specific project changes
+  const unsubscribe = socketIOAdapter.subscribe(
+    'project',
+    id,
+    async (event: RealtimeEvent) => {
+      if (event.type === 'removed') {
+        callback(null);
+      } else {
+        // Fetch fresh data for added/modified events
+        try {
+          const project = await getProjectById(id);
+          callback(project);
+        } catch (error) {
+          console.error('Error fetching project data:', error);
+          callback(null);
+        }
+      }
     }
-  });
+  );
+
+  // Fetch initial data
+  getProjectById(id).then(callback).catch(() => callback(null));
+
+  return unsubscribe;
 }
 
 /**
- * Subscribe to projects list (real-time)
+ * Subscribe to projects list (real-time via WebSocket)
  */
 export function subscribeToProjects(callback: (projects: Project[]) => void): () => void {
-  const projectsRef = collection(db, 'projects');
-  const q = query(projectsRef, orderBy('updatedAt', 'desc'));
-  
-  return onSnapshot(q, (snapshot) => {
-    const projects = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Project));
-    callback(projects);
-  });
+  // Ensure WebSocket is connected
+  if (!socketIOAdapter.isConnected()) {
+    socketIOAdapter.connect().catch(console.error);
+  }
+
+  // Subscribe to all project changes
+  const unsubscribe = socketIOAdapter.subscribeToAll(
+    'project',
+    async (event: RealtimeEvent) => {
+      // Re-fetch the entire list on any change
+      try {
+        const projects = await getAllProjects();
+        callback(projects);
+      } catch (error) {
+        console.error('Error fetching projects list:', error);
+        callback([]);
+      }
+    }
+  );
+
+  // Fetch initial data
+  getAllProjects().then(callback).catch(() => callback([]));
+
+  return unsubscribe;
 }

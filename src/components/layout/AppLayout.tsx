@@ -2,10 +2,14 @@ import { useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 // import { useTheme } from '@/contexts/ThemeContext'; // Ready for future use
 import { useAuth } from '@/contexts/AuthContext';
-import { Sidebar } from './Sidebar';
-import { Header } from './Header';
-import { Footer } from './Footer';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { ConnectionStatus } from '@/components/realtime/ConnectionStatus';
+import dynamic from 'next/dynamic';
+
+// Dynamically import components that use router to avoid SSR issues
+const Sidebar = dynamic(() => import('./Sidebar').then(mod => ({ default: mod.Sidebar })), { ssr: false });
+const Header = dynamic(() => import('./Header').then(mod => ({ default: mod.Header })), { ssr: false });
+const Footer = dynamic(() => import('./Footer').then(mod => ({ default: mod.Footer })), { ssr: false });
 
 interface PageMeta {
   title: string;
@@ -27,7 +31,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     }
     return false;
   });
-  
+
   const router = useRouter();
   const { currentUser, loading } = useAuth();
   // Theme hook ready for future use
@@ -49,7 +53,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const getPageMeta = (): PageMeta => {
     const path = router.pathname;
     const segments = path.split('/').filter(Boolean);
-    
+
     // Dashboard
     if (path.includes('dashboard')) {
       return {
@@ -57,7 +61,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Dashboard'],
       };
     }
-    
+
     // Project Management
     if (path.includes('projects')) {
       if (segments.includes('create')) {
@@ -77,7 +81,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Projects'],
       };
     }
-    
+
     // Pole Tracker
     if (path.includes('pole-tracker')) {
       return {
@@ -85,7 +89,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Project Management', 'Pole Tracker'],
       };
     }
-    
+
     // Clients
     if (path.includes('clients')) {
       if (segments.includes('create') || segments.includes('new')) {
@@ -105,7 +109,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Clients'],
       };
     }
-    
+
     // Staff Management
     if (path.includes('staff')) {
       if (segments.includes('create') || segments.includes('new')) {
@@ -137,7 +141,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Staff'],
       };
     }
-    
+
     // Procurement
     if (path.includes('procurement')) {
       return {
@@ -145,7 +149,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Procurement'],
       };
     }
-    
+
     // Suppliers
     if (path.includes('suppliers')) {
       return {
@@ -153,7 +157,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Suppliers'],
       };
     }
-    
+
     // Contractors
     if (path.includes('contractors')) {
       return {
@@ -161,7 +165,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Contractors'],
       };
     }
-    
+
     // Communications
     if (path.includes('communications') || path.includes('meetings')) {
       return {
@@ -169,7 +173,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Communications'],
       };
     }
-    
+
     // Analytics & Reports
     if (path.includes('analytics') || path.includes('reports')) {
       return {
@@ -177,7 +181,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Analytics'],
       };
     }
-    
+
     // Daily Progress
     if (path.includes('daily-progress')) {
       return {
@@ -185,7 +189,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Analytics', 'Daily Progress'],
       };
     }
-    
+
     // Field App
     if (path.includes('field')) {
       return {
@@ -193,7 +197,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Field App'],
       };
     }
-    
+
     // Settings
     if (path.includes('settings')) {
       return {
@@ -209,7 +213,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Communications', 'Action Items'],
       };
     }
-    
+
     // SOW Management
     if (path.includes('sow')) {
       return {
@@ -217,7 +221,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         breadcrumbs: ['Home', 'Project Management', 'SOW'],
       };
     }
-    
+
     // Default
     return {
       title: 'FibreFlow',
@@ -242,45 +246,54 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex h-screen bg-[var(--ff-background-secondary)] overflow-hidden">
       {/* Sidebar */}
-      <Sidebar 
-        isOpen={sidebarOpen} 
+      <Sidebar
+        isOpen={sidebarOpen}
         isCollapsed={sidebarCollapsed}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
         onCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      
+
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-20 bg-[var(--ff-surface-overlay)] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      
+
       {/* Main Content */}
       <div className={`
         flex-1 flex flex-col min-w-0 transition-all duration-300
         ${sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'}
       `}>
         {/* Header */}
-        <Header 
+        <Header
           title={pageMeta.title}
           breadcrumbs={pageMeta.breadcrumbs || ['Home']}
           actions={pageMeta.actions}
           onMenuClick={() => setSidebarOpen(true)}
           user={currentUser}
         />
-        
+
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto bg-[var(--ff-background-primary)]">
           <div className="min-h-full">
             {children}
           </div>
         </main>
-        
+
         {/* Footer */}
         <Footer />
       </div>
+      
+      {/* WebSocket Connection Status */}
+      <ConnectionStatus 
+        mode="auto"
+        position="bottom-right"
+        showDetails={false}
+        autoHide={true}
+        autoHideDelay={5000}
+      />
     </div>
   );
 }

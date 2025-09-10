@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { DropsManagement } from '@/src/modules/projects/drops/DropsManagement';
+import { DropsManagement } from '@/modules/projects/drops/DropsManagement';
 
 export default function DropsPage() {
   return (
@@ -9,3 +9,10 @@ export default function DropsPage() {
     </AppLayout>
   );
 }
+
+// Prevent static generation to avoid router mounting issues
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
