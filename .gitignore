@@ -93,3 +93,7 @@ storybook-static
 
 /generated/prisma
 .vercel
+
+# Next.js build output
+.next/
+.next/cache/
