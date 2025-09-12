@@ -6,7 +6,7 @@ A modern Next.js application for fiber network project management.
 
 ### Local Development (Production Mode - Recommended)
 
-Due to a known Watchpack issue with the development server, use production mode for local development:
+Use production mode for local development as it provides the full Next.js experience without authentication barriers:
 
 ```bash
 # Install dependencies
@@ -15,14 +15,16 @@ npm install
 # Build the application
 npm run build
 
-# Start the server (default port 3000)
+# Start the production server (default port 3000)
 npm start
 
 # Or specify a custom port
 PORT=3005 npm start
 ```
 
-Access the application at: **http://localhost:3005** (or your chosen port)
+Access the application at: **http://localhost:3000** (or your chosen port)
+
+**Note**: The development server (`npm run dev`) has known issues and should not be used. Always use production mode for local development.
 
 ## 📦 Available Scripts
 

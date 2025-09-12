@@ -336,13 +336,13 @@ export default function StaffPage() {
                           <div className="flex-shrink-0 h-10 w-10">
                             <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                               <span className="text-sm font-medium text-blue-600">
-                                {member.name.charAt(0)}{member.name.split(' ')[1]?.charAt(0) || ''}
+                                {member.name ? member.name.charAt(0) : ''}{member.name ? member.name.split(' ')[1]?.charAt(0) || '' : ''}
                               </span>
                             </div>
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {member.name}
+                              {member.name || 'Unknown'}
                             </div>
                             <div className="text-sm text-gray-500">
                               ID: {member.employeeId}
@@ -372,7 +372,7 @@ export default function StaffPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Badge className={getStatusColor(member.status)} variant="secondary">
-                          {member.status.replace('_', ' ')}
+                          {member.status ? member.status.replace('_', ' ') : 'unknown'}
                         </Badge>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

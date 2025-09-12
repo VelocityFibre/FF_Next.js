@@ -1,4 +1,4 @@
-import { sql } from '@/lib/neon';
+import { getSql } from '@/lib/neon-sql';
 import { Client, ClientFilter, ClientSummary } from '@/types/client.types';
 import { mapDbToClient } from './mappers';
 import { log } from '@/lib/logger';
@@ -13,7 +13,7 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
     
     // Base query - get all clients
     if (!filter || Object.keys(filter).length === 0) {
-      result = await sql`
+      result = await getSql()`
         SELECT * FROM clients
         ORDER BY name ASC
       `;
@@ -21,7 +21,7 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
     // Handle status filtering
     else if (filter.status?.length && filter.status.length > 0) {
       const statusValue = filter.status[0]; // Take first status for simplicity
-      result = await sql`
+      result = await getSql()`
         SELECT * FROM clients
         WHERE status = ${statusValue}
         ORDER BY name ASC
@@ -30,7 +30,7 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
     // Handle search term filtering
     else if (filter.searchTerm) {
       const searchPattern = `%${filter.searchTerm}%`;
-      result = await sql`
+      result = await getSql()`
         SELECT * FROM clients
         WHERE name ILIKE ${searchPattern}
           OR contact_person ILIKE ${searchPattern}
@@ -41,13 +41,14 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
     }
     // Default: return all clients
     else {
-      result = await sql`
+      result = await getSql()`
         SELECT * FROM clients
         ORDER BY name ASC
       `;
     }
 
-    return result.map(mapDbToClient);
+    const rows = result as any[];
+    return rows.map(mapDbToClient);
     
   } catch (error) {
     log.error('Error fetching clients from Neon:', { data: error }, 'queries');
@@ -60,17 +61,18 @@ export async function getAllClients(filter?: ClientFilter): Promise<Client[]> {
  */
 export async function getClientById(id: string): Promise<Client | null> {
   try {
-    const result = await sql`
+    const result = await getSql()`
       SELECT * FROM clients
       WHERE id = ${id}
       LIMIT 1
     `;
     
-    if (!result || result.length === 0) {
+    const rows = result as any[];
+    if (!rows || rows.length === 0) {
       return null;
     }
     
-    return mapDbToClient(result[0]);
+    return mapDbToClient(rows[0]);
   } catch (error) {
     log.error('Error fetching client by ID:', { data: error }, 'queries');
     return null;
@@ -82,13 +84,14 @@ export async function getClientById(id: string): Promise<Client | null> {
  */
 export async function getActiveClients(): Promise<Client[]> {
   try {
-    const result = await sql`
+    const result = await getSql()`
       SELECT * FROM clients
       WHERE status = 'ACTIVE'
       ORDER BY name ASC
     `;
     
-    return result.map(mapDbToClient);
+    const rows = result as any[];
+    return rows.map(mapDbToClient);
   } catch (error) {
     log.error('Error fetching active clients:', { data: error }, 'queries');
     return [];
@@ -100,7 +103,7 @@ export async function getActiveClients(): Promise<Client[]> {
  */
 export async function getClientSummary(): Promise<ClientSummary> {
   try {
-    const result = await sql`
+    const result = await getSql()`
       SELECT 
         COUNT(*) as total_clients,
         COUNT(CASE WHEN status = 'ACTIVE' THEN 1 END) as active_clients,
@@ -110,10 +113,11 @@ export async function getClientSummary(): Promise<ClientSummary> {
       FROM clients
     `;
     
+    const rows = result as any[];
     return {
-      totalClients: parseInt(result[0].total_clients),
-      activeClients: parseInt(result[0].active_clients),
-      inactiveClients: parseInt(result[0].inactive_clients),
+      totalClients: parseInt(rows[0].total_clients),
+      activeClients: parseInt(rows[0].active_clients),
+      inactiveClients: parseInt(rows[0].inactive_clients),
       prospectClients: 0,
       totalProjectValue: 0,
       averageProjectValue: 0,

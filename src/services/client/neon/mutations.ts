@@ -1,4 +1,4 @@
-import { sql } from '@/lib/neon';
+import { getSql } from '@/lib/neon-sql';
 import { ClientFormData } from '@/types/client.types';
 import { buildMetadata, extractPaymentTerms } from './mappers';
 import { log } from '@/lib/logger';
@@ -19,7 +19,7 @@ export async function createClient(data: ClientFormData): Promise<string> {
       contract_value: (data as any).contractValue
     };
 
-    const result = await sql`
+    const result = await getSql()`
       INSERT INTO clients (
         name, 
         email, 
@@ -60,7 +60,8 @@ export async function createClient(data: ClientFormData): Promise<string> {
       RETURNING id
     `;
     
-    return result[0].id;
+    const rows = result as any[];
+    return rows[0].id;
   } catch (error) {
     log.error('Error creating client:', { data: error }, 'mutations');
     throw error;
@@ -75,7 +76,7 @@ export async function updateClient(id: string, data: Partial<ClientFormData>): P
     // Build metadata update if needed
     const metadata = buildMetadata(data);
 
-    await sql`
+    await getSql()`
       UPDATE clients
       SET 
         name = COALESCE(${data.name}, name),
@@ -107,7 +108,7 @@ export async function updateClient(id: string, data: Partial<ClientFormData>): P
  */
 export async function deleteClient(id: string): Promise<void> {
   try {
-    await sql`
+    await getSql()`
       DELETE FROM clients
       WHERE id = ${id}
     `;

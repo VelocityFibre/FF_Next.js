@@ -3,13 +3,13 @@
  * Reusable query building functions for staff operations
  */
 
-import { sql } from '@/lib/neon';
+import { getSql } from '@/lib/neon-sql';
 import { StaffFilter } from '@/types/staff.types';
 
 /**
  * Build base staff query with manager information
  */
-export const baseStaffQuery = () => sql`
+export const baseStaffQuery = () => getSql()`
   SELECT 
     s.*,
     m.name as manager_name,
@@ -24,7 +24,7 @@ export const baseStaffQuery = () => sql`
 export async function queryStaffWithFilters(filter?: StaffFilter) {
   // If no filters, return all staff
   if (!filter || (!filter.status?.length && !filter.department?.length)) {
-    return sql`
+    return getSql()`
       SELECT 
         s.*,
         m.name as manager_name,
@@ -40,7 +40,7 @@ export async function queryStaffWithFilters(filter?: StaffFilter) {
     // Both status and department filters - for now just handle simple cases
     const statusValue = filter.status[0]; // Take first status
     const deptValue = filter.department[0]; // Take first department
-    return sql`
+    return getSql()`
       SELECT 
         s.*,
         m.name as manager_name,
@@ -53,7 +53,7 @@ export async function queryStaffWithFilters(filter?: StaffFilter) {
   } else if (filter.status?.length) {
     // Status filter only
     const statusValue = filter.status[0]; // Take first status for simplicity
-    return sql`
+    return getSql()`
       SELECT 
         s.*,
         m.name as manager_name,
@@ -66,7 +66,7 @@ export async function queryStaffWithFilters(filter?: StaffFilter) {
   } else if (filter.department?.length) {
     // Department filter only
     const deptValue = filter.department[0]; // Take first department for simplicity
-    return sql`
+    return getSql()`
       SELECT 
         s.*,
         m.name as manager_name,
@@ -79,7 +79,7 @@ export async function queryStaffWithFilters(filter?: StaffFilter) {
   }
   
   // Fallback to all staff
-  return sql`
+  return getSql()`
     SELECT 
       s.*,
       m.name as manager_name,
@@ -94,7 +94,7 @@ export async function queryStaffWithFilters(filter?: StaffFilter) {
  * Query staff by ID
  */
 export async function queryStaffById(id: string) {
-  return sql`
+  return getSql()`
     SELECT 
       s.*,
       m.name as manager_name,
@@ -110,7 +110,7 @@ export async function queryStaffById(id: string) {
  * Query active staff for dropdowns
  */
 export async function queryActiveStaff() {
-  return sql`
+  return getSql()`
     SELECT id, name, position, department, email 
     FROM staff 
     WHERE status = 'ACTIVE'
@@ -122,7 +122,7 @@ export async function queryActiveStaff() {
  * Query project managers
  */
 export async function queryProjectManagers() {
-  return sql`
+  return getSql()`
     SELECT id, name, position, department, email 
     FROM staff 
     WHERE status = 'ACTIVE' 

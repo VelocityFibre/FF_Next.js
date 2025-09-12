@@ -159,5 +159,5 @@ export async function closeConnections(): Promise<void> {
   }
 }
 
-// Export the configured connection
-export const sql = getNeonConnection();
+// Export a function to get the connection (lazy loading)
+export const getSql = () => getNeonConnection();

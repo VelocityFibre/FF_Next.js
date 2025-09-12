@@ -31,6 +31,7 @@ export function StaffForm() {
   const createMutation = useCreateStaff();
   const updateMutation = useUpdateStaff();
 
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<StaffFormData>({
     name: '',
     email: '',
@@ -110,8 +111,10 @@ export function StaffForm() {
       } else {
         await createMutation.mutateAsync(formData);
       }
-      router.push('/app/staff');
+      router.push('/staff');
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save staff member';
+      setError(errorMessage);
       log.error('Failed to save staff member:', { data: error }, 'StaffForm');
     }
   };
@@ -141,7 +144,7 @@ export function StaffForm() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <button
-          onClick={() => router.push('/app/staff')}
+          onClick={() => router.push('/staff')}
           className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
@@ -160,6 +163,17 @@ export function StaffForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {error && (
+            <div className="p-4 text-red-800 bg-red-100 border border-red-200 rounded-lg">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <span className="font-medium">Error:</span>
+              </div>
+              <p className="mt-1 ml-7">{error}</p>
+            </div>
+          )}
           <PersonalInfoSection 
             formData={formData} 
             handleInputChange={handleInputChange} 
@@ -192,7 +206,7 @@ export function StaffForm() {
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => router.push('/app/staff')}
+              onClick={() => router.push('/staff')}
               className="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Cancel

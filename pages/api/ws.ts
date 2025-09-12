@@ -49,9 +49,9 @@ export default async function handler(
     const io = new SocketIOServer(res.socket.server as any, {
       path: '/api/ws',
       cors: {
-        origin: process.env.NODE_ENV === 'production' 
-          ? process.env.NEXT_PUBLIC_APP_URL 
-          : 'http://localhost:3005',
+        origin: process.env.NODE_ENV === 'production'
+          ? process.env.NEXT_PUBLIC_APP_URL
+          : `http://localhost:${process.env.PORT || 3007}`,
         methods: ['GET', 'POST']
       }
     });
@@ -116,10 +116,14 @@ export default async function handler(
         // Send current state if subscribing to specific entity
         if (entityId !== '*') {
           try {
-            const result = await sql`
-              SELECT * FROM ${sql(entityType === 'client' ? 'clients' : entityType === 'staff' ? 'staff' : 'projects')}
-              WHERE id = ${entityId}
-            `;
+            let result;
+            if (entityType === 'client') {
+              result = await sql`SELECT * FROM clients WHERE id = ${entityId}`;
+            } else if (entityType === 'staff') {
+              result = await sql`SELECT * FROM staff WHERE id = ${entityId}`;
+            } else {
+              result = await sql`SELECT * FROM projects WHERE id = ${entityId}`;
+            }
             
             if (result.length > 0) {
               socket.emit('initial_data', {

@@ -3,7 +3,7 @@
  * Core CRUD operations for staff management
  */
 
-import { sql } from '@/lib/neon';
+import { getSql } from '@/lib/neon-sql';
 import { StaffMember, StaffFormData } from '@/types/staff.types';
 import { validateStaffData, processReportsToField, logDebugInfo, logError } from './validators';
 import { log } from '@/lib/logger';
@@ -21,7 +21,7 @@ export async function createStaff(data: StaffFormData): Promise<StaffMember> {
     // Process reportsTo field
     const processedReportsTo = processReportsToField(data.reportsTo);
 
-    const result = await sql`
+    const result = await getSql()`
       INSERT INTO staff (
         employee_id, name, email, phone, department, position, 
         status, join_date, reports_to, created_at, updated_at
@@ -33,7 +33,8 @@ export async function createStaff(data: StaffFormData): Promise<StaffMember> {
       ) RETURNING *
     `;
 
-    return result[0] as StaffMember;
+    const rows = result as any[];
+    return rows[0] as StaffMember;
   } catch (error) {
     logError('CREATE', error, data);
     throw error;
@@ -54,15 +55,16 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
     const processedReportsTo = processReportsToField(data.reportsTo);
 
     // Check if staff member exists by employee_id
-    const existing = await sql`
+    const existing = await getSql()`
       SELECT id FROM staff WHERE employee_id = ${data.employeeId}
     `;
     
-    if (existing.length > 0) {
+    const existingRows = existing as any[];
+    if (existingRows.length > 0) {
       // Update existing staff member
 
 
-      const result = await sql`
+      const result = await getSql()`
         UPDATE staff SET
           name = ${data.name},
           email = ${data.email},
@@ -76,12 +78,13 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
         RETURNING *
       `;
 
-      return result[0] as StaffMember;
+      const rows = result as any[];
+      return rows[0] as StaffMember;
     } else {
       // Create new staff member
 
 
-      const result = await sql`
+      const result = await getSql()`
         INSERT INTO staff (
           employee_id, name, email, phone, department, position, 
           status, join_date, reports_to, created_at, updated_at
@@ -93,7 +96,8 @@ export async function createOrUpdateStaff(data: StaffFormData): Promise<StaffMem
         ) RETURNING *
       `;
 
-      return result[0] as StaffMember;
+      const rows = result as any[];
+      return rows[0] as StaffMember;
     }
   } catch (error) {
     logError('CREATE_OR_UPDATE', error, data);
@@ -109,7 +113,7 @@ export async function updateStaff(id: string, data: Partial<StaffFormData>): Pro
     // Handle empty string for UUID fields - convert to null
     const reportsTo = data.reportsTo && data.reportsTo.trim() !== '' ? data.reportsTo : null;
     
-    const result = await sql`
+    const result = await getSql()`
       UPDATE staff SET
         name = ${data.name},
         email = ${data.email},
@@ -122,7 +126,8 @@ export async function updateStaff(id: string, data: Partial<StaffFormData>): Pro
       WHERE id = ${id}
       RETURNING *
     `;
-    return result[0] as StaffMember;
+    const rows = result as any[];
+    return rows[0] as StaffMember;
   } catch (error) {
     log.error('Error updating staff member:', { data: error }, 'crudOperations');
     throw error;
@@ -134,7 +139,7 @@ export async function updateStaff(id: string, data: Partial<StaffFormData>): Pro
  */
 export async function deleteStaff(id: string): Promise<void> {
   try {
-    await sql`DELETE FROM staff WHERE id = ${id}`;
+    await getSql()`DELETE FROM staff WHERE id = ${id}`;
   } catch (error) {
     log.error('Error deleting staff member:', { data: error }, 'crudOperations');
     throw error;

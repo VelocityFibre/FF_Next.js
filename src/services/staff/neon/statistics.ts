@@ -3,7 +3,7 @@
  * Functions for calculating staff statistics and summaries
  */
 
-import { sql } from '@/lib/neon';
+import { getSql } from '@/lib/neon-sql';
 import { StaffSummary } from '@/types/staff.types';
 import { log } from '@/lib/logger';
 
@@ -12,29 +12,35 @@ import { log } from '@/lib/logger';
  */
 export async function getStaffSummary(): Promise<StaffSummary> {
   try {
-    const totalResult = await sql`SELECT COUNT(*) as count FROM staff`;
-    const activeResult = await sql`SELECT COUNT(*) as count FROM staff WHERE status = 'ACTIVE'`;
-    const inactiveResult = await sql`SELECT COUNT(*) as count FROM staff WHERE status = 'INACTIVE'`;
-    const onLeaveResult = await sql`SELECT COUNT(*) as count FROM staff WHERE status = 'ON_LEAVE'`;
+    const totalResult = await getSql()`SELECT COUNT(*) as count FROM staff`;
+    const activeResult = await getSql()`SELECT COUNT(*) as count FROM staff WHERE status = 'ACTIVE'`;
+    const inactiveResult = await getSql()`SELECT COUNT(*) as count FROM staff WHERE status = 'INACTIVE'`;
+    const onLeaveResult = await getSql()`SELECT COUNT(*) as count FROM staff WHERE status = 'ON_LEAVE'`;
     
     // Get department breakdown
-    const departmentResult = await sql`
+    const departmentResult = await getSql()`
       SELECT department, COUNT(*) as count 
       FROM staff 
       GROUP BY department
     `;
     
-    const totalStaff = parseInt(totalResult[0].count);
-    const activeStaff = parseInt(activeResult[0].count);
-    const inactiveStaff = parseInt(inactiveResult[0].count);
-    const onLeaveStaff = parseInt(onLeaveResult[0].count);
+    const totalRows = totalResult as any[];
+    const activeRows = activeResult as any[];
+    const inactiveRows = inactiveResult as any[];
+    const onLeaveRows = onLeaveResult as any[];
+    
+    const totalStaff = parseInt(totalRows[0].count);
+    const activeStaff = parseInt(activeRows[0].count);
+    const inactiveStaff = parseInt(inactiveRows[0].count);
+    const onLeaveStaff = parseInt(onLeaveRows[0].count);
     
     // Calculate utilization rate (assuming active staff are utilized)
     const utilizationRate = totalStaff > 0 ? (activeStaff / totalStaff) * 100 : 0;
     
     // Build department breakdown
     const staffByDepartment: { [key: string]: number } = {};
-    departmentResult.forEach((dept: any) => {
+    const deptRows = departmentResult as any[];
+    deptRows.forEach((dept: any) => {
       staffByDepartment[dept.department] = parseInt(dept.count);
     });
     

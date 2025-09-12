@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { withErrorHandler } from '@/lib/api-error-handler';
-import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
+import { logCreate, logUpdate, logDelete } from '@/lib/db-logger';
+import { getSql } from '@/lib/neon-sql';
 
 // Create a new SQL instance for each request to avoid connection issues
-const getSql = () => createLoggedSql(process.env.DATABASE_URL!);
+const getSqlInstance = () => getSql();
 
 export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
-  const sql = getSql();
+  const sql = getSqlInstance();
   // CORS handled by withErrorHandler
   
   try {
@@ -18,7 +19,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
         if (id) {
           // Get single staff member
           const staff = await sql`
-            SELECT 
+            SELECT
               s.*,
               CONCAT(s.first_name, ' ', s.last_name) as name,
               CONCAT(s.first_name, ' ', s.last_name) as full_name
@@ -26,7 +27,8 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             WHERE s.id = ${id as string}
           `;
           
-          if (staff.length === 0) {
+          const staffRows = staff as any[];
+          if (staffRows.length === 0) {
             return res.status(404).json({ 
               success: false, 
               data: null, 
@@ -34,7 +36,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             });
           }
           
-          res.status(200).json({ success: true, data: staff[0] });
+          res.status(200).json({ success: true, data: staffRows[0] });
         } else {
           // Build query with filters using parameterized queries
           let staff;
@@ -45,9 +47,11 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE (
+                LOWER(CONCAT(s.first_name, ' ', s.last_name)) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.email) LIKE LOWER(${searchTerm}) OR
@@ -60,9 +64,11 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE (
+                LOWER(CONCAT(s.first_name, ' ', s.last_name)) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.email) LIKE LOWER(${searchTerm}) OR
@@ -75,9 +81,11 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE (
+                LOWER(CONCAT(s.first_name, ' ', s.last_name)) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.email) LIKE LOWER(${searchTerm}) OR
@@ -90,9 +98,11 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE (
+                LOWER(CONCAT(s.first_name, ' ', s.last_name)) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
                 LOWER(s.email) LIKE LOWER(${searchTerm}) OR
@@ -105,6 +115,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE s.department = ${department} AND s.status = ${status} AND LOWER(s.position) LIKE LOWER(${positionTerm})
@@ -114,6 +125,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE s.department = ${department} AND s.status = ${status}
@@ -123,6 +135,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE s.department = ${department}
@@ -132,6 +145,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE s.status = ${status}
@@ -142,6 +156,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               WHERE LOWER(s.position) LIKE LOWER(${positionTerm})
@@ -152,6 +167,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             staff = await sql`
               SELECT
                 s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
               FROM staff s
               ORDER BY s.created_at DESC NULLS LAST
@@ -159,10 +175,11 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
           }
           
           // Return empty array if no staff, not an error
-          res.status(200).json({ 
-            success: true, 
-            data: staff || [],
-            message: staff.length === 0 ? 'No staff members found' : undefined
+          const staffRows = staff as any[];
+          res.status(200).json({
+            success: true,
+            data: staffRows || [],
+            message: staffRows.length === 0 ? 'No staff members found' : undefined
           });
         }
         break;
@@ -171,36 +188,43 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
       case 'POST': {
         // Create new staff member
         const staffData = req.body;
+        
+        // Extract first and last name from name field or use separate fields
+        const name = staffData.name || '';
+        const firstName = staffData.first_name || staffData.firstName || name.split(' ')[0] || '';
+        const lastName = staffData.last_name || staffData.lastName || name.split(' ').slice(1).join(' ') || '';
+        
         const newStaff = await sql`
           INSERT INTO staff (
             employee_id, first_name, last_name, email, phone,
-            department, position, hire_date, status
+            department, position, join_date, status
           )
           VALUES (
             ${staffData.employee_id || staffData.employeeId || `EMP-${Date.now()}`},
-            ${staffData.first_name || staffData.firstName || ''},
-            ${staffData.last_name || staffData.lastName || ''},
+            ${firstName},
+            ${lastName},
             ${staffData.email},
             ${staffData.phone || null},
             ${staffData.department || 'General'},
             ${staffData.position || 'Staff'},
-            ${staffData.hire_date || staffData.hireDate || new Date().toISOString()},
+            ${staffData.join_date || staffData.startDate || new Date().toISOString()},
             ${staffData.status || 'ACTIVE'}
           )
-          RETURNING *, CONCAT(first_name, ' ', last_name) as full_name
+          RETURNING *, CONCAT(first_name, ' ', last_name) as name, CONCAT(first_name, ' ', last_name) as full_name
         `;
         
         // Log successful staff creation
-        if (newStaff[0]) {
-          logCreate('staff', newStaff[0].id, {
-            employee_id: newStaff[0].employee_id,
-            name: newStaff[0].full_name,
-            email: newStaff[0].email,
-            department: newStaff[0].department
+        const newStaffRows = newStaff as any[];
+        if (newStaffRows[0]) {
+          logCreate('staff', newStaffRows[0].id, {
+            employee_id: newStaffRows[0].employee_id,
+            name: newStaffRows[0].full_name,
+            email: newStaffRows[0].email,
+            department: newStaffRows[0].department
           });
         }
         
-        res.status(201).json({ success: true, data: newStaff[0] });
+        res.status(201).json({ success: true, data: newStaffRows[0] });
         break;
       }
 
@@ -210,23 +234,30 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
           return res.status(400).json({ success: false, error: 'Staff ID required' });
         }
         const updates = req.body;
+        
+        // Handle name field updates - extract first and last name
+        const name = updates.name || '';
+        const firstName = updates.first_name || updates.firstName || name.split(' ')[0] || '';
+        const lastName = updates.last_name || updates.lastName || name.split(' ').slice(1).join(' ') || '';
+        
         const updatedStaff = await sql`
-          UPDATE staff 
-          SET 
-              first_name = COALESCE(${updates.first_name || updates.firstName}, first_name),
-              last_name = COALESCE(${updates.last_name || updates.lastName}, last_name),
+          UPDATE staff
+          SET
+              first_name = COALESCE(${firstName}, first_name),
+              last_name = COALESCE(${lastName}, last_name),
               email = COALESCE(${updates.email}, email),
               phone = COALESCE(${updates.phone}, phone),
               position = COALESCE(${updates.position}, position),
               department = COALESCE(${updates.department}, department),
               status = COALESCE(${updates.status}, status),
-              hire_date = COALESCE(${updates.hire_date || updates.hireDate}, hire_date),
+              join_date = COALESCE(${updates.join_date || updates.startDate}, join_date),
               updated_at = NOW()
           WHERE id = ${req.query.id as string}
-          RETURNING *, CONCAT(first_name, ' ', last_name) as full_name
+          RETURNING *, CONCAT(first_name, ' ', last_name) as name, CONCAT(first_name, ' ', last_name) as full_name
         `;
         
-        if (updatedStaff.length === 0) {
+        const updatedStaffRows = updatedStaff as any[];
+        if (updatedStaffRows.length === 0) {
           return res.status(404).json({ 
             success: false, 
             error: 'Staff member not found' 
@@ -234,14 +265,14 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
         }
         
         // Log successful staff update
-        if (updatedStaff[0]) {
+        if (updatedStaffRows[0]) {
           logUpdate('staff', req.query.id as string, {
             updated_fields: Object.keys(updates),
-            name: updatedStaff[0].full_name
+            name: updatedStaffRows[0].full_name
           });
         }
         
-        res.status(200).json({ success: true, data: updatedStaff[0] });
+        res.status(200).json({ success: true, data: updatedStaffRows[0] });
         break;
       }
 
@@ -262,8 +293,29 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
       default:
         res.status(405).json({ success: false, error: 'Method not allowed' });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('API Error:', error);
-    res.status(500).json({ success: false, error: (error as Error).message });
+    
+    // Handle specific database errors
+    if (error.code === '23505') { // Unique constraint violation
+      if (error.constraint === 'staff_employee_id_unique') {
+        return res.status(409).json({
+          success: false,
+          error: 'Employee ID already exists. Please use a different employee ID.'
+        });
+      }
+      if (error.constraint === 'staff_email_unique') {
+        return res.status(409).json({
+          success: false,
+          error: 'Email address already exists. Please use a different email address.'
+        });
+      }
+      return res.status(409).json({
+        success: false,
+        error: 'Duplicate entry. This record already exists.'
+      });
+    }
+    
+    res.status(500).json({ success: false, error: error.message || 'Internal server error' });
   }
 })
