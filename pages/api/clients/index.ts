@@ -55,8 +55,9 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
             async () => {
               // Base query that we'll filter based on parameters
               if (search && status) {
+                const searchTerm = `%${search}%`;
                 return sql`
-                  SELECT 
+                  SELECT
                     c.*,
                     COUNT(DISTINCT p.id) as project_count,
                     COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
@@ -64,16 +65,17 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
                   FROM clients c
                   LEFT JOIN projects p ON p.client_id = c.id::text::uuid
                   WHERE (
-                    LOWER(c.client_name) LIKE LOWER(${'%' + search + '%'}) OR 
-                    LOWER(c.contact_person) LIKE LOWER(${'%' + search + '%'}) OR 
-                    LOWER(c.email) LIKE LOWER(${'%' + search + '%'})
+                    LOWER(c.company_name) LIKE LOWER(${searchTerm}) OR
+                    LOWER(c.contact_person) LIKE LOWER(${searchTerm}) OR
+                    LOWER(c.email) LIKE LOWER(${searchTerm})
                   ) AND c.status = ${status}
                   GROUP BY c.id
-                  ORDER BY c.client_name ASC NULLS LAST
+                  ORDER BY c.company_name ASC NULLS LAST
                 `;
               } else if (search) {
+                const searchTerm = `%${search}%`;
                 return sql`
-                  SELECT 
+                  SELECT
                     c.*,
                     COUNT(DISTINCT p.id) as project_count,
                     COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
@@ -81,16 +83,16 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
                   FROM clients c
                   LEFT JOIN projects p ON p.client_id = c.id::text::uuid
                   WHERE (
-                    LOWER(c.client_name) LIKE LOWER(${'%' + search + '%'}) OR 
-                    LOWER(c.contact_person) LIKE LOWER(${'%' + search + '%'}) OR 
-                    LOWER(c.email) LIKE LOWER(${'%' + search + '%'})
+                    LOWER(c.company_name) LIKE LOWER(${searchTerm}) OR
+                    LOWER(c.contact_person) LIKE LOWER(${searchTerm}) OR
+                    LOWER(c.email) LIKE LOWER(${searchTerm})
                   )
                   GROUP BY c.id
-                  ORDER BY c.client_name ASC NULLS LAST
+                  ORDER BY c.company_name ASC NULLS LAST
                 `;
               } else if (status) {
                 return sql`
-                  SELECT 
+                  SELECT
                     c.*,
                     COUNT(DISTINCT p.id) as project_count,
                     COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
@@ -99,11 +101,11 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
                   LEFT JOIN projects p ON p.client_id = c.id::text::uuid
                   WHERE c.status = ${status}
                   GROUP BY c.id
-                  ORDER BY c.client_name ASC NULLS LAST
+                  ORDER BY c.company_name ASC NULLS LAST
                 `;
               } else {
                 return sql`
-                  SELECT 
+                  SELECT
                     c.*,
                     COUNT(DISTINCT p.id) as project_count,
                     COUNT(DISTINCT CASE WHEN p.status = 'active' THEN p.id END) as active_projects,
@@ -111,7 +113,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
                   FROM clients c
                   LEFT JOIN projects p ON p.client_id = c.id::text::uuid
                   GROUP BY c.id
-                  ORDER BY c.client_name ASC NULLS LAST
+                  ORDER BY c.company_name ASC NULLS LAST
                 `;
               }
             },
@@ -133,7 +135,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
         const clientData = req.body;
         const newClient = await sql`
           INSERT INTO clients (
-            client_code, client_name, contact_person, email, phone,
+            client_code, company_name, contact_person, email, phone,
             address, city, state, country, status
           )
           VALUES (
@@ -163,7 +165,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
         const updatedClient = await sql`
           UPDATE clients 
           SET 
-              client_name = COALESCE(${updates.client_name || updates.clientName || updates.name || updates.company_name}, client_name),
+              company_name = COALESCE(${updates.client_name || updates.clientName || updates.name || updates.company_name}, company_name),
               contact_person = COALESCE(${updates.contact_person || updates.contactPerson}, contact_person),
               email = COALESCE(${updates.email}, email),
               phone = COALESCE(${updates.phone}, phone),

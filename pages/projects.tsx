@@ -5,7 +5,19 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { useProjects, useCreateProject, useDeleteProject } from '@/hooks/useProjects';
 import { useStore } from '@/store/useStore';
 import { useForm } from 'react-hook-form';
-import type { NewProject } from '@/lib/db';
+
+// Define NewProject type inline
+interface NewProject {
+  name: string;
+  description?: string;
+  status?: string;
+  clientId?: string;
+  projectType?: string;
+  priority?: string;
+  startDate?: string;
+  endDate?: string;
+  budget?: number;
+}
 
 export default function ProjectsPage() {
   // For testing: mock user

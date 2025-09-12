@@ -31,3 +31,7 @@ export { SOWHealthService } from './healthService';
 
 // Main service orchestrator
 export { NeonSOWService } from './neonSOWService';
+
+// API-based service
+export { ApiSOWService } from './apiSOWService';
+export { apiSOWService } from './apiSOWService';

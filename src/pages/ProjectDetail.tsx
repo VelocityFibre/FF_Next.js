@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useProject, useProjectHierarchy, useDeleteProject } from '@/hooks/useProjects';
 import { EnhancedSOWDisplay } from '@/components/sow/EnhancedSOWDisplay';
 
@@ -16,9 +16,13 @@ import { ProjectTimelineTab } from './detail/ProjectTimelineTab';
 import { ProjectDetailLoading } from './detail/ProjectDetailLoading';
 import { ProjectDetailNotFound } from './detail/ProjectDetailNotFound';
 
-export function ProjectDetail() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+interface ProjectDetailProps {
+  projectId: string;
+}
+
+export function ProjectDetail({ projectId }: ProjectDetailProps) {
+  const router = useRouter();
+  const id = projectId;
   type TabId = 'overview' | 'hierarchy' | 'sow' | 'timeline';
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   
@@ -31,13 +35,13 @@ export function ProjectDetail() {
   }
 
   if (error || !project) {
-    return <ProjectDetailNotFound onNavigateBack={() => navigate('/app/projects')} />;
+    return <ProjectDetailNotFound onNavigateBack={() => router.push('/projects')} />;
   }
 
   const handleDeleteProject = async () => {
     if (window.confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
       await deleteMutation.mutateAsync(id!);
-      navigate('/app/projects');
+      router.push('/projects');
     }
   };
 
@@ -45,8 +49,8 @@ export function ProjectDetail() {
     <div className="max-w-7xl mx-auto space-y-6">
       <ProjectDetailHeader
         project={project}
-        onNavigateBack={() => navigate('/app/projects')}
-        onEdit={() => navigate(`/app/projects/${id}/edit`)}
+        onNavigateBack={() => router.push('/projects')}
+        onEdit={() => router.push(`/projects/${id}/edit`)}
         onDelete={handleDeleteProject}
       />
 
@@ -87,3 +91,6 @@ export function ProjectDetail() {
     </div>
   );
 }
+
+// Default export for Next.js dynamic import
+export default ProjectDetail;

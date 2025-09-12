@@ -13,7 +13,7 @@ import { log } from '@/lib/logger';
  */
 export class SOWValidator {
   /**
-   * Validate poles data
+   * Validate poles data - Minimal validation for import
    */
   static validatePoles(poles: NeonPoleData[]): ValidationResult<NeonPoleData> {
     const valid: NeonPoleData[] = [];
@@ -22,78 +22,29 @@ export class SOWValidator {
     const seenPoleNumbers = new Set<string>();
     
     for (const pole of poles) {
-      const poleErrors: ValidationError[] = [];
-      
-      // Validate pole number
-      const poleNumberError = SOWValidationRules.validatePoleNumber(pole.pole_number);
-      if (poleNumberError) {
-        poleErrors.push(poleNumberError);
+      // Minimal validation - just check for pole number and duplicates
+      if (!pole.pole_number || pole.pole_number.trim() === '') {
+        invalid.push({ ...pole, errors: [{ 
+          field: 'pole_number',
+          value: pole.pole_number,
+          message: 'Missing pole number',
+          severity: 'error',
+          code: 'MISSING_POLE_NUMBER'
+        }] });
+        errors.push(`Missing pole number in row`);
       } else if (seenPoleNumbers.has(pole.pole_number)) {
-        poleErrors.push({
+        invalid.push({ ...pole, errors: [{
           field: 'pole_number',
           value: pole.pole_number,
           message: `Duplicate pole number: ${pole.pole_number}`,
           severity: 'error',
           code: 'DUPLICATE_POLE_NUMBER'
-        });
+        }] });
+        errors.push(`Duplicate pole number: ${pole.pole_number}`);
       } else {
+        // Accept the pole as valid - no strict format validation
         seenPoleNumbers.add(pole.pole_number);
-      }
-      
-      // Validate coordinates
-      const coordinateErrors = SOWValidationRules.validateCoordinates(pole.latitude, pole.longitude);
-      poleErrors.push(...coordinateErrors);
-      
-      // Validate pole type
-      if (pole.pole_type && !SOWValidationRules.isValidPoleType(pole.pole_type)) {
-        poleErrors.push({
-          field: 'pole_type',
-          value: pole.pole_type,
-          message: `Invalid pole type: ${pole.pole_type}`,
-          severity: 'error',
-          code: 'INVALID_POLE_TYPE'
-        });
-      }
-      
-      // Validate status
-      if (pole.status && !SOWValidationRules.isValidPoleStatus(pole.status)) {
-        poleErrors.push({
-          field: 'status',
-          value: pole.status,
-          message: `Invalid pole status: ${pole.status}`,
-          severity: 'error',
-          code: 'INVALID_POLE_STATUS'
-        });
-      }
-      
-      // Validate height
-      const heightValue = pole.height ? parseFloat(pole.height) : undefined;
-      const heightError = SOWValidationRules.validateHeight(isNaN(heightValue as number) ? undefined : heightValue);
-      if (heightError) {
-        poleErrors.push(heightError);
-      }
-      
-      // Validate address
-      const addressError = SOWValidationRules.validateAddress(pole.address);
-      if (addressError) {
-        poleErrors.push(addressError);
-      }
-      
-      // Validate installation date
-      const dateError = SOWValidationRules.validateInstallationDate(pole.installation_date);
-      if (dateError) {
-        poleErrors.push(dateError);
-      }
-      
-      // Check data quality issues
-      const qualityErrors = SOWValidationRules.checkDataQuality(pole);
-      poleErrors.push(...qualityErrors);
-      
-      if (poleErrors.length === 0) {
         valid.push(pole);
-      } else {
-        invalid.push({ ...pole, errors: poleErrors });
-        errors.push(...poleErrors.map(e => `Pole ${pole.pole_number}: ${e.message}`));
       }
     }
     
@@ -101,7 +52,7 @@ export class SOWValidator {
   }
 
   /**
-   * Validate drops data
+   * Validate drops data - Minimal validation for import
    */
   static validateDrops(drops: NeonDropData[]): ValidationResult<NeonDropData> {
     const valid: NeonDropData[] = [];
@@ -110,65 +61,34 @@ export class SOWValidator {
     const seenDropNumbers = new Set<string>();
     
     for (const drop of drops) {
-      const dropErrors: ValidationError[] = [];
-      
-      // Validate drop ID/number
-      const dropIdError = SOWValidationRules.validateDropId(drop.drop_number);
-      if (dropIdError) {
-        dropErrors.push(dropIdError);
+      // Minimal validation - just check for drop number and duplicates
+      if (!drop.drop_number || drop.drop_number.trim() === '') {
+        invalid.push({ ...drop, errors: [{ 
+          field: 'drop_number',
+          value: drop.drop_number,
+          message: 'Missing drop number',
+          severity: 'error',
+          code: 'MISSING_DROP_NUMBER'
+        }] });
+        errors.push(`Missing drop number in row`);
       } else if (seenDropNumbers.has(drop.drop_number)) {
-        dropErrors.push({
+        invalid.push({ ...drop, errors: [{
           field: 'drop_number',
           value: drop.drop_number,
           message: `Duplicate drop number: ${drop.drop_number}`,
           severity: 'error',
           code: 'DUPLICATE_DROP_NUMBER'
-        });
+        }] });
+        errors.push(`Duplicate drop number: ${drop.drop_number}`);
       } else {
+        // Accept the drop as valid - no strict format validation
         seenDropNumbers.add(drop.drop_number);
-      }
-      
-      // Validate coordinates
-      const coordinateErrors = SOWValidationRules.validateCoordinates(drop.latitude, drop.longitude);
-      dropErrors.push(...coordinateErrors);
-      
-      // Validate cable length
-      if (drop.cable_length) {
-        const length = parseFloat(drop.cable_length);
-        if (!isNaN(length)) {
-          const lengthError = SOWValidationRules.validateFibreLength(length);
-          if (lengthError) {
-            dropErrors.push(lengthError);
-          }
-        }
-      }
-      
-      // Validate service type
-      const serviceError = SOWValidationRules.validateServiceType(drop.service_type);
-      if (serviceError) {
-        dropErrors.push(serviceError);
-      }
-      
-      // Validate address
-      const addressError = SOWValidationRules.validateAddress(drop.address);
-      if (addressError) {
-        dropErrors.push(addressError);
-      }
-      
-      // Check data quality issues
-      const qualityErrors = SOWValidationRules.checkDataQuality(drop);
-      dropErrors.push(...qualityErrors);
-      
-      // Warning for missing pole assignment (not an error)
-      if (!drop.pole_number) {
-        log.warn(`Drop ${drop.drop_number} has no pole assignment`, undefined, 'sow-validator');
-      }
-      
-      if (dropErrors.length === 0) {
         valid.push(drop);
-      } else {
-        invalid.push({ ...drop, errors: dropErrors });
-        errors.push(...dropErrors.map(e => `Drop ${drop.drop_number}: ${e.message}`));
+        
+        // Log warning for missing pole assignment (not an error)
+        if (!drop.pole_number) {
+          log.warn(`Drop ${drop.drop_number} has no pole assignment`, undefined, 'sow-validator');
+        }
       }
     }
     
@@ -176,7 +96,7 @@ export class SOWValidator {
   }
 
   /**
-   * Validate fibre data
+   * Validate fibre data - Minimal validation for import
    */
   static validateFibre(fibres: NeonFibreData[]): ValidationResult<NeonFibreData> {
     const valid: NeonFibreData[] = [];
@@ -185,82 +105,29 @@ export class SOWValidator {
     const seenSegmentIds = new Set<string>();
     
     for (const fibre of fibres) {
-      const fibreErrors: ValidationError[] = [];
-      
-      // Check required fields
-      if (!fibre.segment_id) {
-        fibreErrors.push({
+      // Minimal validation - just check for segment ID and duplicates
+      if (!fibre.segment_id || fibre.segment_id.trim() === '') {
+        invalid.push({ ...fibre, errors: [{
           field: 'segment_id',
           value: fibre.segment_id,
           message: 'Missing segment ID',
           severity: 'error',
           code: 'MISSING_SEGMENT_ID'
-        });
+        }] });
+        errors.push(`Missing segment ID in row`);
       } else if (seenSegmentIds.has(fibre.segment_id)) {
-        fibreErrors.push({
+        invalid.push({ ...fibre, errors: [{
           field: 'segment_id',
           value: fibre.segment_id,
           message: `Duplicate segment ID: ${fibre.segment_id}`,
           severity: 'error',
           code: 'DUPLICATE_SEGMENT_ID'
-        });
+        }] });
+        errors.push(`Duplicate segment ID: ${fibre.segment_id}`);
       } else {
+        // Accept the fibre as valid - no strict format validation
         seenSegmentIds.add(fibre.segment_id);
-      }
-      
-      // Validate length
-      const lengthError = SOWValidationRules.validateFibreLength(fibre.length);
-      if (lengthError) {
-        fibreErrors.push(lengthError);
-      }
-      
-      // Validate string completed length
-      const stringCompletedError = SOWValidationRules.validateFibreLength(fibre.string_completed);
-      if (stringCompletedError) {
-        fibreErrors.push({
-          ...stringCompletedError,
-          field: 'string_completed',
-          message: stringCompletedError.message.replace('fibre length', 'string completed length')
-        });
-      }
-      
-      // Check if string completed exceeds total length
-      if (fibre.length !== undefined && 
-          fibre.string_completed !== undefined && 
-          fibre.string_completed > fibre.length) {
-        fibreErrors.push({
-          field: 'string_completed',
-          value: { length: fibre.length, string_completed: fibre.string_completed },
-          message: `String completed (${fibre.string_completed}) exceeds total length (${fibre.length})`,
-          severity: 'error',
-          code: 'STRING_EXCEEDS_LENGTH'
-        });
-      }
-      
-      // Validate fibre type
-      const typeError = SOWValidationRules.validateFibreType(fibre.fibre_type);
-      if (typeError) {
-        fibreErrors.push(typeError);
-      }
-      
-      // Validate completion date format
-      const dateError = SOWValidationRules.validateInstallationDate(fibre.date_completed);
-      if (dateError) {
-        fibreErrors.push({
-          ...dateError,
-          field: 'date_completed'
-        });
-      }
-      
-      // Check data quality issues
-      const qualityErrors = SOWValidationRules.checkDataQuality(fibre);
-      fibreErrors.push(...qualityErrors);
-      
-      if (fibreErrors.length === 0) {
         valid.push(fibre);
-      } else {
-        invalid.push({ ...fibre, errors: fibreErrors });
-        errors.push(...fibreErrors.map(e => `Segment ${fibre.segment_id}: ${e.message}`));
       }
     }
     

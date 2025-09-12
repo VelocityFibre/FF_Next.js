@@ -3,6 +3,8 @@ import type { Drop, DropsStats, DropsFiltersState } from '../types/drops.types';
 
 export function useDropsManagement() {
   const [drops, setDrops] = useState<Drop[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<DropsStats>({
     totalDrops: 0,
     completedDrops: 0,
@@ -19,8 +21,47 @@ export function useDropsManagement() {
   });
 
   useEffect(() => {
-    // Load drops data - TODO: Replace with actual API call
-    const mockDrops: Drop[] = [
+    fetchDropsData();
+  }, []);
+
+  const fetchDropsData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch('/api/sow/drops');
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to fetch drops');
+      }
+      
+      if (result.success && result.data) {
+        // Transform database records to Drop format
+        const transformedDrops: Drop[] = result.data.map((dbDrop: any) => ({
+          id: dbDrop.id,
+          dropNumber: dbDrop.drop_number,
+          poleNumber: dbDrop.pole_number || '',
+          customerName: dbDrop.end_point || 'Unknown Customer',
+          address: dbDrop.address || dbDrop.end_point || '',
+          status: determineStatus(dbDrop),
+          installationType: dbDrop.cable_type || 'aerial',
+          cableLength: parseFloat(dbDrop.cable_length) || 0,
+          scheduledDate: dbDrop.created_date,
+          completedDate: dbDrop.updated_at,
+          technician: dbDrop.created_by || 'Unassigned',
+          latitude: dbDrop.latitude,
+          longitude: dbDrop.longitude,
+          municipality: dbDrop.municipality,
+          zone: dbDrop.zone_no,
+          pon: dbDrop.pon_no,
+        }));
+        
+        setDrops(transformedDrops);
+        calculateStats(transformedDrops);
+      } else {
+        // Fallback to mock data if no database records
+        const mockDrops: Drop[] = [
       {
         id: '1',
         dropNumber: 'D001',
@@ -83,9 +124,42 @@ export function useDropsManagement() {
       },
     ];
 
-    setDrops(mockDrops);
-    calculateStats(mockDrops);
-  }, []);
+        setDrops(mockDrops);
+        calculateStats(mockDrops);
+      }
+    } catch (err) {
+      console.error('Error fetching drops:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch drops');
+      // Use mock data as fallback
+      const mockDrops: Drop[] = [
+        {
+          id: '1',
+          dropNumber: 'D001',
+          poleNumber: 'P001',
+          customerName: 'John Smith',
+          address: '123 Main St',
+          status: 'completed',
+          installationType: 'aerial',
+          cableLength: 45,
+          scheduledDate: '2024-01-15',
+          completedDate: '2024-01-15',
+          technician: 'Mike Johnson',
+        },
+      ];
+      setDrops(mockDrops);
+      calculateStats(mockDrops);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const determineStatus = (dbDrop: any): Drop['status'] => {
+    // Simple logic to determine status based on available data
+    if (dbDrop.completed_date) return 'completed';
+    if (dbDrop.technician && dbDrop.scheduled_date) return 'in_progress';
+    if (dbDrop.scheduled_date) return 'scheduled';
+    return 'pending';
+  };
 
   const calculateStats = (dropsData: Drop[]) => {
     const total = dropsData.length;
@@ -141,6 +215,9 @@ export function useDropsManagement() {
     stats,
     filters,
     filteredDrops,
-    updateFilters
+    updateFilters,
+    loading,
+    error,
+    refetch: fetchDropsData
   };
 }

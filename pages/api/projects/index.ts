@@ -3,10 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from '../../../lib/auth-mock';
 import { neon } from '@neondatabase/serverless';
 import { safeArrayQuery, safeObjectQuery, safeMutation } from '../../../lib/safe-query';
-import { apiResponse, ErrorCode } from '../../../src/lib/apiResponse';
+import { apiResponse, ErrorCode } from '../../../lib/apiResponse';
 import { logCreate, logUpdate, logDelete } from '../../../lib/db-logger';
 
-const sql = neon(process.env.DATABASE_URL!);
+// Create a new connection for each request to avoid connection pooling issues
+const getSql = () => neon(process.env.DATABASE_URL!);
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,11 +32,29 @@ export default async function handler(
       case 'GET':
         // Get all projects or single project by ID
         if (req.query.id) {
+          const sql = getSql();
           const project = await safeArrayQuery(
             async () => sql`
-              SELECT p.*, c.client_name 
+              SELECT 
+                p.id,
+                p.project_code,
+                p.project_name as name,
+                p.client_id,
+                p.description,
+                p.project_type as type,
+                p.status,
+                p.priority,
+                p.start_date,
+                p.end_date,
+                p.budget,
+                p.actual_cost,
+                p.project_manager,
+                p.progress,
+                p.created_at,
+                p.updated_at,
+                c.company_name as client_name
               FROM projects p
-              LEFT JOIN clients c ON p.client_id = c.id::text::uuid
+              LEFT JOIN clients c ON p.client_id = c.id
               WHERE p.id = ${req.query.id}
             `,
             { logError: true }
@@ -47,11 +66,29 @@ export default async function handler(
           
           return apiResponse.success(res, project[0]);
         } else {
+          const sql = getSql();
           const projects = await safeArrayQuery(
             async () => sql`
-              SELECT p.*, c.client_name 
+              SELECT 
+                p.id,
+                p.project_code,
+                p.project_name as name,
+                p.client_id,
+                p.description,
+                p.project_type as type,
+                p.status,
+                p.priority,
+                p.start_date,
+                p.end_date,
+                p.budget,
+                p.actual_cost,
+                p.project_manager,
+                p.progress,
+                p.created_at,
+                p.updated_at,
+                c.company_name as client_name
               FROM projects p
-              LEFT JOIN clients c ON p.client_id = c.id::text::uuid
+              LEFT JOIN clients c ON p.client_id = c.id
               ORDER BY p.created_at DESC NULLS LAST
             `,
             { logError: true, retryCount: 2 }
@@ -69,6 +106,7 @@ export default async function handler(
       case 'POST': {
         // Create new project
         const projectData = req.body;
+        const sql = getSql();
         const result = await safeMutation(
           async () => sql`
             INSERT INTO projects (
@@ -119,6 +157,7 @@ export default async function handler(
         }
         
         const updateData = req.body;
+        const sql = getSql();
         const updateResult = await safeMutation(
           async () => sql`
             UPDATE projects SET
@@ -167,6 +206,7 @@ export default async function handler(
           return apiResponse.validationError(res, { id: 'Project ID is required' });
         }
         
+        const sql = getSql();
         const deleteResult = await safeMutation(
           async () => sql`DELETE FROM projects WHERE id = ${req.query.id}`,
           { logError: true }

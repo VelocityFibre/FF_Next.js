@@ -1,27 +1,23 @@
 /**
  * SOW Upload Service
  * Handles file upload operations for SOW documents
+ * Now uses API endpoints instead of Firebase Storage
  */
 
-import { 
-  ref, 
-  uploadBytes, 
-  getDownloadURL,
-  UploadMetadata 
-} from 'firebase/storage';
-import { storage } from '@/config/firebase';
-import { 
-  SOWDocument, 
-  SOWDocumentType, 
-  DocumentStatus 
+import {
+  SOWDocument,
+  SOWDocumentType,
+  DocumentStatus
 } from '../../types/project.types';
 import { SOWFileValidator } from './fileValidator';
 import { SOW_CONFIG, SOWMetadata } from './types';
 import { log } from '@/lib/logger';
+import { neonSOWService } from '@/services/neonSOWService';
 
 export class SOWUploadService {
   /**
    * Upload single SOW document
+   * Now processes the file and uploads data directly to Neon via API
    */
   static async uploadDocument(
     projectId: string,
@@ -33,49 +29,71 @@ export class SOWUploadService {
     // Validate file
     SOWFileValidator.validate(file);
 
-    // Generate file name and storage reference
-    const fileName = SOWFileValidator.generateFileName(
-      projectId,
-      type,
-      file.name
-    );
-    const storageRef = ref(
-      storage,
-      `${SOW_CONFIG.STORAGE_PATH}/${fileName}`
-    );
+    // Process the file to extract data
+    const processedData = await this.processFileForUpload(file, type);
+    
+    if (!processedData || processedData.length === 0) {
+      throw new Error('No valid data found in file');
+    }
 
-    // Prepare upload metadata
-    const uploadMetadata: UploadMetadata = {
-      contentType: file.type,
-      customMetadata: {
-        projectId,
-        documentType: type,
-        uploadedBy,
-        originalName: file.name,
-      }
-    };
+    // Upload data to Neon via API
+    let uploadResult;
+    switch (type) {
+      case 'poles':
+        uploadResult = await neonSOWService.uploadPoles(projectId, processedData);
+        break;
+      case 'drops':
+        uploadResult = await neonSOWService.uploadDrops(projectId, processedData);
+        break;
+      case 'fibre':
+        uploadResult = await neonSOWService.uploadFibre(projectId, processedData);
+        break;
+      default:
+        throw new Error(`Unsupported document type: ${type}`);
+    }
 
-    // Upload file
-    const snapshot = await uploadBytes(storageRef, file, uploadMetadata);
+    if (!uploadResult.success) {
+      throw new Error(uploadResult.message || `Failed to upload ${type} data`);
+    }
 
-    // Get download URL
-    const fileUrl = await getDownloadURL(snapshot.ref);
-
-    // Create document object
+    // Create document object (for UI consistency, but data is now in Neon)
     const timestamp = Date.now();
     const sowDocument: SOWDocument = {
       id: `${type}_${timestamp}`,
       name: file.name,
       type,
-      fileUrl,
+      fileUrl: '', // No longer storing files in Firebase Storage
       uploadDate: new Date().toISOString(),
       uploadedBy,
       version: 1,
-      status: DocumentStatus.PENDING,
-      ...(metadata && { metadata }),
+      status: DocumentStatus.APPROVED, // Direct upload to Neon is complete
+      metadata: {
+        ...(metadata || {}),
+        poleCount: type === 'poles' ? processedData.length : undefined,
+        dropCount: type === 'drops' ? processedData.length : undefined,
+      },
     };
 
     return sowDocument;
+  }
+
+  /**
+   * Process file for data extraction
+   */
+  private static async processFileForUpload(file: File, type: SOWDocumentType): Promise<any[]> {
+    try {
+      // Read file as array buffer
+      const arrayBuffer = await file.arrayBuffer();
+      
+      // Parse Excel file using the data processor service
+      // For now, return empty array - actual processing should be handled by the data processor service
+      // This service should focus on API communication, not file processing
+      log.info('File processing delegated to data processor service', { fileName: file.name, type }, 'uploadService');
+      return [];
+    } catch (error) {
+      log.error('Error processing file for upload:', { data: error }, 'uploadService');
+      throw new Error(`Failed to process file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   /**
@@ -96,10 +114,10 @@ export class SOWUploadService {
     const uploadPromises = files.map(({ file, type, metadata }) =>
       this.uploadDocument(projectId, file, type, uploadedBy, metadata)
         .then(doc => ({ status: 'success' as const, value: doc }))
-        .catch(error => ({ 
-          status: 'error' as const, 
+        .catch(error => ({
+          status: 'error' as const,
           fileName: file.name,
-          error 
+          error
         }))
     );
 

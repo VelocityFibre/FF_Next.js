@@ -48,9 +48,7 @@ class SOWService {
         metadata
       );
 
-      // Add to project
-      await SOWDocumentService.addToProject(projectId, document);
-
+      // Document is now handled by API endpoints - no need to add to project separately
       return document;
     } catch (error) {
       log.error('Error uploading SOW document:', { data: error }, 'sowService');
@@ -77,11 +75,6 @@ class SOWService {
         uploadedBy
       );
 
-      // Add successful uploads to project
-      for (const document of result.successful) {
-        await SOWDocumentService.addToProject(projectId, document);
-      }
-
       if (result.failed.length > 0) {
         log.warn('Some files failed to upload:', { data: result.failed }, 'sowService');
       }
@@ -95,48 +88,42 @@ class SOWService {
 
   /**
    * Update document status
+   * @deprecated Use API endpoints directly for document management
    */
   async updateDocumentStatus(
     projectId: string,
     documentId: string,
     status: DocumentStatus
   ): Promise<void> {
-    try {
-      await SOWDocumentService.updateStatus(projectId, documentId, status);
-    } catch (error) {
-      log.error('Error updating document status:', { data: error }, 'sowService');
-      throw new Error('Failed to update document status');
-    }
+    log.warn('updateDocumentStatus is deprecated. Use API endpoints for document management.',
+      { projectId, documentId, status }, 'sowService');
+    // No-op - document status is managed by the Neon database via API
   }
 
   /**
    * Delete SOW document
+   * @deprecated Use API endpoints directly for document management
    */
   async deleteSOWDocument(
     projectId: string,
     documentId: string
   ): Promise<void> {
-    try {
-      await SOWDocumentService.deleteDocument(projectId, documentId);
-    } catch (error) {
-      log.error('Error deleting SOW document:', { data: error }, 'sowService');
-      throw new Error('Failed to delete SOW document');
-    }
+    log.warn('deleteSOWDocument is deprecated. Use API endpoints for document management.',
+      { projectId, documentId }, 'sowService');
+    // No-op - document deletion should be handled via API
   }
 
   /**
    * Get SOW documents by type
+   * @deprecated Use API endpoints directly for data retrieval
    */
   async getSOWDocumentsByType(
     projectId: string,
     type: SOWDocumentType
   ): Promise<SOWDocument[]> {
-    try {
-      return await SOWDocumentService.getByType(projectId, type);
-    } catch (error) {
-      log.error('Error fetching SOW documents by type:', { data: error }, 'sowService');
-      throw new Error('Failed to fetch SOW documents');
-    }
+    log.warn('getSOWDocumentsByType is deprecated. Use API endpoints for data retrieval.',
+      { projectId, type }, 'sowService');
+    return [];
   }
 
   /**
@@ -167,34 +154,26 @@ class SOWService {
 
   /**
    * Get all SOW documents for a project
+   * @deprecated Use API endpoints directly for data retrieval
    */
   async getAllSOWDocuments(projectId: string): Promise<SOWDocument[]> {
-    try {
-      return await SOWDocumentService.getAll(projectId);
-    } catch (error) {
-      log.error('Error fetching all SOW documents:', { data: error }, 'sowService');
-      throw new Error('Failed to fetch SOW documents');
-    }
+    log.warn('getAllSOWDocuments is deprecated. Use API endpoints for data retrieval.',
+      { projectId }, 'sowService');
+    return [];
   }
 
   /**
    * Update document metadata
+   * @deprecated Use API endpoints directly for document management
    */
   async updateDocumentMetadata(
     projectId: string,
     documentId: string,
     metadata: any
   ): Promise<void> {
-    try {
-      await SOWDocumentService.updateMetadata(
-        projectId,
-        documentId,
-        metadata
-      );
-    } catch (error) {
-      log.error('Error updating document metadata:', { data: error }, 'sowService');
-      throw new Error('Failed to update document metadata');
-    }
+    log.warn('updateDocumentMetadata is deprecated. Use API endpoints for document management.',
+      { projectId, documentId }, 'sowService');
+    // No-op - metadata is managed by the Neon database via API
   }
 }
 

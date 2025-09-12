@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useProjectSOW, useProjectPoles, useProjectDrops, useProjectFibre } from '@/hooks/useSOW';
+import { useProjectSOW, useProjectPoles, useProjectDrops, useProjectFibre } from '@/hooks/useNeonSOW';
 import { SOWUploadSection } from '@/modules/projects/components/SOWUploadSection';
 
 // Import split components

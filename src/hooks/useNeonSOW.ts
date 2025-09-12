@@ -101,3 +101,36 @@ export function useHasSOWData(projectId?: string) {
     summary: sowData?.data?.summary || { totalPoles: 0, totalDrops: 0, totalFibre: 0 }
   };
 }
+
+/**
+ * Hook to fetch poles data for a project
+ */
+export function useProjectPoles(projectId?: string) {
+  const { data: sowData, ...rest } = useProjectSOW(projectId);
+  return {
+    data: sowData?.data?.poles || [],
+    ...rest
+  };
+}
+
+/**
+ * Hook to fetch drops data for a project
+ */
+export function useProjectDrops(projectId?: string) {
+  const { data: sowData, ...rest } = useProjectSOW(projectId);
+  return {
+    data: sowData?.data?.drops || [],
+    ...rest
+  };
+}
+
+/**
+ * Hook to fetch fibre data for a project
+ */
+export function useProjectFibre(projectId?: string) {
+  const { data: sowData, ...rest } = useProjectSOW(projectId);
+  return {
+    data: sowData?.data?.fibre || [],
+    ...rest
+  };
+}

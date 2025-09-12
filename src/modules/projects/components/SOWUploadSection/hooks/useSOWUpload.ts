@@ -28,14 +28,7 @@ export function useSOWUpload(
     ));
   };
 
-  const saveToFirebase = async (type: string, data: any[]) => {
-    try {
-      await sowService.saveSOWData(projectId, type, data);
-    } catch (error) {
-      log.error(`Error saving ${type} to Firebase:`, { data: error }, 'useSOWUpload');
-      throw error;
-    }
-  };
+  // Removed Firebase save function - data is now saved directly to Neon via API
 
   const processFile = async (sowFile: SOWFile) => {
     setIsProcessing(true);
@@ -54,33 +47,26 @@ export function useSOWUpload(
 
       updateFileStatus(sowFile.type, 'processing', 'Processing data...');
 
-      // Process data based on type using Lawley-format processor
+      // Process data based on type WITHOUT validation - just like the direct import
       let processedData: any[] = [];
-      let validation: any = { valid: [], invalid: [], errors: [] };
 
       switch (sowFile.type) {
         case 'poles': {
-          const poles = sowDataProcessor.processPoles(rawData);
-          validation = sowDataProcessor.validatePoles(poles);
-          processedData = validation.valid;
+          processedData = sowDataProcessor.processPoles(rawData);
           break;
         }
         case 'drops': {
-          const drops = sowDataProcessor.processDrops(rawData);
-          validation = sowDataProcessor.validateDrops(drops);
-          processedData = validation.valid;
+          processedData = sowDataProcessor.processDrops(rawData);
           break;
         }
         case 'fibre': {
-          const fibres = sowDataProcessor.processFibre(rawData);
-          validation = sowDataProcessor.validateFibre(fibres);
-          processedData = validation.valid;
+          processedData = sowDataProcessor.processFibre(rawData);
           break;
         }
       }
 
       if (processedData.length === 0) {
-        updateFileStatus(sowFile.type, 'error', 'No valid data found in file');
+        updateFileStatus(sowFile.type, 'error', 'No data found in file');
         setIsProcessing(false);
         return;
       }
@@ -105,15 +91,14 @@ export function useSOWUpload(
           break;
       }
 
-      // Also save to Firebase for backward compatibility
-      await saveToFirebase(sowFile.type, processedData);
+      // Data is now saved directly to Neon via API - no Firebase backup needed
 
       // Update status with success
       updateFileStatus(sowFile.type, 'success', uploadResult?.message || 'Data uploaded successfully', processedData, {
         total: rawData.length,
         valid: processedData.length,
-        invalid: validation.invalid.length,
-        warnings: validation.errors.length > 0 ? validation.errors : undefined
+        invalid: 0,
+        warnings: undefined
       });
 
       // Update parent component

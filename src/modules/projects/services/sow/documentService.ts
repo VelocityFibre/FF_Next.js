@@ -1,165 +1,91 @@
 /**
  * SOW Document Service
- * Handles document management operations in Firestore
+ * Handles document management operations using API endpoints
+ * Replaces Firebase Firestore operations with Neon database API calls
  */
 
-import { 
-  doc, 
-  updateDoc, 
-  arrayUnion, 
-  arrayRemove,
-  serverTimestamp 
-} from 'firebase/firestore';
-import { ref, deleteObject } from 'firebase/storage';
-import { db, storage } from '../../../../config/firebase';
-import { 
-  SOWDocument, 
-  SOWDocumentType, 
-  DocumentStatus 
+import {
+  SOWDocument,
+  SOWDocumentType,
+  DocumentStatus
 } from '../../types/project.types';
-import { projectService } from '../projectService/index';
 import { log } from '@/lib/logger';
 
 export class SOWDocumentService {
   /**
-   * Add document to project
+   * Note: This service is no longer used for SOW upload operations.
+   * SOW data is now uploaded directly to Neon via API endpoints.
+   * This service is kept for backward compatibility but should be deprecated.
+   */
+
+  /**
+   * Add document to project (No longer used - data goes directly to Neon)
    */
   static async addToProject(
-    projectId: string, 
+    projectId: string,
     document: SOWDocument
   ): Promise<void> {
-    const project = await projectService.getProjectById(projectId);
-    
-    if (!project) {
-      throw new Error('Project not found');
-    }
-
-    const docRef = doc(db, 'projects', projectId);
-    await updateDoc(docRef, {
-      sowDocuments: arrayUnion(document),
-      updatedAt: serverTimestamp(),
-    });
+    log.warn('SOWDocumentService.addToProject is deprecated. Use API endpoints directly.',
+      { projectId, documentType: document.type }, 'documentService');
+    // No-op - data is handled by API endpoints
   }
 
   /**
-   * Update document status
+   * Update document status (No longer used)
    */
   static async updateStatus(
     projectId: string,
     documentId: string,
     status: DocumentStatus
   ): Promise<void> {
-    const project = await projectService.getProjectById(projectId);
-    
-    if (!project) {
-      throw new Error('Project not found');
-    }
-
-    const updatedDocuments = project.sowDocuments.map(doc => {
-      if (doc.id === documentId) {
-        return { ...doc, status };
-      }
-      return doc;
-    });
-
-    const docRef = doc(db, 'projects', projectId);
-    await updateDoc(docRef, {
-      sowDocuments: updatedDocuments,
-      updatedAt: serverTimestamp(),
-    });
+    log.warn('SOWDocumentService.updateStatus is deprecated.',
+      { projectId, documentId, status }, 'documentService');
+    // No-op - status is managed by the Neon database
   }
 
   /**
-   * Delete SOW document
+   * Delete SOW document (No longer used)
    */
   static async deleteDocument(
     projectId: string,
     documentId: string
   ): Promise<void> {
-    const project = await projectService.getProjectById(projectId);
-    
-    if (!project) {
-      throw new Error('Project not found');
-    }
-
-    const documentToDelete = project.sowDocuments.find(
-      d => d.id === documentId
-    );
-    
-    if (!documentToDelete) {
-      throw new Error('Document not found');
-    }
-
-    // Try to delete from storage (don't fail if storage deletion fails)
-    try {
-      const storageRef = ref(storage, documentToDelete.fileUrl);
-      await deleteObject(storageRef);
-    } catch (storageError) {
-      log.warn('Error deleting file from storage:', { data: storageError }, 'documentService');
-    }
-
-    // Remove from project
-    const docRef = doc(db, 'projects', projectId);
-    await updateDoc(docRef, {
-      sowDocuments: arrayRemove(documentToDelete),
-      updatedAt: serverTimestamp(),
-    });
+    log.warn('SOWDocumentService.deleteDocument is deprecated.',
+      { projectId, documentId }, 'documentService');
+    // No-op - document deletion should be handled via API
   }
 
   /**
-   * Get documents by type
+   * Get documents by type (No longer used - use API endpoints)
    */
   static async getByType(
     projectId: string,
     type: SOWDocumentType
   ): Promise<SOWDocument[]> {
-    const project = await projectService.getProjectById(projectId);
-    
-    if (!project) {
-      throw new Error('Project not found');
-    }
-
-    return project.sowDocuments.filter(doc => doc.type === type);
+    log.warn('SOWDocumentService.getByType is deprecated. Use API endpoints for data retrieval.',
+      { projectId, type }, 'documentService');
+    return [];
   }
 
   /**
-   * Get all documents for a project
+   * Get all documents for a project (No longer used - use API endpoints)
    */
   static async getAll(projectId: string): Promise<SOWDocument[]> {
-    const project = await projectService.getProjectById(projectId);
-    
-    if (!project) {
-      throw new Error('Project not found');
-    }
-
-    return project.sowDocuments || [];
+    log.warn('SOWDocumentService.getAll is deprecated. Use API endpoints for data retrieval.',
+      { projectId }, 'documentService');
+    return [];
   }
 
   /**
-   * Update document metadata
+   * Update document metadata (No longer used)
    */
   static async updateMetadata(
     projectId: string,
     documentId: string,
     metadata: Record<string, unknown>
   ): Promise<void> {
-    const project = await projectService.getProjectById(projectId);
-    
-    if (!project) {
-      throw new Error('Project not found');
-    }
-
-    const updatedDocuments = project.sowDocuments.map(doc => {
-      if (doc.id === documentId) {
-        return { ...doc, metadata: { ...doc.metadata, ...metadata } };
-      }
-      return doc;
-    });
-
-    const docRef = doc(db, 'projects', projectId);
-    await updateDoc(docRef, {
-      sowDocuments: updatedDocuments,
-      updatedAt: serverTimestamp(),
-    });
+    log.warn('SOWDocumentService.updateMetadata is deprecated.',
+      { projectId, documentId }, 'documentService');
+    // No-op - metadata is managed by the Neon database
   }
 }

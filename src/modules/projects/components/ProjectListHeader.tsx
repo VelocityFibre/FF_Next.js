@@ -44,7 +44,7 @@ export function ProjectListHeader({ onImport, onExport, projectCount = 0 }: Proj
           )}
           
           <button
-            onClick={() => router.push('/projects/create')}
+            onClick={() => router.push('/projects/new')}
             className="flex items-center gap-2 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Plus className="h-4 w-4" />

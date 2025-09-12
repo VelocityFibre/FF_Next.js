@@ -43,33 +43,32 @@ export default withErrorHandler(async (
         FROM staff
       `,
       
-      // SOW statistics from imports (since we don't have poles/drops tables yet)
+      // SOW statistics - using sow_poles table instead of sow_imports
       sql`
-        SELECT 
-          COUNT(CASE WHEN import_type = 'poles' THEN 1 END) as pole_imports,
-          COUNT(CASE WHEN import_type = 'drops' THEN 1 END) as drop_imports,
-          COUNT(CASE WHEN import_type = 'fibre' OR import_type = 'fiber' THEN 1 END) as fiber_imports,
-          COALESCE(SUM(processed_records), 0) as total_processed
-        FROM sow_imports
-        WHERE status = 'completed' OR status = 'success'
+        SELECT
+          COUNT(DISTINCT project_id) as pole_projects,
+          COUNT(*) as total_poles,
+          0 as drop_imports,
+          0 as fiber_imports,
+          0 as total_processed
+        FROM sow_poles
       `,
       
       // Client statistics - using actual columns
       sql`
-        SELECT 
+        SELECT
           COUNT(*) as total_clients,
           COUNT(CASE WHEN status = 'active' THEN 1 END) as active_clients
         FROM clients
       `,
       
-      // Get project budgets for revenue calculation
+      // Get project budgets for revenue calculation (without sow_imports)
       sql`
-        SELECT 
+        SELECT
           COALESCE(SUM(budget::numeric), 0) as total_revenue,
-          COUNT(*) as total_imports,
-          COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_imports
-        FROM projects p
-        LEFT JOIN sow_imports si ON p.id = si.project_id
+          0 as total_imports,
+          0 as completed_imports
+        FROM projects
       `
     ]);
 
@@ -108,10 +107,10 @@ export default withErrorHandler(async (
       teamMembers: parseInt(staffData.total_staff) || 0,
       openIssues: 0, // TODO: Implement issues tracking
       
-      // Infrastructure stats (from SOW imports for now)
-      polesInstalled: parseInt(sowData.pole_imports) * 100 || 0, // Estimate based on imports
-      dropsCompleted: parseInt(sowData.drop_imports) * 50 || 0, // Estimate based on imports
-      fiberInstalled: parseInt(sowData.fiber_imports) * 1000 || 0, // Estimate based on imports
+      // Infrastructure stats (from actual poles data)
+      polesInstalled: parseInt(sowData.total_poles) || 0, // Use actual pole count
+      dropsCompleted: parseInt(sowData.drop_imports) || 0, // Placeholder for now
+      fiberInstalled: parseInt(sowData.fiber_imports) || 0, // Placeholder for now
       
       // Financial stats
       totalRevenue,

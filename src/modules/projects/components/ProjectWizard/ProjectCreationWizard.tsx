@@ -138,7 +138,7 @@ export function ProjectCreationWizard() {
         return (
           <BasicInfoStep
             form={form}
-            clients={clients?.map((c: any) => ({ id: c.id!, name: c.companyName })) || []}
+            clients={clients?.map((c: any) => ({ id: c.id!, name: c.company_name || c.companyName })) || []}
             isClientsLoading={isClientsLoading}
           />
         );
@@ -154,7 +154,7 @@ export function ProjectCreationWizard() {
         return (
           <ReviewStep
             form={form}
-            clientName={selectedClient?.companyName || 'Unknown'}
+            clientName={selectedClient?.company_name || selectedClient?.companyName || 'Unknown'}
             projectManagerName={selectedProjectManager?.name || 'Unassigned'}
           />
         );

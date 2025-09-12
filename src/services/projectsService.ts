@@ -51,7 +51,7 @@ class ProjectsService {
         throw new Error(`Failed to fetch projects: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.projects || [];
+      return data.data || [];
     } catch (error) {
       log.error('Error fetching projects:', error, 'ProjectsService');
       throw error;
@@ -66,7 +66,7 @@ class ProjectsService {
         throw new Error(`Failed to fetch project: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.project;
+      return data.data;
     } catch (error) {
       log.error('Error fetching project by ID:', error, 'ProjectsService');
       throw error;
@@ -86,7 +86,7 @@ class ProjectsService {
         throw new Error(`Failed to create project: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.project;
+      return data.data;
     } catch (error) {
       log.error('Error creating project:', error, 'ProjectsService');
       throw error;
@@ -106,7 +106,7 @@ class ProjectsService {
         throw new Error(`Failed to update project: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.project;
+      return data.data;
     } catch (error) {
       log.error('Error updating project:', error, 'ProjectsService');
       throw error;
@@ -134,7 +134,7 @@ class ProjectsService {
         throw new Error(`Failed to fetch projects by client: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.projects || [];
+      return data.data || [];
     } catch (error) {
       log.error('Error fetching projects by client:', error, 'ProjectsService');
       throw error;
@@ -147,7 +147,8 @@ class ProjectsService {
       if (!response.ok) {
         throw new Error(`Failed to fetch project stats: ${response.statusText}`);
       }
-      return await response.json();
+      const data = await response.json();
+      return data.data;
     } catch (error) {
       log.error('Error fetching project stats:', error, 'ProjectsService');
       throw error;
@@ -161,7 +162,7 @@ class ProjectsService {
         throw new Error(`Failed to search projects: ${response.statusText}`);
       }
       const data = await response.json();
-      return data.projects || [];
+      return data.data || [];
     } catch (error) {
       log.error('Error searching projects:', error, 'ProjectsService');
       throw error;

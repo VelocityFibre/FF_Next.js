@@ -24,22 +24,24 @@ export default async function handler(
     const [currentPeriod, previousPeriod] = await Promise.all([
       // Current 30 days
       sql`
-        SELECT 
+        SELECT
           (SELECT COUNT(*) FROM projects WHERE created_at >= ${thirtyDaysAgo}) as new_projects,
           (SELECT COUNT(*) FROM staff WHERE created_at >= ${thirtyDaysAgo}) as new_staff,
-          (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${thirtyDaysAgo} AND import_type = 'poles') as new_poles,
-          (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${thirtyDaysAgo} AND import_type = 'drops') as new_drops,
-          (SELECT COALESCE(SUM(processed_records), 0) FROM sow_imports WHERE imported_at >= ${thirtyDaysAgo}) as new_tasks
+          (SELECT COUNT(*) FROM sow_poles WHERE created_at >= ${thirtyDaysAgo}) as new_poles,
+          (SELECT COUNT(*) FROM sow_drops WHERE created_at >= ${thirtyDaysAgo}) as new_drops,
+          (SELECT COALESCE(COUNT(*), 0) FROM sow_poles WHERE created_at >= ${thirtyDaysAgo}) +
+          (SELECT COALESCE(COUNT(*), 0) FROM sow_drops WHERE created_at >= ${thirtyDaysAgo}) as new_tasks
       `,
       
       // Previous 30 days
       sql`
-        SELECT 
+        SELECT
           (SELECT COUNT(*) FROM projects WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_projects,
           (SELECT COUNT(*) FROM staff WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_staff,
-          (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${sixtyDaysAgo} AND imported_at < ${thirtyDaysAgo} AND import_type = 'poles') as prev_poles,
-          (SELECT COUNT(*) FROM sow_imports WHERE imported_at >= ${sixtyDaysAgo} AND imported_at < ${thirtyDaysAgo} AND import_type = 'drops') as prev_drops,
-          (SELECT COALESCE(SUM(processed_records), 0) FROM sow_imports WHERE imported_at >= ${sixtyDaysAgo} AND imported_at < ${thirtyDaysAgo}) as prev_tasks
+          (SELECT COUNT(*) FROM sow_poles WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_poles,
+          (SELECT COUNT(*) FROM sow_drops WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_drops,
+          (SELECT COALESCE(COUNT(*), 0) FROM sow_poles WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) +
+          (SELECT COALESCE(COUNT(*), 0) FROM sow_drops WHERE created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}) as prev_tasks
       `
     ]);
 

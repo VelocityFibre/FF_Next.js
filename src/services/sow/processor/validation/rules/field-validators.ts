@@ -21,13 +21,13 @@ export class FieldValidators {
       };
     }
 
-    // Check for valid pole number format (alphanumeric, hyphens, underscores)
-    const validFormat = /^[a-zA-Z0-9_-]+$/.test(poleNumber);
+    // Check for valid pole number format (alphanumeric, dots, hyphens, underscores, parentheses, spaces)
+    const validFormat = /^[a-zA-Z0-9._\-\s()]+$/.test(poleNumber);
     if (!validFormat) {
       return {
         field: 'pole_number',
         value: poleNumber,
-        message: `Invalid pole number format: ${poleNumber}. Only alphanumeric characters, hyphens, and underscores allowed`,
+        message: `Invalid pole number format: ${poleNumber}. Only alphanumeric characters, dots, hyphens, underscores, parentheses, and spaces allowed`,
         severity: 'error',
         code: 'INVALID_POLE_NUMBER_FORMAT'
       };
@@ -50,12 +50,12 @@ export class FieldValidators {
       };
     }
 
-    const validFormat = /^[a-zA-Z0-9_-]+$/.test(dropId);
+    const validFormat = /^[a-zA-Z0-9._\-\s()]+$/.test(dropId);
     if (!validFormat) {
       return {
         field: 'drop_id',
         value: dropId,
-        message: `Invalid drop ID format: ${dropId}`,
+        message: `Invalid drop ID format: ${dropId}. Only alphanumeric characters, dots, hyphens, underscores, parentheses, and spaces allowed`,
         severity: 'error',
         code: 'INVALID_DROP_ID_FORMAT'
       };

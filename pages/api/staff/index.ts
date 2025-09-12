@@ -2,9 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { withErrorHandler } from '@/lib/api-error-handler';
 import { createLoggedSql, logCreate, logUpdate, logDelete } from '@/lib/db-logger';
 
-const sql = createLoggedSql(process.env.DATABASE_URL!);
+// Create a new SQL instance for each request to avoid connection issues
+const getSql = () => createLoggedSql(process.env.DATABASE_URL!);
 
 export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
+  const sql = getSql();
   // CORS handled by withErrorHandler
   
   try {
@@ -18,6 +20,7 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
           const staff = await sql`
             SELECT 
               s.*,
+              CONCAT(s.first_name, ' ', s.last_name) as name,
               CONCAT(s.first_name, ' ', s.last_name) as full_name
             FROM staff s
             WHERE s.id = ${id as string}
@@ -33,40 +36,127 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
           
           res.status(200).json({ success: true, data: staff[0] });
         } else {
-          // Build query with filters
-          const conditions = [];
-          
-          if (search) {
-            conditions.push(`(
-              LOWER(s.first_name) LIKE LOWER('%${search}%') OR 
-              LOWER(s.last_name) LIKE LOWER('%${search}%') OR 
-              LOWER(s.email) LIKE LOWER('%${search}%') OR 
-              LOWER(s.employee_id) LIKE LOWER('%${search}%')
-            )`);
+          // Build query with filters using parameterized queries
+          let staff;
+
+          if (search && department && status && position) {
+            const searchTerm = `%${search}%`;
+            const positionTerm = `%${position}%`;
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE (
+                LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.email) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.employee_id) LIKE LOWER(${searchTerm})
+              ) AND s.department = ${department} AND s.status = ${status} AND LOWER(s.position) LIKE LOWER(${positionTerm})
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (search && department && status) {
+            const searchTerm = `%${search}%`;
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE (
+                LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.email) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.employee_id) LIKE LOWER(${searchTerm})
+              ) AND s.department = ${department} AND s.status = ${status}
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (search && department) {
+            const searchTerm = `%${search}%`;
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE (
+                LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.email) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.employee_id) LIKE LOWER(${searchTerm})
+              ) AND s.department = ${department}
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (search) {
+            const searchTerm = `%${search}%`;
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE (
+                LOWER(s.first_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.last_name) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.email) LIKE LOWER(${searchTerm}) OR
+                LOWER(s.employee_id) LIKE LOWER(${searchTerm})
+              )
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (department && status && position) {
+            const positionTerm = `%${position}%`;
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE s.department = ${department} AND s.status = ${status} AND LOWER(s.position) LIKE LOWER(${positionTerm})
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (department && status) {
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE s.department = ${department} AND s.status = ${status}
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (department) {
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE s.department = ${department}
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (status) {
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE s.status = ${status}
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else if (position) {
+            const positionTerm = `%${position}%`;
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              WHERE LOWER(s.position) LIKE LOWER(${positionTerm})
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
+          } else {
+            // Simple query without any parameters when none are provided
+            staff = await sql`
+              SELECT
+                s.*,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+              FROM staff s
+              ORDER BY s.created_at DESC NULLS LAST
+            `;
           }
-          
-          if (department) {
-            conditions.push(`s.department = '${department}'`);
-          }
-          
-          if (status) {
-            conditions.push(`s.status = '${status}'`);
-          }
-          
-          if (position) {
-            conditions.push(`LOWER(s.position) LIKE LOWER('%${position}%')`);
-          }
-          
-          const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-          
-          const staff = await sql`
-            SELECT 
-              s.*,
-              CONCAT(s.first_name, ' ', s.last_name) as full_name
-            FROM staff s
-            ${whereClause ? sql.unsafe(whereClause) : sql``}
-            ORDER BY s.created_at DESC NULLS LAST
-          `;
           
           // Return empty array if no staff, not an error
           res.status(200).json({ 

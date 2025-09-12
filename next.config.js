@@ -15,10 +15,21 @@ const nextConfig = {
     disableOptimizedLoading: true,
   },
 
+  // Disable static optimization for problematic pages
+  trailingSlash: true,
+  generateEtags: false,
+  poweredByHeader: false,
+
   // Fix file watching issues
   webpack: (config, { dev, isServer }) => {
-    // Temporarily disable watch options to avoid Watchpack issues
-    // TODO: Re-enable when Next.js/watchpack compatibility is fixed
+    // Try to fix Watchpack issues with minimal configuration
+    if (dev && !isServer) {
+      config.watchOptions = {
+        ignored: ['**/node_modules/**'],
+        aggregateTimeout: 300,
+        poll: 1000,
+      };
+    }
 
     // Ensure proper handling of undefined paths
     if (config.resolve && config.resolve.alias) {
